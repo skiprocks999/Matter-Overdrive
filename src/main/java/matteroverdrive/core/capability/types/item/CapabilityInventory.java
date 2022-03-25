@@ -74,6 +74,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			for(Direction dir : dirs) {
 				relativeInputDirs.add(dir);
 			}
+			setInputCaps();
 		}
 		return this;
 	}
@@ -84,6 +85,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			for(Direction dir : dirs) {
 				relativeOutputDirs.add(dir);
 			}
+			setOutputCaps();
 		}
 		return this;
 	}
@@ -226,11 +228,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
-		
+		invalidateCaps();
 	}
 	
 	private void invalidateCaps() {
-		holder.invalidate();
+		if(holder != null) {
+			holder.invalidate();
+		}
 		sideCaps.forEach((dir, lazy) -> {
 			lazy.invalidate();
 		});
