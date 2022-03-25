@@ -1,5 +1,3 @@
-*.class
-
 .DS_Store
 
 # Resources #
@@ -47,35 +45,7 @@ gradle/wrapper/gradle-wrapper.properties
 build.gradle
 *.gradle
 build.gradle
-*.java
-*.java
-src/main/java/personal/ibonny/matteroverdrive116/block/BlockPipe.java
-src/main/java/personal/ibonny/matteroverdrive116/block/ConnectedEnum.java
-src/main/java/personal/ibonny/matteroverdrive116/block/DecomposerBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/DecorativeBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/DecorativeBlockConnected.java
-src/main/java/personal/ibonny/matteroverdrive116/block/DecorativeColoredBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/IDismantleable.java
-src/main/java/personal/ibonny/matteroverdrive116/block/MatterAnalyzerBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/MatterPipeBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/MatterRecyclerBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/MicrowaveBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/ModBlocks.java
-src/main/java/personal/ibonny/matteroverdrive116/block/PatternStorageBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/ReplicatorBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/StarMapBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/block/TritaniumCrateBlock.java
-src/main/java/personal/ibonny/matteroverdrive116/container/MatterRecyclerContainer.java
-src/main/java/personal/ibonny/matteroverdrive116/container/MicrowaveContainer.java
-src/main/java/personal/ibonny/matteroverdrive116/container/ModContainers.java
-src/main/java/personal/ibonny/matteroverdrive116/item/ModItemGroup.java
-src/main/java/personal/ibonny/matteroverdrive116/item/ModItems.java
-src/main/java/personal/ibonny/matteroverdrive116/MatterOverdrive116.java
-src/main/java/personal/ibonny/matteroverdrive116/screen/MatterRecyclerScreen.java
-src/main/java/personal/ibonny/matteroverdrive116/screen/MicrowaveScreen.java
-src/main/java/personal/ibonny/matteroverdrive116/tile/MatterRecyclerTileEntity.java
-src/main/java/personal/ibonny/matteroverdrive116/tile/MicrowaveTileEntity.java
-src/main/java/personal/ibonny/matteroverdrive116/tile/ModTileEntities.java
+
 /bin
 /out
 /run
