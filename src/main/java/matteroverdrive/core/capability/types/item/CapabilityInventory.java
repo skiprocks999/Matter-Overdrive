@@ -1,6 +1,7 @@
 package matteroverdrive.core.capability.types.item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Nullable
 	private GenericTile owner;
 	
-	private final LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
+	private LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
+	
+	private HashMap<Direction, LazyOptional<IItemHandlerModifiable>> sideCaps = new HashMap<>();
 	
 	public CapabilityInventory() {
 		super();
@@ -145,28 +148,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 					return LazyOptional.empty();
 				} 
 				Direction dir = DirectionUtils.getRelativeSide(owner.getFacing(), side);
-				if (relativeInputDirs.contains(dir)) {
-					int[] slots = new int[inputs()];
-					for (int i = 0; i < inputs(); i++) {
-						slots[i] = inputIndex() + i;
-					}
-					NonNullList<ItemStack> stacks = NonNullList.create();
-					stacks.addAll(getInputs());
-					//is this safe?
-					return LazyOptional.of(() -> (T) new ChildInventoryHandler(stacks, this, slots));
-				} else if (relativeOutputDirs.contains(dir)) {
-					int[] slots = new int[outputs() + byproducts()];
-					for (int i = 0; i < outputs(); i++) {
-						slots[i] = outputIndex() + i;
-					}
-					for (int i = outputs(); i < byproducts(); i++) {
-						slots[i] = byproductIndex() + i;
-					}
-					NonNullList<ItemStack> stacks = NonNullList.create();
-					stacks.addAll(getOutputs());
-					stacks.addAll(getByproducts());
-					//is this safe?
-					return LazyOptional.of(() -> (T) new ChildInventoryHandler(stacks, this, slots));
+				if(sideCaps.containsKey(dir)) {
+					return sideCaps.get(dir).cast();
 				}
 				return LazyOptional.empty();	
 			} 
@@ -244,6 +227,54 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
 		
+	}
+	
+	private void invalidateCaps() {
+		holder.invalidate();
+		sideCaps.forEach((dir, lazy) -> {
+			lazy.invalidate();
+		});
+		if (isSided) {
+			if(relativeInputDirs.size() > 0) {
+				setInputCaps();
+			}
+			if(relativeOutputDirs.size() > 0) {
+				setOutputCaps();
+			}
+		} else {
+			holder = LazyOptional.of(() -> this);
+		}
+	}
+	
+	private void setInputCaps() {
+		int[] slots = new int[inputs()];
+		for (int i = 0; i < inputs(); i++) {
+			slots[i] = inputIndex() + i;
+		}
+		NonNullList<ItemStack> stacks = NonNullList.create();
+		stacks.addAll(getInputs());
+		LazyOptional<IItemHandlerModifiable> inputCap = LazyOptional.of(() -> new ChildInventoryHandler(stacks, this, slots));
+		for(Direction dir : relativeInputDirs) {
+			sideCaps.put(dir, inputCap);
+		}
+	}
+	
+	private void setOutputCaps() {
+		int[] slots = new int[outputs() + byproducts()];
+		for (int i = 0; i < outputs(); i++) {
+			slots[i] = outputIndex() + i;
+		}
+		for (int i = outputs(); i < byproducts(); i++) {
+			slots[i] = byproductIndex() + i;
+		}
+		NonNullList<ItemStack> stacks = NonNullList.create();
+		stacks.addAll(getOutputs());
+		stacks.addAll(getByproducts());
+		//is this safe?
+		LazyOptional<IItemHandlerModifiable> inputCap = LazyOptional.of(() -> new ChildInventoryHandler(stacks, this, slots));
+		for(Direction dir : relativeOutputDirs) {
+			sideCaps.put(dir, inputCap);
+		}
 	}
 	
 	public List<ItemStack> getInputs(){
