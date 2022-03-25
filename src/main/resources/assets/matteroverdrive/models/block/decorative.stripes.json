@@ -1,0 +1,11 @@
+{
+  "forge_marker": 1,
+  "parent": "matteroverdrive:block/base/orientable",
+  "textures": {
+    "top": "matteroverdrive:block/base_stripes",
+    "bottom": "matteroverdrive:block/base_stripes",
+    "front": "matteroverdrive:block/base_stripes",
+    "back": "matteroverdrive:block/base_stripes",
+    "side": "matteroverdrive:block/base_stripes"
+  }
+}

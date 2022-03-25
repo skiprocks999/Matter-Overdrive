@@ -1,0 +1,20 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "matteroverdrive:block/decomposer",
+    "textures": {
+      "bottom": "matteroverdrive:block/vent2",
+      "top": "matteroverdrive:block/decomposer_top",
+      "side": "matteroverdrive:block/base_stripes",
+      "front": "matteroverdrive:block/tank_empty",
+      "back": "matteroverdrive:block/base_stripes",
+      "particle": "matteroverdrive:block/base_stripes"
+    }
+  },
+  "variants": {
+    "facing=north": { "model": "matteroverdrive:block/decomposer"},
+    "facing=south": { "model": "matteroverdrive:block/decomposer","y": 180 },
+    "facing=west":  { "model": "matteroverdrive:block/decomposer","y": 270 },
+    "facing=east":  { "model": "matteroverdrive:block/decomposer","y": 90 }
+  }
+}

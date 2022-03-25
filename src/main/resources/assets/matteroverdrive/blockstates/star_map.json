@@ -1,0 +1,9 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "facing=north": { "model": "matteroverdrive:block/android_station" },
+    "facing=south": { "model": "matteroverdrive:block/android_station" },
+    "facing=east":  { "model": "matteroverdrive:block/android_station" },
+    "facing=west":  { "model": "matteroverdrive:block/android_station" }
+  }
+}

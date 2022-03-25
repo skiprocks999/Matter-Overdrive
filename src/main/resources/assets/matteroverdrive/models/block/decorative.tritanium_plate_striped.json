@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "matteroverdrive:block/tritanium_plate",
+    "top": "matteroverdrive:block/tritanium_plate",
+    "side": "matteroverdrive:block/tritanium_plate_yellow_stripe",
+    "particle": "matteroverdrive:block/tritanium_plate_yellow_stripe"
+  }
+}

@@ -1,0 +1,25 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "matteroverdrive:block/base/orientable",
+	"textures": {
+		"particle": "matteroverdrive:block/tritanium_lamp_bottom",
+		"bottom": "matteroverdrive:block/tritanium_lamp_bottom",
+		"top": "matteroverdrive:block/tritanium_lamp_top",
+		"side": "matteroverdrive:block/tritanium_lamp_sides",
+		"front": "matteroverdrive:block/tritanium_plate_yellow_stripe"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [17, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#front"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#front"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+			}
+		}
+	]
+}

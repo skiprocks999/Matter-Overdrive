@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "matteroverdrive:tritanium_nugget"
+    }
+  },
+  "result": {
+    "item": "matteroverdrive:tritanium_ingot",
+    "count": 1
+  }
+}

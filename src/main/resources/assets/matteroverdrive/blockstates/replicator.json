@@ -1,0 +1,15 @@
+{
+  "defaults": {
+    "model": "matteroverdrive:block/replicator"
+  },
+  "variants": {
+    "facing=north": { "model": "matteroverdrive:block/replicator"},
+    "facing=south": { "model": "matteroverdrive:block/replicator", "y": 180 },
+    "facing=west":  { "model": "matteroverdrive:block/replicator", "y": 270 },
+    "facing=east":  { "model": "matteroverdrive:block/replicator", "y": 90 },
+    "inventory": {
+      "model": "matteroverdrive:block/replicator",
+      "transform": "forge:default-block"
+    }
+  }
+}

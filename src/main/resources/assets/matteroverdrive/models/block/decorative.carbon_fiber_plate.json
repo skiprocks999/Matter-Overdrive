@@ -1,0 +1,7 @@
+{
+  "forge_marker": 1,
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "matteroverdrive:block/carbon_fiber_plate"
+  }
+}

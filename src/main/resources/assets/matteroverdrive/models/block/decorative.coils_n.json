@@ -1,0 +1,11 @@
+{
+  "forge_marker": 1,
+  "parent": "matteroverdrive:block/base/orientable",
+  "textures": {
+    "top": "matteroverdrive:block/base_coil",
+    "bottom": "matteroverdrive:block/base_coil",
+    "front": "matteroverdrive:block/base_coil",
+    "back": "matteroverdrive:block/base_coil",
+    "side": "matteroverdrive:block/base_coil"
+  }
+}
