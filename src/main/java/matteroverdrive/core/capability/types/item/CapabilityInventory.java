@@ -8,8 +8,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mojang.datafixers.util.Pair;
-
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
@@ -45,7 +43,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	private LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
 	
-	private List<Pair<Direction, LazyOptional<IItemHandlerModifiable>>> sideCaps = new ArrayList<>();
+	private LazyOptional<IItemHandlerModifiable> childInput;
+	private LazyOptional<IItemHandlerModifiable> childOutput;
+	// Down Up North South West East
+	private LazyOptional<IItemHandlerModifiable>[] sideCaps = new LazyOptional[6];
 	
 	public CapabilityInventory() {
 		super();
@@ -151,12 +152,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 					return LazyOptional.empty();
 				} 
 				Direction dir = DirectionUtils.getRelativeSide(owner.getFacing(), side);
-				for(Pair<Direction, LazyOptional<IItemHandlerModifiable>> pair : sideCaps) {
-					if (pair.getFirst() == dir) {
-						return pair.getSecond().cast();
-					}
+				if(relativeInputDirs.contains(dir)) {
+					return sideCaps[dir.ordinal()].cast();
+				} else if (relativeOutputDirs.contains(dir)) {
+					return sideCaps[dir.ordinal()].cast();
+				} else {
+					return LazyOptional.empty();
 				}
-				return LazyOptional.empty();	
 			} 
 			return castHolder();
 		}
@@ -238,10 +240,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		if(holder != null) {
 			holder.invalidate();
 		}
-		for(Pair<Direction, LazyOptional<IItemHandlerModifiable>> pair : sideCaps) {
-			pair.getSecond().invalidate();
+		if(childInput != null) {
+			childInput.invalidate();
 		}
-		sideCaps = new ArrayList<>();
+		if(childOutput != null) {
+			childOutput.invalidate();
+		}
 		if (isSided) {
 			if(relativeInputDirs.size() > 0) {
 				setInputCaps();
@@ -255,7 +259,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	}
 	
 	private void setInputCaps() {
-		LazyOptional<IItemHandlerModifiable> inputCap = LazyOptional.of(() -> {
+		childInput = LazyOptional.of(() -> {
 			int[] slots = new int[inputs()];
 			for (int i = 0; i < inputs(); i++) {
 				slots[i] = inputIndex() + i;
@@ -265,12 +269,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
 		for(Direction dir : relativeInputDirs) {
-			sideCaps.add(Pair.of(dir, inputCap));
+			sideCaps[dir.ordinal()] = childInput;
 		}
 	}
 	
 	private void setOutputCaps() {
-		LazyOptional<IItemHandlerModifiable> outputCap = LazyOptional.of(() -> {
+		childOutput = LazyOptional.of(() -> {
 			int[] slots = new int[outputs() + byproducts()];
 			for (int i = 0; i < outputs(); i++) {
 				slots[i] = outputIndex() + i;
@@ -284,7 +288,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
 		for(Direction dir : relativeOutputDirs) {
-			sideCaps.add(Pair.of(dir, outputCap));
+			sideCaps[dir.ordinal()] = childOutput;
 		}
 	}
 	
