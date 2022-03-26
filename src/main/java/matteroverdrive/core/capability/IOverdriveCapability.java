@@ -3,13 +3,10 @@ package matteroverdrive.core.capability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 public interface IOverdriveCapability extends ICapabilitySerializable<CompoundTag> {
-
-	public <T> boolean matchesCapability(Capability<T> capability);
 	
 	public <T> LazyOptional<T> castHolder();
 	
