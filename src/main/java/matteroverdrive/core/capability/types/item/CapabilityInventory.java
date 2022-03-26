@@ -1,6 +1,7 @@
 package matteroverdrive.core.capability.types.item;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -76,8 +77,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			for(Direction dir : dirs) {
 				relativeInputDirs.add(dir);
 			}
-			setInputCaps();
 		}
+		setInputCaps();
 		return this;
 	}
 	
@@ -87,8 +88,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			for(Direction dir : dirs) {
 				relativeOutputDirs.add(dir);
 			}
-			setOutputCaps();
 		}
+		setOutputCaps();
 		return this;
 	}
 	
@@ -146,28 +147,14 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (matchesCapability(cap)) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (isSided) {
-				if (side == null || owner == null) {
-					return LazyOptional.empty();
-				} 
-				Direction dir = DirectionUtils.getRelativeSide(owner.getFacing(), side);
-				if(relativeInputDirs.contains(dir)) {
-					return sideCaps[dir.ordinal()].cast();
-				} else if (relativeOutputDirs.contains(dir)) {
-					return sideCaps[dir.ordinal()].cast();
-				} else {
-					return LazyOptional.empty();
-				}
-			} 
-			return castHolder();
+				return side == null ? LazyOptional.empty() : sideCaps[side.ordinal()].cast();
+			} else {
+				return castHolder();
+			}
 		}
 		return LazyOptional.empty();
-	}
-	
-	@Override
-	public <T> boolean matchesCapability(Capability<T> capability) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
 	@Override
@@ -246,7 +233,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		if(childOutput != null) {
 			childOutput.invalidate();
 		}
+		sideCaps = new LazyOptional[6];
 		if (isSided) {
+			Arrays.fill(sideCaps, LazyOptional.empty());
 			if(relativeInputDirs.size() > 0) {
 				setInputCaps();
 			}
@@ -268,8 +257,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			stacks.addAll(getInputs());
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
+		Direction facing = owner.getFacing();
 		for(Direction dir : relativeInputDirs) {
-			sideCaps[dir.ordinal()] = childInput;
+			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
 	
@@ -287,8 +277,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			stacks.addAll(getByproducts());
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
+		Direction facing = owner.getFacing();
 		for(Direction dir : relativeOutputDirs) {
-			sideCaps[dir.ordinal()] = childOutput;
+			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
 	
