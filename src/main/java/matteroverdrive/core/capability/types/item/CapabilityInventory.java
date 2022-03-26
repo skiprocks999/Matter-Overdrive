@@ -61,35 +61,31 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		super(stacks);
 	}
 	
-	public CapabilityInventory setIsSided() {
-		isSided = true;
-		return this;
-	}
-	
 	public CapabilityInventory setOwner(GenericTile tile) {
 		owner = tile;
 		return this;
 	}
 	
-	public CapabilityInventory setDefaultInputs(@Nonnull Direction...dirs) {
+	public CapabilityInventory setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
+		isSided = true;
+		boolean changed = false;
 		if(relativeInputDirs == null) {
 			relativeInputDirs = new HashSet<>();
-			for(Direction dir : dirs) {
+			for(Direction dir : inputs) {
 				relativeInputDirs.add(dir);
 			}
+			changed = true;
 		}
-		setInputCaps();
-		return this;
-	}
-	
-	public CapabilityInventory setDefaultOutputs(@Nonnull Direction...dirs) {
 		if(relativeOutputDirs == null) {
 			relativeOutputDirs = new HashSet<>();
-			for(Direction dir : dirs) {
+			for(Direction dir : outputs) {
 				relativeOutputDirs.add(dir);
 			}
+			changed = true;
 		}
-		setOutputCaps();
+		if(changed) {
+			refreshCapability();
+		}
 		return this;
 	}
 	
@@ -147,19 +143,19 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (matchesCapability(cap)) {
 			if (isSided) {
 				return side == null ? LazyOptional.empty() : sideCaps[side.ordinal()].cast();
 			} else {
-				return castHolder();
+				return holder.cast();
 			}
 		}
 		return LazyOptional.empty();
 	}
-
+	
 	@Override
-	public <T> LazyOptional<T> castHolder() {
-		return holder.cast();
+	public <T> boolean matchesCapability(Capability<T> cap) {
+		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
 	@Override
@@ -169,7 +165,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	@Override
 	public void onLoad(BlockEntity tile) {
-		
+		refreshCapability();
+	}
+	
+	@Override
+	public String getSaveKey() {
+		return "inventory";
 	}
 	
 	@Override
@@ -220,10 +221,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
-		invalidateCaps();
 	}
 	
-	private void invalidateCaps() {
+	@Override
+	public void invalidateCapability() {
 		if(holder != null) {
 			holder.invalidate();
 		}
@@ -233,6 +234,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		if(childOutput != null) {
 			childOutput.invalidate();
 		}
+		
+	}
+	
+	@Override
+	public void refreshCapability() {
+		invalidateCapability();
 		sideCaps = new LazyOptional[6];
 		if (isSided) {
 			Arrays.fill(sideCaps, LazyOptional.empty());
