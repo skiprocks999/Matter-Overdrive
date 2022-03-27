@@ -342,6 +342,14 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return owner.getLevel().getBlockEntity(pos) == owner && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 	
+	public NonNullList<ItemStack> getItems(){
+		return stacks;
+	}
+	
+	public ItemStack[] getItemsArray() {
+		return getItems().toArray(new ItemStack[getItems().size()]);
+	}
+	
 	private class ChildInventoryHandler extends CapabilityInventory {
 
 		private int[] indexes;

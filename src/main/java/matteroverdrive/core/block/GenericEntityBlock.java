@@ -29,8 +29,11 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		// TODO Auto-generated method stub
-		return super.getTicker(level, state, type);
+		return (world, pos, blockstate, tile) -> {
+			if (tile instanceof GenericTile generic && generic.hasTicker) {
+				generic.getTicker().performTick(level);
+			}
+		};
 	}
 	
 	@Override

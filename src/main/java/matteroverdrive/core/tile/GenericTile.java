@@ -3,14 +3,19 @@ package matteroverdrive.core.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import matteroverdrive.References;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.tile.utils.Ticker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,11 +25,34 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class GenericTile extends BlockEntity implements Nameable {
 	
-	private boolean hasMenu = false;
 	private List<IOverdriveCapability> capabilities = new ArrayList<>();
+	
+	public boolean hasMenu = false;
+	private MenuProvider menu;
+	
+	public boolean hasTicker = false;
+	private Ticker ticker;
 	
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+	}
+	
+	public void setMenuProvider(MenuProvider menu) {
+		hasMenu = true;
+		this.menu = menu;
+	}
+	
+	public MenuProvider getMenuProvider() {
+		return menu;
+	}
+	
+	public void setTicker(Ticker ticker) {
+		hasTicker = true;
+		this.ticker = ticker;
+	}
+	
+	public Ticker getTicker() {
+		return ticker;
 	}
 	
 	@Override
@@ -116,11 +144,20 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		return Direction.UP;
 	}
+	
+	public SimpleContainerData getCoordsData() {
+		SimpleContainerData array = new SimpleContainerData(3);
+		array.set(0, worldPosition.getX());
+		array.set(1, worldPosition.getY());
+		array.set(2, worldPosition.getZ());
+		return array;
+	}
+
 
 	@Override
+	//TODO allow translations
 	public Component getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TextComponent(References.ID + ".default.tile.name");
 	}
 	
 }
