@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class GenericTile extends BlockEntity implements Nameable {
 	
+	private boolean hasMenu = false;
 	private List<IOverdriveCapability> capabilities = new ArrayList<>();
 	
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -49,6 +50,15 @@ public class GenericTile extends BlockEntity implements Nameable {
 		} else {
 			throw new RuntimeException("error: capability type " + cap.getCapabilityType() + " already added");
 		}
+	}
+	
+	public boolean hasCapability(CapabilityType type) {
+		for(IOverdriveCapability cap : capabilities) {
+			if(cap.getCapabilityType() == type) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public <T extends IOverdriveCapability> T exposeCapability(CapabilityType type) {

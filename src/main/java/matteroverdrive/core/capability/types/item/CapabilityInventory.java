@@ -13,21 +13,26 @@ import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.DirectionUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.TriPredicate;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CapabilityInventory extends ItemStackHandler implements IOverdriveCapability {
 
+	private TriPredicate<Integer, ItemStack, CapabilityInventory> valid = (slot, item, inv) -> true;
+	
 	private HashSet<Direction> relativeInputDirs;
 	private HashSet<Direction> relativeOutputDirs;
 	
@@ -41,6 +46,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	@Nullable
 	private GenericTile owner;
+	private boolean hasOwner = false;
 	
 	private LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
 	
@@ -63,6 +69,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	
 	public CapabilityInventory setOwner(GenericTile tile) {
 		owner = tile;
+		hasOwner = true;
 		return this;
 	}
 	
@@ -320,6 +327,19 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			upgrades.add(getStackInSlot(upgradeIndex() + i));
 		}
 		return upgrades;
+	}
+	
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack) {
+		return valid.test(slot, stack, this);
+	}
+	
+	public boolean isInRange(Player player) {
+		if(!hasOwner) {
+			return true;
+		}
+		BlockPos pos = owner.getBlockPos();
+		return owner.getLevel().getBlockEntity(pos) == owner && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 	
 	private class ChildInventoryHandler extends CapabilityInventory {
