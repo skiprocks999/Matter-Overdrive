@@ -1,91 +1,286 @@
 package matteroverdrive.core.capability.types.energy;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import javax.annotation.Nonnull;
+
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.utils.DirectionUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapability {
 
+	private HashSet<Direction> relativeInputDirs;
+	private HashSet<Direction> relativeOutputDirs;
+	
+	private boolean isSided = false;
+	
+	private GenericTile owner;
+	private boolean hasTile;
+	
+	private boolean hasInput = false;
+	private boolean hasOutput = false;
+	
+	private int maxStorage = 0;
+	private int currStorage = 0;
+	
+	private LazyOptional<IEnergyStorage> holder = LazyOptional.of(() -> this);
+	
+	private LazyOptional<IEnergyStorage> childInput;
+	private LazyOptional<IEnergyStorage> childOutput;
+	// Down Up North South West East
+	private LazyOptional<IEnergyStorage>[] sideCaps = new LazyOptional[6];
+	
+	public CapabilityEnergyStorage(int maxStorage, boolean hasInput, boolean hasOutput) {
+		this.maxStorage = maxStorage;
+		this.hasInput = hasInput;
+		this.hasOutput = hasOutput;
+	}
+	
+	public CapabilityEnergyStorage setOwner(GenericTile tile) {
+		owner = tile;
+		hasTile = true;
+		return this;
+	}
+	
+	public CapabilityEnergyStorage setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
+		isSided = true;
+		boolean changed = false;
+		if(relativeInputDirs == null) {
+			relativeInputDirs = new HashSet<>();
+			for(Direction dir : inputs) {
+				relativeInputDirs.add(dir);
+			}
+			changed = true;
+		}
+		if(relativeOutputDirs == null) {
+			relativeOutputDirs = new HashSet<>();
+			for(Direction dir : outputs) {
+				relativeOutputDirs.add(dir);
+			}
+			changed = true;
+		}
+		if(changed) {
+			refreshCapability();
+		}
+		return this;
+	}
+	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		// TODO Auto-generated method stub
-		return null;
+		if (matchesCapability(cap)) {
+			if (isSided) {
+				return side == null ? LazyOptional.empty() : sideCaps[side.ordinal()].cast();
+			} else {
+				return holder.cast();
+			}
+		}
+		return LazyOptional.empty();
 	}
 
 	@Override
 	public CompoundTag serializeNBT() {
-		// TODO Auto-generated method stub
-		return null;
+		CompoundTag tag = new CompoundTag();
+		tag.putInt("stored", currStorage);
+		
+		int inDirSize = relativeInputDirs.size();
+		tag.putInt("inDirSize", inDirSize);
+		ListTag inList = new ListTag();
+		int index = 0;
+		Iterator<Direction> it = relativeInputDirs.iterator();
+		while (it.hasNext()) {
+			CompoundTag dirTag = new CompoundTag();
+			dirTag.putString("inDir" + index , it.next().toString());
+			inList.add(dirTag);
+			index ++;
+		}
+		tag.put("inDirs", inList);
+		
+		int outDirSize = relativeOutputDirs.size();
+		tag.putInt("outDirSize", outDirSize);
+		ListTag outList = new ListTag();
+		index = 0;
+		it = relativeOutputDirs.iterator();
+		while (it.hasNext()) {
+			CompoundTag dirTag = new CompoundTag();
+			dirTag.putString("outDir" + index , it.next().toString());
+			outList.add(dirTag);
+			index ++;
+		}
+		tag.put("outDirs", inList);
+		
+		return tag;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		// TODO Auto-generated method stub
+		currStorage = nbt.getInt("stored");
 		
+		relativeInputDirs = new HashSet<>();
+		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
+		for(int i = 0; i < nbt.getInt("inDirSize"); i++) {
+			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
+		}
+		
+		relativeOutputDirs = new HashSet<>();
+		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
+		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
+			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
+		}
 	}
 
 	@Override
 	public <T> boolean matchesCapability(Capability<T> capability) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public <T> LazyOptional<T> castHolder() {
-		// TODO Auto-generated method stub
-		return null;
+		return capability == CapabilityEnergy.ENERGY;
 	}
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		// TODO Auto-generated method stub
+		if(canReceive()) {
+			int room = maxStorage - currStorage;
+			int accepted = room < maxReceive ? room : maxReceive;
+			if(!simulate) {
+				currStorage += accepted;
+			}
+			return accepted;
+		}
 		return 0;
 	}
 
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
-		// TODO Auto-generated method stub
+		if(canExtract()) {
+			int taken = currStorage < maxExtract ? currStorage : maxExtract;
+			if(!simulate) {
+				currStorage -= taken;
+			}
+			return taken;
+		}
 		return 0;
 	}
 
 	@Override
 	public int getEnergyStored() {
-		// TODO Auto-generated method stub
-		return 0;
+		return currStorage;
 	}
 
 	@Override
 	public int getMaxEnergyStored() {
-		// TODO Auto-generated method stub
-		return 0;
+		return maxStorage;
 	}
 
 	@Override
 	public boolean canExtract() {
-		// TODO Auto-generated method stub
-		return false;
+		return hasOutput;
 	}
 
 	@Override
 	public boolean canReceive() {
-		// TODO Auto-generated method stub
-		return false;
+		return hasInput;
 	}
 
 	@Override
 	public void onLoad(BlockEntity tile) {
-		// TODO Auto-generated method stub
-		
+		refreshCapability();
 	}
 
 	@Override
 	public CapabilityType getCapabilityType() {
 		return CapabilityType.Energy;
+	}
+
+	@Override
+	public void invalidateCapability() {
+		if(holder != null) {
+			holder.invalidate();
+		}
+		if(childInput != null) {
+			childInput.invalidate();
+		}
+		if(childOutput != null) {
+			childOutput.invalidate();
+		}
+		
+	}
+	
+	@Override
+	public void refreshCapability() {
+		invalidateCapability();
+		sideCaps = new LazyOptional[6];
+		if (isSided) {
+			Arrays.fill(sideCaps, LazyOptional.empty());
+			if(relativeInputDirs.size() > 0) {
+				setInputCaps();
+			}
+			if(relativeOutputDirs.size() > 0) {
+				setOutputCaps();
+			}
+		} else {
+			holder = LazyOptional.of(() -> this);
+		}
+	}
+	
+	private void setInputCaps() {
+		childInput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(true, false, this));
+		Direction facing = owner.getFacing();
+		for(Direction dir : relativeInputDirs) {
+			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childInput;
+		}
+	}
+	
+	private void setOutputCaps() {
+		childOutput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(false, true, this));
+		Direction facing = owner.getFacing();
+		for(Direction dir : relativeOutputDirs) {
+			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childOutput;
+		}
+	}
+
+	@Override
+	public String getSaveKey() {
+		return "energy";
+	}
+	
+	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {
+
+		private CapabilityEnergyStorage parent;
+		
+		public ChildCapabilityEnergyStorage(boolean isInput, boolean isOutput, CapabilityEnergyStorage parent) {
+			super(parent.maxStorage, isInput, isOutput);
+			this.parent = parent;
+			currStorage = parent.currStorage;
+		}
+		
+		@Override
+		public int extractEnergy(int maxExtract, boolean simulate) {
+			int returned = super.extractEnergy(maxExtract, simulate);
+			if (canExtract() && !simulate) {
+				parent.currStorage -= returned;
+			}
+			return returned;
+		}
+		
+		@Override
+		public int receiveEnergy(int maxReceive, boolean simulate) {
+			int returned = super.receiveEnergy(maxReceive, simulate);
+			if (canReceive() && !simulate) {
+				parent.currStorage += returned;
+			}
+			return returned;
+		}
+		
 	}
 
 }

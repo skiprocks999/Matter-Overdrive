@@ -37,12 +37,6 @@ public class CapabilityFluidHandlerMulti implements IFluidHandler, IOverdriveCap
 	}
 
 	@Override
-	public <T> LazyOptional<T> castHolder() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int getTanks() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -93,6 +87,24 @@ public class CapabilityFluidHandlerMulti implements IFluidHandler, IOverdriveCap
 	@Override
 	public CapabilityType getCapabilityType() {
 		return CapabilityType.Fluid;
+	}
+
+	@Override
+	public void invalidateCapability() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void refreshCapability() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getSaveKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
