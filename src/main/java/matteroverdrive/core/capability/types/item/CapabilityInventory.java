@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.utils.DirectionUtils;
+import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -273,7 +273,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		});
 		Direction facing = owner.getFacing();
 		for(Direction dir : relativeInputDirs) {
-			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childInput;
+			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
 	
@@ -293,7 +293,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		});
 		Direction facing = owner.getFacing();
 		for(Direction dir : relativeOutputDirs) {
-			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childOutput;
+			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
 	

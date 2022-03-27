@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.utils.DirectionUtils;
+import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -236,7 +236,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		childInput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(true, false, this));
 		Direction facing = owner.getFacing();
 		for(Direction dir : relativeInputDirs) {
-			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childInput;
+			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
 	
@@ -244,7 +244,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		childOutput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(false, true, this));
 		Direction facing = owner.getFacing();
 		for(Direction dir : relativeOutputDirs) {
-			sideCaps[DirectionUtils.getRelativeSide(facing, dir).ordinal()] = childOutput;
+			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
 

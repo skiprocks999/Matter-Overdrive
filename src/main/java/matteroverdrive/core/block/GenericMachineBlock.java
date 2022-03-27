@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class GenericMachineBlock extends WaterloggableEntityBlock {
+public abstract class GenericMachineBlock extends WaterloggableEntityBlock {
 
 	protected GenericMachineBlock(Properties properties) {
 		super(properties);
@@ -34,12 +34,6 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 			Containers.dropContents(worldIn, pos, new SimpleContainer(cap.getItemsArray()));
 		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
-	}
-	
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override

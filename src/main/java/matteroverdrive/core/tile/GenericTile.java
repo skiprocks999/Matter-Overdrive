@@ -7,6 +7,7 @@ import matteroverdrive.References;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +34,9 @@ public class GenericTile extends BlockEntity implements Nameable {
 	public boolean hasTicker = false;
 	private Ticker ticker;
 	
+	public boolean hasPacketHandler = false;
+	private PacketHandler handler;
+	
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -53,6 +57,15 @@ public class GenericTile extends BlockEntity implements Nameable {
 	
 	public Ticker getTicker() {
 		return ticker;
+	}
+	
+	public void setPacketHandler(PacketHandler handler) {
+		hasPacketHandler = true;
+		this.handler = handler;
+	}
+	
+	public PacketHandler getPacketHandler() {
+		return handler;
 	}
 	
 	@Override
