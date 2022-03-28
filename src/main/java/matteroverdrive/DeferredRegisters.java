@@ -29,7 +29,7 @@ public class DeferredRegisters {
 	public static final HashMap<IType, Block> TYPED_BLOCKS = new HashMap<>();
 	
 	
-	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ionsniper", supplier(new Item(new Item.Properties().tab(References.MAIN))));
+	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ionsniper", () -> new Item(new Item.Properties().tab(References.MAIN)));
 	
 	
 	
