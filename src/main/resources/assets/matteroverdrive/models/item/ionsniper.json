@@ -1,9 +1,41 @@
 {
+	"parent": "item/generated",
 	"loader": "forge:obj",
-	"model": "matteroverdrive:ionsniper.obj",
+	"model": "matteroverdrive:models/item/ionsniper.obj",
 	"ambientToFullbright": false,
 	"diffuseLighting": false,
 	"textures": {
-		"texture0": "matteroverdrive:textures/item/ionsniper"
-	}
+		"texture0": "matteroverdrive:item/ionsniper"
+	},
+	"display": {
+        "gui": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [-5, 4, 0 ],
+             "scale" : [0.8, 0.8, 0.8]
+        },
+        "ground": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 8, 5, 0 ]
+        },
+        "fixed": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [ -6, 5, 7]
+        },
+        "thirdperson_righthand": {
+            "rotation": [ 90, 180, 0 ],
+            "translation": [-8, 8, 10 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 90, 180, 0 ],
+            "translation": [40, 8, 10 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [ -5, 5, 0 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [ -5, 5, 0 ]
+        }
+    }
 }
