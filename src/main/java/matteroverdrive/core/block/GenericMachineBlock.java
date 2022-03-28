@@ -14,15 +14,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
-public abstract class GenericMachineBlock extends WaterloggableEntityBlock {
+public class GenericMachineBlock extends WaterloggableEntityBlock {
 
-	protected GenericMachineBlock(Properties properties) {
-		super(properties);
+	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
+	
+	protected GenericMachineBlock(BlockEntitySupplier<BlockEntity> supplier) {
+		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops());
+		blockEntitySupplier = supplier;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 	
@@ -61,6 +67,11 @@ public abstract class GenericMachineBlock extends WaterloggableEntityBlock {
 			return InteractionResult.CONSUME;
 		}
 		return InteractionResult.FAIL;
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return blockEntitySupplier.create(pos, state);
 	}
 
 }

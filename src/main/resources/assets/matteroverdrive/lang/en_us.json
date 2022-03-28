@@ -1,5 +1,8 @@
 {
-  "itemGroup.MOModTab": "Matter Overdrive",
+  "itemGroup.itemgroupmatteroverdrivemain": "Matter Overdrive",
+  
+  "item.matteroverdrive.ionsniper" : "Ion Sniper",
+  
   "block.matteroverdrive.matter_analyzer": "Matter Analyzer",
   "block.matteroverdrive.matter_recycler": "Matter Recycler",
   "block.matteroverdrive.decomposer": "Decomposer",

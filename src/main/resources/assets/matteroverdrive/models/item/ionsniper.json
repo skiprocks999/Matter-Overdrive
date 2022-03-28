@@ -1,0 +1,9 @@
+{
+	"loader": "forge:obj",
+	"model": "matteroverdrive:ionsniper.obj",
+	"ambientToFullbright": false,
+	"diffuseLighting": false,
+	"textures": {
+		"texture0": "matteroverdrive:textures/item/ionsniper"
+	}
+}

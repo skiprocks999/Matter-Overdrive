@@ -3,6 +3,7 @@ package matteroverdrive;
 import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.core.packet.NetworkHandler;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -35,7 +36,7 @@ public class MatterOverdrive {
 
     @SubscribeEvent
 	public static void onCommonSetup(FMLCommonSetupEvent event) {
-    	
+    	NetworkHandler.init();
     }
 
     @SubscribeEvent
