@@ -30,7 +30,7 @@ public class DeferredRegisters {
 	
 	
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ionsniper", () -> new Item(new Item.Properties().tab(References.MAIN)));
-	
+	public static final RegistryObject<Item> ITEM_PHASERRIFLE = ITEMS.register("phaserrifle", () -> new Item(new Item.Properties().tab(References.MAIN)));
 	
 	
 	

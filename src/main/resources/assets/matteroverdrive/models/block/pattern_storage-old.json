@@ -1,8 +1,0 @@
-{
-  "loader": "forge:obj",
-  "model": "matteroverdrive:models/block/pattern_storage.obj",
-  "flip-v": true,
-  "textures": {
-    "particle": "matteroverdrive:block/pattern_storage"
-  }
-}

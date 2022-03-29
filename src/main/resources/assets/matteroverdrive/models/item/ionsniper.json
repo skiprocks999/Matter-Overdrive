@@ -1,9 +1,7 @@
 {
-	"parent": "item/generated",
 	"loader": "forge:obj",
 	"model": "matteroverdrive:models/item/ionsniper.obj",
-	"ambientToFullbright": false,
-	"diffuseLighting": false,
+	"flip-v": true,
 	"textures": {
 		"texture0": "matteroverdrive:item/ionsniper"
 	},
