@@ -1,0 +1,45 @@
+{
+	"loader": "forge:obj",
+	"model": "matteroverdrive:models/item/phaser_rifle.obj",
+	"flip-v": true,
+	"textures": {
+		"texture0": "matteroverdrive:item/phaser_rifle"
+	},
+	"display": {
+        "gui": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [-10.5, 2, 0 ],
+            "scale" : [1.25, 1.25, 1.25]
+        },
+        "ground": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 12, 10, 0 ],
+            "scale" : [1.5, 1.5, 1.5]
+        },
+        "fixed": {
+            "rotation": [ 90, -45, 90 ],
+            "translation": [ -11, 2, 9.75],
+            "scale" : [1.25, 1.25, 1.25]
+        },
+        "thirdperson_righthand": {
+            "rotation": [ 0, 180, 0 ],
+            "translation": [-14, 14, -11.6725 ],
+            "scale" : [1.75, 1.75, 1.75]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 0, 180, 0 ],
+            "translation": [14, 14, -11.6725 ],
+            "scale" : [1.75, 1.75, 1.75]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 180, 0 ],
+            "translation": [ -17.5, 17.5,-7 ],
+            "scale" : [1.75, 1.75, 1.75]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 180, 0 ],
+            "translation": [ 10.5, 17.5, -7 ],
+            "scale" : [1.75, 1.75, 1.75]
+        }
+    }
+}

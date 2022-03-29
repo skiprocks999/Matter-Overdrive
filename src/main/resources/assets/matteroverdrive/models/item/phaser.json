@@ -1,15 +1,14 @@
 {
 	"loader": "forge:obj",
-	"model": "matteroverdrive:models/item/ionsniper.obj",
+	"model": "matteroverdrive:models/item/phaser.obj",
 	"flip-v": true,
 	"textures": {
-		"texture0": "matteroverdrive:item/ionsniper"
+		"texture0": "matteroverdrive:item/phaser"
 	},
 	"display": {
         "gui": {
             "rotation": [ 90, -45, 90 ],
-            "translation": [-5, 4, 0 ],
-             "scale" : [0.8, 0.8, 0.8]
+            "translation": [-5, 4, 0 ]
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],

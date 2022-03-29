@@ -1,8 +1,8 @@
 {
   "itemGroup.itemgroupmatteroverdrivemain": "Matter Overdrive",
   
-  "item.matteroverdrive.ionsniper" : "Ion Sniper",
-  "item.matteroverdrive.phaserrifle" : "Phaser Rifle",
+  "item.matteroverdrive.ion_sniper" : "Ion Sniper",
+  "item.matteroverdrive.phaser_rifle" : "Phaser Rifle",
   
   "block.matteroverdrive.matter_analyzer": "Matter Analyzer",
   "block.matteroverdrive.matter_recycler": "Matter Recycler",

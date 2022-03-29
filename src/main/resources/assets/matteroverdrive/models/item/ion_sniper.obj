@@ -1,6 +1,6 @@
 # Blender 3.1.0
 # www.blender.org
-mtllib ionsniper.mtl
+mtllib ion_sniper.mtl
 o ionsniper
 v 0.057332 0.087870 0.272401
 v 0.049613 0.025897 0.273517
