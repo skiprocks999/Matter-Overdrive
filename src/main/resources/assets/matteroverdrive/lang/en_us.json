@@ -3,6 +3,9 @@
   
   "item.matteroverdrive.ion_sniper" : "Ion Sniper",
   "item.matteroverdrive.phaser_rifle" : "Phaser Rifle",
+  "item.matteroverdrive.phaser" : "Phaser",
+  "item.matteroverdrive.plasma_shotgun" : "Plasma Shotgun",
+  "item.matteroverdrive.omni_tool" : "Omni Tool",
   
   "block.matteroverdrive.matter_analyzer": "Matter Analyzer",
   "block.matteroverdrive.matter_recycler": "Matter Recycler",

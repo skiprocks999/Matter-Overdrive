@@ -31,6 +31,9 @@ public class DeferredRegisters {
 	
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper", () -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_PHASERRIFLE = ITEMS.register("phaser_rifle", () -> new Item(new Item.Properties().tab(References.MAIN)));
+	public static final RegistryObject<Item> ITEM_PHASER = ITEMS.register("phaser", () -> new Item(new Item.Properties().tab(References.MAIN)));
+	public static final RegistryObject<Item> ITEM_PLASMASHOTGUN = ITEMS.register("plasma_shotgun", () -> new Item(new Item.Properties().tab(References.MAIN)));
+	public static final RegistryObject<Item> OMNI_TOOL = ITEMS.register("omni_tool", () -> new Item(new Item.Properties().tab(References.MAIN)));
 	
 	
 	

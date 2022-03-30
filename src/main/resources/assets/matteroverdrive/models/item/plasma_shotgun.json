@@ -1,25 +1,25 @@
 {
 	"loader": "forge:obj",
-	"model": "matteroverdrive:models/item/phaser.obj",
+	"model": "matteroverdrive:models/item/plasma_shotgun.obj",
 	"flip-v": true,
 	"textures": {
-		"texture0": "matteroverdrive:item/phaser"
+		"texture0": "matteroverdrive:item/plasma_shotgun"
 	},
 	"display": {
-        "gui": {
+       "gui": {
             "rotation": [ 90, -45, 90 ],
-            "translation": [-20, 3, 0 ],
-            "scale" : [2, 2, 2]
+            "translation": [-12.5, 4, 0 ],
+            "scale" : [1.5, 1.5, 1.5]
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],
-            "translation": [ 12, 7.5, 9 ],
+            "translation": [ 12, 7.5, 5 ],
             "scale" : [1.5, 1.5, 1.5]
         },
         "fixed": {
             "rotation": [ 90, -45, 90 ],
-            "translation": [ -20, 4, 15],
-            "scale" : [2, 2, 2]
+            "translation": [ -12.5, 4, 9.75],
+            "scale" : [1.5, 1.5, 1.5]
         },
         "thirdperson_righthand": {
             "rotation": [ 0, 180, 0 ],

@@ -1,44 +1,44 @@
 {
 	"loader": "forge:obj",
-	"model": "matteroverdrive:models/item/phaser.obj",
+	"model": "matteroverdrive:models/item/omni_tool.obj",
 	"flip-v": true,
 	"textures": {
-		"texture0": "matteroverdrive:item/phaser"
+		"texture0": "matteroverdrive:item/omni_tool"
 	},
 	"display": {
         "gui": {
             "rotation": [ 90, -45, 90 ],
-            "translation": [-20, 3, 0 ],
+            "translation": [-16.5, 5.5, 0 ],
             "scale" : [2, 2, 2]
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],
-            "translation": [ 12, 7.5, 9 ],
+            "translation": [ 12, 7.5, 5 ],
             "scale" : [1.5, 1.5, 1.5]
         },
         "fixed": {
             "rotation": [ 90, -45, 90 ],
-            "translation": [ -20, 4, 15],
+            "translation": [ -16, 5, 15],
             "scale" : [2, 2, 2]
         },
         "thirdperson_righthand": {
             "rotation": [ 0, 180, 0 ],
-            "translation": [-12, 12, -10 ],
+            "translation": [-12, 12, -8 ],
             "scale" : [1.5, 1.5, 1.5]
         },
         "thirdperson_lefthand": {
             "rotation": [ 0, 180, 0 ],
-            "translation": [12, 12, -10 ],
+            "translation": [12, 12, -8 ],
             "scale" : [1.5, 1.5, 1.5]
         },
         "firstperson_righthand": {
             "rotation": [ 0, 180, 0 ],
-            "translation": [ -15, 15,-6 ],
+            "translation": [ -15, 15,-4 ],
             "scale" : [1.5, 1.5, 1.5]
         },
         "firstperson_lefthand": {
             "rotation": [ 0, 180, 0 ],
-            "translation": [ 9, 15, -6 ],
+            "translation": [ 9, 15, -4 ],
             "scale" : [1.5, 1.5, 1.5]
         }
     }
