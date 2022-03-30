@@ -7,6 +7,13 @@
   "item.matteroverdrive.plasma_shotgun" : "Plasma Shotgun",
   "item.matteroverdrive.omni_tool" : "Omni Tool",
   
+  
+  "tooltip.matteroverdrive.energystored" : "%1$s / %2$s FE",
+  
+  
+  
+  
+  
   "block.matteroverdrive.matter_analyzer": "Matter Analyzer",
   "block.matteroverdrive.matter_recycler": "Matter Recycler",
   "block.matteroverdrive.decomposer": "Decomposer",

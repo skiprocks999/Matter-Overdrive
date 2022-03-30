@@ -184,30 +184,36 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = super.serializeNBT();
 		
-		int inDirSize = relativeInputDirs.size();
-		tag.putInt("inDirSize", inDirSize);
 		ListTag inList = new ListTag();
-		int index = 0;
-		Iterator<Direction> it = relativeInputDirs.iterator();
-		while (it.hasNext()) {
-			CompoundTag dirTag = new CompoundTag();
-			dirTag.putString("inDir" + index , it.next().toString());
-			inList.add(dirTag);
-			index ++;
-		}
-		tag.put("inDirs", inList);
-		
-		int outDirSize = relativeOutputDirs.size();
-		tag.putInt("outDirSize", outDirSize);
 		ListTag outList = new ListTag();
-		index = 0;
-		it = relativeOutputDirs.iterator();
-		while (it.hasNext()) {
-			CompoundTag dirTag = new CompoundTag();
-			dirTag.putString("outDir" + index , it.next().toString());
-			outList.add(dirTag);
-			index ++;
+		int inDirSize = 0;
+		int outDirSize = 0;
+		
+		if(isSided) {
+			inDirSize = relativeInputDirs.size();
+			int index = 0;
+			Iterator<Direction> it = relativeInputDirs.iterator();
+			while (it.hasNext()) {
+				CompoundTag dirTag = new CompoundTag();
+				dirTag.putString("inDir" + index , it.next().toString());
+				inList.add(dirTag);
+				index ++;
+			}
+			
+			outDirSize = relativeOutputDirs.size();
+			index = 0;
+			it = relativeOutputDirs.iterator();
+			while (it.hasNext()) {
+				CompoundTag dirTag = new CompoundTag();
+				dirTag.putString("outDir" + index , it.next().toString());
+				outList.add(dirTag);
+				index ++;
+			}
 		}
+		
+		tag.putInt("inDirSize", inDirSize);
+		tag.put("inDirs", inList);
+		tag.putInt("outDirSize", outDirSize);
 		tag.put("outDirs", inList);
 		
 		return tag;
