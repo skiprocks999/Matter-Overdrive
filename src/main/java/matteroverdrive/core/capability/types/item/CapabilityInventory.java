@@ -41,7 +41,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private int inputs = 0;
 	private int outputs = 0;
 	private int byproducts = 0;
-	//not included in child cap
+	// not included in child cap
 	private int upgrades = 0;
 
 	@Nullable
@@ -76,21 +76,21 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public CapabilityInventory setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
-		if(relativeInputDirs == null) {
+		if (relativeInputDirs == null) {
 			relativeInputDirs = new HashSet<>();
-			for(Direction dir : inputs) {
+			for (Direction dir : inputs) {
 				relativeInputDirs.add(dir);
 			}
 			changed = true;
 		}
-		if(relativeOutputDirs == null) {
+		if (relativeOutputDirs == null) {
 			relativeOutputDirs = new HashSet<>();
-			for(Direction dir : outputs) {
+			for (Direction dir : outputs) {
 				relativeOutputDirs.add(dir);
 			}
 			changed = true;
 		}
-		if(changed) {
+		if (changed) {
 			refreshCapability();
 		}
 		return this;
@@ -189,15 +189,15 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		int inDirSize = 0;
 		int outDirSize = 0;
 
-		if(isSided) {
+		if (isSided) {
 			inDirSize = relativeInputDirs.size();
 			int index = 0;
 			Iterator<Direction> it = relativeInputDirs.iterator();
 			while (it.hasNext()) {
 				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("inDir" + index , it.next().toString());
+				dirTag.putString("inDir" + index, it.next().toString());
 				inList.add(dirTag);
-				index ++;
+				index++;
 			}
 
 			outDirSize = relativeOutputDirs.size();
@@ -205,9 +205,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			it = relativeOutputDirs.iterator();
 			while (it.hasNext()) {
 				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("outDir" + index , it.next().toString());
+				dirTag.putString("outDir" + index, it.next().toString());
 				outList.add(dirTag);
-				index ++;
+				index++;
 			}
 		}
 
@@ -225,26 +225,26 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 		relativeInputDirs = new HashSet<>();
 		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
-		for(int i = 0; i < nbt.getInt("inDirSize"); i++) {
+		for (int i = 0; i < nbt.getInt("inDirSize"); i++) {
 			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
 		}
 
 		relativeOutputDirs = new HashSet<>();
 		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
-		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
+		for (int i = 0; i < nbt.getInt("outDirSize"); i++) {
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
 	}
 
 	@Override
 	public void invalidateCapability() {
-		if(holder != null) {
+		if (holder != null) {
 			holder.invalidate();
 		}
-		if(childInput != null) {
+		if (childInput != null) {
 			childInput.invalidate();
 		}
-		if(childOutput != null) {
+		if (childOutput != null) {
 			childOutput.invalidate();
 		}
 
@@ -256,10 +256,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		sideCaps = new LazyOptional[6];
 		if (isSided) {
 			Arrays.fill(sideCaps, LazyOptional.empty());
-			if(relativeInputDirs.size() > 0) {
+			if (relativeInputDirs.size() > 0) {
 				setInputCaps();
 			}
-			if(relativeOutputDirs.size() > 0) {
+			if (relativeOutputDirs.size() > 0) {
 				setOutputCaps();
 			}
 		} else {
@@ -278,7 +278,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
 		Direction facing = owner.getFacing();
-		for(Direction dir : relativeInputDirs) {
+		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
@@ -298,12 +298,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
 		Direction facing = owner.getFacing();
-		for(Direction dir : relativeOutputDirs) {
+		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
 
-	public List<ItemStack> getInputs(){
+	public List<ItemStack> getInputs() {
 		List<ItemStack> inputs = new ArrayList<>();
 		for (int i = 0; i < inputs(); i++) {
 			inputs.add(getStackInSlot(inputIndex() + i));
@@ -311,7 +311,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return inputs;
 	}
 
-	public List<ItemStack> getOutputs(){
+	public List<ItemStack> getOutputs() {
 		List<ItemStack> outputs = new ArrayList<>();
 		for (int i = 0; i < outputs(); i++) {
 			outputs.add(getStackInSlot(outputIndex() + i));
@@ -319,7 +319,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return outputs;
 	}
 
-	public List<ItemStack> getByproducts(){
+	public List<ItemStack> getByproducts() {
 		List<ItemStack> byprouducts = new ArrayList<>();
 		for (int i = 0; i < byproducts(); i++) {
 			byprouducts.add(getStackInSlot(byproductIndex() + i));
@@ -327,7 +327,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return byprouducts;
 	}
 
-	public List<ItemStack> getUpgrades(){
+	public List<ItemStack> getUpgrades() {
 		List<ItemStack> upgrades = new ArrayList<>();
 		for (int i = 0; i < upgrades(); i++) {
 			upgrades.add(getStackInSlot(upgradeIndex() + i));
@@ -341,14 +341,15 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	}
 
 	public boolean isInRange(Player player) {
-		if(!hasOwner) {
+		if (!hasOwner) {
 			return true;
 		}
 		BlockPos pos = owner.getBlockPos();
-		return owner.getLevel().getBlockEntity(pos) == owner && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+		return owner.getLevel().getBlockEntity(pos) == owner
+				&& player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 
-	public NonNullList<ItemStack> getItems(){
+	public NonNullList<ItemStack> getItems() {
 		return stacks;
 	}
 
@@ -361,7 +362,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		private int[] indexes;
 		private CapabilityInventory parent;
 
-		public ChildInventoryHandler(NonNullList<ItemStack> stacks, CapabilityInventory parent, int...indexes) {
+		public ChildInventoryHandler(NonNullList<ItemStack> stacks, CapabilityInventory parent, int... indexes) {
 			super(stacks);
 			this.parent = parent;
 			this.indexes = indexes;

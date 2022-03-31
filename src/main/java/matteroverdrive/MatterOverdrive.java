@@ -22,36 +22,36 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD)
 public class MatterOverdrive {
 
-    public static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 
-    public MatterOverdrive() {
-    	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-    	SoundRegister.SOUNDS.register(bus);
-    	DeferredRegisters.BLOCKS.register(bus);
+	public MatterOverdrive() {
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		SoundRegister.SOUNDS.register(bus);
+		DeferredRegisters.BLOCKS.register(bus);
 		DeferredRegisters.ITEMS.register(bus);
 		DeferredRegisters.TILES.register(bus);
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
-    }
+	}
 
-    @SubscribeEvent
+	@SubscribeEvent
 	public static void onCommonSetup(FMLCommonSetupEvent event) {
-    	NetworkHandler.init();
-    }
+		NetworkHandler.init();
+	}
 
-    @SubscribeEvent
+	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 
-    }
+	}
 
-    @SubscribeEvent
+	@SubscribeEvent
 	public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
 
-    }
+	}
 
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-    	ClientRegister.init();
-    }
+	@SubscribeEvent
+	public static void onClientSetup(FMLClientSetupEvent event) {
+		ClientRegister.init();
+	}
 }

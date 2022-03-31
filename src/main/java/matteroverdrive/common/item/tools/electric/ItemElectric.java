@@ -36,7 +36,9 @@ public class ItemElectric extends OverdriveItem {
 		if (allowdedIn(category)) {
 			items.add(new ItemStack(this));
 			ItemStack filled = new ItemStack(this);
-			filled.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {h.receiveEnergy(h.getMaxEnergyStored(), false);});
+			filled.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+				h.receiveEnergy(h.getMaxEnergyStored(), false);
+			});
 			items.add(filled);
 		}
 	}
@@ -48,8 +50,9 @@ public class ItemElectric extends OverdriveItem {
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		if(stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-			CapabilityEnergyStorage cap = (CapabilityEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve().get();
+		if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+			CapabilityEnergyStorage cap = (CapabilityEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast()
+					.resolve().get();
 			return cap.getEnergyStored() < cap.getMaxEnergyStored();
 		}
 		return super.isBarVisible(stack);
@@ -57,9 +60,9 @@ public class ItemElectric extends OverdriveItem {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		if(stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+		if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
 			return (int) Math.round(stack.getCapability(CapabilityEnergy.ENERGY).map(h -> {
-				if(h.getMaxEnergyStored() > 0) {
+				if (h.getMaxEnergyStored() > 0) {
 					return 13.0 * h.getEnergyStored() / h.getMaxEnergyStored();
 				} else {
 					return 13.0;
@@ -73,7 +76,8 @@ public class ItemElectric extends OverdriveItem {
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, level, tooltips, advanced);
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(), h.getMaxEnergyStored()).withStyle(ChatFormatting.GRAY));
+			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(),
+					h.getMaxEnergyStored()).withStyle(ChatFormatting.GRAY));
 		});
 	}
 
@@ -85,7 +89,7 @@ public class ItemElectric extends OverdriveItem {
 		}
 		// had to expose cap because it whined about tag not being effectively final
 		LazyOptional<IEnergyStorage> cap = stack.getCapability(CapabilityEnergy.ENERGY);
-		if(cap.isPresent()) {
+		if (cap.isPresent()) {
 			CapabilityEnergyStorage energy = ((CapabilityEnergyStorage) cap.resolve().get());
 			tag.put(energy.getSaveKey(), energy.serializeNBT());
 		}

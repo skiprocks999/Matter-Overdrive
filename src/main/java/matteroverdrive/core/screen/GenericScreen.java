@@ -24,7 +24,8 @@ import net.minecraft.world.inventory.Slot;
 
 public class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> implements IScreenWrapper {
 
-	protected ResourceLocation defaultBackground = new ResourceLocation(References.ID + ":textures/screen/component/base.png");
+	protected ResourceLocation defaultBackground = new ResourceLocation(
+			References.ID + ":textures/screen/component/base.png");
 	protected Set<IGuiComponent> components = new HashSet<>();
 	protected int playerInvOffset = 0;
 

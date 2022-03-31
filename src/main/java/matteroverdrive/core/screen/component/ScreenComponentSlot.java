@@ -26,15 +26,17 @@ public class ScreenComponentSlot extends ScreenComponent {
 	}
 
 	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth, final int guiHeight) {
+	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
+			final int guiHeight) {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight());
+		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(),
+				type.getWidth(), type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 	}
 
 	public enum SlotType {
-		GENERIC(0,0,0,0);
+		GENERIC(0, 0, 0, 0);
 
 		private final int width;
 		private final int height;

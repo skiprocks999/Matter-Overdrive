@@ -12,17 +12,18 @@ public class ItemEnergyWeapon extends ItemElectric {
 
 	private int defaultUsage = 0;
 
-	public ItemEnergyWeapon(Properties properties, int maxStorage, boolean hasInput, boolean hasOutput, int defaultUsage) {
+	public ItemEnergyWeapon(Properties properties, int maxStorage, boolean hasInput, boolean hasOutput,
+			int defaultUsage) {
 		super(properties, maxStorage, hasInput, hasOutput);
 		this.defaultUsage = defaultUsage;
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		if(!level.isClientSide) {
+		if (!level.isClientSide) {
 			ItemStack handStack = player.getItemInHand(hand);
 			handStack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
-				((CapabilityEnergyStorage)h).removeEnergy(defaultUsage);
+				((CapabilityEnergyStorage) h).removeEnergy(defaultUsage);
 			});
 		}
 		return InteractionResultHolder.pass(player.getItemInHand(hand));

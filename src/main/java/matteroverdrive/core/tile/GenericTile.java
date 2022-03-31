@@ -80,13 +80,13 @@ public class GenericTile extends BlockEntity implements Nameable {
 
 	public void addCapability(IOverdriveCapability cap) {
 		boolean valid = true;
-		for(IOverdriveCapability i : capabilities) {
-			if(i.getCapabilityType() == cap.getCapabilityType()) {
+		for (IOverdriveCapability i : capabilities) {
+			if (i.getCapabilityType() == cap.getCapabilityType()) {
 				valid = false;
 				break;
 			}
 		}
-		if(valid) {
+		if (valid) {
 			capabilities.add(cap);
 		} else {
 			throw new RuntimeException("error: capability type " + cap.getCapabilityType() + " already added");
@@ -94,8 +94,8 @@ public class GenericTile extends BlockEntity implements Nameable {
 	}
 
 	public boolean hasCapability(CapabilityType type) {
-		for(IOverdriveCapability cap : capabilities) {
-			if(cap.getCapabilityType() == type) {
+		for (IOverdriveCapability cap : capabilities) {
+			if (cap.getCapabilityType() == type) {
 				return true;
 			}
 		}
@@ -152,7 +152,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 	public Direction getFacing() {
 		Level world = getLevel();
 		BlockState state = world.getBlockState(getBlockPos());
-		if(state.hasProperty(GenericEntityBlock.FACING)) {
+		if (state.hasProperty(GenericEntityBlock.FACING)) {
 			return state.getValue(GenericEntityBlock.FACING);
 		}
 		return Direction.UP;
@@ -166,9 +166,8 @@ public class GenericTile extends BlockEntity implements Nameable {
 		return array;
 	}
 
-
 	@Override
-	//TODO allow translations
+	// TODO allow translations
 	public Component getName() {
 		return new TextComponent(References.ID + ".default.tile.name");
 	}

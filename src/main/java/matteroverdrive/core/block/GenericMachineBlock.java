@@ -27,7 +27,8 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
 
 	protected GenericMachineBlock(BlockEntitySupplier<BlockEntity> supplier) {
-		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops());
+		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion()
+				.requiresCorrectToolForDrops());
 		blockEntitySupplier = supplier;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
@@ -35,7 +36,8 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if (!(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING)) && tile instanceof GenericTile generic && generic.hasCapability(CapabilityType.Item)) {
+		if (!(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING))
+				&& tile instanceof GenericTile generic && generic.hasCapability(CapabilityType.Item)) {
 			CapabilityInventory cap = generic.exposeCapability(CapabilityType.Item);
 			Containers.dropContents(worldIn, pos, new SimpleContainer(cap.getItemsArray()));
 		}
@@ -54,13 +56,14 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if(level.isClientSide) {
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+			BlockHitResult hit) {
+		if (level.isClientSide) {
 			return InteractionResult.SUCCESS;
 		}
 		BlockEntity tile = level.getBlockEntity(pos);
 		if (tile instanceof GenericTile generic && generic != null) {
-			if(generic.hasMenu) {
+			if (generic.hasMenu) {
 				player.openMenu(generic.getMenuProvider());
 			}
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);

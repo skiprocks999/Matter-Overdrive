@@ -40,12 +40,11 @@ public class BlockColored extends Block {
 	private static class ColorHandler {
 
 		@SubscribeEvent
-        public static void registerColoredBlocks(ColorHandlerEvent.Block event) {
+		public static void registerColoredBlocks(ColorHandlerEvent.Block event) {
 			MatterOverdrive.LOGGER.info("Fired");
-            BLOCKS.forEach(block ->
-                    event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(), block)
-            );
-        }
+			BLOCKS.forEach(block -> event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(),
+					block));
+		}
 	}
 
 }

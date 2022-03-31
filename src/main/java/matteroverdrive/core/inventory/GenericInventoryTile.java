@@ -13,7 +13,8 @@ public abstract class GenericInventoryTile<T extends BlockEntity> extends Generi
 
 	protected final ContainerData tilecoords;
 
-	protected GenericInventoryTile(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
+	protected GenericInventoryTile(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap,
+			ContainerData tilecoords) {
 		super(menu, id, playerinv, invcap);
 		this.tilecoords = tilecoords;
 		addDataSlots(tilecoords);
