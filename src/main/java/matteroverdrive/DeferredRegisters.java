@@ -38,6 +38,12 @@ public class DeferredRegisters {
 	public static final ColoredRegistryObject<Block> COLORED_TRITANIUM_PLATING = new ColoredRegistryObject<>(
 			color -> registerColoredBlock("tritanium_plating" + "_" + color.toString().toLowerCase(),
 					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
+	public static final ColoredRegistryObject<Block> FLOOT_TILE = new ColoredRegistryObject<>(
+			color -> registerColoredBlock("floor_tile" + "_" + color.toString().toLowerCase(),
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
+	public static final ColoredRegistryObject<Block> FLOOR_TILES = new ColoredRegistryObject<>(
+			color -> registerColoredBlock("floor_tiles" + "_" + color.toString().toLowerCase(),
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
 
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
