@@ -5,14 +5,15 @@ import matteroverdrive.core.datagen.client.blockstates.OverdriveBlockStateProvid
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraft.data.DataGenerator;
 
 @Mod.EventBusSubscriber(modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenerator {
+public class DataGenerators {
 
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		
-		net.minecraft.data.DataGenerator generator = event.getGenerator();
+		DataGenerator generator = event.getGenerator();
 		
 		if(event.includeServer()) {
 			
