@@ -1,6 +1,22 @@
 {
 	"replace":false,
 	"values":[
-	
+		"matteroverdrive:tritanium_plating",
+		"matteroverdrive:tritanium_plating_red",
+		"matteroverdrive:tritanium_plating_green",
+		"matteroverdrive:tritanium_plating_blue",
+		"matteroverdrive:tritanium_plating_black",
+		"matteroverdrive:tritanium_plating_brown",
+		"matteroverdrive:tritanium_plating_purple",
+		"matteroverdrive:tritanium_plating_cyan",
+		"matteroverdrive:tritanium_plating_light_grey",
+		"matteroverdrive:tritanium_plating_dark_grey",
+		"matteroverdrive:tritanium_plating_pink",
+		"matteroverdrive:tritanium_plating_magenta",
+		"matteroverdrive:tritanium_plating_lime_green",
+		"matteroverdrive:tritanium_plating_yellow",
+		"matteroverdrive:tritanium_plating_light_blue" ,
+		"matteroverdrive:tritanium_plating_orange",
+		"matteroverdrive:tritanium_plating_white"
 	]
 }

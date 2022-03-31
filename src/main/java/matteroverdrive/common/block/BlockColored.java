@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -41,7 +40,6 @@ public class BlockColored extends Block {
 
 		@SubscribeEvent
 		public static void registerColoredBlocks(ColorHandlerEvent.Block event) {
-			MatterOverdrive.LOGGER.info("Fired");
 			BLOCKS.forEach(block -> event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(),
 					block));
 		}
