@@ -3,6 +3,7 @@ package matteroverdrive;
 import java.util.function.Supplier;
 
 import matteroverdrive.common.block.BlockColored;
+import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.utils.ColoredRegistryObject;
 import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
@@ -33,10 +34,10 @@ public class DeferredRegisters {
 			References.ID);
 
 	public static final RegistryObject<Block> TRITANIUM_PLATING = registerBlock("tritanium_plating",
-			() -> new Block(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)));
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), false));
 	public static final ColoredRegistryObject<Block> COLORED_TRITANIUM_PLATING = new ColoredRegistryObject<>(
 			color -> registerColoredBlock("tritanium_plating" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color), color.color));
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
 
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,

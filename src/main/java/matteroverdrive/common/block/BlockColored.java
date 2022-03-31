@@ -6,7 +6,6 @@ import java.util.List;
 
 import matteroverdrive.References;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,14 +13,14 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-public class BlockColored extends Block {
+public class BlockColored extends BlockOverdrive {
 
 	private static final List<BlockColored> BLOCKS = new ArrayList<>();
 
 	private int color;
 
-	public BlockColored(Properties properties, int color) {
-		super(properties);
+	public BlockColored(Properties properties, int color, boolean useLootTable) {
+		super(properties, useLootTable);
 		this.color = color;
 		BLOCKS.add(this);
 	}
