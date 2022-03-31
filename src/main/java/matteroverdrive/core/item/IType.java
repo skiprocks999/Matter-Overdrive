@@ -5,5 +5,5 @@ package matteroverdrive.core.item;
 public interface IType {
 
 	public String regName();
-	
+
 }

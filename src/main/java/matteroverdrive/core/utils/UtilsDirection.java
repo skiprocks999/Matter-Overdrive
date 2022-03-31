@@ -13,5 +13,5 @@ public class UtilsDirection {
 		}
 		return Direction.from3DDataValue(RELATIVE_MATRIX[main.ordinal()][relative.ordinal()]);
 	}
-	
+
 }

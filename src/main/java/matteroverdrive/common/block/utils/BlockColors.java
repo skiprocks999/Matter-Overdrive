@@ -20,10 +20,10 @@ public enum BlockColors {
 	LIGHT_BLUE(135, 206, 250, 1),
 	ORANGE(255, 165, 0, 1),
 	WHITE(255, 255, 255, 1);
-	
+
 	public final int color;
 	private BlockColors(int r, int g, int b, int a) {
 		color = UtilsRendering.getRGBA(a, r, g, b);
 	}
-	
+
 }

@@ -14,7 +14,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 
 	private final SlotType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
-	
+
 	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y) {
 		super(new ResourceLocation(References.ID + ":textures/screen/component/slot.png"), gui, x, y);
 		this.type = type;
@@ -32,10 +32,10 @@ public class ScreenComponentSlot extends ScreenComponent {
 		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 	}
-	
+
 	public enum SlotType {
 		GENERIC(0,0,0,0);
-		
+
 		private final int width;
 		private final int height;
 		private final int textureX;

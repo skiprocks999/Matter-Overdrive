@@ -32,47 +32,47 @@ import net.minecraftforge.items.ItemStackHandler;
 public class CapabilityInventory extends ItemStackHandler implements IOverdriveCapability {
 
 	private TriPredicate<Integer, ItemStack, CapabilityInventory> valid = (slot, item, inv) -> true;
-	
+
 	private HashSet<Direction> relativeInputDirs;
 	private HashSet<Direction> relativeOutputDirs;
-	
+
 	private boolean isSided = false;
-	
+
 	private int inputs = 0;
 	private int outputs = 0;
 	private int byproducts = 0;
 	//not included in child cap
 	private int upgrades = 0;
-	
+
 	@Nullable
 	private GenericTile owner;
 	private boolean hasOwner = false;
-	
+
 	private LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
-	
+
 	private LazyOptional<IItemHandlerModifiable> childInput;
 	private LazyOptional<IItemHandlerModifiable> childOutput;
 	// Down Up North South West East
 	private LazyOptional<IItemHandlerModifiable>[] sideCaps = new LazyOptional[6];
-	
+
 	public CapabilityInventory() {
 		super();
 	}
-	
+
 	public CapabilityInventory(int size) {
 		super(size);
 	}
-	
+
 	public CapabilityInventory(NonNullList<ItemStack> stacks) {
 		super(stacks);
 	}
-	
+
 	public CapabilityInventory setOwner(GenericTile tile) {
 		owner = tile;
 		hasOwner = true;
 		return this;
 	}
-	
+
 	public CapabilityInventory setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
@@ -95,59 +95,59 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return this;
 	}
-	
+
 	public CapabilityInventory setInputs(int count) {
 		inputs = count;
 		return this;
 	}
-	
+
 	public CapabilityInventory setOutputs(int count) {
 		outputs = count;
 		return this;
 	}
-	
+
 	public CapabilityInventory setByproducts(int count) {
 		byproducts = count;
 		return this;
 	}
-	
+
 	public CapabilityInventory setUpgrades(int count) {
 		upgrades = count;
 		return this;
 	}
-	
+
 	public int inputs() {
 		return inputs;
 	}
-	
+
 	public int outputs() {
 		return outputs;
 	}
-	
+
 	public int byproducts() {
 		return byproducts;
 	}
-	
+
 	public int upgrades() {
 		return upgrades;
 	}
-	
+
 	public int inputIndex() {
 		return 0;
 	}
-	
+
 	public int outputIndex() {
 		return inputIndex() + inputs;
 	}
-	
+
 	public int byproductIndex() {
 		return outputIndex() + outputs;
 	}
-	
+
 	public int upgradeIndex() {
 		return byproductIndex() + byproducts;
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (matchesCapability(cap)) {
@@ -159,7 +159,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return LazyOptional.empty();
 	}
-	
+
 	@Override
 	public <T> boolean matchesCapability(Capability<T> cap) {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
@@ -169,26 +169,26 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public CapabilityType getCapabilityType() {
 		return CapabilityType.Item;
 	}
-	
+
 	@Override
 	public void onLoad(BlockEntity tile) {
 		refreshCapability();
 	}
-	
+
 	@Override
 	public String getSaveKey() {
 		return "inventory";
 	}
-	
+
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = super.serializeNBT();
-		
+
 		ListTag inList = new ListTag();
 		ListTag outList = new ListTag();
 		int inDirSize = 0;
 		int outDirSize = 0;
-		
+
 		if(isSided) {
 			inDirSize = relativeInputDirs.size();
 			int index = 0;
@@ -199,7 +199,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				inList.add(dirTag);
 				index ++;
 			}
-			
+
 			outDirSize = relativeOutputDirs.size();
 			index = 0;
 			it = relativeOutputDirs.iterator();
@@ -210,32 +210,32 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				index ++;
 			}
 		}
-		
+
 		tag.putInt("inDirSize", inDirSize);
 		tag.put("inDirs", inList);
 		tag.putInt("outDirSize", outDirSize);
 		tag.put("outDirs", inList);
-		
+
 		return tag;
 	}
-	
+
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		super.deserializeNBT(nbt);
-		
+
 		relativeInputDirs = new HashSet<>();
 		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
 		for(int i = 0; i < nbt.getInt("inDirSize"); i++) {
 			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
 		}
-		
+
 		relativeOutputDirs = new HashSet<>();
 		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
 		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
 	}
-	
+
 	@Override
 	public void invalidateCapability() {
 		if(holder != null) {
@@ -247,9 +247,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		if(childOutput != null) {
 			childOutput.invalidate();
 		}
-		
+
 	}
-	
+
 	@Override
 	public void refreshCapability() {
 		invalidateCapability();
@@ -266,7 +266,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			holder = LazyOptional.of(() -> this);
 		}
 	}
-	
+
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> {
 			int[] slots = new int[inputs()];
@@ -282,7 +282,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
-	
+
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> {
 			int[] slots = new int[outputs() + byproducts()];
@@ -302,7 +302,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
-	
+
 	public List<ItemStack> getInputs(){
 		List<ItemStack> inputs = new ArrayList<>();
 		for (int i = 0; i < inputs(); i++) {
@@ -310,7 +310,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return inputs;
 	}
-	
+
 	public List<ItemStack> getOutputs(){
 		List<ItemStack> outputs = new ArrayList<>();
 		for (int i = 0; i < outputs(); i++) {
@@ -318,7 +318,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return outputs;
 	}
-	
+
 	public List<ItemStack> getByproducts(){
 		List<ItemStack> byprouducts = new ArrayList<>();
 		for (int i = 0; i < byproducts(); i++) {
@@ -326,7 +326,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return byprouducts;
 	}
-	
+
 	public List<ItemStack> getUpgrades(){
 		List<ItemStack> upgrades = new ArrayList<>();
 		for (int i = 0; i < upgrades(); i++) {
@@ -334,12 +334,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return upgrades;
 	}
-	
+
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return valid.test(slot, stack, this);
 	}
-	
+
 	public boolean isInRange(Player player) {
 		if(!hasOwner) {
 			return true;
@@ -347,31 +347,31 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		BlockPos pos = owner.getBlockPos();
 		return owner.getLevel().getBlockEntity(pos) == owner && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
-	
+
 	public NonNullList<ItemStack> getItems(){
 		return stacks;
 	}
-	
+
 	public ItemStack[] getItemsArray() {
 		return getItems().toArray(new ItemStack[getItems().size()]);
 	}
-	
+
 	private class ChildInventoryHandler extends CapabilityInventory {
 
 		private int[] indexes;
 		private CapabilityInventory parent;
-		
+
 		public ChildInventoryHandler(NonNullList<ItemStack> stacks, CapabilityInventory parent, int...indexes) {
 			super(stacks);
 			this.parent = parent;
 			this.indexes = indexes;
 		}
-		
+
 		@Override
 		protected void onContentsChanged(int slot) {
 			parent.setStackInSlot(indexes[slot], getStackInSlot(slot).copy());
 		}
-		
+
 	}
 
 }

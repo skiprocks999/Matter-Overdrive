@@ -24,38 +24,38 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	private HashSet<Direction> relativeInputDirs;
 	private HashSet<Direction> relativeOutputDirs;
-	
+
 	private boolean isSided = false;
-	
+
 	private GenericTile owner;
 	private boolean hasTile;
-	
+
 	private boolean hasInput = false;
 	private boolean hasOutput = false;
-	
+
 	private int maxStorage = 0;
 	private int currStorage = 0;
-	
+
 	private LazyOptional<IEnergyStorage> holder = LazyOptional.of(() -> this);
-	
+
 	private LazyOptional<IEnergyStorage> childInput;
 	private LazyOptional<IEnergyStorage> childOutput;
 	// Down Up North South West East
 	private LazyOptional<IEnergyStorage>[] sideCaps = new LazyOptional[6];
-	
+
 	public CapabilityEnergyStorage(int maxStorage, boolean hasInput, boolean hasOutput) {
 		//will be overwritten by nbt load!
 		this.maxStorage = maxStorage;
 		this.hasInput = hasInput;
 		this.hasOutput = hasOutput;
 	}
-	
+
 	public CapabilityEnergyStorage setOwner(GenericTile tile) {
 		owner = tile;
 		hasTile = true;
 		return this;
 	}
-	
+
 	public CapabilityEnergyStorage setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
@@ -78,7 +78,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		}
 		return this;
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (matchesCapability(cap)) {
@@ -95,12 +95,12 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("stored", currStorage);
-		
+
 		ListTag inList = new ListTag();
 		ListTag outList = new ListTag();
 		int inDirSize = 0;
 		int outDirSize = 0;
-		
+
 		if(isSided) {
 			inDirSize = relativeInputDirs.size();
 			int index = 0;
@@ -111,7 +111,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 				inList.add(dirTag);
 				index ++;
 			}
-			
+
 			outDirSize = relativeOutputDirs.size();
 			index = 0;
 			it = relativeOutputDirs.iterator();
@@ -122,35 +122,35 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 				index ++;
 			}
 		}
-		
+
 		tag.putInt("inDirSize", inDirSize);
 		tag.put("inDirs", inList);
 		tag.putInt("outDirSize", outDirSize);
 		tag.put("outDirs", inList);
-		
+
 		tag.putInt("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
-		
+
 		return tag;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		currStorage = nbt.getInt("stored");
-		
+
 		relativeInputDirs = new HashSet<>();
 		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
 		for(int i = 0; i < nbt.getInt("inDirSize"); i++) {
 			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
 		}
-		
+
 		relativeOutputDirs = new HashSet<>();
 		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
 		for(int i = 0; i < nbt.getInt("outDirSize"); i++) {
 			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
 		}
-		
+
 		maxStorage = nbt.getInt("maxStorage");
 		hasInput = nbt.getBoolean("hasInput");
 		hasOutput = nbt.getBoolean("hasOutput");
@@ -227,9 +227,9 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		if(childOutput != null) {
 			childOutput.invalidate();
 		}
-		
+
 	}
-	
+
 	@Override
 	public void refreshCapability() {
 		invalidateCapability();
@@ -246,7 +246,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			holder = LazyOptional.of(() -> this);
 		}
 	}
-	
+
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(true, false, this));
 		Direction facing = owner.getFacing();
@@ -254,7 +254,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
 	}
-	
+
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(false, true, this));
 		Direction facing = owner.getFacing();
@@ -262,19 +262,19 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
-	
+
 	public void updateMaxEnergyStorage(int maxStorage) {
 		this.maxStorage = maxStorage;
 	}
-	
+
 	public void updateInput(boolean input) {
 		this.hasInput = input;
 	}
-	
+
 	public void updateOutput(boolean output) {
 		this.hasOutput = output;
 	}
-	
+
 	// method for us to allow for energy removal on items/blocks that aren't
 	// meant to provide energy
 	public int removeEnergy(int amt) {
@@ -282,7 +282,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		currStorage -= taken;
 		return taken;
 	}
-	
+
 	// method for us to allow energy addition on items/blocks that aren't
 	// meant to recieve power
 	public int giveEnergy(int amt) {
@@ -296,17 +296,17 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public String getSaveKey() {
 		return "energy";
 	}
-	
+
 	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {
 
 		private CapabilityEnergyStorage parent;
-		
+
 		public ChildCapabilityEnergyStorage(boolean isInput, boolean isOutput, CapabilityEnergyStorage parent) {
 			super(parent.maxStorage, isInput, isOutput);
 			this.parent = parent;
 			currStorage = parent.currStorage;
 		}
-		
+
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate) {
 			int returned = super.extractEnergy(maxExtract, simulate);
@@ -315,7 +315,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			}
 			return returned;
 		}
-		
+
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate) {
 			int returned = super.receiveEnergy(maxReceive, simulate);
@@ -324,7 +324,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			}
 			return returned;
 		}
-		
+
 	}
 
 }

@@ -68,5 +68,5 @@ public class PacketUpdateTile {
 	public static PacketUpdateTile decode(FriendlyByteBuf buf) {
 		return new PacketUpdateTile(buf.readBlockPos(), buf.readNbt(), buf.readBoolean());
 	}
-	
+
 }

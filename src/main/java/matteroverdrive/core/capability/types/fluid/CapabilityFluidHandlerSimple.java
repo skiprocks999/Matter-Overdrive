@@ -27,7 +27,7 @@ public class CapabilityFluidHandlerSimple implements IFluidHandler, IOverdriveCa
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -81,9 +81,9 @@ public class CapabilityFluidHandlerSimple implements IFluidHandler, IOverdriveCa
 	@Override
 	public void onLoad(BlockEntity tile) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public CapabilityType getCapabilityType() {
 		return CapabilityType.Fluid;
@@ -92,13 +92,13 @@ public class CapabilityFluidHandlerSimple implements IFluidHandler, IOverdriveCa
 	@Override
 	public void invalidateCapability() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void refreshCapability() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

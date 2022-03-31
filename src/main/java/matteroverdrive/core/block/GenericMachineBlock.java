@@ -25,13 +25,13 @@ import net.minecraft.world.phys.BlockHitResult;
 public class GenericMachineBlock extends WaterloggableEntityBlock {
 
 	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
-	
+
 	protected GenericMachineBlock(BlockEntitySupplier<BlockEntity> supplier) {
 		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops());
 		blockEntitySupplier = supplier;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
-	
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
@@ -41,7 +41,7 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
@@ -52,7 +52,7 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 		super.createBlockStateDefinition(builder);
 		builder.add(FACING);
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if(level.isClientSide) {

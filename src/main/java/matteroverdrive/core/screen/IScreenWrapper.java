@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
 public interface IScreenWrapper {
-	
+
 	void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h);
 
 	void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h);

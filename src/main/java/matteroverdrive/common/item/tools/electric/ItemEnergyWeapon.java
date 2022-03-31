@@ -11,12 +11,12 @@ import net.minecraftforge.energy.CapabilityEnergy;
 public class ItemEnergyWeapon extends ItemElectric {
 
 	private int defaultUsage = 0;
-	
+
 	public ItemEnergyWeapon(Properties properties, int maxStorage, boolean hasInput, boolean hasOutput, int defaultUsage) {
 		super(properties, maxStorage, hasInput, hasOutput);
 		this.defaultUsage = defaultUsage;
 	}
-	
+
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 		if(!level.isClientSide) {
@@ -27,7 +27,7 @@ public class ItemEnergyWeapon extends ItemElectric {
 		}
 		return InteractionResultHolder.pass(player.getItemInHand(hand));
 	}
-	
+
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged;

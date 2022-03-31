@@ -25,49 +25,49 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class GenericTile extends BlockEntity implements Nameable {
-	
+
 	private List<IOverdriveCapability> capabilities = new ArrayList<>();
-	
+
 	public boolean hasMenu = false;
 	private MenuProvider menu;
-	
+
 	public boolean hasTicker = false;
 	private Ticker ticker;
-	
+
 	public boolean hasPacketHandler = false;
 	private PacketHandler handler;
-	
+
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-	
+
 	public void setMenuProvider(MenuProvider menu) {
 		hasMenu = true;
 		this.menu = menu;
 	}
-	
+
 	public MenuProvider getMenuProvider() {
 		return menu;
 	}
-	
+
 	public void setTicker(Ticker ticker) {
 		hasTicker = true;
 		this.ticker = ticker;
 	}
-	
+
 	public Ticker getTicker() {
 		return ticker;
 	}
-	
+
 	public void setPacketHandler(PacketHandler handler) {
 		hasPacketHandler = true;
 		this.handler = handler;
 	}
-	
+
 	public PacketHandler getPacketHandler() {
 		return handler;
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		for (IOverdriveCapability i : capabilities) {
@@ -77,7 +77,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		return super.getCapability(cap, side);
 	}
-	
+
 	public void addCapability(IOverdriveCapability cap) {
 		boolean valid = true;
 		for(IOverdriveCapability i : capabilities) {
@@ -92,7 +92,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 			throw new RuntimeException("error: capability type " + cap.getCapabilityType() + " already added");
 		}
 	}
-	
+
 	public boolean hasCapability(CapabilityType type) {
 		for(IOverdriveCapability cap : capabilities) {
 			if(cap.getCapabilityType() == type) {
@@ -101,7 +101,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		return false;
 	}
-	
+
 	public <T extends IOverdriveCapability> T exposeCapability(CapabilityType type) {
 		for (IOverdriveCapability cap : capabilities) {
 			if (cap.getCapabilityType() == type) {
@@ -110,7 +110,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -118,13 +118,13 @@ public class GenericTile extends BlockEntity implements Nameable {
 			cap.onLoad(this);
 		}
 	}
-	
+
 	public void refreshCapabilities() {
 		for (IOverdriveCapability cap : capabilities) {
 			cap.refreshCapability();
 		}
 	}
-	
+
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
@@ -132,7 +132,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 			cap.invalidateCapability();
 		}
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
@@ -140,7 +140,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 			tag.put(cap.getSaveKey(), cap.serializeNBT());
 		}
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
@@ -148,7 +148,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
 	}
-	
+
 	public Direction getFacing() {
 		Level world = getLevel();
 		BlockState state = world.getBlockState(getBlockPos());
@@ -157,7 +157,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		return Direction.UP;
 	}
-	
+
 	public SimpleContainerData getCoordsData() {
 		SimpleContainerData array = new SimpleContainerData(3);
 		array.set(0, worldPosition.getX());
@@ -172,5 +172,5 @@ public class GenericTile extends BlockEntity implements Nameable {
 	public Component getName() {
 		return new TextComponent(References.ID + ".default.tile.name");
 	}
-	
+
 }

@@ -27,7 +27,7 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 	protected ResourceLocation defaultBackground = new ResourceLocation(References.ID + ":textures/screen/component/base.png");
 	protected Set<IGuiComponent> components = new HashSet<>();
 	protected int playerInvOffset = 0;
-	
+
 	public GenericScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
 		super(pMenu, pPlayerInventory, pTitle);
 		initializeComponents();

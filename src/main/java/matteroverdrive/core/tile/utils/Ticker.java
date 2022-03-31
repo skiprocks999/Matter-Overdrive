@@ -15,7 +15,7 @@ public class Ticker {
 	protected Consumer<Ticker> tickClient;
 	protected Consumer<Ticker> tickServer;
 	private long ticks = 0;
-	
+
 	public Ticker(GenericTile owner) {
 		this.owner = owner;
 	}
@@ -79,5 +79,5 @@ public class Ticker {
 		}
 	}
 
-	
+
 }

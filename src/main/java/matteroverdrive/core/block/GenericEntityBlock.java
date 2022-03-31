@@ -22,11 +22,11 @@ import net.minecraft.world.level.storage.loot.LootContext;
 public abstract class GenericEntityBlock extends BaseEntityBlock {
 
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-	
+
 	protected GenericEntityBlock(Properties properties) {
 		super(properties);
 	}
-	
+
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return (world, pos, blockstate, tile) -> {
@@ -35,12 +35,12 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			}
 		};
 	}
-	
+
 	@Override
 	public RenderShape getRenderShape(BlockState state) {
 		return RenderShape.MODEL;
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		if (state.hasProperty(FACING)) {
@@ -49,7 +49,7 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		}
 		return super.rotate(state, rot);
 	}
-	
+
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		if (state.hasProperty(FACING)) {
@@ -57,12 +57,12 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		}
 		return super.mirror(state, mirrorIn);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return Arrays.asList(new ItemStack(this));
 	}
-	
+
 	@Override
 	public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean moving) {
 		super.onRemove(oldState, level, pos, newState, moving);

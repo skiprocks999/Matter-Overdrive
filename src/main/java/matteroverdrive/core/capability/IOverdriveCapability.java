@@ -7,17 +7,17 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public interface IOverdriveCapability extends ICapabilitySerializable<CompoundTag> {
-	
+
 	public void onLoad(BlockEntity tile);
-	
+
 	public <T> boolean matchesCapability(Capability<T> cap);
-	
+
 	CapabilityType getCapabilityType();
-	
+
 	void invalidateCapability();
-	
+
 	void refreshCapability();
-	
+
 	String getSaveKey();
-	
+
 }

@@ -27,7 +27,7 @@ public class CapabilityFluidHandlerMulti implements IFluidHandler, IOverdriveCap
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class CapabilityFluidHandlerMulti implements IFluidHandler, IOverdriveCap
 	@Override
 	public void onLoad(BlockEntity tile) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -92,13 +92,13 @@ public class CapabilityFluidHandlerMulti implements IFluidHandler, IOverdriveCap
 	@Override
 	public void invalidateCapability() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void refreshCapability() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

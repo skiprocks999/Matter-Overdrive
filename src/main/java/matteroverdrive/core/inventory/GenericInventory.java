@@ -16,11 +16,11 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected final int slotCount;
 	protected int playerInvOffset = 0;
 	private int nextIndex = 0;
-	
+
 	public int nextIndex() {
 		return nextIndex++;
 	}
-	
+
 	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap) {
 		super(menu, id);
 		world = playerinv.player.level;
@@ -30,7 +30,7 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		addInvSlots(invcap, playerinv);
 		player = playerinv.player;
 	}
-	
+
 	protected void addPlayerInventory(Inventory playerinv) {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
@@ -42,7 +42,7 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 			addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset));
 		}
 	}
-	
+
 	public abstract void addInvSlots(CapabilityInventory invcap, Inventory playerinv);
 
 	@Override

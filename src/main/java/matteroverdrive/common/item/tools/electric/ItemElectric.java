@@ -23,14 +23,14 @@ public class ItemElectric extends OverdriveItem {
 	private int maxStorage;
 	private boolean hasInput;
 	private boolean hasOutput;
-	
+
 	public ItemElectric(Properties pProperties, int maxStorage, boolean hasInput, boolean hasOutput) {
 		super(pProperties);
 		this.maxStorage = maxStorage;
 		this.hasInput = hasInput;
 		this.hasOutput = hasOutput;
 	}
-	
+
 	@Override
 	public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
 		if (allowdedIn(category)) {
@@ -40,12 +40,12 @@ public class ItemElectric extends OverdriveItem {
 			items.add(filled);
 		}
 	}
-	
+
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
 		return new CapabilityEnergyStorage(maxStorage, hasInput, hasOutput);
 	}
-	
+
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		if(stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
@@ -54,13 +54,13 @@ public class ItemElectric extends OverdriveItem {
 		}
 		return super.isBarVisible(stack);
 	}
-	
+
 	@Override
 	public int getBarWidth(ItemStack stack) {
 		if(stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
 			return (int) Math.round(stack.getCapability(CapabilityEnergy.ENERGY).map(h -> {
 				if(h.getMaxEnergyStored() > 0) {
-					return 13.0 * (float) h.getEnergyStored() / (float) h.getMaxEnergyStored();
+					return 13.0 * h.getEnergyStored() / h.getMaxEnergyStored();
 				} else {
 					return 13.0;
 				}
@@ -68,7 +68,7 @@ public class ItemElectric extends OverdriveItem {
 		}
 		return super.getBarWidth(stack);
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, level, tooltips, advanced);
@@ -76,7 +76,7 @@ public class ItemElectric extends OverdriveItem {
 			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(), h.getMaxEnergyStored()).withStyle(ChatFormatting.GRAY));
 		});
 	}
-	
+
 	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		CompoundTag tag = super.getShareTag(stack);
@@ -91,7 +91,7 @@ public class ItemElectric extends OverdriveItem {
 		}
 		return tag;
 	}
-	
+
 	@Override
 	public void readShareTag(ItemStack stack, CompoundTag nbt) {
 		if (nbt != null) {

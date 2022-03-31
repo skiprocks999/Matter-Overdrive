@@ -16,7 +16,7 @@ import net.minecraftforge.network.NetworkDirection;
 public class PacketHandler {
 
 	private GenericTile owner;
-	
+
 	public PacketHandler(GenericTile owner) {
 		this.owner = owner;
 	}
@@ -96,5 +96,5 @@ public class PacketHandler {
 		}
 	}
 
-	
+
 }

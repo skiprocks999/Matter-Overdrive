@@ -1,5 +1,7 @@
 package matteroverdrive;
 
+import org.slf4j.Logger;
+
 import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
@@ -15,7 +17,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
 
 @Mod(References.ID)
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD)
@@ -41,12 +42,12 @@ public class MatterOverdrive {
 
     @SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        
+
     }
 
     @SubscribeEvent
 	public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-    	
+
     }
 
     @SubscribeEvent

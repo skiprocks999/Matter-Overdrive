@@ -9,7 +9,7 @@ public class UtilsRendering {
 	public static void bindTexture(ResourceLocation resource) {
 		RenderSystem.setShaderTexture(0, resource);
 	}
-	
+
 	public static float getRed(int color) {
 		return (color >> 16 & 0xFF) / 255.0F;
 	}
@@ -37,5 +37,5 @@ public class UtilsRendering {
 	public static void color(int color) {
 		RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
 	}
-	
+
 }
