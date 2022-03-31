@@ -26,6 +26,7 @@ public class MatterOverdrive {
     public MatterOverdrive() {
     	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
     	SoundRegister.SOUNDS.register(bus);
+    	DeferredRegisters.init();
     	DeferredRegisters.BLOCKS.register(bus);
 		DeferredRegisters.ITEMS.register(bus);
 		DeferredRegisters.TILES.register(bus);

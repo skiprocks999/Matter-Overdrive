@@ -7,6 +7,24 @@
   "item.matteroverdrive.plasma_shotgun" : "Plasma Shotgun",
   "item.matteroverdrive.omni_tool" : "Omni Tool",
   
+  "block.matteroverdrive.tritainium_plating" : "Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_red" : "Red Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_green" : "Green Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_blue" : "Blue Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_black" : "Black Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_brown" : "Brown Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_purple" : "Purple Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_cyan" : "Cyan Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_light_grey" : "Light Grey Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_dark_grey" : "Dark Grey Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_pink" : "Pink Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_magenta" : "Magenta Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_lime_green" : "Lime Green Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_yellow" : "Yellow Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_light_blue" : "Light Blue Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_orange" : "Orange Tritainium Plating",
+  "block.matteroverdrive.tritainium_plating_white" : "White Tritainium Plating",
+  
   
   "tooltip.matteroverdrive.energystored" : "%1$s / %2$s FE",
   

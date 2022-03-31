@@ -6,6 +6,4 @@ public interface IType {
 
 	public String regName();
 	
-	public String oreDictName();
-	
 }
