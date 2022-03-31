@@ -1,6 +1,8 @@
 {
-  "parent": "block/cube_all",
+  "parent": "matteroverdrive:block/parent/cube_colored_all",
+  "ambientocclusion": false,
   "textures": {
     "all": "matteroverdrive:block/decorative/tritanium_plating_colorless"
+    
   }
 }

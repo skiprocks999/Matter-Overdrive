@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +25,7 @@ public class BlockColored extends Block {
 	public BlockColored(Properties properties, int color) {
 		super(properties);
 		this.color = color;
+		BLOCKS.add(this);
 	}
 	
 	public int getColor() {
@@ -37,9 +39,10 @@ public class BlockColored extends Block {
 	
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	private static class ColorHandler {
-		@SubscribeEvent(priority = EventPriority.HIGHEST)
-        public static void registerSpawnEggColors(ColorHandlerEvent.Item event)
-        {
+		
+		@SubscribeEvent
+        public static void registerColoredBlocks(ColorHandlerEvent.Block event) {
+			MatterOverdrive.LOGGER.info("Fired");
             BLOCKS.forEach(block ->
                     event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(), block)
             );
