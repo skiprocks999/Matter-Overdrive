@@ -13,11 +13,6 @@ hs_err_pid*
 
 # windows
 *.bat
-
-# gradle
-/.gradle
-/build
-!gradlew.bat
  
 # eclipse
 /eclipse
@@ -36,15 +31,6 @@ hs_err_pid*
 /*.iws
 classes/
 
-# secret curse shiz
-curse.json
-gradle/scripts/artifacts.gradle
-gradle/scripts/dependencies.gradle
-gradle/wrapper/gradle-wrapper.jar
-gradle/wrapper/gradle-wrapper.properties
-build.gradle
-*.gradle
-build.gradle
 
 /bin
 /out
