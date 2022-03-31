@@ -17,6 +17,22 @@
 		"matteroverdrive:tritanium_plating_yellow",
 		"matteroverdrive:tritanium_plating_light_blue" ,
 		"matteroverdrive:tritanium_plating_orange",
-		"matteroverdrive:tritanium_plating_white"
+		"matteroverdrive:tritanium_plating_white",
+		"matteroverdrive:floor_tile_pink",
+	    "matteroverdrive:floor_tile_magenta",
+	    "matteroverdrive:floor_tile_light_grey",
+	    "matteroverdrive:floor_tile_blue",
+	    "matteroverdrive:floor_tile_green",
+	    "matteroverdrive:floor_tile_dark_grey",
+	    "matteroverdrive:floor_tile_purple",
+	    "matteroverdrive:floor_tile_black",
+	    "matteroverdrive:floor_tile_white",
+	    "matteroverdrive:floor_tile_orange",
+	    "matteroverdrive:floor_tile_brown",
+	    "matteroverdrive:floor_tile_cyan",
+	    "matteroverdrive:floor_tile_yellow",
+	    "matteroverdrive:floor_tile_red",
+	    "matteroverdrive:floor_tile_light_blue",
+	    "matteroverdrive:floor_tile_lime_green"
 	]
 }
