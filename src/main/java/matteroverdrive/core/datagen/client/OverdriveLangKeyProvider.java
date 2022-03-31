@@ -16,7 +16,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	protected void addTranslations() {
 		for(BlockColors color : BlockColors.values()) {
 			String capName = color.toString().toLowerCase().substring(0, 1).toUpperCase() +  color.toString().toLowerCase().substring(1);
-			add(DeferredRegisters.FLOOT_TILE.get(color).get(), capName + " Floor Tile");
+			add(DeferredRegisters.FLOOR_TILE.get(color).get(), capName + " Floor Tile");
+			add(DeferredRegisters.FLOOR_TILES.get(color).get(), capName + " Floor Tiles");
 		}
 	}
 
