@@ -17,13 +17,15 @@ public class MinableTags extends BlockTagsProvider {
 	@Override
 	protected void addTags() {
 		tag(BlockTags.MINEABLE_WITH_PICKAXE)
-			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]));
-		tag(BlockTags.NEEDS_STONE_TOOL)
-			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]));
-		
-		tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.add(DeferredRegisters.TRITANIUM_PLATING.get())
+			.add(DeferredRegisters.COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
+			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
 			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]));
+		
 		tag(BlockTags.NEEDS_STONE_TOOL)
+			.add(DeferredRegisters.TRITANIUM_PLATING.get())
+			.add(DeferredRegisters.COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
+			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
 			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]));
 	}
 

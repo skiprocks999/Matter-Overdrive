@@ -57,7 +57,7 @@ public class DeferredRegisters {
 	public static final RegistryObject<Item> ITEM_PLASMASHOTGUN = ITEMS.register("plasma_shotgun",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final RegistryObject<Item> OMNI_TOOL = ITEMS.register("omni_tool",
+	public static final RegistryObject<Item> ITEM_OMNITOOL = ITEMS.register("omni_tool",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
 
