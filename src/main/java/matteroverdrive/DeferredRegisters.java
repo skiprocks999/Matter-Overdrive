@@ -4,9 +4,10 @@ import java.util.function.Supplier;
 
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockOverdrive;
-import matteroverdrive.common.block.utils.ColoredRegistryObject;
+import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.core.registers.BulkjRegistryObject;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -35,16 +36,21 @@ public class DeferredRegisters {
 
 	public static final RegistryObject<Block> TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), false));
-	public static final ColoredRegistryObject<Block> COLORED_TRITANIUM_PLATING = new ColoredRegistryObject<>(
+	public static final BulkjRegistryObject<Block> COLORED_TRITANIUM_PLATING = new BulkjRegistryObject<>(
 			color -> registerColoredBlock("tritanium_plating" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
-	public static final ColoredRegistryObject<Block> FLOOR_TILE = new ColoredRegistryObject<>(
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
+	public static final BulkjRegistryObject<Block> FLOOR_TILE = new BulkjRegistryObject<>(
 			color -> registerColoredBlock("floor_tile" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
-	public static final ColoredRegistryObject<Block> FLOOR_TILES = new ColoredRegistryObject<>(
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
+	public static final BulkjRegistryObject<Block> FLOOR_TILES = new BulkjRegistryObject<>(
 			color -> registerColoredBlock("floor_tiles" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), color.color, false), color.color));
+					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
 
+	//South needs no rotation
+	public static final RegistryObject<Block> TRITANIUM_CRATE = registerBlock("tritanium_crate_red",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion(), false));
+	
+	
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));

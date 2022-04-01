@@ -1,8 +1,9 @@
 package matteroverdrive.common.block.utils;
 
+import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.utils.UtilsRendering;
 
-public enum BlockColors {
+public enum BlockColors implements IBulkRegistryObject {
 
 	RED(255, 0, 0, 1), GREEN(0, 128, 0, 1), BLUE(0, 0, 255, 1), BLACK(30, 30, 30, 1), BROWN(139, 69, 19, 1),
 	PURPLE(128, 0, 128, 1), CYAN(0, 255, 255, 1), LIGHT_GREY(211, 211, 211, 1), DARK_GREY(169, 169, 169, 1),
