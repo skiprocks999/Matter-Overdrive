@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -147,6 +148,10 @@ public class GenericTile extends BlockEntity implements Nameable {
 		for (IOverdriveCapability cap : capabilities) {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
+	}
+	
+	public TranslatableComponent getContainerName(String name) {
+		return new TranslatableComponent("container." + name);
 	}
 
 	public Direction getFacing() {

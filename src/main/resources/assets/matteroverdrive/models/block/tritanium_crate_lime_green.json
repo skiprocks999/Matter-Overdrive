@@ -1,0 +1,10 @@
+{
+	"parent" : "block/cube",
+	"loader": "forge:obj",
+	"model": "matteroverdrive:models/block/tritanium_crate_lime_green.obj",
+	"flip-v": true,
+	"textures": {
+		"texture0": "matteroverdrive:block/crate/tritanium_crate_lime_green",
+		"particle" : "#texture0"
+	}
+}

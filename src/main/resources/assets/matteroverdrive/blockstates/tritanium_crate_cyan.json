@@ -1,0 +1,21 @@
+{
+  "variants": {
+		"facing=east": {
+			"model": "matteroverdrive:block/tritanium_crate_cyan",
+			"y": 90
+		},
+		"facing=north": {
+			"model": "matteroverdrive:block/tritanium_crate_cyan",
+			"y": 0
+		},
+		"facing=south": {
+			"model": "matteroverdrive:block/tritanium_crate_cyan",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "matteroverdrive:block/tritanium_crate_cyan",
+			"y": 270
+		}
+	}
+  }
+}

@@ -1,7 +1,7 @@
 package matteroverdrive.core.inventory;
 
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.inventory.slot.SlotContainer;
+import matteroverdrive.core.inventory.slot.vanilla.SlotVanillaContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,12 +34,12 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected void addPlayerInventory(Inventory playerinv) {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset));
+				addSlot(new SlotVanillaContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset));
 			}
 		}
 
 		for (int k = 0; k < 9; ++k) {
-			addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset));
+			addSlot(new SlotVanillaContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset));
 		}
 	}
 

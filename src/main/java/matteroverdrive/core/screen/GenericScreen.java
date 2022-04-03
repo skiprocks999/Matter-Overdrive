@@ -44,7 +44,7 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		if (slot instanceof ISlotType type) {
 			return new ScreenComponentSlot(type.getSlotType(), this, slot.x - 1, slot.y - 1);
 		}
-		return new ScreenComponentSlot(SlotType.GENERIC, this, slot.x - 1, slot.y - 1);
+		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1);
 	}
 
 	@Override

@@ -20,13 +20,15 @@ public class MinableTags extends BlockTagsProvider {
 			.add(DeferredRegisters.TRITANIUM_PLATING.get())
 			.add(DeferredRegisters.COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
 			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
-			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]));
+			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]))
+			.add(DeferredRegisters.TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]));
 		
 		tag(BlockTags.NEEDS_STONE_TOOL)
 			.add(DeferredRegisters.TRITANIUM_PLATING.get())
 			.add(DeferredRegisters.COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
 			.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
-			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]));
+			.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]))
+			.add(DeferredRegisters.TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]));
 	}
 
 }
