@@ -2,24 +2,37 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileTritaniumCrate;
-import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.inventory.GenericInventoryTile;
+import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
+import matteroverdrive.core.inventory.slot.SlotGeneric;
+import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class InventoryTritaniumCrate extends GenericInventoryTile<TileTritaniumCrate> {
+public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTritaniumCrate> {
 
+	public static final int OFFSET = 56;
+	
 	public InventoryTritaniumCrate(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
+		this(id, playerinv, new ItemStackHandler(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
 	}
 	
-	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {
+	public InventoryTritaniumCrate(int id, Inventory playerinv, IItemHandler invcap, ContainerData coords) {
 		super(DeferredRegisters.MENU_TRITANIUMCRATE.get(), id, playerinv, invcap, coords);
 	}
 
 	@Override
-	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
+	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
+		playerInvOffset = OFFSET;
+		if(getHandler() != null) {
+			for(int j = 0; j < 6; ++j) {
+		         for(int k = 0; k < 9; ++k) {
+		            this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA));
+		         }
+			}
+		}
 		
 	}
 

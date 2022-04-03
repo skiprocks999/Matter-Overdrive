@@ -1,16 +1,18 @@
 package matteroverdrive.core.inventory;
 
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.inventory.slot.vanilla.SlotVanillaContainer;
+import matteroverdrive.core.inventory.slot.SlotContainer;
+import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.IItemHandler;
 
 public abstract class GenericInventory extends AbstractContainerMenu {
 
-	private CapabilityInventory invcap;
+	private IItemHandler invcap;
 	protected Player player;
 	protected Level world;
 	protected final int slotCount;
@@ -21,33 +23,40 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return nextIndex++;
 	}
 
-	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap) {
+	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, IItemHandler invcap) {
 		super(menu, id);
 		world = playerinv.player.level;
 		slotCount = slots.size();
 		this.invcap = invcap;
-		addPlayerInventory(playerinv);
 		addInvSlots(invcap, playerinv);
+		addPlayerInventory(playerinv);
 		player = playerinv.player;
 	}
 
 	protected void addPlayerInventory(Inventory playerinv) {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlot(new SlotVanillaContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset));
+				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset, SlotType.SMALL));
 			}
 		}
 
 		for (int k = 0; k < 9; ++k) {
-			addSlot(new SlotVanillaContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset));
+			addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset, SlotType.SMALL));
 		}
 	}
 
-	public abstract void addInvSlots(CapabilityInventory invcap, Inventory playerinv);
+	public abstract void addInvSlots(IItemHandler invcap, Inventory playerinv);
 
 	@Override
 	public boolean stillValid(Player pPlayer) {
-		return invcap.isInRange(pPlayer);
+		if(invcap instanceof CapabilityInventory inv) {
+			inv.isInRange(pPlayer);
+		}
+		return true;
+	}
+	
+	public IItemHandler getHandler() {
+		return invcap;
 	}
 
 }

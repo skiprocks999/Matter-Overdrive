@@ -24,6 +24,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 	
 	public ScreenComponentSlot withIcon(IconType type) {
 		
+		return this;
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
 		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(),
-				type.getWidth(), type.getHeight());
+				type.getWidth(), type.getHeight(), type.getWidth(), type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 	}
 
@@ -89,6 +90,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 		public String getName() {
 			return name;
 		}
+		
 	}
 
 }

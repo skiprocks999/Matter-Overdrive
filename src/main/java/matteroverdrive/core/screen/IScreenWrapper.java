@@ -11,9 +11,9 @@ import net.minecraft.util.FormattedCharSequence;
 
 public interface IScreenWrapper {
 
-	void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h);
+	void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h, int tW, int tH);
 
-	void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h);
+	void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h, int tW, int tH);
 
 	void displayTooltip(PoseStack stack, Component text, int xAxis, int yAxis);
 
