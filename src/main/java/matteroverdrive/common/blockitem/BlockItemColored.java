@@ -16,7 +16,7 @@ public class BlockItemColored extends BlockItem {
 	private static final List<BlockItemColored> BLOCK_ITEMS = new ArrayList<>();
 
 	private int color;
-	
+
 	public BlockItemColored(Block block, Properties properties, int color) {
 		super(block, properties);
 		this.color = color;

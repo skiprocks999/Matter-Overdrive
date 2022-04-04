@@ -38,7 +38,8 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected void addPlayerInventory(Inventory playerinv) {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset, SlotType.SMALL));
+				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset,
+						SlotType.SMALL));
 			}
 		}
 
@@ -51,16 +52,16 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 
 	@Override
 	public boolean stillValid(Player pPlayer) {
-		if(invcap instanceof CapabilityInventory inv) {
+		if (invcap instanceof CapabilityInventory inv) {
 			inv.isInRange(pPlayer);
 		}
 		return true;
 	}
-	
+
 	public IItemHandler getHandler() {
 		return invcap;
 	}
-	
+
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
 		return UtilsInventory.handleShiftClick(slots, player, index);

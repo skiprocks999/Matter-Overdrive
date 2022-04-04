@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class UtilsInventory {
-	
+
 	public static ItemStack handleShiftClick(List<Slot> slots, Player player, int slotIndex) {
 		Slot sourceSlot = slots.get(slotIndex);
 		ItemStack inputStack = sourceSlot.getItem();
@@ -33,7 +33,8 @@ public class UtilsInventory {
 		return copy;
 	}
 
-	private static boolean mergeStack(Inventory playerInv, boolean mergeIntoPlayer, Slot sourceSlot, List<Slot> slots, boolean reverse) {
+	private static boolean mergeStack(Inventory playerInv, boolean mergeIntoPlayer, Slot sourceSlot, List<Slot> slots,
+			boolean reverse) {
 		ItemStack sourceStack = sourceSlot.getItem();
 
 		int originalSize = sourceStack.getCount();
@@ -47,7 +48,7 @@ public class UtilsInventory {
 				Slot targetSlot = slots.get(idx);
 				if (targetSlot.container == playerInv == mergeIntoPlayer) {
 					ItemStack target = targetSlot.getItem();
-					if (ItemStack.isSame(sourceStack, target)) { 
+					if (ItemStack.isSame(sourceStack, target)) {
 						int targetMax = Math.min(targetSlot.getMaxStackSize(), target.getMaxStackSize());
 						int toTransfer = Math.min(sourceStack.getCount(), targetMax - target.getCount());
 						if (toTransfer > 0) {
@@ -73,7 +74,8 @@ public class UtilsInventory {
 		idx = reverse ? len - 1 : 0;
 		while (reverse ? idx >= 0 : idx < len) {
 			Slot targetSlot = slots.get(idx);
-			if (targetSlot.container == playerInv == mergeIntoPlayer && !targetSlot.hasItem() && targetSlot.mayPlace(sourceStack)) {
+			if (targetSlot.container == playerInv == mergeIntoPlayer && !targetSlot.hasItem()
+					&& targetSlot.mayPlace(sourceStack)) {
 				targetSlot.set(sourceStack.copy());
 				sourceSlot.set(ItemStack.EMPTY);
 				sourceStack.setCount(0);

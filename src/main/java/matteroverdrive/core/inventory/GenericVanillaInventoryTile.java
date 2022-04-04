@@ -14,11 +14,13 @@ public abstract class GenericVanillaInventoryTile<T extends BlockEntity> extends
 			ContainerData tilecoords) {
 		super(menu, id, playerinv, invcap, tilecoords);
 	}
-	
+
+	@Override
 	protected void addPlayerInventory(Inventory playerinv) {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset, SlotType.VANILLA));
+				addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset,
+						SlotType.VANILLA));
 			}
 		}
 

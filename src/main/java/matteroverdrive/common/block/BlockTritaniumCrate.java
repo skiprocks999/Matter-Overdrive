@@ -28,21 +28,20 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockTritaniumCrate extends WaterloggableEntityBlock {
-	
-	private static final VoxelShape NS = Block.box(0.0D , 0.0D, 2.0D, 16.0D, 12.0D, 14.0D);
-	private static final VoxelShape EW = Block.box(2.0D , 0.0D, 0.0D, 14.0D, 12.0D, 16.0D);
-	
+
+	private static final VoxelShape NS = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 12.0D, 14.0D);
+	private static final VoxelShape EW = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 12.0D, 16.0D);
+
 	public BlockTritaniumCrate(Properties properties) {
 		super(properties);
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		switch(state.getValue(FACING)) {
+		switch (state.getValue(FACING)) {
 		case NORTH, SOUTH:
 			return NS;
 		case EAST, WEST:
@@ -56,7 +55,7 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return new TileTritaniumCrate(pPos, pState);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
@@ -67,7 +66,7 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 		super.createBlockStateDefinition(builder);
 		builder.add(FACING);
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 			BlockHitResult hit) {
@@ -84,12 +83,13 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 		}
 		return InteractionResult.FAIL;
 	}
-	
+
 	@Override
-	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state,
+			net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
 		ItemStack dropped = new ItemStack(this);
 		BlockEntity tile = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if(tile instanceof TileTritaniumCrate crate) {
+		if (tile instanceof TileTritaniumCrate crate) {
 			CompoundTag tag = dropped.getOrCreateTag();
 			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
 			tag.put("SavedItems", ContainerHelper.saveAllItems(tag, inv.getItems()));

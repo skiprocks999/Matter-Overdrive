@@ -87,11 +87,10 @@ public class GenericTile extends BlockEntity implements Nameable {
 				break;
 			}
 		}
-		if (valid) {
-			capabilities.add(cap);
-		} else {
+		if (!valid) {
 			throw new RuntimeException("error: capability type " + cap.getCapabilityType() + " already added");
 		}
+		capabilities.add(cap);
 	}
 
 	public boolean hasCapability(CapabilityType type) {
@@ -149,7 +148,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
 	}
-	
+
 	public TranslatableComponent getContainerName(String name) {
 		return new TranslatableComponent("container." + name);
 	}

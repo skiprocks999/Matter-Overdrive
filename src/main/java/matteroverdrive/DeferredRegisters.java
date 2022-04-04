@@ -40,21 +40,35 @@ public class DeferredRegisters {
 			References.ID);
 
 	public static final RegistryObject<Block> TRITANIUM_PLATING = registerBlock("tritanium_plating",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), false));
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
 	public static final BulkRegistryObject<Block> COLORED_TRITANIUM_PLATING = new BulkRegistryObject<>(
 			color -> registerColoredBlock("tritanium_plating" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
+					() -> new BlockColored(
+							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+							((BlockColors) color).color, false),
+					((BlockColors) color).color),
+			BlockColors.values());
 	public static final BulkRegistryObject<Block> FLOOR_TILE = new BulkRegistryObject<>(
 			color -> registerColoredBlock("floor_tile" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
+					() -> new BlockColored(
+							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+							((BlockColors) color).color, false),
+					((BlockColors) color).color),
+			BlockColors.values());
 	public static final BulkRegistryObject<Block> FLOOR_TILES = new BulkRegistryObject<>(
 			color -> registerColoredBlock("floor_tiles" + "_" + color.toString().toLowerCase(),
-					() -> new BlockColored(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F), ((BlockColors)color).color, false), ((BlockColors)color).color), BlockColors.values());
-	public static final BulkRegistryObject<Block> TRITANIUM_CRATES = new BulkRegistryObject<>(
-			crate -> registerBlock("tritanium_crate" + "_" + crate.toString().toLowerCase(),
-			() -> new BlockTritaniumCrate(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())), TileTritaniumCrate.CrateColors.values());
-	
-	
+					() -> new BlockColored(
+							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+							((BlockColors) color).color, false),
+					((BlockColors) color).color),
+			BlockColors.values());
+	public static final BulkRegistryObject<Block> TRITANIUM_CRATES = new BulkRegistryObject<>(crate -> registerBlock(
+			"tritanium_crate" + "_" + crate.toString().toLowerCase(),
+			() -> new BlockTritaniumCrate(
+					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
+			TileTritaniumCrate.CrateColors.values());
+
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
@@ -71,20 +85,13 @@ public class DeferredRegisters {
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
 
-	
-	
-	
-	
-	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUMCRATE = TILES.register("tritanium_crate", 
-			() -> new BlockEntityType<>(TileTritaniumCrate::new, Sets.newHashSet(TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0])), null));
-	
-	
-	
-	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUMCRATE = CONTAINERS.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
-	
-	
-	
-	
+	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUMCRATE = TILES
+			.register("tritanium_crate", () -> new BlockEntityType<>(TileTritaniumCrate::new,
+					Sets.newHashSet(TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0])), null));
+
+	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUMCRATE = CONTAINERS
+			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
+
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {
 		return registerBlock(name, supplier, new Item.Properties().tab(References.MAIN));
 	}
@@ -95,7 +102,7 @@ public class DeferredRegisters {
 		ITEMS.register(name, () -> new BlockItem(block.get(), properties));
 		return block;
 	}
-	
+
 	private static RegistryObject<Block> registerColoredBlock(String name, Supplier<Block> supplier, int color) {
 		return registerColoredBlock(name, supplier, new Item.Properties().tab(References.MAIN), color);
 	}

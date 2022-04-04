@@ -14,11 +14,11 @@ import net.minecraftforge.items.ItemStackHandler;
 public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTritaniumCrate> {
 
 	public static final int OFFSET = 56;
-	
+
 	public InventoryTritaniumCrate(int id, Inventory playerinv) {
 		this(id, playerinv, new ItemStackHandler(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
 	}
-	
+
 	public InventoryTritaniumCrate(int id, Inventory playerinv, IItemHandler invcap, ContainerData coords) {
 		super(DeferredRegisters.MENU_TRITANIUMCRATE.get(), id, playerinv, invcap, coords);
 	}
@@ -26,14 +26,14 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	@Override
 	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
 		playerInvOffset = OFFSET;
-		if(getHandler() != null) {
-			for(int j = 0; j < 6; ++j) {
-		         for(int k = 0; k < 9; ++k) {
-		            this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA));
-		         }
+		if (getHandler() != null) {
+			for (int j = 0; j < 6; ++j) {
+				for (int k = 0; k < 9; ++k) {
+					this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA));
+				}
 			}
 		}
-		
+
 	}
 
 }

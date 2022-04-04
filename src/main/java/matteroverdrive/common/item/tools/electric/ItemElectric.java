@@ -64,9 +64,8 @@ public class ItemElectric extends OverdriveItem {
 			return (int) Math.round(stack.getCapability(CapabilityEnergy.ENERGY).map(h -> {
 				if (h.getMaxEnergyStored() > 0) {
 					return 13.0 * h.getEnergyStored() / h.getMaxEnergyStored();
-				} else {
-					return 13.0;
 				}
+				return 13.0;
 			}).orElse(13.0));
 		}
 		return super.getBarWidth(stack);

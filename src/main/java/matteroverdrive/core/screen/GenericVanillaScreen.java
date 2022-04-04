@@ -12,13 +12,12 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class GenericVanillaScreen<T extends GenericInventory> extends GenericScreen<T> {
 
-	protected ResourceLocation vanillaBg = new ResourceLocation(
-			References.ID + ":textures/gui/base/base_vanilla.png");
-	
+	protected ResourceLocation vanillaBg = new ResourceLocation(References.ID + ":textures/gui/base/base_vanilla.png");
+
 	public GenericVanillaScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
 		super(pMenu, pPlayerInventory, pTitle);
 	}
-	
+
 	@Override
 	protected void renderBg(PoseStack stack, float partialTick, int x, int y) {
 		UtilsRendering.bindTexture(vanillaBg);

@@ -11,12 +11,12 @@ import net.minecraft.world.level.storage.loot.LootContext.Builder;
 public class BlockOverdrive extends Block {
 
 	private boolean useLootTable;
-	
+
 	public BlockOverdrive(Properties properties, boolean useLootTable) {
 		super(properties);
 		this.useLootTable = useLootTable;
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(BlockState pState, Builder pBuilder) {
 		if (useLootTable) {

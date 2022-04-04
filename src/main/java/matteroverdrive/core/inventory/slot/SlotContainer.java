@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.Slot;
 public class SlotContainer extends Slot implements ISlotType {
 
 	private SlotType type;
-	
+
 	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, SlotType type) {
 		super(pContainer, pIndex, pX, pY);
 		this.type = type;

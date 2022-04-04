@@ -18,12 +18,12 @@ public class ScreenComponentSlot extends ScreenComponent {
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
 
 	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC  + type.getName()), gui, x, y);
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y);
 		this.type = type;
 	}
-	
+
 	public ScreenComponentSlot withIcon(IconType type) {
-		
+
 		return this;
 	}
 
@@ -43,14 +43,9 @@ public class ScreenComponentSlot extends ScreenComponent {
 	}
 
 	public enum SlotType {
-		SMALL("slot_small"),
-		BIG(22, 22, 0, 0, "slot_big"),
-		BIG_DARK(22, 22, 0, 0, "slot_big_dark"),
-		HOLO("slot_holo"),
-		HOLO_BG("slot_holo_with_bg"),
-		MAIN(37, 22, 0, 0, "slot_big_main"),
-		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark"),
-		MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active"),
+		SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big"), BIG_DARK(22, 22, 0, 0, "slot_big_dark"), HOLO("slot_holo"),
+		HOLO_BG("slot_holo_with_bg"), MAIN(37, 22, 0, 0, "slot_big_main"),
+		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark"), MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active"),
 		VANILLA("slot_vanilla");
 
 		private final int width;
@@ -66,7 +61,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 			this.textureY = textureY;
 			this.name = name + ".png";
 		}
-		
+
 		private SlotType(String name) {
 			this(18, 18, 0, 0, name);
 		}
@@ -86,11 +81,11 @@ public class ScreenComponentSlot extends ScreenComponent {
 		public int getTextureY() {
 			return textureY;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
-		
+
 	}
 
 }

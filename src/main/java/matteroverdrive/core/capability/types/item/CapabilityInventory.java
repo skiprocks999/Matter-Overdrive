@@ -153,9 +153,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		if (matchesCapability(cap)) {
 			if (isSided) {
 				return side == null ? LazyOptional.empty() : sideCaps[side.ordinal()].cast();
-			} else {
-				return holder.cast();
 			}
+			return holder.cast();
 		}
 		return LazyOptional.empty();
 	}

@@ -9,7 +9,7 @@ public class ClientRegister {
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUMCRATE.get(), ScreenTritaniumCrate::new);
-		
+
 	}
 
 }

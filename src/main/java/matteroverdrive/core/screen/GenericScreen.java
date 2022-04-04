@@ -142,8 +142,10 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 	}
 
 	@Override
-	public void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h, int tW, int tH) {
-		blit(stack, x, y, (int) (icon.getU0() * icon.getWidth()), (int) (icon.getV0() * icon.getHeight()), w, h, tH, tW);
+	public void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h, int tW,
+			int tH) {
+		blit(stack, x, y, (int) (icon.getU0() * icon.getWidth()), (int) (icon.getV0() * icon.getHeight()), w, h, tH,
+				tW);
 	}
 
 	@Override
