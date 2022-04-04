@@ -1,14 +1,22 @@
 package matteroverdrive.common.block;
 
+import java.util.Arrays;
+import java.util.List;
+
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.WaterloggableEntityBlock;
+import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -16,9 +24,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 	
@@ -73,6 +83,18 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 			return InteractionResult.CONSUME;
 		}
 		return InteractionResult.FAIL;
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
+		ItemStack dropped = new ItemStack(this);
+		BlockEntity tile = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+		if(tile instanceof TileTritaniumCrate crate) {
+			CompoundTag tag = dropped.getOrCreateTag();
+			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
+			tag.put("SavedItems", ContainerHelper.saveAllItems(tag, inv.getItems()));
+		}
+		return Arrays.asList(dropped);
 	}
 
 }

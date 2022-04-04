@@ -3,10 +3,12 @@ package matteroverdrive.core.inventory;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.slot.SlotContainer;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.core.utils.UtilsInventory;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
@@ -57,6 +59,11 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	
 	public IItemHandler getHandler() {
 		return invcap;
+	}
+	
+	@Override
+	public ItemStack quickMoveStack(Player player, int index) {
+		return UtilsInventory.handleShiftClick(slots, player, index);
 	}
 
 }
