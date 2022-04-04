@@ -8,9 +8,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class MinableTags extends BlockTagsProvider {
+public class MinableTagsProvider extends BlockTagsProvider {
 
-	public MinableTags(DataGenerator pGenerator, ExistingFileHelper existingFileHelper) {
+	public MinableTagsProvider(DataGenerator pGenerator, ExistingFileHelper existingFileHelper) {
 		super(pGenerator, References.ID, existingFileHelper);
 	}
 

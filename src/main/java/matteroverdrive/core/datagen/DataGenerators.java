@@ -4,22 +4,13 @@ import matteroverdrive.References;
 import matteroverdrive.core.datagen.client.OverdriveBlockStateProvider;
 import matteroverdrive.core.datagen.client.OverdriveEnUSLangKeyProvider;
 import matteroverdrive.core.datagen.client.OverdriveItemModelsProvider;
-import matteroverdrive.core.datagen.server.MinableTags;
+import matteroverdrive.core.datagen.server.LootTablesProvider;
+import matteroverdrive.core.datagen.server.MinableTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
-/**
- * For all BlockStates and Models Generated with this, know they must remain in
- * the "generated" directory where they were saved
- *
- * For all Lang Key and Minable Tags made, they must be copied over to the main
- * folder
- *
- * @author skip999
- *
- */
 @Mod.EventBusSubscriber(modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
 
@@ -29,7 +20,8 @@ public class DataGenerators {
 		DataGenerator generator = event.getGenerator();
 
 		if (event.includeServer()) {
-			generator.addProvider(new MinableTags(generator, event.getExistingFileHelper()));
+			generator.addProvider(new MinableTagsProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(new LootTablesProvider(generator));
 		}
 		if (event.includeClient()) {
 			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));

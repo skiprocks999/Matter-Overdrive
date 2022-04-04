@@ -1,8 +1,8 @@
 package matteroverdrive.common.block;
 
-import java.util.Arrays;
 import java.util.List;
 
+import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.WaterloggableEntityBlock;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -10,9 +10,8 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +32,8 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 
 	private static final VoxelShape NS = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 12.0D, 14.0D);
 	private static final VoxelShape EW = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 12.0D, 16.0D);
+
+	public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
 
 	public BlockTritaniumCrate(Properties properties) {
 		super(properties);
@@ -87,14 +88,25 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state,
 			net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
-		ItemStack dropped = new ItemStack(this);
-		BlockEntity tile = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (tile instanceof TileTritaniumCrate crate) {
-			CompoundTag tag = dropped.getOrCreateTag();
+		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+		if (blockentity instanceof TileTritaniumCrate crate) {
 			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
-			tag.put("SavedItems", ContainerHelper.saveAllItems(tag, inv.getItems()));
+			builder = builder.withDynamicDrop(CONTENTS, (context, consumer) -> {
+				for(ItemStack stack :  inv.getItems()) {
+					consumer.accept(stack);
+				}
+			});
 		}
-		return Arrays.asList(dropped);
+		return super.getDrops(state, builder);
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
+		ItemStack stack = super.getCloneItemStack(level, pPos, pState);
+		level.getBlockEntity(pPos, DeferredRegisters.TILE_TRITANIUMCRATE.get()).ifPresent(crate -> {
+			crate.saveToItem(stack);
+		});
+		return stack;
 	}
 
 }
