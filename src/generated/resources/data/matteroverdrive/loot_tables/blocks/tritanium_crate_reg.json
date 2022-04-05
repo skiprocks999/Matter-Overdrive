@@ -18,13 +18,8 @@
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "inv",
-                  "target": "BlockEntityTag.inv",
-                  "op": "replace"
-                },
-                {
-                  "source": "energy",
-                  "target": "BlockEntityTag.energy",
+                  "source": "inventory",
+                  "target": "BlockEntityTag.inventory",
                   "op": "replace"
                 }
               ]

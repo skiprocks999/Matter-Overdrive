@@ -1,0 +1,16 @@
+{
+	"crateopen": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.crateopen",
+		"sounds": [
+			"matteroverdrive:crateopen"
+		]
+	},
+	"crateclose": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.crateclose",
+		"sounds": [
+			"matteroverdrive:crateclose"
+		]
+	}
+}

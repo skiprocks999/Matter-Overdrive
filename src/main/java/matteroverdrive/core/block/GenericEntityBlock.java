@@ -1,11 +1,7 @@
 package matteroverdrive.core.block;
 
-import java.util.Arrays;
-import java.util.List;
-
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -17,7 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.storage.loot.LootContext;
 
 public abstract class GenericEntityBlock extends BaseEntityBlock {
 
@@ -57,11 +52,6 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 		}
 		return super.mirror(state, mirrorIn);
-	}
-
-	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-		return Arrays.asList(new ItemStack(this));
 	}
 
 	@Override

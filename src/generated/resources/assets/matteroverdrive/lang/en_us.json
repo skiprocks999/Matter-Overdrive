@@ -72,5 +72,7 @@
   "item.matteroverdrive.phaser_rifle": "Phaser Rifle",
   "item.matteroverdrive.plasma_shotgun": "Plasma Shotgun",
   "itemGroup.itemgroupmatteroverdrivemain": "Matter Overdrive",
+  "subtitles.matteroverdrive.crateclose": "Tritanium Crate Closes",
+  "subtitles.matteroverdrive.crateopen": "Tritanium Crate Opens",
   "tooltip.matteroverdrive.energystored": "%1$s / %2$s FE"
 }

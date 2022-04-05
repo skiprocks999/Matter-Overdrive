@@ -1,11 +1,16 @@
 package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.core.tile.GenericTile;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraftforge.items.IItemHandler;
@@ -34,6 +39,15 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 			}
 		}
 
+	}
+	
+	@Override
+	public void removed(Player pPlayer) {
+		super.removed(pPlayer);
+		GenericTile tile = getTile();
+		if(tile != null) {
+			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATECLOSE.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		}
 	}
 
 }

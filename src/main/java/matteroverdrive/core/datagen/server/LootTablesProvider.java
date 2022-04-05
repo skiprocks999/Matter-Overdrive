@@ -14,7 +14,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	@Override
 	protected void addTables() {
 		for (Block block : DeferredRegisters.TRITANIUM_CRATES.<Block>getAllObjects()) {
-			lootTables.put(block, createStandardTable(block.getRegistryName().getPath(), block,
+			lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block,
 					DeferredRegisters.TILE_TRITANIUMCRATE.get()));
 		}
 	}
