@@ -1,24 +1,25 @@
 package matteroverdrive.core.datagen.server;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 
-import com.mojang.datafixers.util.Pair;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MatterValueGenerator implements DataProvider {
 
 	private static final String DATA_LOC = "data/matteroverdrive/matter/values.json";
+	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 	DataGenerator gen;
 	
 	public MatterValueGenerator(DataGenerator gen) {	
@@ -27,59 +28,50 @@ public class MatterValueGenerator implements DataProvider {
 	
 	@Override
 	public void run(HashCache pCache) throws IOException {
-		FileWriter blockWriter;
+		JsonObject json = new JsonObject();
+		addHardcodedValues(json);
+		Path path = gen.getOutputFolder().resolve(DATA_LOC);
 		try {
-			File loc = gen.getOutputFolder().resolve(DATA_LOC).toFile();
-			loc.getParentFile().mkdirs();
-			blockWriter = new FileWriter(loc);
-			List<Pair<String, Integer>> values = hardcodedValues();
-			blockWriter.write("{");
-			blockWriter.write("\n");
-			for(Pair<String, Integer> value : values) {
-				String entry = "    \"" + value.getFirst() + "\" : " + value.getSecond() + ",";
-				blockWriter.write(entry);
-				blockWriter.write("\n");
-			}
-			blockWriter.write("}");
-			blockWriter.write("\n");
-			blockWriter.close();
+			String s = GSON.toJson((JsonElement)json);
+            
+			String s1 = SHA1.hashUnencodedChars(s).toString();
+            if (!Objects.equals(pCache.getHash(path), s1) || !Files.exists(path)) {
+               Files.createDirectories(path.getParent());
+               BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 
+               try {
+                  bufferedwriter.write(s);
+               } catch (Throwable throwable1) {
+                  if (bufferedwriter != null) {
+                     try {
+                        bufferedwriter.close();
+                     } catch (Throwable throwable) {
+                        throwable1.addSuppressed(throwable);
+                     }
+                  }
+
+                  throw throwable1;
+               }
+
+               if (bufferedwriter != null) {
+                  bufferedwriter.close();
+               }
+            }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private static List<Pair<String, Integer>> hardcodedValues(){
-		List<Pair<String, Integer>> values = new ArrayList<>();
-		values.addAll(getFromItemTag(ItemTags.DIRT, 1));
-		values.addAll(getFromItemTag(ItemTags.LOGS, 16));
-		values.addAll(getFromItemTag(ItemTags.WOOL, 2));
-		return values;
+	private static void addHardcodedValues(JsonObject json){
+		json.addProperty("#" + ItemTags.DIRT.location().toString(), 1);
+		json.addProperty("#" + ItemTags.LOGS.location().toString(), 16);
+		json.addProperty("#" + ItemTags.WOOL.location().toString(), 2);
 	}
 
 	@Override
 	public String getName() {
 		return "Matter Generator";
 	}
-	
-	private static List<Pair<String, Integer>> getFromItemTag(TagKey<Item> tag, int value){
-		List<Pair<String, Integer>> values = new ArrayList<>();
-		ForgeRegistries.ITEMS.tags().getTag(tag).forEach(h -> {
-			values.add(Pair.of(h.getRegistryName().toString(), value));
-		});
-		return values;
-	}
-	
-	/* Hard Coded
-	 * 
-	 * Tags:
-	 * Logs: 16 kM
-	 * 
-	 * Granite: 7 kM
-	 * Diorite: 4 kM
-	 * Andesite: 3 kM
-	 * 
-	 */
 	
 	
 }
