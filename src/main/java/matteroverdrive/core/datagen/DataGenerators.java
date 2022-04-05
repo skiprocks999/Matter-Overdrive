@@ -5,6 +5,7 @@ import matteroverdrive.core.datagen.client.OverdriveBlockStateProvider;
 import matteroverdrive.core.datagen.client.OverdriveEnUSLangKeyProvider;
 import matteroverdrive.core.datagen.client.OverdriveItemModelsProvider;
 import matteroverdrive.core.datagen.server.LootTablesProvider;
+import matteroverdrive.core.datagen.server.MatterValueGenerator;
 import matteroverdrive.core.datagen.server.MinableTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,7 @@ public class DataGenerators {
 		if (event.includeServer()) {
 			generator.addProvider(new MinableTagsProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new LootTablesProvider(generator));
+			generator.addProvider(new MatterValueGenerator(generator));
 		}
 		if (event.includeClient()) {
 			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
