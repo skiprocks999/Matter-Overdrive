@@ -23,8 +23,9 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 
 	@Override
 	protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager manager, ProfilerFiller profiler) {
+		System.out.println("called");
 		object.forEach((location, element) -> {
-			System.out.println(location.toString());
+			System.out.println(element.toString());
 		});
 	}
 	
