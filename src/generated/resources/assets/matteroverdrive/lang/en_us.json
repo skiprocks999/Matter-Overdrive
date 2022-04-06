@@ -74,5 +74,7 @@
   "itemGroup.itemgroupmatteroverdrivemain": "Matter Overdrive",
   "subtitles.matteroverdrive.crateclose": "Tritanium Crate Closes",
   "subtitles.matteroverdrive.crateopen": "Tritanium Crate Opens",
-  "tooltip.matteroverdrive.energystored": "%1$s / %2$s FE"
+  "tooltip.matteroverdrive.energystored": "%1$s / %2$s FE",
+  "tooltip.matteroverdrive.matterval": "Matter: %s",
+  "tooltip.matteroverdrive.nomatter": "NONE"
 }

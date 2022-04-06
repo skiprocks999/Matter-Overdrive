@@ -50,6 +50,8 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 			}
 
 			add("tooltip." + References.ID + ".energystored", "%1$s / %2$s FE");
+			add("tooltip." + References.ID + ".matterval", "Matter: %s");
+			add("tooltip." + References.ID + ".nomatter", "NONE");
 
 			add("container.tritanium_crate", "Tritanium Crate");
 			
