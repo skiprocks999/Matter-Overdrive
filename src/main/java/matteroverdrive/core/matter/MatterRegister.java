@@ -24,6 +24,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class MatterRegister extends SimpleJsonResourceReloadListener {
 
 	private HashMap<Item, Integer> VALUES = new HashMap<>();
+	private HashMap<TagKey<Item>, Integer> parsedTags = new HashMap<>();
+	private boolean haveNoTagsParsed = false;
 	private static final Gson GSON = new Gson();
 	public static MatterRegister INSTANCE;
 	
@@ -33,12 +35,29 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 	
 	@Nullable
 	public Integer getMatterValue(Item item) {
+		if(haveNoTagsParsed) {
+			parsedTags.forEach((key, val) -> {
+				Ingredient ing = Ingredient.of(key);
+				for(ItemStack stack : ing.getItems()) {
+					Item itm = stack.getItem();
+					if(!VALUES.containsKey(itm)) {
+						VALUES.put(itm, val);
+					}
+				}
+			});
+			parsedTags.clear();
+			haveNoTagsParsed = false;
+			return VALUES.get(item);
+		}	
+		MatterOverdrive.LOGGER.info(VALUES.toString());
 		return VALUES.get(item);
 	}
 
 	@Override
 	protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager manager, ProfilerFiller profiler) {
 		VALUES.clear();
+		parsedTags.clear();
+		haveNoTagsParsed = true;
 		object.forEach((location, element) -> {
 			JsonObject obj = (JsonObject) element;
 			obj.entrySet().forEach(h -> {
@@ -46,12 +65,7 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 				if(key.charAt(0) == '#') {
 					key = key.substring(1);
 					String[] split = key.split(":");
-					Ingredient ing = Ingredient.of(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])));
-					for(ItemStack stack : ing.getItems()) {
-						if(!VALUES.containsKey(stack.getItem())) {
-							VALUES.put(stack.getItem(), h.getValue().getAsInt());
-						}
-					}
+					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])), h.getValue().getAsInt());
 				} else {
 					Item item = ForgeRegistries.ITEMS.getHolder(new ResourceLocation(key)).get().value();
 					if(!VALUES.containsKey(item)) {
@@ -60,7 +74,6 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 				}
 			});
 		});
-		MatterOverdrive.LOGGER.info(VALUES.toString());
 	}
 	
 }
