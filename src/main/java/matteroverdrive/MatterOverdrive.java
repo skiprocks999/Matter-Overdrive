@@ -6,6 +6,7 @@ import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -25,6 +26,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD)
 public class MatterOverdrive {
 
+	public MatterRegister register;
+	
 	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public MatterOverdrive() {

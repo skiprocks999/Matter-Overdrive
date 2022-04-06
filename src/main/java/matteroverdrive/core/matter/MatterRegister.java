@@ -2,13 +2,10 @@ package matteroverdrive.core.matter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -26,15 +23,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class MatterRegister extends SimpleJsonResourceReloadListener {
 
-	private static final HashMap<Item, Integer> VALUES = new HashMap<>();
+	private HashMap<Item, Integer> VALUES = new HashMap<>();
 	private static final Gson GSON = new Gson();
+	public static MatterRegister INSTANCE;
 	
 	public MatterRegister() {
 		super(GSON, "matter");
 	}
 	
 	@Nullable
-	public static Integer getMatterValue(Item item) {
+	public Integer getMatterValue(Item item) {
 		return VALUES.get(item);
 	}
 
@@ -43,10 +41,8 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 		VALUES.clear();
 		object.forEach((location, element) -> {
 			JsonObject obj = (JsonObject) element;
-			
 			obj.entrySet().forEach(h -> {
 				String key = h.getKey();
-				MatterOverdrive.LOGGER.info(key);
 				if(key.charAt(0) == '#') {
 					key = key.substring(1);
 					String[] split = key.split(":");
@@ -64,6 +60,7 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 				}
 			});
 		});
+		MatterOverdrive.LOGGER.info(VALUES.toString());
 	}
 	
 }
