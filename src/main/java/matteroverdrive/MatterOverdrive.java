@@ -6,11 +6,9 @@ import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,11 +53,6 @@ public class MatterOverdrive {
 	@SubscribeEvent
 	public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
 
-	}
-	
-	@SubscribeEvent
-	public static void reloadListeners(AddReloadListenerEvent event) {
-		event.addListener(new MatterRegister());
 	}
 
 	@SubscribeEvent
