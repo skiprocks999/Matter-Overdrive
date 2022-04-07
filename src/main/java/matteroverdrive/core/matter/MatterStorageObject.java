@@ -1,14 +1,12 @@
 package matteroverdrive.core.matter;
 
-import net.minecraft.world.item.Item;
-
 public class MatterStorageObject {
 
-	public Item item;
+	public String name;
 	public int val;
 	
-	public MatterStorageObject(Item item, int val) {
-		this.item = item;
+	public MatterStorageObject(String name, int val) {
+		this.name = name;
 		this.val = val;
 	}
 	
