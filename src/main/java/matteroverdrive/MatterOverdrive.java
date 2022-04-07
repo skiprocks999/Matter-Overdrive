@@ -41,6 +41,9 @@ public class MatterOverdrive {
 		DeferredRegisters.ENTITIES.register(bus);
 		
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON, "matteroverdrive/matteroverdrive.common.toml");
+		
+		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
+	
 	}
 
 	@SubscribeEvent

@@ -17,7 +17,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void matterTooltipApplier(ItemTooltipEvent event) {
 		if(Screen.hasShiftDown()) {
-			Integer val = MatterRegister.INSTANCE.getMatterValue(event.getItemStack().getItem());
+			Integer val = MatterRegister.INSTANCE.getClientMatterValue(event.getItemStack().getItem());
 			if(val != null) {
 				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval", new TextComponent(val + ".00 kM").withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.BLUE));
 			} else {

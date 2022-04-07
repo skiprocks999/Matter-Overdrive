@@ -12,7 +12,6 @@ public class ServerHandler {
 
 	@SubscribeEvent
 	public static void reloadListeners(AddReloadListenerEvent event) {
-		MatterRegister.INSTANCE = new MatterRegister();
 		event.addListener(MatterRegister.INSTANCE);
 	}
 	

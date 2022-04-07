@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -30,18 +28,14 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.mojang.serialization.JsonOps;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
-import matteroverdrive.core.listeners.MergeableCodecDataManager;
+import matteroverdrive.core.packet.type.PacketClientMatterValues;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -50,9 +44,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PacketDistributor.PacketTarget;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -61,14 +53,16 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 	
-	private HashMap<Item, Integer> VALUES = new HashMap<>();
+	private HashMap<Item, Integer> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Integer> parsedTags = new HashMap<>();
 	private boolean haveNoTagsParsed = false;
 	private static final Gson GSON = new Gson();
-	public static MatterRegister INSTANCE;
+	public static MatterRegister INSTANCE = null;
 	
 	private final String folderName;
 	private final Logger logger;
+	
+	private HashMap<Item, Integer> CLIENT_VALUES = new HashMap<>();
 	
 	public MatterRegister() {
 		folderName = "matter";
@@ -77,31 +71,34 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	
 	@Nullable
 	//TODO move the tag loading to ServerStartedEvent if possible
-	public Integer getMatterValue(Item item) {
+	public Integer getServerMatterValue(Item item) {
 		if(haveNoTagsParsed) {
 			parsedTags.forEach((key, val) -> {
 				Ingredient ing = Ingredient.of(key);
 				for(ItemStack stack : ing.getItems()) {
 					Item itm = stack.getItem();
-					if(!VALUES.containsKey(itm)) {
-						VALUES.put(itm, val);
+					if(!SERVER_VALUES.containsKey(itm)) {
+						SERVER_VALUES.put(itm, val);
 					}
 				}
 			});
 			parsedTags.clear();
 			haveNoTagsParsed = false;
-			return VALUES.get(item);
+			return SERVER_VALUES.get(item);
 		}	
-		return VALUES.get(item);
+		return SERVER_VALUES.get(item);
+	}
+	
+	@Nullable
+	public Integer getClientMatterValue(Item item) {
+		return CLIENT_VALUES.get(item);
 	}
 	
 	@Override
-	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler)
-	{
+	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
 		final Map<ResourceLocation, List<JsonObject>> map = Maps.newHashMap();
 
-		for (ResourceLocation resourceLocation : resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile))
-		{
+		for (ResourceLocation resourceLocation : resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile)) {
 			final String namespace = resourceLocation.getNamespace();
 			final String filePath = resourceLocation.getPath();
 			final String dataPath = filePath.substring(this.folderName.length() + 1, filePath.length() - JSON_EXTENSION_LENGTH);
@@ -109,35 +106,23 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			final ResourceLocation jsonIdentifier = new ResourceLocation(namespace, dataPath);
 			final List<JsonObject> unmergedRaws = new ArrayList<>();
 
-			try
-			{
-				for (Resource resource : resourceManager.getResources(resourceLocation))
-				{
-					try 
-					(
+			try {
+				for (Resource resource : resourceManager.getResources(resourceLocation)) {
+					try (
 						final InputStream inputStream = resource.getInputStream();
 						final Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-					)
-					{
+					) {
 						final JsonObject jsonElement = (JsonObject) GsonHelper.fromJson(GSON, reader, JsonElement.class);
 						unmergedRaws.add(jsonElement);
-					}
-					catch(RuntimeException | IOException exception)
-					{
+					} catch(RuntimeException | IOException exception) {
 						this.logger.error("Data loader for {} could not read data {} from file {} in data pack {}", this.folderName, jsonIdentifier, resourceLocation, resource.getSourceName(), exception); 
-					}
-					finally
-					{
+					} finally {
 						IOUtils.closeQuietly(resource);
 					}
 				}
-			}
-			catch (IOException exception)
-			{
+			} catch (IOException exception) {
 				this.logger.error("Data loader for {} could not read data {} from file {}", this.folderName, jsonIdentifier, resourceLocation, exception);
 			}
-			
-			
 			map.put(jsonIdentifier, unmergedRaws);
 		}
 		
@@ -150,54 +135,18 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			});
 		});
 		Map<ResourceLocation, JsonObject> combined = new HashMap<>();
-		combined.put(new ResourceLocation(References.ID, ":combinedMattedVals"), merged);
+		combined.put(new ResourceLocation(References.ID, ":combinedMatterVals"), merged);
 		
 		return combined;
 	}
 	
-	static boolean isStringJsonFile(final String filename)
-	{
+	private static boolean isStringJsonFile(final String filename) {
 		return filename.endsWith(JSON_EXTENSION);
 	}
 	
-	static void throwJsonParseException(final String codecParseFailure)
-	{
-		throw new JsonParseException(codecParseFailure);
-	}
-	
-	/**
-	 * This should be called at most once, during construction of your mod (static init of your main mod class is fine)
-	 * (FMLCommonSetupEvent *may* work as well)
-	 * Calling this method automatically subscribes a packet-sender to {@link OnDatapackSyncEvent}.
-	 * @param <PACKET> the packet type that will be sent on the given channel
-	 * @param channel The networking channel of your mod
-	 * @param packetFactory  A packet constructor or factory method that converts the given map to a packet object to send on the given channel
-	 * @return this manager object
-	 */
-	public <PACKET> MatterRegister subscribeAsSyncable(final SimpleChannel channel,
-		final Function<Map<ResourceLocation, FINE>, PACKET> packetFactory)
-	{
-		MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(channel, packetFactory));
-		return this;
-	}
-	
-	/** Generate an event listener function for the on-datapack-sync event **/
-	private <PACKET> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final SimpleChannel channel,
-		final Function<Map<ResourceLocation, FINE>, PACKET> packetFactory)
-	{
-		return event -> {
-			ServerPlayer player = event.getPlayer();
-			PACKET packet = packetFactory.apply(this.data);
-			PacketTarget target = player == null
-				? PacketDistributor.ALL.noArg()
-				: PacketDistributor.PLAYER.with(() -> player);
-			channel.send(target, packet);
-		};
-	}
-
 	@Override
 	protected void apply(Map<ResourceLocation, JsonObject> object, ResourceManager manager, ProfilerFiller profiler) {
-		VALUES.clear();
+		SERVER_VALUES.clear();
 		parsedTags.clear();
 		haveNoTagsParsed = true;
 		object.forEach((location, element) -> {
@@ -209,12 +158,23 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])), h.getValue().getAsInt());
 				} else {
 					Item item = ForgeRegistries.ITEMS.getHolder(new ResourceLocation(key)).get().value();
-					if(!VALUES.containsKey(item)) {
-						VALUES.put(item, h.getValue().getAsInt());
+					if(!SERVER_VALUES.containsKey(item)) {
+						SERVER_VALUES.put(item, h.getValue().getAsInt());
 					}
 				}
 			});
 		});
+	}
+	
+	public MatterRegister subscribeAsSyncable(final SimpleChannel channel) {
+		MinecraftForge.EVENT_BUS.addListener(event -> {
+			channel.send(PacketDistributor.ALL.noArg(), new PacketClientMatterValues(SERVER_VALUES));
+		});
+		return this;
+	}
+	
+	public void setClientValues(HashMap<Item, Integer> valueMap) {
+		this.CLIENT_VALUES = valueMap;
 	}
 	
 }
