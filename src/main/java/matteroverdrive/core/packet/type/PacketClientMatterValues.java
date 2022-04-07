@@ -3,6 +3,7 @@ package matteroverdrive.core.packet.type;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,9 +38,14 @@ public class PacketClientMatterValues {
 
 	public static PacketClientMatterValues decode(FriendlyByteBuf buf) {
 		HashMap<Item, Integer> vals = new HashMap<>();
-		ItemStack stack = null;
-		while(stack == null || !stack.isEmpty()) {
-			vals.put(buf.readItem().getItem(), buf.readInt());
+		ItemStack stack = buf.readItem();
+		MatterOverdrive.LOGGER.info("decoding");
+		while(!stack.isEmpty()) {
+			if(!stack.isEmpty()) {
+				vals.put(stack.getItem(), buf.readInt());
+				MatterOverdrive.LOGGER.info(stack.toString());
+			}
+			stack = buf.readItem();
 		}
 		return new PacketClientMatterValues(vals);
 	}

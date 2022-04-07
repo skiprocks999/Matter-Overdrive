@@ -44,6 +44,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -55,7 +56,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	
 	private HashMap<Item, Integer> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Integer> parsedTags = new HashMap<>();
-	private boolean haveNoTagsParsed = false;
 	private static final Gson GSON = new Gson();
 	public static MatterRegister INSTANCE = null;
 	
@@ -72,20 +72,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	@Nullable
 	//TODO move the tag loading to ServerStartedEvent if possible
 	public Integer getServerMatterValue(Item item) {
-		if(haveNoTagsParsed) {
-			parsedTags.forEach((key, val) -> {
-				Ingredient ing = Ingredient.of(key);
-				for(ItemStack stack : ing.getItems()) {
-					Item itm = stack.getItem();
-					if(!SERVER_VALUES.containsKey(itm)) {
-						SERVER_VALUES.put(itm, val);
-					}
-				}
-			});
-			parsedTags.clear();
-			haveNoTagsParsed = false;
-			return SERVER_VALUES.get(item);
-		}	
 		return SERVER_VALUES.get(item);
 	}
 	
@@ -135,7 +121,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			});
 		});
 		Map<ResourceLocation, JsonObject> combined = new HashMap<>();
-		combined.put(new ResourceLocation(References.ID, ":combinedMatterVals"), merged);
+		combined.put(new ResourceLocation(References.ID, "combinedmattervals"), merged);
 		
 		return combined;
 	}
@@ -148,7 +134,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected void apply(Map<ResourceLocation, JsonObject> object, ResourceManager manager, ProfilerFiller profiler) {
 		SERVER_VALUES.clear();
 		parsedTags.clear();
-		haveNoTagsParsed = true;
 		object.forEach((location, element) -> {
 			element.entrySet().forEach(h -> {
 				String key = h.getKey();
@@ -166,8 +151,21 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		});
 	}
 	
+	public void generateTagValues() {
+		parsedTags.forEach((key, val) -> {
+			Ingredient ing = Ingredient.of(key);
+			for(ItemStack stack : ing.getItems()) {
+				Item itm = stack.getItem();
+				if(!SERVER_VALUES.containsKey(itm)) {
+					SERVER_VALUES.put(itm, val);
+				}
+			}
+		});
+		parsedTags.clear();
+	}
+	
 	public MatterRegister subscribeAsSyncable(final SimpleChannel channel) {
-		MinecraftForge.EVENT_BUS.addListener(event -> {
+		MinecraftForge.EVENT_BUS.<OnDatapackSyncEvent>addListener(event -> {
 			channel.send(PacketDistributor.ALL.noArg(), new PacketClientMatterValues(SERVER_VALUES));
 		});
 		return this;
