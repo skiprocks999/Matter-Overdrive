@@ -22,6 +22,7 @@ public class PacketClientMatterValues {
 	public static void handle(PacketClientMatterValues message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
+			MatterOverdrive.LOGGER.info("work done");
 			if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null) {
 				MatterRegister.INSTANCE.setClientValues(message.values);
 			}
@@ -30,6 +31,7 @@ public class PacketClientMatterValues {
 	}
 
 	public static void encode(PacketClientMatterValues pkt, FriendlyByteBuf buf) {
+		buf.writeInt(pkt.values.size());
 		pkt.values.forEach((item, val) -> {
 			buf.writeItem(new ItemStack(item));
 			buf.writeInt(val);
@@ -38,14 +40,9 @@ public class PacketClientMatterValues {
 
 	public static PacketClientMatterValues decode(FriendlyByteBuf buf) {
 		HashMap<Item, Integer> vals = new HashMap<>();
-		ItemStack stack = buf.readItem();
-		MatterOverdrive.LOGGER.info("decoding");
-		while(!stack.isEmpty()) {
-			if(!stack.isEmpty()) {
-				vals.put(stack.getItem(), buf.readInt());
-				MatterOverdrive.LOGGER.info(stack.toString());
-			}
-			stack = buf.readItem();
+		int size = buf.readInt();
+		for(int i = 0; i < size; i++) {
+			vals.put(buf.readItem().getItem(), buf.readInt());
 		}
 		return new PacketClientMatterValues(vals);
 	}

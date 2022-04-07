@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -31,9 +33,11 @@ import com.google.gson.JsonObject;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
+import matteroverdrive.core.listeners.MergeableCodecDataManager;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -46,6 +50,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor.PacketTarget;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -164,11 +169,20 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		parsedTags.clear();
 	}
 	
-	public MatterRegister subscribeAsSyncable(final SimpleChannel channel) {
-		MinecraftForge.EVENT_BUS.<OnDatapackSyncEvent>addListener(event -> {
-			channel.send(PacketDistributor.ALL.noArg(), new PacketClientMatterValues(SERVER_VALUES));
-		});
+	public MatterRegister subscribeAsSyncable(final SimpleChannel channel){
+		MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(channel));
 		return this;
+	}
+		
+	private Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final SimpleChannel channel) {
+		return event -> {
+			ServerPlayer player = event.getPlayer();
+			PacketClientMatterValues packet = new PacketClientMatterValues(SERVER_VALUES);
+			PacketTarget target = player == null
+				? PacketDistributor.ALL.noArg()
+				: PacketDistributor.PLAYER.with(() -> player);
+			channel.send(target, packet);
+		};
 	}
 	
 	public void setClientValues(HashMap<Item, Integer> valueMap) {
