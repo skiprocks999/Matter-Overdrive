@@ -49,7 +49,6 @@ public class MatterRegister extends SimpleJsonResourceReloadListener {
 			haveNoTagsParsed = false;
 			return VALUES.get(item);
 		}	
-		MatterOverdrive.LOGGER.info(VALUES.toString());
 		return VALUES.get(item);
 	}
 

@@ -1,6 +1,5 @@
 package matteroverdrive.client;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.ChatFormatting;
@@ -20,8 +19,7 @@ public class ClientEventHandler {
 		if(Screen.hasShiftDown()) {
 			Integer val = MatterRegister.INSTANCE.getMatterValue(event.getItemStack().getItem());
 			if(val != null) {
-				MatterOverdrive.LOGGER.info("called");
-				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval", new TextComponent(val + " kM").withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.BLUE));
+				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval", new TextComponent(val + ".00 kM").withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.BLUE));
 			} else {
 				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval", new TranslatableComponent("tooltip." + References.ID + ".nomatter").withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.BLUE));
 			}

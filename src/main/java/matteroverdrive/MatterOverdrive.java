@@ -40,7 +40,7 @@ public class MatterOverdrive {
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
 		
-		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON, "matteroverdrive.common.toml");
+		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON, "matteroverdrive/matteroverdrive.common.toml");
 	}
 
 	@SubscribeEvent
