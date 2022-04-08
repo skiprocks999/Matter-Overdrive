@@ -1,0 +1,59 @@
+How the matter data file works:
+
+1. Individual items are represented by "item" : <number>. For example, say we wanted
+to assign a value of 10 kM to cobblestone. The entry would look like this:
+
+    "minecraft:cobblestone" : 10
+    
+2. Item tags are represented by "#tag" : <number>. For example, say we wanted to assign
+a value of 5 kM to all types of dirt. The entry would look like this"
+
+    "#minecraft:dirt" : 5
+
+3. Duplicates will be ignored. Say we have the following:
+
+    "#minecraft:dirt" : 10,
+    "#minecraft:dirt" : 5
+
+Since the key assigning 10 to the dirt tag is before the key assigning 5, the key assigning
+5 will be ignored, and all items in the dirt tag will have a value of 10 kM.
+
+4. Items will be populated before tags when the JSON file is read. This is because tags
+are not populated until the server loads, where as items are already registered by that 
+point. This means you can override specific item values in a tag. For example, say we
+have the following:
+
+    "#minecraft:dirt" : 10,
+    "minecraft:dirt" : 5
+    
+Because "minecraft:dirt" is an item, it will have its value loaded instantly, where as the
+tag "#minecraft:dirt" will not be loaded until the server is loaded. The result of this would
+be that the Item "Dirt" would have a value of 5 kM, where as Podzol and Grass would have values
+of 10 kM.
+
+
+
+Adding your own matter values:
+
+1. To add your own matter values, create a file called "values.json" under the package "matter" in
+a data pack. This package can either be an external data pack or in your mod's built in one. All
+item and tag values in this file will be processed regularly. However, this does not gaurentee that
+your item values will be assigned if another mod already assigns a tag and its file is loaded first.
+
+2. To force a value on an item, place it in a file called "forced.json" in the same directory. This 
+file is loaded before "values.json", and can help ensure that a value is assigned properly.
+
+3. If you want to completely customize 
+
+
+
+
+
+
+
+
+
+
+
+
+

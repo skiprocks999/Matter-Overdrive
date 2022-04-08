@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +32,6 @@ import com.google.gson.JsonObject;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
-import matteroverdrive.core.listeners.MergeableCodecDataManager;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -75,7 +73,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	}
 	
 	@Nullable
-	//TODO move the tag loading to ServerStartedEvent if possible
 	public Integer getServerMatterValue(Item item) {
 		return SERVER_VALUES.get(item);
 	}

@@ -3,7 +3,6 @@ package matteroverdrive.core.packet.type;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +21,6 @@ public class PacketClientMatterValues {
 	public static void handle(PacketClientMatterValues message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			MatterOverdrive.LOGGER.info("work done");
 			if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null) {
 				MatterRegister.INSTANCE.setClientValues(message.values);
 			}
