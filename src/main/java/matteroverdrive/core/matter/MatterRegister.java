@@ -144,7 +144,13 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 					String[] split = key.split(":");
 					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])), h.getValue().getAsInt());
 				} else {
-					Item item = ForgeRegistries.ITEMS.getHolder(new ResourceLocation(key)).get().value();
+					ResourceLocation loc = new ResourceLocation(key);
+					Item item = null;
+					try {
+						item = ForgeRegistries.ITEMS.getHolder(loc).get().value();
+					} catch(Exception e) {
+						MatterOverdrive.LOGGER.info(loc.toString() + " does not exist!");
+					}
 					if(!SERVER_VALUES.containsKey(item)) {
 						SERVER_VALUES.put(item, h.getValue().getAsInt());
 					}
