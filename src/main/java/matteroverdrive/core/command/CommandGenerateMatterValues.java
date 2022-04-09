@@ -53,7 +53,7 @@ public class CommandGenerateMatterValues {
 		RecipeManager manager = source.getRecipeManager();
 		Map<Item, Integer> generatedValues = new HashMap<>();
 		
-		//we make 20 passes to be extra sure
+		//we make 50 passes to be extra sure
 		for(int i = 0; i < 50; i++) {
 			manager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
@@ -104,30 +104,33 @@ public class CommandGenerateMatterValues {
 			
 			manager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
 				UpgradeRecipe upgrade = (UpgradeRecipe) recipe;
-				ItemStack result = recipe.getResultItem();
-				List<Ingredient> ings = recipe.getIngredients();
-				
-				int sum = 0;
-				boolean failed = false;
-				for(Ingredient ing : ings) {
-					for(ItemStack stack : ing.getItems()) {
-						Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack.getItem());
-						if(value == null) {
-							value = generatedValues.get(stack.getItem());
-						}
-						if(value != null && !generatedValues.containsKey(result.getItem())) {
-							sum += value * stack.getCount();
-							failed = false;
-							break;
-						} else {
-							failed = true;
+				ItemStack result = upgrade.getResultItem();
+				if(MatterRegister.INSTANCE.getServerMatterValue(result.getItem()) == null) {
+					List<Ingredient> ings = new ArrayList<>();
+					ings.add(upgrade.base);
+					ings.add(upgrade.addition);
+					int sum = 0;
+					boolean failed = false;
+					for(Ingredient ing : ings) {
+						for(ItemStack stack : ing.getItems()) {
+							Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack.getItem());
+							if(value == null) {
+								value = generatedValues.get(stack.getItem());
+							}
+							if(value != null && !generatedValues.containsKey(result.getItem())) {
+								sum += value * stack.getCount();
+								failed = false;
+								break;
+							} else {
+								failed = true;
+							}
 						}
 					}
+					if (!failed) {
+						int matterValue = (int) Math.ceil((double) sum / (double) result.getCount());
+						generatedValues.put(result.getItem(), matterValue);
+					} 
 				}
-				if (!failed) {
-					int matterValue = (int) Math.ceil((double) sum / (double) result.getCount());
-					generatedValues.put(result.getItem(), matterValue);
-				} 
 			});
 		}
 		
