@@ -55,6 +55,9 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 
 			add("container.tritanium_crate", "Tritanium Crate");
 			
+			add("command." + References.ID + ".startmattercalc", "Starting Matter calculations...");
+			add("command." + References.ID + ".endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
+			
 			add("subtitles." + References.ID + ".crateopen", "Tritanium Crate Opens");
 			add("subtitles." + References.ID + ".crateclose", "Tritanium Crate Closes");
 		}

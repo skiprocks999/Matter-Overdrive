@@ -20,7 +20,7 @@ public class MatterValueGenerator implements DataProvider {
 
 	private static final String DATA_LOC = "data/matteroverdrive/matter/values.json";
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-	DataGenerator gen;
+	private DataGenerator gen;
 	
 	public MatterValueGenerator(DataGenerator gen) {	
 		this.gen = gen;
