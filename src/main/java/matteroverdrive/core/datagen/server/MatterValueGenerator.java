@@ -8,7 +8,6 @@ import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.data.DataGenerator;
@@ -21,47 +20,47 @@ public class MatterValueGenerator implements DataProvider {
 	private static final String DATA_LOC = "data/matteroverdrive/matter/values.json";
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 	private DataGenerator gen;
-	
-	public MatterValueGenerator(DataGenerator gen) {	
+
+	public MatterValueGenerator(DataGenerator gen) {
 		this.gen = gen;
 	}
-	
+
 	@Override
 	public void run(HashCache pCache) throws IOException {
 		JsonObject json = new JsonObject();
 		addValues(json);
 		Path path = gen.getOutputFolder().resolve(DATA_LOC);
 		try {
-			String s = GSON.toJson((JsonElement)json);
-            
+			String s = GSON.toJson(json);
+
 			String s1 = SHA1.hashUnencodedChars(s).toString();
-            if (!Objects.equals(pCache.getHash(path), s1) || !Files.exists(path)) {
-               Files.createDirectories(path.getParent());
-               BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
+			if (!Objects.equals(pCache.getHash(path), s1) || !Files.exists(path)) {
+				Files.createDirectories(path.getParent());
+				BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 
-               try {
-                  bufferedwriter.write(s);
-               } catch (Throwable throwable1) {
-                  if (bufferedwriter != null) {
-                     try {
-                        bufferedwriter.close();
-                     } catch (Throwable throwable) {
-                        throwable1.addSuppressed(throwable);
-                     }
-                  }
+				try {
+					bufferedwriter.write(s);
+				} catch (Throwable throwable1) {
+					if (bufferedwriter != null) {
+						try {
+							bufferedwriter.close();
+						} catch (Throwable throwable) {
+							throwable1.addSuppressed(throwable);
+						}
+					}
 
-                  throw throwable1;
-               }
+					throw throwable1;
+				}
 
-               if (bufferedwriter != null) {
-                  bufferedwriter.close();
-               }
-            }
+				if (bufferedwriter != null) {
+					bufferedwriter.close();
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void addValues(JsonObject json) {
 		json.addProperty("minecraft:basalt", 4);
 		json.addProperty("minecraft:bamboo", 1);
@@ -191,6 +190,5 @@ public class MatterValueGenerator implements DataProvider {
 	public String getName() {
 		return "Matter Generator";
 	}
-	
-	
+
 }

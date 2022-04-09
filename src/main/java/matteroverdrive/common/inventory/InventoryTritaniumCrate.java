@@ -1,7 +1,6 @@
 package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
@@ -40,13 +39,14 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		}
 
 	}
-	
+
 	@Override
 	public void removed(Player pPlayer) {
 		super.removed(pPlayer);
 		GenericTile tile = getTile();
-		if(tile != null) {
-			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATECLOSE.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		if (tile != null) {
+			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATECLOSE.get(),
+					SoundSource.BLOCKS, 0.5F, 1.0F);
 		}
 	}
 

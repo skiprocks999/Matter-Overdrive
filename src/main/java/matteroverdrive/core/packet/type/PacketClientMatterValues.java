@@ -13,11 +13,11 @@ import net.minecraftforge.network.NetworkEvent.Context;
 public class PacketClientMatterValues {
 
 	private final HashMap<Item, Integer> values;
-	
+
 	public PacketClientMatterValues(HashMap<Item, Integer> values) {
 		this.values = values;
 	}
-	
+
 	public static void handle(PacketClientMatterValues message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -39,10 +39,10 @@ public class PacketClientMatterValues {
 	public static PacketClientMatterValues decode(FriendlyByteBuf buf) {
 		HashMap<Item, Integer> vals = new HashMap<>();
 		int size = buf.readInt();
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			vals.put(buf.readItem().getItem(), buf.readInt());
 		}
 		return new PacketClientMatterValues(vals);
 	}
-	
+
 }

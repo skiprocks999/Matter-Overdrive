@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.WaterloggableEntityBlock;
@@ -85,7 +84,8 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 		if (tile instanceof GenericTile generic && generic != null) {
 			if (generic.hasMenu) {
 				player.openMenu(generic.getMenuProvider());
-				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATEOPEN.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATEOPEN.get(),
+						SoundSource.BLOCKS, 0.5F, 1.0F);
 			}
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);
 			return InteractionResult.CONSUME;
@@ -98,20 +98,18 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof TileTritaniumCrate crate) {
 			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
-			if(MatterOverdriveConfig.crate_drop_items.get()) {
+			if (MatterOverdriveConfig.crate_drop_items.get()) {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));
 			}
 			builder = builder.withDynamicDrop(CONTENTS, (context, consumer) -> {
-				for(ItemStack stack :  inv.getItems()) {
+				for (ItemStack stack : inv.getItems()) {
 					consumer.accept(stack);
 				}
 			});
 		}
 		return super.getDrops(state, builder);
 	}
-	
-	
 
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {

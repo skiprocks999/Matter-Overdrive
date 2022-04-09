@@ -54,10 +54,15 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 			add("tooltip." + References.ID + ".nomatter", "NONE");
 
 			add("container.tritanium_crate", "Tritanium Crate");
-			
+
 			add("command." + References.ID + ".startmattercalc", "Starting Matter calculations...");
-			add("command." + References.ID + ".endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
-			
+			add("command." + References.ID + ".endmattercalc",
+					"Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
+			add("command." + References.ID + ".manualfailed", "unexpected error");
+			add("command." + References.ID + ".mainhandempty", "You must be holding an item");
+			add("command." + References.ID + ".assignedvalue", "Assigned %1$s kM to %2$s");
+			add("command." + References.ID + ".endmanualassign", "Saved under \"Matter Overdrive/manual.json\"");
+
 			add("subtitles." + References.ID + ".crateopen", "Tritanium Crate Opens");
 			add("subtitles." + References.ID + ".crateclose", "Tritanium Crate Closes");
 		}

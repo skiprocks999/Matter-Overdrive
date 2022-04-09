@@ -27,7 +27,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class MatterOverdrive {
 
 	public MatterRegister register;
-	
+
 	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public MatterOverdrive() {
@@ -39,11 +39,12 @@ public class MatterOverdrive {
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
-		
-		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON, "matteroverdrive/matteroverdrive.common.toml");
-		
+
+		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
+				"matteroverdrive/matteroverdrive.common.toml");
+
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
-	
+
 	}
 
 	@SubscribeEvent

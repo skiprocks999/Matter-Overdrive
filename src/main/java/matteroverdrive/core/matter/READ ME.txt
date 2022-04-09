@@ -43,16 +43,35 @@ your item values will be assigned if another mod already assigns a tag and its f
 2. To assign values to items in your mod, you don't have to do a whole lot of work, as there is a
 provided command to generate values for you. Instead of coding every single value by hand, you 
 simply have to code values that don't have a crafting table, furnace, or smithing table recipe.
-Once you have hand-coded those, you simply have to run the command "/matteroverdrive genmattervalues"
+Once you have hand-coded those, you simply have to run the command 
+
+"/matteroverdrive genmattervalues"
+
 in game. The command will then assign values to items (provided they are of the three recipe types above) 
-and save it under "Matter Overdrive/generated.json" in your save folder.
+and save it under "Matter Overdrive/generated.json" in your save folder. Note, this file will be 
+overwriten each time the command is run!
 
 You can then either put this file in your mod's "matter" folder along with your "values.json" file to 
 ship it directly with your mod, or make a datapack from it!
 
 More compatibility is planned in the future for additional recipe types.
 
-3. If you want to completely customize matter values, then it is within your power. Simply create a data
+3. To help you with manually assigning matter values to items, the command 
+
+/matteroverdrive addmattervalue <value>
+
+has been added. To use, simply hold an item in your main hand and run the command. The item will then
+be added to the file "Matter Overdrive/manual.json". Unlike the genmattervalues command, the file 
+the items are stored to will not be overwritten each time it is run. However, if the item is already
+present in the existing file, then it will be overwritten by the new assignment. As an example, say
+you wanted to assign a value of 10 kM to Dirt. Holding the Dirt block in your main hand, the command
+would look like this:
+
+/matteroverdrive addmattervalue 10
+
+Note, the command only supports integers!
+
+4. If you want to completely customize matter values, then it is within your power. Simply create a data
 pack with a higher priority than 8, and it will override all the preset values shipped with Matter Overdrive
 and other mods. However, due to the limitations of data packs, the only difference in priority is
 the higher priority packs get parsed before the lower ones. In short, this means if you want to 

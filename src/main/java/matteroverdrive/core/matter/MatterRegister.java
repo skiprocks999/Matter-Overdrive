@@ -1,5 +1,5 @@
 /*
-Based off of example by Commable under MIT License 
+Based off of example by Commable under MIT License
 
 See https://github.com/Commoble/databuddy/blob/1.18.x/src/main/java/commoble/databuddy/data/MergeableCodecDataManager.java
 for full details
@@ -57,73 +57,78 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
-	
+
 	private HashMap<Item, Integer> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Integer> parsedTags = new HashMap<>();
 	private static final Gson GSON = new Gson();
 	public static MatterRegister INSTANCE = null;
-	
+
 	private final String folderName;
 	private final Logger logger;
-	
+
 	private HashMap<Item, Integer> CLIENT_VALUES = new HashMap<>();
-	
+
 	public MatterRegister() {
 		folderName = "matter";
 		logger = MatterOverdrive.LOGGER;
 	}
-	
+
 	@Nullable
 	public Integer getServerMatterValue(Item item) {
 		return SERVER_VALUES.get(item);
 	}
-	
+
 	@Nullable
 	public Integer getClientMatterValue(Item item) {
 		return CLIENT_VALUES.get(item);
 	}
-	
+
 	@Override
-	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
+	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager,
+			final ProfilerFiller profiler) {
 		final List<Pair<ResourceLocation, List<JsonObject>>> map = new ArrayList<>();
 
-		List<ResourceLocation> resources = new ArrayList<ResourceLocation>(resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile));
+		List<ResourceLocation> resources = new ArrayList<>(
+				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile));
 		Collections.reverse(resources);
-		//we go in reverse, as higher priority data packs are found later in the list
+		// we go in reverse, as higher priority data packs are found later in the list
 		for (ResourceLocation resourceLocation : resources) {
 			final String namespace = resourceLocation.getNamespace();
 			final String filePath = resourceLocation.getPath();
-			final String dataPath = filePath.substring(this.folderName.length() + 1, filePath.length() - JSON_EXTENSION_LENGTH);
-			
+			final String dataPath = filePath.substring(this.folderName.length() + 1,
+					filePath.length() - JSON_EXTENSION_LENGTH);
+
 			final ResourceLocation jsonIdentifier = new ResourceLocation(namespace, dataPath);
 			final List<JsonObject> unmergedRaws = new ArrayList<>();
 
 			try {
 				for (Resource resource : resourceManager.getResources(resourceLocation)) {
-					try (
-						final InputStream inputStream = resource.getInputStream();
-						final Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-					) {
-						final JsonObject jsonElement = (JsonObject) GsonHelper.fromJson(GSON, reader, JsonElement.class);
+					try (final InputStream inputStream = resource.getInputStream();
+							final Reader reader = new BufferedReader(
+									new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+						final JsonObject jsonElement = (JsonObject) GsonHelper.fromJson(GSON, reader,
+								JsonElement.class);
 						unmergedRaws.add(jsonElement);
-					} catch(RuntimeException | IOException exception) {
-						this.logger.error("Data loader for {} could not read data {} from file {} in data pack {}", this.folderName, jsonIdentifier, resourceLocation, resource.getSourceName(), exception); 
+					} catch (RuntimeException | IOException exception) {
+						this.logger.error("Data loader for {} could not read data {} from file {} in data pack {}",
+								this.folderName, jsonIdentifier, resourceLocation, resource.getSourceName(), exception);
 					} finally {
 						IOUtils.closeQuietly(resource);
 					}
 				}
 			} catch (IOException exception) {
-				this.logger.error("Data loader for {} could not read data {} from file {}", this.folderName, jsonIdentifier, resourceLocation, exception);
+				this.logger.error("Data loader for {} could not read data {} from file {}", this.folderName,
+						jsonIdentifier, resourceLocation, exception);
 			}
 			map.add(Pair.of(jsonIdentifier, unmergedRaws));
 		}
-		
+
 		JsonObject merged = new JsonObject();
 		map.forEach(pair -> {
 			pair.getSecond().forEach(list -> {
 				list.entrySet().forEach(json -> {
 					String key = json.getKey();
-					if(!merged.has(key)) {
+					if (!merged.has(key)) {
 						merged.addProperty(key, json.getValue().getAsInt());
 					}
 				});
@@ -131,14 +136,14 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		});
 		Map<ResourceLocation, JsonObject> combined = new HashMap<>();
 		combined.put(new ResourceLocation(References.ID, "combinedmattervals"), merged);
-		
+
 		return combined;
 	}
-	
+
 	private static boolean isStringJsonFile(final String filename) {
 		return filename.endsWith(JSON_EXTENSION);
 	}
-	
+
 	@Override
 	protected void apply(Map<ResourceLocation, JsonObject> object, ResourceManager manager, ProfilerFiller profiler) {
 		SERVER_VALUES.clear();
@@ -146,59 +151,59 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		object.forEach((location, element) -> {
 			element.entrySet().forEach(h -> {
 				String key = h.getKey();
-				if(key.charAt(0) == '#') {
+				if (key.charAt(0) == '#') {
 					key = key.substring(1);
 					String[] split = key.split(":");
-					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])), h.getValue().getAsInt());
+					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])),
+							h.getValue().getAsInt());
 				} else {
 					ResourceLocation loc = new ResourceLocation(key);
 					Item item = null;
 					try {
 						item = ForgeRegistries.ITEMS.getHolder(loc).get().value();
-					} catch(Exception e) {
+					} catch (Exception e) {
 						MatterOverdrive.LOGGER.info(loc.toString() + " does not exist!");
 					}
 					int value = h.getValue().getAsInt();
-					if(!SERVER_VALUES.containsKey(item) && value > 0) {
+					if (!SERVER_VALUES.containsKey(item) && value > 0) {
 						SERVER_VALUES.put(item, value);
 					}
 				}
 			});
 		});
 	}
-	
+
 	public void generateTagValues() {
 		parsedTags.forEach((key, val) -> {
 			Ingredient ing = Ingredient.of(key);
-			for(ItemStack stack : ing.getItems()) {
+			for (ItemStack stack : ing.getItems()) {
 				Item itm = stack.getItem();
-				if(!SERVER_VALUES.containsKey(itm) && val > 0) {
+				if (!SERVER_VALUES.containsKey(itm) && val > 0) {
 					SERVER_VALUES.put(itm, val);
 				}
 			}
 		});
 		parsedTags.clear();
 	}
-	
-	public MatterRegister subscribeAsSyncable(final SimpleChannel channel){
+
+	public MatterRegister subscribeAsSyncable(final SimpleChannel channel) {
 		MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(channel));
 		return this;
 	}
-		
+
 	private Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final SimpleChannel channel) {
 		return event -> {
 			generateTagValues();
 			ServerPlayer player = event.getPlayer();
 			PacketClientMatterValues packet = new PacketClientMatterValues(SERVER_VALUES);
-			PacketTarget target = player == null
-				? PacketDistributor.ALL.noArg()
-				: PacketDistributor.PLAYER.with(() -> player);
+			PacketTarget target = player == null ? PacketDistributor.ALL.noArg()
+					: PacketDistributor.PLAYER.with(() -> player);
 			channel.send(target, packet);
 		};
 	}
-	
+
 	public void setClientValues(HashMap<Item, Integer> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
-	
+
 }

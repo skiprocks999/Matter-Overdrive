@@ -2,6 +2,7 @@ package matteroverdrive.common.event;
 
 import matteroverdrive.References;
 import matteroverdrive.core.command.CommandGenerateMatterValues;
+import matteroverdrive.core.command.CommandManualMatterValue;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -17,15 +18,16 @@ public class ServerHandler {
 	public static void reloadListeners(AddReloadListenerEvent event) {
 		event.addListener(MatterRegister.INSTANCE);
 	}
-	
+
 	@SubscribeEvent
 	public static void serverStartedHandler(ServerStartedEvent event) {
 		MatterRegister.INSTANCE.generateTagValues();
 	}
-	
+
 	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {
 		CommandGenerateMatterValues.register(event.getDispatcher());
+		CommandManualMatterValue.register(event.getDispatcher());
 	}
-	
+
 }
