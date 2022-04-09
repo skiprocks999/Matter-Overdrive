@@ -40,11 +40,31 @@ a data pack. This package can either be an external data pack or in your mod's b
 item and tag values in this file will be processed regularly. However, this does not gaurentee that
 your item values will be assigned if another mod already assigns a tag and its file is loaded first.
 
-2. To force a value on an item, place it in a file called "forced.json" in the same directory. This 
-file is loaded before "values.json", and can help ensure that a value is assigned properly.
+2. To assign values to items in your mod, you don't have to do a whole lot of work, as there is a
+provided command to generate values for you. Instead of coding every single value by hand, you 
+simply have to code values that don't have a crafting table, furnace, or smithing table recipe.
+Once you have hand-coded those, you simply have to run the command "/matteroverdrive genmattervalues"
+in game. The command will then assign values to items (provided they are of the three recipe types above) 
+and save it under "Matter Overdrive/generated.json" in your save folder.
 
-3. If you want to completely customize 
+You can then either put this file in your mod's "matter" folder along with your "values.json" file to 
+ship it directly with your mod, or make a datapack from it!
 
+More compatibility is planned in the future for additional recipe types.
+
+3. If you want to completely customize matter values, then it is within your power. Simply create a data
+pack with a higher priority than 8, and it will override all the preset values shipped with Matter Overdrive
+and other mods. However, due to the limitations of data packs, the only difference in priority is
+the higher priority packs get parsed before the lower ones. In short, this means if you want to 
+remove the matter value from an item added from a lower data pack, you will need to tell the parser
+not to. This can be easily, albiet tediously, accomplished by assigning a value of 0 or less to the 
+item in your json file. For example, say you really hate dirt, and don't want it to have a matter value.
+In your custom json file, you would add the line:
+
+    "minecraft:dirt" : 0
+
+Any integer less than or equal to zero will technically work! Remember the tag rules from abover also
+would still apply here.
 
 
 

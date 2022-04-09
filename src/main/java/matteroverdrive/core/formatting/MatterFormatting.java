@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 public class MatterFormatting {
 	
-	private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
+	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 	
 	public static String formatMatterValue(int matterValue) {
 		if(matterValue < 1000) {

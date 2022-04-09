@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +26,10 @@ import javax.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
@@ -84,9 +85,12 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	
 	@Override
 	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
-		final Map<ResourceLocation, List<JsonObject>> map = Maps.newHashMap();
+		final List<Pair<ResourceLocation, List<JsonObject>>> map = new ArrayList<>();
 
-		for (ResourceLocation resourceLocation : resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile)) {
+		List<ResourceLocation> resources = new ArrayList<ResourceLocation>(resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile));
+		Collections.reverse(resources);
+		//we go in reverse, as higher priority data packs are found later in the list
+		for (ResourceLocation resourceLocation : resources) {
 			final String namespace = resourceLocation.getNamespace();
 			final String filePath = resourceLocation.getPath();
 			final String dataPath = filePath.substring(this.folderName.length() + 1, filePath.length() - JSON_EXTENSION_LENGTH);
@@ -111,14 +115,17 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			} catch (IOException exception) {
 				this.logger.error("Data loader for {} could not read data {} from file {}", this.folderName, jsonIdentifier, resourceLocation, exception);
 			}
-			map.put(jsonIdentifier, unmergedRaws);
+			map.add(Pair.of(jsonIdentifier, unmergedRaws));
 		}
 		
 		JsonObject merged = new JsonObject();
-		map.forEach((resource, list) -> {
-			list.forEach(object -> {
-				object.entrySet().forEach(h -> {
-					merged.addProperty(h.getKey(), h.getValue().getAsInt());
+		map.forEach(pair -> {
+			pair.getSecond().forEach(list -> {
+				list.entrySet().forEach(json -> {
+					String key = json.getKey();
+					if(!merged.has(key)) {
+						merged.addProperty(key, json.getValue().getAsInt());
+					}
 				});
 			});
 		});
@@ -151,8 +158,9 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 					} catch(Exception e) {
 						MatterOverdrive.LOGGER.info(loc.toString() + " does not exist!");
 					}
-					if(!SERVER_VALUES.containsKey(item)) {
-						SERVER_VALUES.put(item, h.getValue().getAsInt());
+					int value = h.getValue().getAsInt();
+					if(!SERVER_VALUES.containsKey(item) && value > 0) {
+						SERVER_VALUES.put(item, value);
 					}
 				}
 			});
@@ -164,7 +172,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			Ingredient ing = Ingredient.of(key);
 			for(ItemStack stack : ing.getItems()) {
 				Item itm = stack.getItem();
-				if(!SERVER_VALUES.containsKey(itm)) {
+				if(!SERVER_VALUES.containsKey(itm) && val > 0) {
 					SERVER_VALUES.put(itm, val);
 				}
 			}
@@ -179,6 +187,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		
 	private Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final SimpleChannel channel) {
 		return event -> {
+			generateTagValues();
 			ServerPlayer player = event.getPlayer();
 			PacketClientMatterValues packet = new PacketClientMatterValues(SERVER_VALUES);
 			PacketTarget target = player == null
