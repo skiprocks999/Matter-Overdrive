@@ -33,10 +33,10 @@ public class CommandManualMatterValue {
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
 		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2))
-				.then(Commands.literal("addmattervalue").requires(source -> source.hasPermission(2)))
-				.then(Commands.argument("value", IntegerArgumentType.integer(0))
-						.executes(source -> addManualValue(source.getSource(),
-								IntegerArgumentType.getInteger(source, "value")))));
+				.then(Commands.literal("addmattervalue").requires(source -> source.hasPermission(2))
+						.then(Commands.argument("value", IntegerArgumentType.integer(0))
+								.executes(source -> addManualValue(source.getSource(),
+										IntegerArgumentType.getInteger(source, "value"))))));
 
 	}
 
@@ -50,6 +50,7 @@ public class CommandManualMatterValue {
 
 			if (target.isEmpty()) {
 				source.sendFailure(new TranslatableComponent("command.matteroverdrive.mainhandempty"));
+				return 0;
 			}
 
 			Path path = Paths.get("Matter Overdrive/manual.json");
@@ -69,7 +70,7 @@ public class CommandManualMatterValue {
 			if (obj.has(key)) {
 				obj.remove(key);
 			}
-			
+
 			obj.addProperty(key, value);
 
 			Map<String, Integer> temp = new HashMap<>();
@@ -109,9 +110,9 @@ public class CommandManualMatterValue {
 			if (bufferedwriter != null) {
 				bufferedwriter.close();
 			}
-			
-			source.sendSuccess(new TranslatableComponent("command.matteroverdrive.assignedvalue", key, value), true);
-			
+
+			source.sendSuccess(new TranslatableComponent("command.matteroverdrive.assignedvalue", value, key), true);
+
 		} catch (Exception e) {
 			source.sendFailure(new TranslatableComponent("command.matteroverdrive.manualfailed"));
 		}
