@@ -16,7 +16,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 
 import matteroverdrive.References;
 import net.minecraft.commands.CommandSourceStack;
@@ -37,7 +36,7 @@ public class CommandManualMatterValue {
 				.then(Commands.literal("addmattervalue").requires(source -> source.hasPermission(2))
 						.then(Commands.argument("value", DoubleArgumentType.doubleArg(0))
 								.executes(source -> addManualValue(source.getSource(),
-										IntegerArgumentType.getInteger(source, "value"))))));
+										DoubleArgumentType.getDouble(source, "value"))))));
 
 	}
 
