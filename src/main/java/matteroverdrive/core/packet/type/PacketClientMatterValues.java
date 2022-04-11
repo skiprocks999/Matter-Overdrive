@@ -12,9 +12,9 @@ import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketClientMatterValues {
 
-	private final HashMap<Item, Integer> values;
+	private final HashMap<Item, Double> values;
 
-	public PacketClientMatterValues(HashMap<Item, Integer> values) {
+	public PacketClientMatterValues(HashMap<Item, Double> values) {
 		this.values = values;
 	}
 
@@ -32,15 +32,15 @@ public class PacketClientMatterValues {
 		buf.writeInt(pkt.values.size());
 		pkt.values.forEach((item, val) -> {
 			buf.writeItem(new ItemStack(item));
-			buf.writeInt(val);
+			buf.writeDouble(val);
 		});
 	}
 
 	public static PacketClientMatterValues decode(FriendlyByteBuf buf) {
-		HashMap<Item, Integer> vals = new HashMap<>();
+		HashMap<Item, Double> vals = new HashMap<>();
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {
-			vals.put(buf.readItem().getItem(), buf.readInt());
+			vals.put(buf.readItem().getItem(), buf.readDouble());
 		}
 		return new PacketClientMatterValues(vals);
 	}

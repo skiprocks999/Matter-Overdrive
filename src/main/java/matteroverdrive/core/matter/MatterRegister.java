@@ -58,15 +58,15 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
-	private HashMap<Item, Integer> SERVER_VALUES = new HashMap<>();
-	private HashMap<TagKey<Item>, Integer> parsedTags = new HashMap<>();
+	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
+	private HashMap<TagKey<Item>, Double> parsedTags = new HashMap<>();
 	private static final Gson GSON = new Gson();
 	public static MatterRegister INSTANCE = null;
 
 	private final String folderName;
 	private final Logger logger;
 
-	private HashMap<Item, Integer> CLIENT_VALUES = new HashMap<>();
+	private HashMap<Item, Double> CLIENT_VALUES = new HashMap<>();
 
 	public MatterRegister() {
 		folderName = "matter";
@@ -74,7 +74,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	}
 
 	@Nullable
-	public Integer getServerMatterValue(ItemStack item) {
+	public Double getServerMatterValue(ItemStack item) {
 		if(MatterUtils.validateItem(item)) {
 			return SERVER_VALUES.get(item.getItem());
 		}
@@ -82,7 +82,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	}
 
 	@Nullable
-	public Integer getClientMatterValue(ItemStack item) {
+	public Double getClientMatterValue(ItemStack item) {
 		if(MatterUtils.validateItem(item)) {
 			return CLIENT_VALUES.get(item.getItem());
 		}
@@ -161,7 +161,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 					key = key.substring(1);
 					String[] split = key.split(":");
 					parsedTags.put(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(split[0], split[1])),
-							h.getValue().getAsInt());
+							h.getValue().getAsDouble());
 				} else {
 					ResourceLocation loc = new ResourceLocation(key);
 					Item item = null;
@@ -170,7 +170,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 					} catch (Exception e) {
 						MatterOverdrive.LOGGER.info(loc.toString() + " does not exist!");
 					}
-					int value = h.getValue().getAsInt();
+					double value = h.getValue().getAsDouble();
 					if (!SERVER_VALUES.containsKey(item) && value > 0) {
 						SERVER_VALUES.put(item, value);
 					}
@@ -208,7 +208,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		};
 	}
 
-	public void setClientValues(HashMap<Item, Integer> valueMap) {
+	public void setClientValues(HashMap<Item, Double> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
 

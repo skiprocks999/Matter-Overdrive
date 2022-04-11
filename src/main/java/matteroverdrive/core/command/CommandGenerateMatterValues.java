@@ -47,7 +47,7 @@ public class CommandGenerateMatterValues {
 		source.sendSuccess(new TranslatableComponent("command.matteroverdrive.startmattercalc"), true);
 
 		RecipeManager manager = source.getRecipeManager();
-		Map<Item, Integer> generatedValues = new HashMap<>();
+		Map<Item, Double> generatedValues = new HashMap<>();
 
 		for (int i = 0; i < 200; i++) {
 			manager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
@@ -56,13 +56,12 @@ public class CommandGenerateMatterValues {
 					Ingredient ing = recipe.getIngredients().get(0);
 
 					for (ItemStack stack : ing.getItems()) {
-						Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+						Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 						if (value == null) {
 							value = generatedValues.get(stack.getItem());
 						}
 						if (value != null && !generatedValues.containsKey(result.getItem())) {
-							int matterValue = (int) Math
-									.ceil(((double) (stack.getCount() * value)) / (double) result.getCount());
+							double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
 							generatedValues.put(result.getItem(), matterValue);
 							break;
 						}
@@ -72,17 +71,17 @@ public class CommandGenerateMatterValues {
 
 			manager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
+				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null && generatedValues.get(result.getItem()) == null) {
 					List<Ingredient> ings = recipe.getIngredients();
-					int sum = 0;
+					double sum = 0;
 					boolean failed = false;
 					for (Ingredient ing : ings) {
 						for (ItemStack stack : ing.getItems()) {
-							Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 							if (value == null) {
 								value = generatedValues.get(stack.getItem());
 							}
-							if (value != null && !generatedValues.containsKey(result.getItem())) {
+							if (value != null) {
 								sum += value * stack.getCount();
 								failed = false;
 								break;
@@ -91,7 +90,7 @@ public class CommandGenerateMatterValues {
 						}
 					}
 					if (!failed) {
-						int matterValue = (int) Math.ceil((double) sum / (double) result.getCount());
+						double matterValue = (double) sum / (double) result.getCount();
 						generatedValues.put(result.getItem(), matterValue);
 					}
 				}
@@ -104,11 +103,11 @@ public class CommandGenerateMatterValues {
 					List<Ingredient> ings = new ArrayList<>();
 					ings.add(upgrade.base);
 					ings.add(upgrade.addition);
-					int sum = 0;
+					double sum = 0;
 					boolean failed = false;
 					for (Ingredient ing : ings) {
 						for (ItemStack stack : ing.getItems()) {
-							Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 							if (value == null) {
 								value = generatedValues.get(stack.getItem());
 							}
@@ -121,7 +120,7 @@ public class CommandGenerateMatterValues {
 						}
 					}
 					if (!failed) {
-						int matterValue = (int) Math.ceil((double) sum / (double) result.getCount());
+						double matterValue = (double) sum / (double) result.getCount();
 						generatedValues.put(result.getItem(), matterValue);
 					}
 				}
@@ -162,7 +161,7 @@ public class CommandGenerateMatterValues {
 		}
 
 		// now we sort them alphabetically
-		List<Pair<String, Integer>> sorted = new ArrayList<>();
+		List<Pair<String, Double>> sorted = new ArrayList<>();
 		List<String> names = new ArrayList<>();
 		generatedValues.keySet().forEach(item -> {
 			names.add(item.getRegistryName().toString());

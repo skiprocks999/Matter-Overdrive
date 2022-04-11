@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 
 import matteroverdrive.References;
@@ -34,13 +35,13 @@ public class CommandManualMatterValue {
 
 		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2))
 				.then(Commands.literal("addmattervalue").requires(source -> source.hasPermission(2))
-						.then(Commands.argument("value", IntegerArgumentType.integer(0))
+						.then(Commands.argument("value", DoubleArgumentType.doubleArg(0))
 								.executes(source -> addManualValue(source.getSource(),
 										IntegerArgumentType.getInteger(source, "value"))))));
 
 	}
 
-	private static int addManualValue(CommandSourceStack source, int value) {
+	private static int addManualValue(CommandSourceStack source, double value) {
 
 		ServerPlayer player = null;
 
@@ -73,12 +74,12 @@ public class CommandManualMatterValue {
 
 			obj.addProperty(key, value);
 
-			Map<String, Integer> temp = new HashMap<>();
+			Map<String, Double> temp = new HashMap<>();
 			List<String> names = new ArrayList<>();
 
 			obj.entrySet().forEach(element -> {
 				names.add(element.getKey());
-				temp.put(element.getKey(), element.getValue().getAsInt());
+				temp.put(element.getKey(), element.getValue().getAsDouble());
 			});
 
 			Collections.sort(names);

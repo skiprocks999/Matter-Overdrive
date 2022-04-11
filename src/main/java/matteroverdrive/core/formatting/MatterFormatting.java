@@ -6,7 +6,7 @@ public class MatterFormatting {
 
 	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 
-	public static String formatMatterValue(int matterValue) {
+	public static String formatMatterValue(double matterValue) {
 		if (matterValue < 1000) {
 			return FORMAT.format(matterValue) + " kM";
 		}
