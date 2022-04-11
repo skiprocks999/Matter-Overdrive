@@ -109,6 +109,9 @@ public class CommandGenerateMatterValues {
 					double sum = 0;
 					boolean failed = false;
 					for (Ingredient ing : ings) {
+						if(failed) {
+							break;
+						}
 						for (ItemStack stack : ing.getItems()) {
 							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 							if (value == null) {
