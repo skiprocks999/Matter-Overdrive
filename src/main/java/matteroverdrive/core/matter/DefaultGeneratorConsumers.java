@@ -71,6 +71,7 @@ public class DefaultGeneratorConsumers {
 				ItemStack result = upgrade.getResultItem();
 				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
 					List<Ingredient> ings = new ArrayList<>();
+					//AT
 					ings.add(upgrade.base);
 					ings.add(upgrade.addition);
 					double sum = 0;

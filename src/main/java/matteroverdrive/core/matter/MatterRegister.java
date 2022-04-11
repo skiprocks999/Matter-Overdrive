@@ -34,6 +34,7 @@ import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -79,18 +80,18 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 	@Nullable
 	public Double getServerMatterValue(ItemStack item) {
-		if(MatterUtils.validateItem(item)) {
-			return SERVER_VALUES.get(item.getItem());
+		if(MatterOverdriveConfig.validate_matter_items.get()) {
+			return MatterUtils.validateItem(item) ? SERVER_VALUES.get(item.getItem()) : null;
 		}
-		return null;
+		return SERVER_VALUES.get(item.getItem());
 	}
 
 	@Nullable
 	public Double getClientMatterValue(ItemStack item) {
-		if(MatterUtils.validateItem(item)) {
-			return CLIENT_VALUES.get(item.getItem());
+		if(MatterOverdriveConfig.validate_matter_items.get()) {
+			return MatterUtils.validateItem(item) ? CLIENT_VALUES.get(item.getItem()) : null;
 		}
-		return null;
+		return CLIENT_VALUES.get(item.getItem());
 	}
 
 	@Override
