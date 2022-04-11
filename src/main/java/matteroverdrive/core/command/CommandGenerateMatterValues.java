@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiConsumer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,11 +24,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CommandGenerateMatterValues {
@@ -47,91 +43,13 @@ public class CommandGenerateMatterValues {
 		source.sendSuccess(new TranslatableComponent("command.matteroverdrive.startmattercalc"), true);
 
 		RecipeManager manager = source.getRecipeManager();
-		Map<Item, Double> generatedValues = new HashMap<>();
+		HashMap<Item, Double> generatedValues = new HashMap<>();
 
+		List<BiConsumer<HashMap<Item, Double>, RecipeManager>> consumers = MatterRegister.getConsumers();
 		for (int i = 0; i < 300; i++) {
-			manager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
-				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
-					Ingredient ing = recipe.getIngredients().get(0);
-
-					for (ItemStack stack : ing.getItems()) {
-						Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-						if (value == null) {
-							value = generatedValues.get(stack.getItem());
-						}
-						if (value != null && !generatedValues.containsKey(result.getItem())) {
-							double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
-							generatedValues.put(result.getItem(), matterValue);
-							break;
-						}
-					}
-				}
-			});
-
-			manager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
-				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null && generatedValues.get(result.getItem()) == null) {
-					List<Ingredient> ings = recipe.getIngredients();
-					double sum = 0;
-					boolean failed = false;
-					for (Ingredient ing : ings) {
-						if(failed) {
-							break;
-						}
-						for (ItemStack stack : ing.getItems()) {
-							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-							if (value == null) {
-								value = generatedValues.get(stack.getItem());
-							}
-							if (value != null) {
-								sum += value * stack.getCount();
-								failed = false;
-								break;
-							}
-							failed = true;
-						}
-					}
-					if (!failed) {
-						double matterValue = (double) sum / (double) result.getCount();
-						generatedValues.put(result.getItem(), matterValue);
-					}
-				}
-			});
-
-			manager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
-				UpgradeRecipe upgrade = recipe;
-				ItemStack result = upgrade.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
-					List<Ingredient> ings = new ArrayList<>();
-					ings.add(upgrade.base);
-					ings.add(upgrade.addition);
-					double sum = 0;
-					boolean failed = false;
-					for (Ingredient ing : ings) {
-						if(failed) {
-							break;
-						}
-						for (ItemStack stack : ing.getItems()) {
-							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-							if (value == null) {
-								value = generatedValues.get(stack.getItem());
-							}
-							if (value != null && !generatedValues.containsKey(result.getItem())) {
-								sum += value * stack.getCount();
-								failed = false;
-								break;
-							}
-							failed = true;
-						}
-					}
-					if (!failed) {
-						double matterValue = (double) sum / (double) result.getCount();
-						generatedValues.put(result.getItem(), matterValue);
-					}
-				}
-			});
-			
+			for(BiConsumer<HashMap<Item, Double>, RecipeManager> consumer : consumers) {
+				consumer.accept(generatedValues, manager);
+			}
 			/*
 			BrewingRecipeRegistry.getRecipes().forEach(recipe -> {
 				if(recipe instanceof BrewingRecipe brewing) {

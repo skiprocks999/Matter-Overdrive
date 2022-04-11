@@ -6,6 +6,7 @@ import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -39,12 +40,12 @@ public class MatterOverdrive {
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
-
+		
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
 				"matteroverdrive/matteroverdrive.common.toml");
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
-
+		DefaultGeneratorConsumers.init();
 	}
 
 	@SubscribeEvent
