@@ -92,6 +92,7 @@ public class MatterValueGenerator implements DataProvider {
 		json.addProperty("#" + ItemTags.DIRT.location().toString(), 1);
 		json.addProperty("minecraft:dirt_path", 1);
 		json.addProperty("#" + ItemTags.EMERALD_ORES.location().toString(), 512);
+		json.addProperty("minecraft:enchanted_golden_apple", 5000);
 		json.addProperty("minecraft:end_portal_frame", 1024);
 		json.addProperty("minecraft:elytra", 100);
 		json.addProperty("minecraft:farmland", 1);
@@ -115,15 +116,18 @@ public class MatterValueGenerator implements DataProvider {
 		json.addProperty("minecraft:kelp", 1);
 		json.addProperty("#" + ItemTags.LAPIS_ORES.location().toString(), 16);
 		json.addProperty("minecraft:large_fern", 1);
+		json.addProperty("minecraft:lava_bucket", 250);
 		json.addProperty("#" + ItemTags.LEAVES.location().toString(), 1);
 		json.addProperty("minecraft:lily_pad", 1);
 		json.addProperty("#" + ItemTags.LOGS.location().toString(), 16);
+		json.addProperty("minecraft:milk_bucket", 193);
 		json.addProperty("#" + ItemTags.MUSIC_DISCS.location().toString(), 1);
 		json.addProperty("minecraft:mushroom_stem", 1);
 		json.addProperty("minecraft:nautilus_shell", 4);
 		json.addProperty("minecraft:nether_sprouts", 1);
 		json.addProperty("minecraft:name_tag", 10);
 		json.addProperty("minecraft:pointed_dripstone", 1);
+		json.addProperty("minecraft:powder_snow_bucket", 193);
 		json.addProperty("minecraft:pumpkin", 2);
 		json.addProperty("minecraft:rabbit_hide", 1);
 		json.addProperty("minecraft:rabbit_foot", 10);
@@ -149,6 +153,8 @@ public class MatterValueGenerator implements DataProvider {
 		json.addProperty("minecraft:warped_fungus", 1);
 		json.addProperty("minecraft:warped_nylium", 1);
 		json.addProperty("minecraft:warped_roots", 1);
+		json.addProperty("minecraft:water_bottle", 3);
+		json.addProperty("minecraft:water_bucket", 193);
 		json.addProperty("minecraft:weeping_vines", 1);
 		json.addProperty("minecraft:wet_sponge", 8);
 		json.addProperty("#forge:amethyst_buds", 4);
