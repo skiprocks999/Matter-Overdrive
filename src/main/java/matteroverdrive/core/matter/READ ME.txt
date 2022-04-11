@@ -44,11 +44,14 @@ your item values will be assigned if another mod already assigns a tag and its f
 provided command to generate values for you. Instead of coding every single value by hand, you 
 simply have to code values that don't have a recipe and then run the command:
 
-"/matteroverdrive genmattervalues"
+/matteroverdrive genmattervalues
 
 in game. By default, the generator ships with support for Crafting Table, Furnace, and Smithing Table
 recipes. Upon running the command, the generator will produce a JSON file  and save it under 
-"Matter Overdrive/generated.json" in your save folder. Note, this file will be overwritten each time the
+
+Matter Overdrive/generated.json
+
+in your save folder. Note, this file will be overwritten each time the
 command is run!
 
 You can then either put this file in your mod's "matter" folder along with your "values.json" file to 
@@ -73,11 +76,14 @@ the command is run.
 /matteroverdrive addmattervalue <value>
 
 has been added. To use, simply hold an item in your main hand and run the command. The item will then
-be added to the file "Matter Overdrive/manual.json". Unlike the genmattervalues command, the file 
-the items are stored to will not be overwritten each time it is run. However, if the item is already
-present in the existing file, then it will be overwritten by the new assignment. As an example, say
-you wanted to assign a value of 10 kM to Dirt. Holding the Dirt block in your main hand, the command
-would look like this:
+be added to the file 
+
+Matter Overdrive/manual.json
+
+Unlike the genmattervalues command, the file will not be overwritten each time it is run. However, if 
+the item is already present in the existing file, then it will be overwritten by the new assignment. 
+As an example, say you wanted to assign a value of 10 kM to Dirt. Holding the Dirt block in your main 
+hand, the command would look like this:
 
 /matteroverdrive addmattervalue 10
 
