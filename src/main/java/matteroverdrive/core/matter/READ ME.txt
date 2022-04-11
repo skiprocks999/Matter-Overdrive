@@ -36,20 +36,20 @@ of 10 kM.
 Adding your own matter values:
 
 1. To add your own matter values, create a file called "values.json" under the package "matter" in
-a data pack. This package can either be an external data pack or in your mod's built in one. All
-item and tag values in this file will be processed regularly. However, this does not gaurentee that
+a data pack. This package can either be an external data pack or in your mod's built-in one. All
+item and tag values in this file will be processed regularly. However, this does not guarantee that
 your item values will be assigned if another mod already assigns a tag and its file is loaded first.
 
 2. To assign values to items in your mod, you don't have to do a whole lot of work, as there is a
 provided command to generate values for you. Instead of coding every single value by hand, you 
 simply have to code values that don't have a recipe and then run the command:
 
-/matteroverdrive genmattervalues
+    /matteroverdrive genmattervalues
 
 in game. By default, the generator ships with support for Crafting Table, Furnace, and Smithing Table
 recipes. Upon running the command, the generator will produce a JSON file  and save it under 
 
-Matter Overdrive/generated.json
+    Matter Overdrive/generated.json
 
 in your save folder. Note, this file will be overwritten each time the
 command is run!
@@ -59,9 +59,9 @@ ship it directly with your mod, or make a datapack from it!
 
 Now, you might be disappointed, as the generator can only handle Vanilla Recipes. Wrong! The generator
 can handle any recipe type as long as you provide a consumer for it. To add your own handler, add
-Matter Overdrive as a dependance. In a place of your choosing, call the method 
+Matter Overdrive as a dependency. In a place of your choosing, call the method 
 
-MatterRegister.addGeneratorConsumer(consumer)
+    MatterRegister.addGeneratorConsumer(consumer)
 
 The method takes a BiConsumer with the two consumer arguments being a HashMap of the values created by
 the generator the run time of the command and the RecipeManager for the world you are in. Simply provide
@@ -73,19 +73,19 @@ the command is run.
 
 3. To help you with manually assigning matter values to items, the command 
 
-/matteroverdrive addmattervalue <value>
+    /matteroverdrive addmattervalue <value>
 
 has been added. To use, simply hold an item in your main hand and run the command. The item will then
 be added to the file 
 
-Matter Overdrive/manual.json
+    Matter Overdrive/manual.json
 
 Unlike the genmattervalues command, the file will not be overwritten each time it is run. However, if 
 the item is already present in the existing file, then it will be overwritten by the new assignment. 
 As an example, say you wanted to assign a value of 10 kM to Dirt. Holding the Dirt block in your main 
 hand, the command would look like this:
 
-/matteroverdrive addmattervalue 10
+    /matteroverdrive addmattervalue 10
 
 Note, the command supports doubles!
 
