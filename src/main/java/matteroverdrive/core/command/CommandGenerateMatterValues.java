@@ -49,7 +49,7 @@ public class CommandGenerateMatterValues {
 		RecipeManager manager = source.getRecipeManager();
 		Map<Item, Double> generatedValues = new HashMap<>();
 
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 300; i++) {
 			manager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
 				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {

@@ -135,7 +135,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 				list.entrySet().forEach(json -> {
 					String key = json.getKey();
 					if (!merged.has(key)) {
-						merged.addProperty(key, json.getValue().getAsInt());
+						merged.addProperty(key, json.getValue().getAsDouble());
 					}
 				});
 			});
