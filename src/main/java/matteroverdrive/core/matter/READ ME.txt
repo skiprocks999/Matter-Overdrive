@@ -42,19 +42,31 @@ your item values will be assigned if another mod already assigns a tag and its f
 
 2. To assign values to items in your mod, you don't have to do a whole lot of work, as there is a
 provided command to generate values for you. Instead of coding every single value by hand, you 
-simply have to code values that don't have a crafting table, furnace, or smithing table recipe.
-Once you have hand-coded those, you simply have to run the command 
+simply have to code values that don't have a recipe and then run the command:
 
 "/matteroverdrive genmattervalues"
 
-in game. The command will then assign values to items (provided they are of the three recipe types above) 
-and save it under "Matter Overdrive/generated.json" in your save folder. Note, this file will be 
-overwriten each time the command is run!
+in game. By default, the generator ships with support for Crafting Table, Furnace, and Smithing Table
+recipes. Upon running the command, the generator will produce a JSON file  and save it under 
+"Matter Overdrive/generated.json" in your save folder. Note, this file will be overwritten each time the
+command is run!
 
 You can then either put this file in your mod's "matter" folder along with your "values.json" file to 
 ship it directly with your mod, or make a datapack from it!
 
-More compatibility is planned in the future for additional recipe types.
+Now, you might be disappointed, as the generator can only handle Vanilla Recipes. Wrong! The generator
+can handle any recipe type as long as you provide a consumer for it. To add your own handler, add
+Matter Overdrive as a dependance. In a place of your choosing, call the method 
+
+MatterRegister.addGeneratorConsumer(consumer)
+
+The method takes a BiConsumer with the two consumer arguments being a HashMap of the values created by
+the generator the run time of the command and the RecipeManager for the world you are in. Simply provide
+a consumer of how to handle a particular recipe type and add the resulting value to the input HashMap.
+
+See DefaultGeneratorConsumers under main/java/matteroverdrive/core/matter/DefaultGeneratorConsumers for
+examples of how this implementation would look. Then simply ensure the Consumers are added by the time
+the command is run.
 
 3. To help you with manually assigning matter values to items, the command 
 
@@ -69,7 +81,7 @@ would look like this:
 
 /matteroverdrive addmattervalue 10
 
-Note, the command only supports integers!
+Note, the command supports doubles!
 
 4. If you want to completely customize matter values, then it is within your power. Simply create a data
 pack with a higher priority than 8, and it will override all the preset values shipped with Matter Overdrive
@@ -82,7 +94,7 @@ In your custom json file, you would add the line:
 
     "minecraft:dirt" : 0
 
-Any integer less than or equal to zero will technically work! Remember the tag rules from abover also
+Any integer less than or equal to zero will technically work! Remember the tag rules from above also
 would still apply here.
 
 
