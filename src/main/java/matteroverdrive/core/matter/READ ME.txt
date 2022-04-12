@@ -65,7 +65,7 @@ call the method
 
 The method takes a BiConsumer with the two input arguments being:
 
-A) A HashMap of the values created by the generator the run time of the command 
+A) A HashMap of the values created by the generator when you run the command
 B) The RecipeManager for the world you are in when you run the command
 
 Simply provide a BiConsumer of how to handle a particular recipe type and add the resulting value to the 
