@@ -42,11 +42,11 @@ your item values will be assigned if another mod already assigns a tag and its f
 
 2. To assign values to items in your mod, you don't have to do a whole lot of work, as there is a
 provided command to generate values for you. Instead of coding every single value by hand, you 
-simply have to code values that don't have a recipe and then run the command:
+simply have to code values that don't have a recipe and then run the command in-game:
 
     /matteroverdrive genmattervalues
 
-in game. By default, the generator ships with support for Crafting Table, Furnace, and Smithing Table
+By default, the generator ships with support for Crafting Table, Furnace, and Smithing Table
 recipes. Upon running the command, the generator will produce a JSON file and save it under 
 
     Matter Overdrive/generated.json
@@ -86,7 +86,7 @@ hand, the command would look like this:
 
     /matteroverdrive addmattervalue 10
 
-Note, the command supports doubles!
+Note, the command supports the double primitive type!
 
 4. If you want to completely customize matter values, then it is within your power. Simply create a data
 pack with a higher priority than 8, and it will override all the preset values shipped with Matter Overdrive
