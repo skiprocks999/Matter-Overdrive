@@ -16,7 +16,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	@Override
 	protected void registerModels() {
 		for (BlockColors color : BlockColors.values()) {
-			withExistingParent(DeferredRegisters.TRITANIUM_PLATING.get().getRegistryName().getPath(),
+			withExistingParent(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get().getRegistryName().getPath(),
 					modLoc("block/tritanium_plating"));
 			withExistingParent(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color).get().getRegistryName().getPath(),
 					modLoc("block/tritanium_plating_colorless"));

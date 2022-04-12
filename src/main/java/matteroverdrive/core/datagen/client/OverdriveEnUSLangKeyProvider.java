@@ -38,7 +38,7 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 				add(DeferredRegisters.FLOOR_TILE.get(color).get(), name + " Floor Tile");
 				add(DeferredRegisters.FLOOR_TILES.get(color).get(), name + " Floor Tiles");
 			}
-			add(DeferredRegisters.TRITANIUM_PLATING.get(), "Tritanium Plating");
+			add(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get(), "Tritanium Plating");
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				if (name.equals("Reg")) {

@@ -5,6 +5,6 @@ package matteroverdrive.core.capability.types;
 
 public enum CapabilityType {
 
-	Energy, Fluid, Item;
+	Energy, Fluid, Item, Matter;
 
 }

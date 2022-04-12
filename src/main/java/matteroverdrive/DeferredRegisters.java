@@ -39,7 +39,9 @@ public class DeferredRegisters {
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,
 			References.ID);
 
-	public static final RegistryObject<Block> TRITANIUM_PLATING = registerBlock("tritanium_plating",
+	/* BLOCKS */
+	
+	public static final RegistryObject<Block> REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
 	public static final BulkRegistryObject<Block> COLORED_TRITANIUM_PLATING = new BulkRegistryObject<>(
@@ -69,6 +71,8 @@ public class DeferredRegisters {
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
 
+	/* ITEMS */
+	
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
@@ -85,13 +89,20 @@ public class DeferredRegisters {
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
 
+	/* TILES */
+	
 	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUMCRATE = TILES
 			.register("tritanium_crate", () -> new BlockEntityType<>(TileTritaniumCrate::new,
 					Sets.newHashSet(TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0])), null));
 
+	/* MENUS */
+	
 	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUMCRATE = CONTAINERS
 			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
 
+	
+	//Functional Methods
+	
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {
 		return registerBlock(name, supplier, new Item.Properties().tab(References.MAIN));
 	}
