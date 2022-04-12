@@ -57,17 +57,20 @@ You can then either put this file in your mod's "matter" folder along with your 
 ship it directly with your mod, or make a datapack from it!
 
 Now, you might be disappointed, as the generator can only handle Vanilla Recipes. Wrong! The generator
-can handle any recipe type as long as you provide a consumer for it. To add your own handler, add
-Matter Overdrive as a dependency. In a place of your choosing, call the method 
+can handle any recipe type as long as you provide a consumer for it. To add your own recipe handling, 
+to the generator, first add Matter Overdrive as a dependency to your mod. Next, in a place of your choosing, 
+call the method 
 
-    MatterRegister.addGeneratorConsumer(consumer)
+    MatterRegister.addGeneratorConsumer(BiConsumer)
 
-The method takes a BiConsumer with the two consumer arguments being a HashMap of the values created by
-the generator the run time of the command and the RecipeManager for the world you are in. Simply provide
-a consumer of how to handle a particular recipe type and add the resulting value to the input HashMap.
+The method takes a BiConsumer with the two input arguments being:
 
-See DefaultGeneratorConsumers under main/java/matteroverdrive/core/matter/DefaultGeneratorConsumers for
-examples of how this implementation would look. Then simply ensure the Consumers are added by the time
+A) A HashMap of the values created by the generator the run time of the command 
+B) The RecipeManager for the world you are in when you run the command
+
+Simply provide a BiConsumer of how to handle a particular recipe type and add the resulting value to the 
+input HashMap. See DefaultGeneratorConsumers under main/java/matteroverdrive/core/matter/DefaultGeneratorConsumers 
+for examples of how this implementation would look. Then simply ensure the consumer is added by the time
 the command is run.
 
 3. To help you with manually assigning matter values to items, the command 
