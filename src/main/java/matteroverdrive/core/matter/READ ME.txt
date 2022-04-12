@@ -51,8 +51,7 @@ recipes. Upon running the command, the generator will produce a JSON file and sa
 
     Matter Overdrive/generated.json
 
-in your save folder. Note, this file will be overwritten each time the
-command is run!
+in your save folder. Note, this file will be overwritten each time the command is run!
 
 You can then either put this file in your mod's "matter" folder along with your "values.json" file to 
 ship it directly with your mod, or make a datapack from it!
@@ -94,7 +93,7 @@ pack with a higher priority than 8, and it will override all the preset values s
 and other mods. However, due to the limitations of data packs, the only difference in priority is
 the higher priority packs get parsed before the lower ones. In short, this means if you want to 
 remove the matter value from an item added from a lower data pack, you will need to tell the parser
-not to. This can be easily, albiet tediously, accomplished by assigning a value of 0 or less to the 
+not to. This can be easily, albeit tediously, accomplished by assigning a value of 0 or less to the 
 item in your json file. For example, say you really hate dirt, and don't want it to have a matter value.
 In your custom json file, you would add the line:
 
