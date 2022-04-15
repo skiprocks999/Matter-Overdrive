@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
+import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -28,6 +30,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	private GenericTile owner;
 	private boolean hasTile;
+	private Direction initialFacing = null;
 
 	private boolean hasInput = false;
 	private boolean hasOutput = false;
@@ -55,7 +58,8 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		return this;
 	}
 
-	public CapabilityMatterStorage setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
+	public CapabilityMatterStorage setDefaultDirections(@Nonnull BlockState initialState, @Nonnull Direction[] inputs,
+			@Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
 		if (relativeInputDirs == null) {
@@ -73,6 +77,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			changed = true;
 		}
 		if (changed) {
+			initialFacing = initialState.getValue(GenericMachineBlock.FACING);
 			refreshCapability();
 		}
 		return this;
@@ -201,7 +206,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	@Override
 	public void onLoad(BlockEntity tile) {
-		refreshCapability();	
+		refreshCapability();
 	}
 
 	@Override
@@ -248,7 +253,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	public String getSaveKey() {
 		return "matter";
 	}
-	
+
 	public void updateMaxMatterStorage(int maxStorage) {
 		this.maxStorage = maxStorage;
 	}
@@ -277,10 +282,16 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		currStorage += accepted;
 		return accepted;
 	}
-	
+
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> new ChildCapabilityMatterStorage(true, false, this));
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
@@ -288,12 +299,18 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> new ChildCapabilityMatterStorage(false, true, this));
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
-	
+
 	private class ChildCapabilityMatterStorage extends CapabilityMatterStorage {
 
 		private CapabilityMatterStorage parent;
@@ -323,6 +340,5 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 
 	}
-
 
 }

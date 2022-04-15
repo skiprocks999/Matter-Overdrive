@@ -48,12 +48,16 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 				}
 
 			}
+			add(DeferredRegisters.BLOCK_SOLAR_PANEL.get(), "Solar Panel");
 
 			add("tooltip." + References.ID + ".energystored", "%1$s / %2$s FE");
 			add("tooltip." + References.ID + ".matterval", "Matter: %s");
 			add("tooltip." + References.ID + ".nomatter", "NONE");
+			add("tooltip." + References.ID + ".openmenu", "Open Menu");
+			add("tooltip." + References.ID + ".closemenu", "Close Menu");
 
 			add("container.tritanium_crate", "Tritanium Crate");
+			add("container.solar_panel", "Solar Panel");
 
 			add("command." + References.ID + ".startmattercalc", "Starting Matter calculations...");
 			add("command." + References.ID + ".endmattercalc",
@@ -65,6 +69,7 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 
 			add("subtitles." + References.ID + ".crateopen", "Tritanium Crate Opens");
 			add("subtitles." + References.ID + ".crateclose", "Tritanium Crate Closes");
+			add("subtitles." + References.ID + ".buttonexpand", "Button Shifts");
 		}
 	}
 

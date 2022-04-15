@@ -12,5 +12,12 @@
 		"sounds": [
 			"matteroverdrive:crateclose"
 		]
+	},
+	"buttonexpand": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.buttonexpand",
+		"sounds": [
+			"matteroverdrive:buttonexpand"
+		]
 	}
 }

@@ -9,9 +9,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 
 public class DefaultGeneratorConsumers {
-	
+
 	public static void init() {
-		
+
 		MatterRegister.addGeneratorConsumer((generatedValues, recipeManager) -> {
 			recipeManager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
@@ -32,16 +32,17 @@ public class DefaultGeneratorConsumers {
 				}
 			});
 		});
-		
+
 		MatterRegister.addGeneratorConsumer((generatedValues, recipeManager) -> {
 			recipeManager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null && generatedValues.get(result.getItem()) == null) {
+				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null
+						&& generatedValues.get(result.getItem()) == null) {
 					List<Ingredient> ings = recipe.getIngredients();
 					double sum = 0;
 					boolean failed = false;
 					for (Ingredient ing : ings) {
-						if(failed) {
+						if (failed) {
 							break;
 						}
 						for (ItemStack stack : ing.getItems()) {
@@ -64,20 +65,20 @@ public class DefaultGeneratorConsumers {
 				}
 			});
 		});
-		
+
 		MatterRegister.addGeneratorConsumer((generatedValues, recipeManager) -> {
 			recipeManager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
 				UpgradeRecipe upgrade = recipe;
 				ItemStack result = upgrade.getResultItem();
 				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
 					List<Ingredient> ings = new ArrayList<>();
-					//AT
+					// AT
 					ings.add(upgrade.base);
 					ings.add(upgrade.addition);
 					double sum = 0;
 					boolean failed = false;
 					for (Ingredient ing : ings) {
-						if(failed) {
+						if (failed) {
 							break;
 						}
 						for (ItemStack stack : ing.getItems()) {
@@ -100,7 +101,7 @@ public class DefaultGeneratorConsumers {
 				}
 			});
 		});
-		
+
 	}
 
 }

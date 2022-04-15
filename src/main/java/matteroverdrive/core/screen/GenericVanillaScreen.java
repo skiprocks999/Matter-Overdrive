@@ -19,6 +19,18 @@ public class GenericVanillaScreen<T extends GenericInventory> extends GenericScr
 	}
 
 	@Override
+	protected void renderLabels(PoseStack stack, int x, int y) {
+		this.font.draw(stack, this.title, (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY,
+				4210752);
+		int xAxis = x - (width - imageWidth) / 2;
+		int yAxis = y - (height - imageHeight) / 2;
+		for (IGuiComponent component : components) {
+			component.renderForeground(stack, xAxis, yAxis);
+		}
+	}
+
+	@Override
 	protected void renderBg(PoseStack stack, float partialTick, int x, int y) {
 		UtilsRendering.bindTexture(vanillaBg);
 		int guiWidth = (width - imageWidth) / 2;

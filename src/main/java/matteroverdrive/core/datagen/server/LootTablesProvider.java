@@ -17,6 +17,9 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 			lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block,
 					DeferredRegisters.TILE_TRITANIUMCRATE.get()));
 		}
+		Block solarPanel = DeferredRegisters.BLOCK_SOLAR_PANEL.get();
+		lootTables.put(solarPanel, itemAndEnergyTable(solarPanel.getRegistryName().getPath(), solarPanel,
+				DeferredRegisters.TILE_SOLARPANEL.get()));
 	}
 
 }

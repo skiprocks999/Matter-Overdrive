@@ -60,7 +60,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
-	
+
 	private static final List<BiConsumer<HashMap<Item, Double>, RecipeManager>> GEN_MATTER_CONSUMERS = new ArrayList<>();
 
 	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
@@ -80,7 +80,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 	@Nullable
 	public Double getServerMatterValue(ItemStack item) {
-		if(MatterOverdriveConfig.validate_matter_items.get()) {
+		if (MatterOverdriveConfig.validate_matter_items.get()) {
 			return MatterUtils.validateItem(item) ? SERVER_VALUES.get(item.getItem()) : null;
 		}
 		return SERVER_VALUES.get(item.getItem());
@@ -88,7 +88,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 	@Nullable
 	public Double getClientMatterValue(ItemStack item) {
-		if(MatterOverdriveConfig.validate_matter_items.get()) {
+		if (MatterOverdriveConfig.validate_matter_items.get()) {
 			return MatterUtils.validateItem(item) ? CLIENT_VALUES.get(item.getItem()) : null;
 		}
 		return CLIENT_VALUES.get(item.getItem());
@@ -216,11 +216,11 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public void setClientValues(HashMap<Item, Double> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
-	
+
 	public static void addGeneratorConsumer(BiConsumer<HashMap<Item, Double>, RecipeManager> consumer) {
 		GEN_MATTER_CONSUMERS.add(consumer);
 	}
-	
+
 	public static List<BiConsumer<HashMap<Item, Double>, RecipeManager>> getConsumers() {
 		return GEN_MATTER_CONSUMERS;
 	}

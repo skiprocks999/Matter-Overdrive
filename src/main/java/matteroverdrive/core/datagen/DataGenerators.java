@@ -23,7 +23,7 @@ public class DataGenerators {
 		if (event.includeServer()) {
 			generator.addProvider(new MinableTagsProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new LootTablesProvider(generator));
-			generator.addProvider(new MatterValueGenerator(generator));
+			// generator.addProvider(new MatterValueGenerator(generator));
 		}
 		if (event.includeClient()) {
 			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));

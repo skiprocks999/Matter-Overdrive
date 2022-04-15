@@ -10,9 +10,9 @@ public class MatterOverdriveCapabilities {
 
 	public static Capability<ICapabilityMatterStorage> MATTER_STORAGE = CapabilityManager.get(new CapabilityToken<>() {
 	});
-	
+
 	public static void register(RegisterCapabilitiesEvent event) {
 		event.register(ICapabilityMatterStorage.class);
 	}
-	
+
 }

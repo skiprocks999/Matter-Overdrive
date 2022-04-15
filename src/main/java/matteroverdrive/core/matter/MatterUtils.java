@@ -12,25 +12,33 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public class MatterUtils {
 
 	public static boolean validateItem(ItemStack item) {
-		
-		if(item.isEnchanted()) return false;
-		if(item.isDamaged()) return false;
-		if(item.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) return false;
-		if(item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
-			boolean isFilled = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().drain(Integer.MAX_VALUE, FluidAction.EXECUTE).getAmount() > 0;
-			if(isFilled) return false;
+
+		if (item.isEnchanted())
+			return false;
+		if (item.isDamaged())
+			return false;
+		if (item.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
+			return false;
+		if (item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
+			boolean isFilled = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get()
+					.drain(Integer.MAX_VALUE, FluidAction.EXECUTE).getAmount() > 0;
+			if (isFilled)
+				return false;
 		}
-		if(item.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-			IEnergyStorage storage =  item.getCapability(CapabilityEnergy.ENERGY).resolve().get();
-			if(storage.getEnergyStored() == 0) return false;
+		if (item.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+			IEnergyStorage storage = item.getCapability(CapabilityEnergy.ENERGY).resolve().get();
+			if (storage.getEnergyStored() == 0)
+				return false;
 		}
 		CompoundTag tag = BlockItem.getBlockEntityData(item);
-		if(tag != null) {
-			if(tag.contains("LootTable", 8)) return false;
-			if(tag.contains("Items", 9)) return false;
+		if (tag != null) {
+			if (tag.contains("LootTable", 8))
+				return false;
+			if (tag.contains("Items", 9))
+				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 }

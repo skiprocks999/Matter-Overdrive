@@ -9,6 +9,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
@@ -22,6 +23,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
@@ -47,6 +49,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Nullable
 	private GenericTile owner;
 	private boolean hasOwner = false;
+	private Direction initialFacing = null;
 
 	private LazyOptional<IItemHandlerModifiable> holder = LazyOptional.of(() -> this);
 
@@ -73,7 +76,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return this;
 	}
 
-	public CapabilityInventory setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
+	public CapabilityInventory setDefaultDirections(@Nonnull BlockState initialState, @Nonnull Direction[] inputs,
+			@Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
 		if (relativeInputDirs == null) {
@@ -91,6 +95,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			changed = true;
 		}
 		if (changed) {
+			initialFacing = initialState.getValue(GenericMachineBlock.FACING);
 			refreshCapability();
 		}
 		return this;
@@ -276,7 +281,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			stacks.addAll(getInputs());
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
@@ -296,7 +307,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			stacks.addAll(getByproducts());
 			return new ChildInventoryHandler(stacks, this, slots);
 		});
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}

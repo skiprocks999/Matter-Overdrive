@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
+import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -29,6 +31,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	private GenericTile owner;
 	private boolean hasTile;
+	private Direction initialFacing = null;
 
 	private boolean hasInput = false;
 	private boolean hasOutput = false;
@@ -56,7 +59,8 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		return this;
 	}
 
-	public CapabilityEnergyStorage setDefaultDirections(@Nonnull Direction[] inputs, @Nonnull Direction[] outputs) {
+	public CapabilityEnergyStorage setDefaultDirections(@Nonnull BlockState initialState, @Nonnull Direction[] inputs,
+			@Nonnull Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
 		if (relativeInputDirs == null) {
@@ -74,6 +78,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			changed = true;
 		}
 		if (changed) {
+			initialFacing = initialState.getValue(GenericMachineBlock.FACING);
 			refreshCapability();
 		}
 		return this;
@@ -248,7 +253,13 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(true, false, this));
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
 		}
@@ -256,7 +267,13 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> new ChildCapabilityEnergyStorage(false, true, this));
-		Direction facing = owner.getFacing();
+		Direction facing;
+		if (initialFacing == null) {
+			facing = owner.getFacing();
+		} else {
+			facing = initialFacing;
+			initialFacing = null;
+		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}

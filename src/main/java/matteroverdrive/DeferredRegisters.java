@@ -5,12 +5,16 @@ import java.util.function.Supplier;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.common.block.BlockColored;
+import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
+import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.registers.BulkRegistryObject;
 import net.minecraft.world.entity.EntityType;
@@ -40,7 +44,7 @@ public class DeferredRegisters {
 			References.ID);
 
 	/* BLOCKS */
-	
+
 	public static final RegistryObject<Block> REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
@@ -70,9 +74,11 @@ public class DeferredRegisters {
 			() -> new BlockTritaniumCrate(
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
+	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.solar_panel.toString(),
+			() -> new BlockMachine(TileSolarPanel::new, TypeMachine.solar_panel));
 
 	/* ITEMS */
-	
+
 	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
@@ -90,19 +96,23 @@ public class DeferredRegisters {
 					true, 1000));
 
 	/* TILES */
-	
+
 	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUMCRATE = TILES
 			.register("tritanium_crate", () -> new BlockEntityType<>(TileTritaniumCrate::new,
 					Sets.newHashSet(TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0])), null));
+	public static final RegistryObject<BlockEntityType<TileSolarPanel>> TILE_SOLARPANEL = TILES.register(
+			TypeMachine.solar_panel.toString(),
+			() -> new BlockEntityType<>(TileSolarPanel::new, Sets.newHashSet(BLOCK_SOLAR_PANEL.get()), null));
 
 	/* MENUS */
-	
+
 	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUMCRATE = CONTAINERS
 			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
+	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLARPANEL = CONTAINERS
+			.register("solar_panel", () -> new MenuType<>(InventorySolarPanel::new));
 
-	
-	//Functional Methods
-	
+	// Functional Methods
+
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {
 		return registerBlock(name, supplier, new Item.Properties().tab(References.MAIN));
 	}

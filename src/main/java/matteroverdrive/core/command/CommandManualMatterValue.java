@@ -32,11 +32,10 @@ public class CommandManualMatterValue {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
-		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2))
-				.then(Commands.literal("addmattervalue").requires(source -> source.hasPermission(2))
-						.then(Commands.argument("value", DoubleArgumentType.doubleArg(0))
-								.executes(source -> addManualValue(source.getSource(),
-										DoubleArgumentType.getDouble(source, "value"))))));
+		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2)).then(Commands
+				.literal("addmattervalue").requires(source -> source.hasPermission(2))
+				.then(Commands.argument("value", DoubleArgumentType.doubleArg(0)).executes(
+						source -> addManualValue(source.getSource(), DoubleArgumentType.getDouble(source, "value"))))));
 
 	}
 

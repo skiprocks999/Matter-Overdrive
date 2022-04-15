@@ -4,6 +4,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.utils.BlockColors;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -25,6 +26,9 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 			withExistingParent(DeferredRegisters.FLOOR_TILES.get(color).get().getRegistryName().getPath(),
 					modLoc("block/floor_tiles_colorless"));
 		}
+		slab("solar_panel", new ResourceLocation(References.ID, "block/base"),
+				new ResourceLocation(References.ID, "block/base"),
+				new ResourceLocation(References.ID, "block/solar_panel"));
 	}
 
 }

@@ -1,5 +1,7 @@
 package matteroverdrive;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -32,6 +34,8 @@ public class MatterOverdrive {
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
+	public static final Random RANDOM = new Random();
+
 	public MatterOverdrive() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		SoundRegister.SOUNDS.register(bus);
@@ -41,7 +45,7 @@ public class MatterOverdrive {
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
-		
+
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
 				"matteroverdrive/matteroverdrive.common.toml");
 

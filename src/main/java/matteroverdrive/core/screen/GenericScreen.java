@@ -25,7 +25,7 @@ import net.minecraft.world.inventory.Slot;
 public class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> implements IScreenWrapper {
 
 	protected ResourceLocation defaultBackground = new ResourceLocation(
-			References.ID + ":textures/screen/component/base.png");
+			References.ID + ":textures/gui/base/base_gui.png");
 	protected Set<IGuiComponent> components = new HashSet<>();
 	protected int playerInvOffset = 0;
 
@@ -56,7 +56,10 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 
 	@Override
 	protected void renderLabels(PoseStack stack, int x, int y) {
-		super.renderLabels(stack, x, y);
+		float length = font.width(this.title);
+		float offset = (144.0F - length) / 2.0F;
+		this.font.draw(stack, this.title, (float) this.titleLabelX + 3 + offset, (float) this.titleLabelY + 1,
+				UtilsRendering.getRGBA(1, 191, 228, 230));
 		int xAxis = x - (width - imageWidth) / 2;
 		int yAxis = y - (height - imageHeight) / 2;
 		for (IGuiComponent component : components) {
@@ -69,9 +72,7 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		UtilsRendering.bindTexture(defaultBackground);
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		blit(stack, guiWidth, guiHeight, 0, 248, imageWidth, 4);
-		blit(stack, guiWidth, guiHeight + 4, 0, 0, imageWidth, imageHeight - 8);
-		blit(stack, guiWidth, guiHeight + imageHeight - 4, 0, 252, imageWidth, 4);
+		blit(stack, guiWidth - 37, guiHeight, 0, 0, 224, 176);
 		int xAxis = x - guiWidth;
 		int yAxis = y - guiHeight;
 		for (IGuiComponent component : components) {
@@ -134,6 +135,11 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 
 	public int getYPos() {
 		return (height - imageHeight) / 2;
+	}
+
+	@Override
+	public void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h) {
+		blit(stack, x, y, u, v, w, h);
 	}
 
 	@Override

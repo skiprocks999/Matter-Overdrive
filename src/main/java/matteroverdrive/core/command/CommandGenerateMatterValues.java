@@ -47,41 +47,23 @@ public class CommandGenerateMatterValues {
 
 		List<BiConsumer<HashMap<Item, Double>, RecipeManager>> consumers = MatterRegister.getConsumers();
 		for (int i = 0; i < 300; i++) {
-			for(BiConsumer<HashMap<Item, Double>, RecipeManager> consumer : consumers) {
+			for (BiConsumer<HashMap<Item, Double>, RecipeManager> consumer : consumers) {
 				consumer.accept(generatedValues, manager);
 			}
 			/*
-			BrewingRecipeRegistry.getRecipes().forEach(recipe -> {
-				if(recipe instanceof BrewingRecipe brewing) {
-					ItemStack result = brewing.getOutput();
-					if (MatterRegister.INSTANCE.getServerMatterValue(result.getItem()) == null) {
-						List<Ingredient> ings = new ArrayList<>();
-						ings.add(brewing.getIngredient());
-						ings.add(brewing.getInput());
-						int sum = 0;
-						boolean failed = false;
-						for (Ingredient ing : ings) {
-							for (ItemStack stack : ing.getItems()) {
-								Integer value = MatterRegister.INSTANCE.getServerMatterValue(stack.getItem());
-								if (value == null) {
-									value = generatedValues.get(stack.getItem());
-								}
-								if (value != null && !generatedValues.containsKey(result.getItem())) {
-									sum += value * stack.getCount();
-									failed = false;
-									break;
-								}
-								failed = true;
-							}
-						}
-						if (!failed) {
-							int matterValue = (int) Math.ceil((double) sum / (double) result.getCount() / 3.0);
-							generatedValues.put(result.getItem(), matterValue);
-						}
-					}
-				}
-			});
-			*/
+			 * BrewingRecipeRegistry.getRecipes().forEach(recipe -> { if(recipe instanceof
+			 * BrewingRecipe brewing) { ItemStack result = brewing.getOutput(); if
+			 * (MatterRegister.INSTANCE.getServerMatterValue(result.getItem()) == null) {
+			 * List<Ingredient> ings = new ArrayList<>(); ings.add(brewing.getIngredient());
+			 * ings.add(brewing.getInput()); int sum = 0; boolean failed = false; for
+			 * (Ingredient ing : ings) { for (ItemStack stack : ing.getItems()) { Integer
+			 * value = MatterRegister.INSTANCE.getServerMatterValue(stack.getItem()); if
+			 * (value == null) { value = generatedValues.get(stack.getItem()); } if (value
+			 * != null && !generatedValues.containsKey(result.getItem())) { sum += value *
+			 * stack.getCount(); failed = false; break; } failed = true; } } if (!failed) {
+			 * int matterValue = (int) Math.ceil((double) sum / (double) result.getCount() /
+			 * 3.0); generatedValues.put(result.getItem(), matterValue); } } } });
+			 */
 		}
 
 		// now we sort them alphabetically
