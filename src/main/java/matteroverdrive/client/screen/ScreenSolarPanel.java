@@ -31,12 +31,12 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		int guiHeight = (height - imageHeight) / 2;
 		close = new ButtonGeneric(guiWidth + 170, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
 		menu = new ButtonMenuBar(guiWidth + 175, guiHeight + 33, button -> {
-		}, () -> false, (button, stack, xAxis, yAxis) -> {
+		}, () -> false, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
 			if (bar.isExtended) {
-				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), xAxis, yAxis);
+				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), mouseX, mouseY);
 			} else {
-				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), xAxis, yAxis);
+				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), mouseX, mouseY);
 			}
 		});
 		addRenderableWidget(close);
