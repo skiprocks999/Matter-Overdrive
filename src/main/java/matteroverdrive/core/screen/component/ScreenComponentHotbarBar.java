@@ -15,8 +15,8 @@ public class ScreenComponentHotbarBar extends ScreenComponent {
 	private final int height = 5;
 	private final int width = 169;
 
-	public ScreenComponentHotbarBar(final IScreenWrapper gui, final int x, final int y) {
-		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y);
+	public ScreenComponentHotbarBar(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y, screenNumbers);
 	}
 
 	@Override

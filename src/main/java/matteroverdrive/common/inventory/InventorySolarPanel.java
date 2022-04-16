@@ -6,7 +6,6 @@ import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,6 +23,16 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 	@Override
 	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
 
+	}
+
+	@Override
+	public int[] getHotbarNumbers() {
+		return new int[]{0,1,2};
+	}
+
+	@Override
+	public int[] getPlayerInvNumbers() {
+		return new int[]{0};
 	}
 
 }

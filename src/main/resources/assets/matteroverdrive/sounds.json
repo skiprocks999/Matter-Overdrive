@@ -19,5 +19,19 @@
 		"sounds": [
 			"matteroverdrive:buttonexpand"
 		]
+	},
+	"buttonsoft0": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"sounds": [
+			"matteroverdrive:buttonsoft0"
+		]
+	},
+	"buttonsoft1": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"sounds": [
+			"matteroverdrive:buttonsoft1"
+		]
 	}
 }

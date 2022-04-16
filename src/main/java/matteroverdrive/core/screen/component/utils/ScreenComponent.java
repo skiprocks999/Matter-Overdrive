@@ -14,11 +14,12 @@ public abstract class ScreenComponent implements IGuiComponent {
 	protected IScreenWrapper gui;
 	protected int xLocation;
 	protected int yLocation;
+	protected int[] screenNumbers;
 
-	protected ScreenComponent(ResourceLocation resource, IScreenWrapper gui, int x, int y) {
+	protected ScreenComponent(ResourceLocation resource, IScreenWrapper gui, int x, int y, int[] screenNumbers) {
 		this.resource = resource;
 		this.gui = gui;
-
+		this.screenNumbers = screenNumbers;
 		xLocation = x;
 		yLocation = y;
 	}
@@ -53,4 +54,13 @@ public abstract class ScreenComponent implements IGuiComponent {
 	protected boolean isPointInRegion(int x, int y, double xAxis, double yAxis, int width, int height) {
 		return xAxis >= x && xAxis <= x + width - 1 && yAxis >= y && yAxis <= y + height - 1;
 	}
+	
+	@Override
+	public boolean matchesScreenNumber(int num) {
+		for(int screen : screenNumbers) {
+			if(num == screen) return true;
+		}
+		return false;
+	}
+	
 }

@@ -23,4 +23,6 @@ public interface IScreenWrapper {
 
 	Font getFontRenderer();
 
+	int[] getAxisAndGuiWidth(int mouseX, int mouseY);
+
 }

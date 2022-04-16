@@ -20,8 +20,8 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected final int slotCount;
 	protected int playerInvOffset = 0;
 	private int nextIndex = 0;
-	private boolean hasInventorySlots = true;
-	private boolean hasHotbarSlots = true;
+	protected boolean hasInventorySlots = true;
+	protected boolean hasHotbarSlots = true;
 
 	public int nextIndex() {
 		return nextIndex++;
@@ -33,7 +33,7 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		slotCount = slots.size();
 		this.invcap = invcap;
 		addInvSlots(invcap, playerinv);
-		addPlayerInventory(playerinv);
+		addPlayerInventory(playerinv, SlotType.SMALL, SlotType.SMALL);
 		player = playerinv.player;
 	}
 
@@ -47,18 +47,22 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return (T) this;
 	}
 
-	protected void addPlayerInventory(Inventory playerinv) {
+	protected void addPlayerInventory(Inventory playerinv, SlotType playerInv, SlotType hotbar) {
 		if (hasInventorySlots) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 9; ++j) {
-					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 81 + i * 18 + playerInvOffset + 8,
-							SlotType.SMALL));
+					SlotContainer slot = new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 81 + i * 18 + playerInvOffset + 8,
+							playerInv);
+					slot.setScreenNumber(getPlayerInvNumbers());
+					addSlot(slot);
 				}
 			}
 		}
 		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, SlotType.SMALL));
+				SlotContainer slot = new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, hotbar);
+				slot.setScreenNumber(getHotbarNumbers());
+				addSlot(slot);
 			}
 		}
 	}
@@ -81,5 +85,9 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	public ItemStack quickMoveStack(Player player, int index) {
 		return UtilsInventory.handleShiftClick(slots, player, index);
 	}
+	
+	public abstract int[] getHotbarNumbers();
 
+	public abstract int[] getPlayerInvNumbers();
+	
 }

@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class GenericVanillaScreen<T extends GenericInventory> extends GenericScreen<T> {
+public abstract class GenericVanillaScreen<T extends GenericInventory> extends GenericScreen<T> {
 
 	protected ResourceLocation vanillaBg = new ResourceLocation(References.ID + ":textures/gui/base/base_vanilla.png");
 
@@ -43,6 +43,11 @@ public class GenericVanillaScreen<T extends GenericInventory> extends GenericScr
 		for (IGuiComponent component : components) {
 			component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
 		}
+	}
+
+	@Override
+	public int getScreenNumber() {
+		return 0;
 	}
 
 }

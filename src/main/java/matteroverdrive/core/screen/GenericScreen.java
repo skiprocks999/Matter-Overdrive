@@ -8,10 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.core.inventory.GenericInventory;
+import matteroverdrive.core.inventory.slot.IToggleableSlot;
 import matteroverdrive.core.screen.component.ScreenComponentSlot;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.IGuiComponent;
-import matteroverdrive.core.screen.component.utils.ISlotType;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -22,7 +22,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> implements IScreenWrapper {
+public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> implements IScreenWrapper {
 
 	protected ResourceLocation defaultBackground = new ResourceLocation(
 			References.ID + ":textures/gui/base/base_gui.png");
@@ -31,6 +31,7 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 
 	public GenericScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
 		super(pMenu, pPlayerInventory, pTitle);
+		updateSlotActivity(getScreenNumber());
 		initializeComponents();
 	}
 
@@ -41,10 +42,10 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 	}
 
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
-		if (slot instanceof ISlotType type) {
-			return new ScreenComponentSlot(type.getSlotType(), this, slot.x - 1, slot.y - 1);
+		if (slot instanceof IToggleableSlot type) {
+			return new ScreenComponentSlot(type.getSlotType(), this, slot.x - 1, slot.y - 1, type.getScreenNumbers());
 		}
-		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1);
+		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1, new int[] {0});
 	}
 
 	@Override
@@ -63,7 +64,9 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		int xAxis = x - (width - imageWidth) / 2;
 		int yAxis = y - (height - imageHeight) / 2;
 		for (IGuiComponent component : components) {
-			component.renderForeground(stack, xAxis, yAxis);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.renderForeground(stack, xAxis, yAxis);
+			}
 		}
 	}
 
@@ -76,7 +79,9 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		int xAxis = x - guiWidth;
 		int yAxis = y - guiHeight;
 		for (IGuiComponent component : components) {
-			component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
+			}
 		}
 	}
 
@@ -86,13 +91,17 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		double yAxis = y - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			component.preMouseClicked(xAxis, yAxis, button);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.preMouseClicked(xAxis, yAxis, button);
+			}
 		}
 
 		boolean ret = super.mouseClicked(x, y, button);
 
 		for (IGuiComponent component : components) {
-			component.mouseClicked(xAxis, yAxis, button);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.mouseClicked(xAxis, yAxis, button);
+			}
 		}
 		return ret;
 	}
@@ -103,7 +112,9 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		double yAxis = mouseY - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			component.mouseClicked(xAxis, yAxis, button);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.mouseClicked(xAxis, yAxis, button);
+			}
 		}
 		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
 	}
@@ -116,7 +127,9 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 		double yAxis = mouseY - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			component.mouseReleased(xAxis, yAxis, button);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.mouseReleased(xAxis, yAxis, button);
+			}
 		}
 		return ret;
 	}
@@ -124,7 +137,9 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		for (IGuiComponent component : components) {
-			component.mouseWheel(mouseX, mouseY, delta);
+			if(component.matchesScreenNumber(getScreenNumber())) {
+				component.mouseWheel(mouseX, mouseY, delta);
+			}
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
@@ -168,5 +183,22 @@ public class GenericScreen<T extends GenericInventory> extends AbstractContainer
 	public Font getFontRenderer() {
 		return font;
 	}
+
+	@Override
+	public int[] getAxisAndGuiWidth(int mouseX, int mouseY) {
+		int guiWidth = (width - imageWidth) / 2;
+		int guiHeight = (height - imageHeight) / 2;
+		return new int[] { guiWidth, guiHeight, mouseX - guiWidth, mouseY - guiHeight };
+	}
+	
+	public void updateSlotActivity(int screenNum) {
+		for(Slot slot : menu.slots) {
+			if(slot instanceof IToggleableSlot toggle) {
+				toggle.setActive(toggle.isScreenNumber(screenNum));
+			}
+		}
+	}
+	
+	public abstract int getScreenNumber();
 
 }

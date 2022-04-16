@@ -1,7 +1,5 @@
 package matteroverdrive.core.screen.component.button;
 
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -21,18 +19,19 @@ public class ButtonMenuBar extends Button {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
 			"textures/gui/button/menu_bar.png");
 
-	public Boolean isExtended;
-	private Supplier<Boolean> initialCondition;
+	public boolean isExtended;
 	private boolean isPressed;
 
-	public ButtonMenuBar(int pX, int pY, OnPress pOnPress, Supplier<Boolean> inidialCondition, OnTooltip tooltip) {
-		super(pX, pY, 16, 143, TextComponent.EMPTY, pOnPress, tooltip);
-		this.initialCondition = inidialCondition;
+	public ButtonMenuBar(int pX, int pY, boolean inidialCondition, OnPress press, OnTooltip tooltip) {
+		super(pX, pY, 16, 143, TextComponent.EMPTY, press, tooltip);
+		isExtended = inidialCondition;
+		if(isExtended) {
+			this.x += EXTEND_DISTANCE;
+		}
 	}
 
 	@Override
 	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-		validateNull();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
@@ -44,7 +43,18 @@ public class ButtonMenuBar extends Button {
 		if (isExtended) {
 			this.blit(pPoseStack, this.x - EXTEND_DISTANCE, this.y, 32, 0, 32, 143);
 		}
+		if (this.isHoveredOrFocused()) {
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
+		}
+	}
 
+	public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+		if (isPressed || this.isValidClickButton(pButton)) {
+			this.onRelease(pMouseX, pMouseY);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -54,8 +64,8 @@ public class ButtonMenuBar extends Button {
 
 	@Override
 	public void onRelease(double pMouseX, double pMouseY) {
+		this.onPress.onPress(this);
 		isPressed = false;
-		validateNull();
 		if (isExtended) {
 			this.x -= EXTEND_DISTANCE;
 		} else {
@@ -64,16 +74,15 @@ public class ButtonMenuBar extends Button {
 		isExtended = !isExtended;
 	}
 
+	public Boolean getIsExtended() {
+		return isExtended;
+	}
+
 	@Override
 	public void playDownSound(SoundManager pHandler) {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
 		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTONEXPAND.get(), pitch));
 	}
 
-	private void validateNull() {
-		if (isExtended == null) {
-			isExtended = initialCondition.get();
-		}
-	}
 
 }

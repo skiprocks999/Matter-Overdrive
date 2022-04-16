@@ -17,5 +17,9 @@ public class SoundRegister {
 			() -> new SoundEvent(new ResourceLocation(References.ID + ":crateclose")));
 	public static final RegistryObject<SoundEvent> SOUND_BUTTONEXPAND = SOUNDS.register("buttonexpand",
 			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonexpand")));
+	public static final RegistryObject<SoundEvent> SOUND_BUTTONSOFT0 = SOUNDS.register("buttonsoft0",
+			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonsoft0")));
+	public static final RegistryObject<SoundEvent> SOUND_BUTTONSOFT1 = SOUNDS.register("buttonsoft1",
+			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonsoft1")));
 
 }

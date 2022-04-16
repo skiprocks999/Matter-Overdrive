@@ -7,6 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 public interface IGuiComponent {
 
 	Rectangle getBounds(int guiWidth, int guiHeight);
+	
+	boolean matchesScreenNumber(int num);
 
 	default void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
 	}

@@ -16,14 +16,15 @@ public class ScreenComponentSlot extends ScreenComponent {
 	private final SlotType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
+	private ScreenComponentIcon icon;
 
-	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y);
+	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
 		this.type = type;
 	}
 
 	public ScreenComponentSlot withIcon(IconType type) {
-
+		icon = new ScreenComponentIcon(type, gui, this.xLocation, this.yLocation, this.screenNumbers);
 		return this;
 	}
 
@@ -40,6 +41,12 @@ public class ScreenComponentSlot extends ScreenComponent {
 		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(),
 				type.getWidth(), type.getHeight(), type.getWidth(), type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
+		if (icon != null) {
+			IconType iType = icon.getType();
+			int widthOffset = (int) ((type.getWidth() - iType.getTextWidth()) / 2);
+			int heightOffset = (int) ((type.getHeight() - iType.getTextHeight()) / 2);
+			icon.renderBackground(stack, xAxis, yAxis, guiWidth + widthOffset, guiHeight + heightOffset);
+		}
 	}
 
 	public enum SlotType {
@@ -84,6 +91,10 @@ public class ScreenComponentSlot extends ScreenComponent {
 
 		public String getName() {
 			return name;
+		}
+
+		public String getTextureLoc() {
+			return BASE_TEXTURE_LOC + getName();
 		}
 
 	}

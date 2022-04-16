@@ -33,7 +33,9 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		if (getHandler() != null) {
 			for (int j = 0; j < 6; ++j) {
 				for (int k = 0; k < 9; ++k) {
-					this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA));
+					SlotGeneric slot = new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA);
+					slot.setScreenNumber(new int[] {0, 1, 2});
+					this.addSlot(slot);
 				}
 			}
 		}
@@ -48,6 +50,16 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATECLOSE.get(),
 					SoundSource.BLOCKS, 0.5F, 1.0F);
 		}
+	}
+
+	@Override
+	public int[] getHotbarNumbers() {
+		return new int[]{0,1,2};
+	}
+
+	@Override
+	public int[] getPlayerInvNumbers() {
+		return new int[]{0,1,2};
 	}
 
 }

@@ -50,26 +50,29 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 			}
 			add(DeferredRegisters.BLOCK_SOLAR_PANEL.get(), "Solar Panel");
 
-			add("tooltip." + References.ID + ".energystored", "%1$s / %2$s FE");
-			add("tooltip." + References.ID + ".matterval", "Matter: %s");
-			add("tooltip." + References.ID + ".nomatter", "NONE");
-			add("tooltip." + References.ID + ".openmenu", "Open Menu");
-			add("tooltip." + References.ID + ".closemenu", "Close Menu");
+			addTooltip("energystored", "%1$s / %2$s FE");
+			addTooltip("matterval", "Matter: %s");
+			addTooltip("nomatter", "NONE");
+			addTooltip("openmenu", "Open Menu");
+			addTooltip("closemenu", "Close Menu");
+			addTooltip("menuhome", "Home");
+			addTooltip("menusettings", "Settings");
+			addTooltip("menuupgrades", "Upgrades");
 
-			add("container.tritanium_crate", "Tritanium Crate");
-			add("container.solar_panel", "Solar Panel");
+			addContainer("tritanium_crate", "Tritanium Crate");
+			addContainer("solar_panel", "Solar Panel");
 
-			add("command." + References.ID + ".startmattercalc", "Starting Matter calculations...");
-			add("command." + References.ID + ".endmattercalc",
-					"Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
-			add("command." + References.ID + ".manualfailed", "unexpected error");
-			add("command." + References.ID + ".mainhandempty", "You must be holding an item");
-			add("command." + References.ID + ".assignedvalue", "Assigned %1$s kM to %2$s");
-			add("command." + References.ID + ".endmanualassign", "Saved under \"Matter Overdrive/manual.json\"");
+			addCommand("startmattercalc", "Starting Matter calculations...");
+			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
+			addCommand("manualfailed", "unexpected error");
+			addCommand("mainhandempty", "You must be holding an item");
+			addCommand("assignedvalue", "Assigned %1$s kM to %2$s");
+			addCommand("endmanualassign", "Saved under \"Matter Overdrive/manual.json\"");
 
-			add("subtitles." + References.ID + ".crateopen", "Tritanium Crate Opens");
-			add("subtitles." + References.ID + ".crateclose", "Tritanium Crate Closes");
-			add("subtitles." + References.ID + ".buttonexpand", "Button Shifts");
+			addSubtitle("crateopen", "Tritanium Crate Opens");
+			addSubtitle("crateclose", "Tritanium Crate Closes");
+			addSubtitle("buttonexpand", "Button Shifts");
+			addSubtitle("buttongeneric", "Button is pressed");
 		}
 	}
 
@@ -90,6 +93,22 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		}
 		return name;
+	}
+
+	private void addTooltip(String key, String translation) {
+		add("tooltip." + References.ID + "." + key, translation);
+	}
+
+	private void addContainer(String key, String translation) {
+		add("container." + key, translation);
+	}
+
+	private void addCommand(String key, String translation) {
+		add("command." + References.ID + "." + key, translation);
+	}
+
+	private void addSubtitle(String key, String translation) {
+		add("subtitles." + References.ID + "." + key, translation);
 	}
 
 }

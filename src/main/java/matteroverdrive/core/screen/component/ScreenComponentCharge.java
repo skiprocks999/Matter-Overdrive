@@ -22,8 +22,8 @@ public class ScreenComponentCharge extends ScreenComponent {
 
 	private final DoubleSupplier progress;
 
-	public ScreenComponentCharge(final DoubleSupplier progress, final IScreenWrapper gui, final int x, final int y) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y);
+	public ScreenComponentCharge(final DoubleSupplier progress, final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, screenNumbers);
 		this.progress = progress;
 	}
 

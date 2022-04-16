@@ -86,6 +86,9 @@
   "tooltip.matteroverdrive.closemenu": "Close Menu",
   "tooltip.matteroverdrive.energystored": "%1$s / %2$s FE",
   "tooltip.matteroverdrive.matterval": "Matter: %s",
+  "tooltip.matteroverdrive.menuhome": "Home",
+  "tooltip.matteroverdrive.menusettings": "Settings",
+  "tooltip.matteroverdrive.menuupgrades": "Upgrades",
   "tooltip.matteroverdrive.nomatter": "NONE",
   "tooltip.matteroverdrive.openmenu": "Open Menu"
 }

@@ -1,4 +1,4 @@
-package matteroverdrive.core.screen.component.utils;
+package matteroverdrive.core.inventory.slot;
 
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 
