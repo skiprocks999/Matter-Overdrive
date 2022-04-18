@@ -9,6 +9,7 @@ import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.IRedstoneMode;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
+import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -52,6 +53,7 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 			energy.giveEnergy(GENERATION * generatingBonus);
 		}
+		UtilsTile.outputEnergy(this);
 	}
 
 	@Override

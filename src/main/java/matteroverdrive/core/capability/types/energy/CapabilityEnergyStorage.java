@@ -163,7 +163,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		if (canReceive()) {
 			int room = maxStorage - currStorage;
-			int accepted = room < maxReceive ? room : maxReceive;
+			int accepted = room <= maxReceive ? room : maxReceive;
 			if (!simulate) {
 				currStorage += accepted;
 				onChange();
@@ -176,7 +176,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
 		if (canExtract()) {
-			int taken = currStorage < maxExtract ? currStorage : maxExtract;
+			int taken = currStorage <= maxExtract ? currStorage : maxExtract;
 			if (!simulate) {
 				currStorage -= taken;
 				onChange();
@@ -316,6 +316,14 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			owner.setChanged();
 		}
 	}
+	
+	public boolean isSided() {
+		return isSided;
+	}
+	
+	public HashSet<Direction> getOutputDirections(){
+		return relativeOutputDirs;
+	}
 
 	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {
 
@@ -329,22 +337,18 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate) {
-			int returned = super.extractEnergy(maxExtract, simulate);
-			if (canExtract() && !simulate) {
-				parent.currStorage -= returned;
-				super.onChange();
+			if(canExtract()) {
+				return parent.extractEnergy(maxExtract, simulate);
 			}
-			return returned;
+			return 0;
 		}
 
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate) {
-			int returned = super.receiveEnergy(maxReceive, simulate);
-			if (canReceive() && !simulate) {
-				parent.currStorage += returned;
-				super.onChange();
+			if(canReceive()) {
+				return parent.receiveEnergy(maxReceive, simulate);
 			}
-			return returned;
+			return 0;
 		}
 
 	}
