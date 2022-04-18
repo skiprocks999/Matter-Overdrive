@@ -33,5 +33,12 @@
 		"sounds": [
 			"matteroverdrive:buttonsoft1"
 		]
+	},
+	"buttonloud3": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"sounds": [
+			"matteroverdrive:buttonloud3"
+		]
 	}
 }

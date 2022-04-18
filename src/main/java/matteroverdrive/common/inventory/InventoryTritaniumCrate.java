@@ -33,9 +33,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		if (getHandler() != null) {
 			for (int j = 0; j < 6; ++j) {
 				for (int k = 0; k < 9; ++k) {
-					SlotGeneric slot = new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, SlotType.VANILLA);
-					slot.setScreenNumber(new int[] {0, 1, 2});
-					this.addSlot(slot);
+					this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] {0, 1, 2}, SlotType.VANILLA, null));
 				}
 			}
 		}

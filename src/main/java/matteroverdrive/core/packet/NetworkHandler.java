@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import matteroverdrive.References;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
+import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.PacketUpdateTile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -24,6 +25,9 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
 				PacketClientMatterValues::decode, PacketClientMatterValues::handle,
 				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketUpdateRedstoneMode.class, PacketUpdateRedstoneMode::encode,
+				PacketUpdateRedstoneMode::decode, PacketUpdateRedstoneMode::handle,
+				Optional.of(NetworkDirection.PLAY_TO_SERVER));
 	}
 
 }

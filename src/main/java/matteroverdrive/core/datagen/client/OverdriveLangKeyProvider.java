@@ -8,11 +8,11 @@ import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
+public class OverdriveLangKeyProvider extends LanguageProvider {
 
 	private String locale;
 
-	public OverdriveEnUSLangKeyProvider(DataGenerator gen, String locale) {
+	public OverdriveLangKeyProvider(DataGenerator gen, String locale) {
 		super(gen, References.ID, locale);
 		this.locale = locale;
 	}
@@ -58,6 +58,14 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 			addTooltip("menuhome", "Home");
 			addTooltip("menusettings", "Settings");
 			addTooltip("menuupgrades", "Upgrades");
+			addTooltip("matterstored", "%1$s / %2$s kM");
+			addTooltip("energyusage", "%s FE");
+			addTooltip("matterusage", "%s kM");
+			
+			addGuiLabel("redstonelow", "Low");
+			addGuiLabel("redstonehigh", "High");
+			addGuiLabel("redstonenone", "None");
+			addGuiLabel("redstone", "Redstone");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer("solar_panel", "Solar Panel");
@@ -109,6 +117,10 @@ public class OverdriveEnUSLangKeyProvider extends LanguageProvider {
 
 	private void addSubtitle(String key, String translation) {
 		add("subtitles." + References.ID + "." + key, translation);
+	}
+	
+	private void addGuiLabel(String key, String translation) {
+		add("gui." + References.ID + "." + key, translation);
 	}
 
 }

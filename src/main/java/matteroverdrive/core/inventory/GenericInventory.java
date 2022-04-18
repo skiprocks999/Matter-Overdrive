@@ -51,18 +51,14 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		if (hasInventorySlots) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 9; ++j) {
-					SlotContainer slot = new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 81 + i * 18 + playerInvOffset + 8,
-							playerInv);
-					slot.setScreenNumber(getPlayerInvNumbers());
-					addSlot(slot);
+					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 81 + i * 18 + playerInvOffset + 8,
+							getPlayerInvNumbers(), playerInv));
 				}
 			}
 		}
 		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				SlotContainer slot = new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, hotbar);
-				slot.setScreenNumber(getHotbarNumbers());
-				addSlot(slot);
+				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, getHotbarNumbers(), hotbar));
 			}
 		}
 	}

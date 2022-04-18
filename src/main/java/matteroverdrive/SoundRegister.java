@@ -21,5 +21,7 @@ public class SoundRegister {
 			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonsoft0")));
 	public static final RegistryObject<SoundEvent> SOUND_BUTTONSOFT1 = SOUNDS.register("buttonsoft1",
 			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonsoft1")));
-
+	public static final RegistryObject<SoundEvent> SOUND_BUTTONLOUD3 = SOUNDS.register("buttonloud3",
+			() -> new SoundEvent(new ResourceLocation(References.ID + ":buttonloud3")));
+	
 }

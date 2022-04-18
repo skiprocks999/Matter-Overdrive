@@ -1,10 +1,12 @@
 package matteroverdrive.core.capability.types.energy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
@@ -13,8 +15,6 @@ import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,7 +30,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	private boolean isSided = false;
 
 	private GenericTile owner;
-	private boolean hasTile;
+	private boolean hasOwner;
 	private Direction initialFacing = null;
 
 	private boolean hasInput = false;
@@ -55,22 +55,22 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	public CapabilityEnergyStorage setOwner(GenericTile tile) {
 		owner = tile;
-		hasTile = true;
+		hasOwner = true;
 		return this;
 	}
 
-	public CapabilityEnergyStorage setDefaultDirections(@Nonnull BlockState initialState, @Nonnull Direction[] inputs,
-			@Nonnull Direction[] outputs) {
+	public CapabilityEnergyStorage setDefaultDirections(@Nonnull BlockState initialState, @Nullable Direction[] inputs,
+			@Nullable Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
-		if (relativeInputDirs == null) {
+		if (relativeInputDirs == null && inputs != null) {
 			relativeInputDirs = new HashSet<>();
 			for (Direction dir : inputs) {
 				relativeInputDirs.add(dir);
 			}
 			changed = true;
 		}
-		if (relativeOutputDirs == null) {
+		if (relativeOutputDirs == null && outputs != null) {
 			relativeOutputDirs = new HashSet<>();
 			for (Direction dir : outputs) {
 				relativeOutputDirs.add(dir);
@@ -100,37 +100,27 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("stored", currStorage);
 
-		ListTag inList = new ListTag();
-		ListTag outList = new ListTag();
-		int inDirSize = 0;
-		int outDirSize = 0;
-
 		if (isSided) {
-			inDirSize = relativeInputDirs.size();
-			int index = 0;
-			Iterator<Direction> it = relativeInputDirs.iterator();
-			while (it.hasNext()) {
-				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("inDir" + index, it.next().toString());
-				inList.add(dirTag);
-				index++;
+			int inDirSize = relativeInputDirs == null ? 0 : relativeInputDirs.size();
+			if(inDirSize > 0) {
+				tag.putInt("inDirSize", inDirSize);
+				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
+				inDirSize = inDirs.size();
+				for(int i = 0; i < inDirSize; i++) {
+					tag.putString("inDir" + i, inDirs.get(i).getName());
+				}
 			}
-
-			outDirSize = relativeOutputDirs.size();
-			index = 0;
-			it = relativeOutputDirs.iterator();
-			while (it.hasNext()) {
-				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("outDir" + index, it.next().toString());
-				outList.add(dirTag);
-				index++;
+			
+			int outDirSize = relativeOutputDirs == null ? 0 : relativeOutputDirs.size();
+			if(outDirSize > 0) {
+				tag.putInt("outDirSize", outDirSize);
+				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
+				outDirSize = outDirs.size();
+				for(int i = 0; i < outDirSize; i++) {
+					tag.putString("outDir" + i, outDirs.get(i).getName());
+				}
 			}
 		}
-
-		tag.putInt("inDirSize", inDirSize);
-		tag.put("inDirs", inList);
-		tag.putInt("outDirSize", outDirSize);
-		tag.put("outDirs", inList);
 
 		tag.putInt("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
@@ -143,16 +133,20 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public void deserializeNBT(CompoundTag nbt) {
 		currStorage = nbt.getInt("stored");
 
-		relativeInputDirs = new HashSet<>();
-		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
-		for (int i = 0; i < nbt.getInt("inDirSize"); i++) {
-			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
-		}
+		if(nbt.contains("inDirSize")) {
+			relativeInputDirs = new HashSet<>();
+			int inDirSize = nbt.getInt("inDirSize");
+			for (int i = 0; i < inDirSize; i++) {
+				relativeInputDirs.add(Direction.valueOf(nbt.getString("inDir" + i).toUpperCase()));
+			}
 
-		relativeOutputDirs = new HashSet<>();
-		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
-		for (int i = 0; i < nbt.getInt("outDirSize"); i++) {
-			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
+		}
+		if(nbt.contains("outDirSize")) {
+			relativeOutputDirs = new HashSet<>();
+			int outDirSize = nbt.getInt("outDirSize");
+			for (int i = 0; i < outDirSize; i++) {
+				relativeOutputDirs.add(Direction.valueOf(nbt.getString("outDir" + i).toUpperCase()));
+			}
 		}
 
 		maxStorage = nbt.getInt("maxStorage");
@@ -172,6 +166,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			int accepted = room < maxReceive ? room : maxReceive;
 			if (!simulate) {
 				currStorage += accepted;
+				onChange();
 			}
 			return accepted;
 		}
@@ -184,6 +179,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			int taken = currStorage < maxExtract ? currStorage : maxExtract;
 			if (!simulate) {
 				currStorage -= taken;
+				onChange();
 			}
 			return taken;
 		}
@@ -240,10 +236,10 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		sideCaps = new LazyOptional[6];
 		if (isSided) {
 			Arrays.fill(sideCaps, LazyOptional.empty());
-			if (relativeInputDirs.size() > 0) {
+			if (relativeInputDirs != null) {
 				setInputCaps();
 			}
-			if (relativeOutputDirs.size() > 0) {
+			if (relativeOutputDirs != null) {
 				setOutputCaps();
 			}
 		} else {
@@ -296,6 +292,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public int removeEnergy(int amt) {
 		int taken = currStorage < amt ? currStorage : amt;
 		currStorage -= taken;
+		onChange();
 		return taken;
 	}
 
@@ -305,12 +302,19 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		int room = maxStorage - currStorage;
 		int accepted = room < amt ? room : amt;
 		currStorage += accepted;
+		onChange();
 		return accepted;
 	}
 
 	@Override
 	public String getSaveKey() {
 		return "energy";
+	}
+	
+	private void onChange() {
+		if(hasOwner) {
+			owner.setChanged();
+		}
 	}
 
 	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {
@@ -328,6 +332,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			int returned = super.extractEnergy(maxExtract, simulate);
 			if (canExtract() && !simulate) {
 				parent.currStorage -= returned;
+				super.onChange();
 			}
 			return returned;
 		}
@@ -337,6 +342,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			int returned = super.receiveEnergy(maxReceive, simulate);
 			if (canReceive() && !simulate) {
 				parent.currStorage += returned;
+				super.onChange();
 			}
 			return returned;
 		}

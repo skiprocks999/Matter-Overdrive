@@ -18,7 +18,6 @@ public class TileTritaniumCrate extends GenericTile {
 		super(DeferredRegisters.TILE_TRITANIUMCRATE.get(), pos, state);
 
 		addCapability(new CapabilityInventory(SIZE).setOwner(this).setInputs(SIZE));
-
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),

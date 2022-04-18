@@ -1,5 +1,8 @@
 package matteroverdrive.core.inventory.slot;
 
+import javax.annotation.Nullable;
+
+import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -7,16 +10,20 @@ import net.minecraftforge.items.SlotItemHandler;
 public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 
 	private SlotType type;
+	@Nullable
+	private IconType icon;
 	private boolean isActive;
 	private int[] screenNumbers;
 
-	public SlotGeneric(IItemHandler itemHandler, int index, int xPosition, int yPosition, SlotType type) {
+	public SlotGeneric(IItemHandler itemHandler, int index, int xPosition, int yPosition, int[] screenNumbers, SlotType type, IconType icon) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.type = type;
+		this.screenNumbers = screenNumbers;
+		this.icon = icon;
 	}
 
-	public SlotGeneric(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-		this(itemHandler, index, xPosition, yPosition, SlotType.SMALL);
+	public SlotGeneric(IItemHandler itemHandler, int index, int xPosition, int yPosition, int[] screenNumbers) {
+		this(itemHandler, index, xPosition, yPosition, screenNumbers, SlotType.SMALL, null);
 	}
 
 	@Override
@@ -27,11 +34,6 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 	@Override
 	public void setActive(boolean active) {
 		isActive = active;
-	}
-
-	@Override
-	public void setScreenNumber(int[] numbers) {
-		screenNumbers = numbers;
 	}
 
 	@Override
@@ -50,6 +52,11 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 	@Override
 	public boolean isActive() {
 		return isActive;
+	}
+
+	@Override
+	public IconType getIconType() {
+		return icon;
 	}
 	
 }

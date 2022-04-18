@@ -1,5 +1,8 @@
 package matteroverdrive.core.inventory.slot;
 
+import javax.annotation.Nullable;
+
+import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
@@ -7,12 +10,20 @@ import net.minecraft.world.inventory.Slot;
 public class SlotContainer extends Slot implements IToggleableSlot {
 
 	private SlotType type;
+	@Nullable
+	private IconType icon;
 	private int[] screenNumbers;
 	private boolean isActive;
 
-	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, SlotType type) {
+	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type, IconType icon) {
 		super(pContainer, pIndex, pX, pY);
 		this.type = type;
+		this.screenNumbers = screenNumbers;
+		this.icon = icon;
+	}
+	
+	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type) {
+		this(pContainer, pIndex, pX, pY, screenNumbers, type, null);
 	}
 
 	@Override
@@ -23,11 +34,6 @@ public class SlotContainer extends Slot implements IToggleableSlot {
 	@Override
 	public void setActive(boolean active) {
 		isActive = active;
-	}
-
-	@Override
-	public void setScreenNumber(int[] numbers) {
-		screenNumbers = numbers;
 	}
 
 	@Override
@@ -46,6 +52,11 @@ public class SlotContainer extends Slot implements IToggleableSlot {
 	@Override
 	public int[] getScreenNumbers() {
 		return screenNumbers;
+	}
+
+	@Override
+	public IconType getIconType() {
+		return icon;
 	}
 
 }

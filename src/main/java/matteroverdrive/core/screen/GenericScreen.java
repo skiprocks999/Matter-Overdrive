@@ -43,7 +43,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
 		if (slot instanceof IToggleableSlot type) {
-			return new ScreenComponentSlot(type.getSlotType(), this, slot.x - 1, slot.y - 1, type.getScreenNumbers());
+			return new ScreenComponentSlot(type.getSlotType(), type.getIconType(), this, slot.x - 1, slot.y - 1, type.getScreenNumbers());
 		}
 		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1, new int[] {0});
 	}
@@ -197,6 +197,10 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 				toggle.setActive(toggle.isScreenNumber(screenNum));
 			}
 		}
+	}
+	
+	public T getMenu() {
+		return this.menu;
 	}
 	
 	public abstract int getScreenNumber();

@@ -35,30 +35,12 @@ public class PacketHandler {
 		return this;
 	}
 
-	public PacketHandler guiPacketWriter(Consumer<CompoundTag> consumer) {
-		Consumer<CompoundTag> safe = consumer;
-		if (guiPacketWriter != null) {
-			safe = safe.andThen(guiPacketWriter);
-		}
-		guiPacketWriter = safe;
-		return this;
-	}
-
 	public PacketHandler customPacketReader(Consumer<CompoundTag> consumer) {
 		Consumer<CompoundTag> safe = consumer;
 		if (customPacketReader != null) {
 			safe = safe.andThen(customPacketReader);
 		}
 		customPacketReader = safe;
-		return this;
-	}
-
-	public PacketHandler guiPacketReader(Consumer<CompoundTag> consumer) {
-		Consumer<CompoundTag> safe = consumer;
-		if (guiPacketReader != null) {
-			safe = safe.andThen(guiPacketReader);
-		}
-		guiPacketReader = safe;
 		return this;
 	}
 

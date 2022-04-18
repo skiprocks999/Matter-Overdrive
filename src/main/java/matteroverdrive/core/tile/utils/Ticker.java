@@ -58,6 +58,9 @@ public class Ticker {
 		if (tickServer != null) {
 			tickServer.accept(this);
 		}
+		if (ticks % 2 == 0 && owner.hasPacketHandler) {
+			owner.getPacketHandler().sendCustomPacket();
+		}
 	}
 
 	public void tickClient() {

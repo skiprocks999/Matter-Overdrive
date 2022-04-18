@@ -4,6 +4,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.inventory.GenericInventoryTile;
+import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -22,7 +23,8 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 
 	@Override
 	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
-
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] {2}));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] {2}));
 	}
 
 	@Override

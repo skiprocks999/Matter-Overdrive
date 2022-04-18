@@ -43,7 +43,9 @@ public class ScreenComponentIcon extends ScreenComponent {
 	public enum IconType {
 
 		PAGE_WRENCH(16, 16, "page_icon_config"), PAGE_HOME(14, 14, "page_icon_home"),
-		PAGE_UPGRADES(12, 12, "page_icon_upgrades");
+		PAGE_UPGRADES(12, 12, "page_icon_upgrades"),
+		
+		UPGRADE("upgrade");
 
 		private final int width;
 		private final int height;
