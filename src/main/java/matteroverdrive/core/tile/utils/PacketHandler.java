@@ -2,12 +2,16 @@ package matteroverdrive.core.tile.utils;
 
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTile;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
@@ -16,17 +20,17 @@ import net.minecraftforge.network.NetworkDirection;
 public class PacketHandler {
 
 	private GenericTile owner;
+	private boolean isGuiPacket;
 
-	public PacketHandler(GenericTile owner) {
+	public PacketHandler(GenericTile owner, boolean isGuiPacket) {
 		this.owner = owner;
+		this.isGuiPacket = isGuiPacket;
 	}
 
 	protected Consumer<CompoundTag> customPacketWriter;
-	protected Consumer<CompoundTag> guiPacketWriter;
 	protected Consumer<CompoundTag> customPacketReader;
-	protected Consumer<CompoundTag> guiPacketReader;
 
-	public PacketHandler customPacketWriter(Consumer<CompoundTag> consumer) {
+	public PacketHandler packetWriter(Consumer<CompoundTag> consumer) {
 		Consumer<CompoundTag> safe = consumer;
 		if (customPacketWriter != null) {
 			safe = safe.andThen(customPacketWriter);
@@ -35,7 +39,7 @@ public class PacketHandler {
 		return this;
 	}
 
-	public PacketHandler customPacketReader(Consumer<CompoundTag> consumer) {
+	public PacketHandler packetReader(Consumer<CompoundTag> consumer) {
 		Consumer<CompoundTag> safe = consumer;
 		if (customPacketReader != null) {
 			safe = safe.andThen(customPacketReader);
@@ -44,39 +48,25 @@ public class PacketHandler {
 		return this;
 	}
 
-	public Consumer<CompoundTag> getCustomPacketSupplier() {
+	public Consumer<CompoundTag> getPacketSupplier() {
 		return customPacketWriter;
 	}
 
-	public Consumer<CompoundTag> getGuiPacketSupplier() {
-		return guiPacketWriter;
-	}
-
-	public Consumer<CompoundTag> getCustomPacketConsumer() {
+	public Consumer<CompoundTag> getPacketConsumer() {
 		return customPacketReader;
 	}
 
-	public Consumer<CompoundTag> getGuiPacketConsumer() {
-		return guiPacketReader;
-	}
-
-	public void sendCustomPacket() {
-		PacketUpdateTile packet = new PacketUpdateTile(this, owner.getBlockPos(), false, new CompoundTag());
-		Level world = owner.getLevel();
-		BlockPos pos = owner.getBlockPos();
-		if (world instanceof ServerLevel level) {
-			level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> NetworkHandler.CHANNEL
-					.sendTo(packet, p.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT));
-		}
-	}
-
-	public void sendGuiPacketToTracking() {
-		PacketUpdateTile packet = new PacketUpdateTile(this, owner.getBlockPos(), true, new CompoundTag());
-		Level world = owner.getLevel();
-		BlockPos pos = owner.getBlockPos();
-		if (world instanceof ServerLevel level) {
-			level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> NetworkHandler.CHANNEL
-					.sendTo(packet, p.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT));
+	public void sendCustomPacket(@Nullable Player player) {
+		PacketUpdateTile packet = new PacketUpdateTile(this, owner.getBlockPos(), new CompoundTag(), isGuiPacket);
+		if(player != null && player instanceof ServerPlayer server) {
+			NetworkHandler.CHANNEL.sendTo(packet, server.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+		} else {
+			Level world = owner.getLevel();
+			BlockPos pos = owner.getBlockPos();
+			if (world instanceof ServerLevel level) {
+				level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> NetworkHandler.CHANNEL
+						.sendTo(packet, p.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT));
+			}
 		}
 	}
 

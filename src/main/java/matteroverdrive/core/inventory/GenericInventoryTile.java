@@ -2,6 +2,7 @@ package matteroverdrive.core.inventory;
 
 import javax.annotation.Nullable;
 
+import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
@@ -32,6 +33,14 @@ public abstract class GenericInventoryTile<T extends BlockEntity> extends Generi
 	@Nullable
 	public BlockEntity getTileUnsafe() {
 		return world.getBlockEntity(new BlockPos(tilecoords.get(0), tilecoords.get(1), tilecoords.get(2)));
+	}
+	
+	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		if(!player.level.isClientSide && getTile() != null && getTile() instanceof GenericTile generic && generic.hasMenuPacketHandler) {
+			generic.getMenuPacketHandler().sendCustomPacket(player);
+		}
 	}
 
 }

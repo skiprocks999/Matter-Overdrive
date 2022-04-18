@@ -16,24 +16,19 @@ public class PacketUpdateTile {
 
 	private final CompoundTag updateTag;
 	private final BlockPos pos;
-	private boolean isGUI;
+	private final boolean isGui;
 
-	public PacketUpdateTile(PacketHandler component, BlockPos pos, boolean isGUI, CompoundTag base) {
-		this(pos, base, isGUI);
-		if (isGUI) {
-			if (component.getGuiPacketSupplier() != null) {
-				component.getGuiPacketSupplier().accept(base);
-			}
-		} else if (component.getCustomPacketSupplier() != null) {
-			component.getCustomPacketSupplier().accept(base);
+	public PacketUpdateTile(PacketHandler component, BlockPos pos, CompoundTag base, boolean isGui) {
+		this(pos, base, isGui);
+		if (component.getPacketSupplier() != null) {
+			component.getPacketSupplier().accept(base);
 		}
-		this.isGUI = isGUI;
 	}
 
-	private PacketUpdateTile(BlockPos pos, CompoundTag updateTag, boolean isGUI) {
+	private PacketUpdateTile(BlockPos pos, CompoundTag updateTag, boolean isGui) {
 		this.pos = pos;
 		this.updateTag = updateTag;
-		this.isGUI = isGUI;
+		this.isGui = isGui;
 	}
 
 	public static void handle(PacketUpdateTile message, Supplier<Context> context) {
@@ -43,15 +38,16 @@ public class PacketUpdateTile {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof GenericTile generic) {
-					if (generic.hasPacketHandler) {
-						PacketHandler handler = generic.getPacketHandler();
-						if (message.isGUI) {
-							if (handler.getGuiPacketConsumer() != null) {
-								handler.getGuiPacketConsumer().accept(message.updateTag);
-							}
-						} else if (handler.getCustomPacketConsumer() != null) {
-							handler.getCustomPacketConsumer().accept(message.updateTag);
-						}
+					if (generic.hasMenuPacketHandler && message.isGui) {
+						PacketHandler handler = generic.getMenuPacketHandler();
+						if (handler.getPacketConsumer() != null) {
+							handler.getPacketConsumer().accept(message.updateTag);
+						} 
+					} else if (generic.hasRenderPacketHandler && !message.isGui) {
+						PacketHandler handler = generic.getRenderPacketHandler();
+						if (handler.getPacketConsumer() != null) {
+							handler.getPacketConsumer().accept(message.updateTag);
+						} 
 					}
 				}
 			}
@@ -62,7 +58,7 @@ public class PacketUpdateTile {
 	public static void encode(PacketUpdateTile pkt, FriendlyByteBuf buf) {
 		buf.writeBlockPos(pkt.pos);
 		buf.writeNbt(pkt.updateTag);
-		buf.writeBoolean(pkt.isGUI);
+		buf.writeBoolean(pkt.isGui);
 	}
 
 	public static PacketUpdateTile decode(FriendlyByteBuf buf) {

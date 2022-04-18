@@ -40,7 +40,7 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 								exposeCapability(CapabilityType.Item), getCoordsData()),
 						getContainerName("solar_panel")));
 		setTicker(new Ticker(this).tickServer(this::tickServer));
-		setPacketHandler(new PacketHandler(this).customPacketReader(this::clientLoad).customPacketWriter(this::clientSave));
+		setMenuPacketHandler(new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));
 	}
 	
 	private void tickServer(Ticker ticker) {
