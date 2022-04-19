@@ -77,9 +77,9 @@ public class DeferredRegisters {
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.solar_panel.toString(),
-			() -> new BlockMachine(TileSolarPanel::new, TypeMachine.solar_panel));
+			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.solar_panel, DeferredRegisters.TILE_SOLARPANEL));
 	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(TypeMachine.matter_decomposer.toString(),
-			() -> new BlockLightableMachine(TileMatterDecomposer::new, TypeMachine.matter_decomposer));
+			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new, TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTERDECOMPOSER));
 
 	/* ITEMS */
 

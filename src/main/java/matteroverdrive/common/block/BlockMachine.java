@@ -3,6 +3,8 @@ package matteroverdrive.common.block;
 import java.util.Arrays;
 import java.util.List;
 
+import matteroverdrive.DeferredRegisters;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -15,22 +17,26 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.registries.RegistryObject;
 
-public class BlockMachine extends GenericMachineBlock {
+public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 
 	public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
-
+	
 	public TypeMachine type;
+	private RegistryObject<BlockEntityType<T>> blockEntityType;
 
-	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type) {
+	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
 		super(supplier);
 		this.type = type;
+		this.blockEntityType = entity;
 	}
 
 	@Override
@@ -39,6 +45,15 @@ public class BlockMachine extends GenericMachineBlock {
 			return type.getShape(state.getValue(FACING));
 		}
 		return super.getShape(state, level, pos, context);
+	}
+	
+	@Override
+	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
+		ItemStack stack = super.getCloneItemStack(level, pPos, pState);
+		level.getBlockEntity(pPos, blockEntityType.get()).ifPresent(crate -> {
+			crate.saveToItem(stack);
+		});
+		return stack;
 	}
 
 	@Override
