@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
@@ -44,10 +44,10 @@ public class BlockMachine extends GenericMachineBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof TileTritaniumCrate crate) {
-			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
+		if (blockentity instanceof GenericTile generic) {
+			CapabilityInventory inv = generic.exposeCapability(CapabilityType.Item);
 			if (MatterOverdriveConfig.machines_drop_items.get()) {
-				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
+				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));
 			}
 			builder = builder.withDynamicDrop(CONTENTS, (context, consumer) -> {

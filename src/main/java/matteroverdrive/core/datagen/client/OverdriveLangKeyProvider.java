@@ -49,6 +49,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			}
 			add(DeferredRegisters.BLOCK_SOLAR_PANEL.get(), "Solar Panel");
+			add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get(), "Matter Decomposer");
 
 			addTooltip("energystored", "%1$s / %2$s FE");
 			addTooltip("matterval", "Matter: %s");

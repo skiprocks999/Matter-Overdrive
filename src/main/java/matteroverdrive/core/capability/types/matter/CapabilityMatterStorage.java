@@ -1,10 +1,12 @@
 package matteroverdrive.core.capability.types.matter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
@@ -14,8 +16,6 @@ import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,7 +29,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private boolean isSided = false;
 
 	private GenericTile owner;
-	private boolean hasTile;
+	private boolean hasOwner;
 	private Direction initialFacing = null;
 
 	private boolean hasInput = false;
@@ -54,22 +54,22 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	public CapabilityMatterStorage setOwner(GenericTile tile) {
 		owner = tile;
-		hasTile = true;
+		hasOwner = true;
 		return this;
 	}
 
-	public CapabilityMatterStorage setDefaultDirections(@Nonnull BlockState initialState, @Nonnull Direction[] inputs,
-			@Nonnull Direction[] outputs) {
+	public CapabilityMatterStorage setDefaultDirections(@Nonnull BlockState initialState, @Nullable Direction[] inputs,
+			@Nullable Direction[] outputs) {
 		isSided = true;
 		boolean changed = false;
-		if (relativeInputDirs == null) {
+		if (relativeInputDirs == null && inputs != null) {
 			relativeInputDirs = new HashSet<>();
 			for (Direction dir : inputs) {
 				relativeInputDirs.add(dir);
 			}
 			changed = true;
 		}
-		if (relativeOutputDirs == null) {
+		if (relativeOutputDirs == null && outputs != null) {
 			relativeOutputDirs = new HashSet<>();
 			for (Direction dir : outputs) {
 				relativeOutputDirs.add(dir);
@@ -99,37 +99,27 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("stored", currStorage);
 
-		ListTag inList = new ListTag();
-		ListTag outList = new ListTag();
-		int inDirSize = 0;
-		int outDirSize = 0;
-
 		if (isSided) {
-			inDirSize = relativeInputDirs.size();
-			int index = 0;
-			Iterator<Direction> it = relativeInputDirs.iterator();
-			while (it.hasNext()) {
-				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("inDir" + index, it.next().toString());
-				inList.add(dirTag);
-				index++;
+			int inDirSize = relativeInputDirs == null ? 0 : relativeInputDirs.size();
+			if(inDirSize > 0) {
+				tag.putInt("inDirSize", inDirSize);
+				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
+				inDirSize = inDirs.size();
+				for(int i = 0; i < inDirSize; i++) {
+					tag.putString("inDir" + i, inDirs.get(i).getName());
+				}
 			}
-
-			outDirSize = relativeOutputDirs.size();
-			index = 0;
-			it = relativeOutputDirs.iterator();
-			while (it.hasNext()) {
-				CompoundTag dirTag = new CompoundTag();
-				dirTag.putString("outDir" + index, it.next().toString());
-				outList.add(dirTag);
-				index++;
+			
+			int outDirSize = relativeOutputDirs == null ? 0 : relativeOutputDirs.size();
+			if(outDirSize > 0) {
+				tag.putInt("outDirSize", outDirSize);
+				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
+				outDirSize = outDirs.size();
+				for(int i = 0; i < outDirSize; i++) {
+					tag.putString("outDir" + i, outDirs.get(i).getName());
+				}
 			}
 		}
-
-		tag.putInt("inDirSize", inDirSize);
-		tag.put("inDirs", inList);
-		tag.putInt("outDirSize", outDirSize);
-		tag.put("outDirs", inList);
 
 		tag.putInt("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
@@ -142,16 +132,20 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	public void deserializeNBT(CompoundTag nbt) {
 		currStorage = nbt.getInt("stored");
 
-		relativeInputDirs = new HashSet<>();
-		ListTag inList = nbt.getList("inDirs", Tag.TAG_COMPOUND);
-		for (int i = 0; i < nbt.getInt("inDirSize"); i++) {
-			relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
-		}
+		if(nbt.contains("inDirSize")) {
+			relativeInputDirs = new HashSet<>();
+			int inDirSize = nbt.getInt("inDirSize");
+			for (int i = 0; i < inDirSize; i++) {
+				relativeInputDirs.add(Direction.valueOf(nbt.getString("inDir" + i).toUpperCase()));
+			}
 
-		relativeOutputDirs = new HashSet<>();
-		ListTag outList = nbt.getList("outDirs", Tag.TAG_COMPOUND);
-		for (int i = 0; i < nbt.getInt("outDirSize"); i++) {
-			relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
+		}
+		if(nbt.contains("outDirSize")) {
+			relativeOutputDirs = new HashSet<>();
+			int outDirSize = nbt.getInt("outDirSize");
+			for (int i = 0; i < outDirSize; i++) {
+				relativeOutputDirs.add(Direction.valueOf(nbt.getString("outDir" + i).toUpperCase()));
+			}
 		}
 
 		maxStorage = nbt.getInt("maxStorage");
@@ -163,9 +157,10 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	public int receiveMatter(int maxReceive, boolean simulate) {
 		if (canReceive()) {
 			int room = maxStorage - currStorage;
-			int accepted = room < maxReceive ? room : maxReceive;
+			int accepted = room <= maxReceive ? room : maxReceive;
 			if (!simulate) {
 				currStorage += accepted;
+				onChange();
 			}
 			return accepted;
 		}
@@ -175,9 +170,10 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	@Override
 	public int extractMatter(int maxExtract, boolean simulate) {
 		if (canExtract()) {
-			int taken = currStorage < maxExtract ? currStorage : maxExtract;
+			int taken = currStorage <= maxExtract ? currStorage : maxExtract;
 			if (!simulate) {
 				currStorage -= taken;
+				onChange();
 			}
 			return taken;
 		}
@@ -238,10 +234,10 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		sideCaps = new LazyOptional[6];
 		if (isSided) {
 			Arrays.fill(sideCaps, LazyOptional.empty());
-			if (relativeInputDirs.size() > 0) {
+			if (relativeInputDirs != null) {
 				setInputCaps();
 			}
-			if (relativeOutputDirs.size() > 0) {
+			if (relativeOutputDirs != null) {
 				setOutputCaps();
 			}
 		} else {
@@ -269,8 +265,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	// method for us to allow for matter removal on items/blocks that aren't
 	// meant to provide matter
 	public int removeMatter(int amt) {
-		int taken = currStorage < amt ? currStorage : amt;
+		int taken = currStorage <= amt ? currStorage : amt;
 		currStorage -= taken;
+		onChange();
 		return taken;
 	}
 
@@ -278,8 +275,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	// meant to receive matter
 	public int giveMatter(int amt) {
 		int room = maxStorage - currStorage;
-		int accepted = room < amt ? room : amt;
+		int accepted = room <= amt ? room : amt;
 		currStorage += accepted;
+		onChange();
 		return accepted;
 	}
 
@@ -310,6 +308,12 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
+	
+	private void onChange() {
+		if(hasOwner) {
+			owner.setChanged();
+		}
+	}
 
 	private class ChildCapabilityMatterStorage extends CapabilityMatterStorage {
 
@@ -323,20 +327,18 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 		@Override
 		public int extractMatter(int maxExtract, boolean simulate) {
-			int returned = super.extractMatter(maxExtract, simulate);
-			if (canExtract() && !simulate) {
-				parent.currStorage -= returned;
+			if (canExtract()) {
+				return parent.extractMatter(maxExtract, simulate);
 			}
-			return returned;
+			return 0;
 		}
 
 		@Override
 		public int receiveMatter(int maxReceive, boolean simulate) {
-			int returned = super.receiveMatter(maxReceive, simulate);
-			if (canReceive() && !simulate) {
-				parent.currStorage += returned;
+			if (canReceive()) {
+				return parent.receiveMatter(maxReceive, simulate);
 			}
-			return returned;
+			return 0;
 		}
 
 	}

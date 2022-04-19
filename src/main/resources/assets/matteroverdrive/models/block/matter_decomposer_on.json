@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "matteroverdrive:block/decomposer_top",
+    "front": "matteroverdrive:block/tank_full",
+    "side": "matteroverdrive:block/base_stripes",
+    "bottom" : "matteroverdrive:block/vent2"
+  }
+}

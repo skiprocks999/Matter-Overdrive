@@ -73,6 +73,19 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 								"BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)));
 		return LootTable.lootTable().withPool(builder);
 	}
+	
+	protected LootTable.Builder itemEnergyMatterTable(String name, Block block, BlockEntityType<?> type) {
+		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
+				.add(LootItem.lootTableItem(block)
+						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+								.copy("inventory", "BlockEntityTag.inventory", CopyNbtFunction.MergeStrategy.REPLACE)
+								.copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)
+								.copy("matter", "BlockEntityTag.matter", CopyNbtFunction.MergeStrategy.REPLACE))
+						.apply(SetContainerContents.setContents(type)
+								.withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents")))));
+		return LootTable.lootTable().withPool(builder);
+	}
 
 	@Override
 	public void run(HashCache cache) {

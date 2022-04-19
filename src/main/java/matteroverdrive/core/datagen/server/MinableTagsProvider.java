@@ -21,14 +21,16 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]))
-				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get());
+				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get())
+				.add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get());
 
 		tag(BlockTags.NEEDS_STONE_TOOL).add(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get())
 				.add(DeferredRegisters.COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.FLOOR_TILE.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.FLOOR_TILES.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]))
-				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get());
+				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get())
+				.add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get());
 	}
 
 }

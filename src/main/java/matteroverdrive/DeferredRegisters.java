@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.common.block.BlockColored;
+import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
@@ -14,6 +15,7 @@ import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.registers.BulkRegistryObject;
@@ -76,6 +78,8 @@ public class DeferredRegisters {
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.solar_panel.toString(),
 			() -> new BlockMachine(TileSolarPanel::new, TypeMachine.solar_panel));
+	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(TypeMachine.matter_decomposer.toString(),
+			() -> new BlockLightableMachine(TileMatterDecomposer::new, TypeMachine.matter_decomposer));
 
 	/* ITEMS */
 
@@ -103,6 +107,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileSolarPanel>> TILE_SOLARPANEL = TILES.register(
 			TypeMachine.solar_panel.toString(),
 			() -> new BlockEntityType<>(TileSolarPanel::new, Sets.newHashSet(BLOCK_SOLAR_PANEL.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTERDECOMPOSER = TILES.register(
+			TypeMachine.matter_decomposer.toString(),
+			() -> new BlockEntityType<>(TileMatterDecomposer::new, Sets.newHashSet(BLOCK_MATTER_DECOMPOSER.get()), null));
 
 	/* MENUS */
 

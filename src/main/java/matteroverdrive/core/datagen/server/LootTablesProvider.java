@@ -20,6 +20,8 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 		Block solarPanel = DeferredRegisters.BLOCK_SOLAR_PANEL.get();
 		lootTables.put(solarPanel, itemAndEnergyTable(solarPanel.getRegistryName().getPath(), solarPanel,
 				DeferredRegisters.TILE_SOLARPANEL.get()));
+		Block matterDecomposer = DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get();
+		lootTables.put(matterDecomposer, itemEnergyMatterTable(matterDecomposer.getRegistryName().getPath(), matterDecomposer, DeferredRegisters.TILE_MATTERDECOMPOSER.get()));
 	}
 
 }
