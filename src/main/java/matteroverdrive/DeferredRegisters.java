@@ -12,6 +12,7 @@ import matteroverdrive.common.block.BlockTritaniumCrate;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
+import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
@@ -117,6 +118,8 @@ public class DeferredRegisters {
 			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
 	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLAR_PANEL = CONTAINERS
 			.register("solar_panel", () -> new MenuType<>(InventorySolarPanel::new));
+	public static final RegistryObject<MenuType<InventoryMatterDecomposer>> MENU_MATTER_DECOMPOSER = CONTAINERS
+			.register("solar_panel", () -> new MenuType<>(InventoryMatterDecomposer::new));
 
 	// Functional Methods
 

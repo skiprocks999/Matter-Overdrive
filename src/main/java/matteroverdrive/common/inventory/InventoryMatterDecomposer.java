@@ -2,24 +2,20 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileMatterDecomposer;
-import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDecomposer> {
-
-	public InventoryMatterDecomposer(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
-	}
 	
 	public InventoryMatterDecomposer(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), id, playerinv, invcap, tilecoords);
+	}
+	
+	public InventoryMatterDecomposer(int id, Inventory playerinv) {
+		this(id, playerinv, new CapabilityInventory(TileMatterDecomposer.SLOT_COUNT), new SimpleContainerData(3));
 	}
 
 	@Override

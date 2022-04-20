@@ -41,10 +41,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private int inputs = 0;
 	private int outputs = 0;
 	private int byproducts = 0;
-	private int energyInput = 0;
-	private int energyOutput = 0;
-	private int matterInput = 0;
-	private int matterOutput = 0;
+	private int energySlot = 0;
+	private int matterSlot = 0;
 	// not included in child cap
 	private int upgrades = 0;
 
@@ -118,23 +116,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return this;
 	}
 	
-	public CapabilityInventory setEnergyInputs(int count) {
-		energyInput = count;
+	public CapabilityInventory setEnergySlots(int count) {
+		energySlot = count;
 		return this;
 	}
 	
-	public CapabilityInventory setEnergyOutputs(int count) {
-		energyOutput = count;
-		return this;
-	}
-	
-	public CapabilityInventory setMatterInputs(int count) {
-		matterInput = count;
-		return this;
-	}
-	
-	public CapabilityInventory setMatterOutputs(int count) {
-		matterOutput = count;
+	public CapabilityInventory setMatterSlots(int count) {
+		matterSlot = count;
 		return this;
 	}
 
@@ -155,20 +143,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return byproducts;
 	}
 	
-	public int energyInputs() {
-		return energyInput;
+	public int energySlots() {
+		return energySlot;
 	}
 	
-	public int energyOutputs() {
-		return energyOutput;
-	}
-	
-	public int matterInputs() {
-		return matterInput;
-	}
-	
-	public int matterOutputs() {
-		return matterOutput;
+	public int matterSlots() {
+		return matterSlot;
 	}
 
 	public int upgrades() {
@@ -176,7 +156,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	}
 	
 	public int externalCount() {
-		return inputs() + outputs() + byproducts() + energyInputs() + energyOutputs() + matterInputs() + matterOutputs();
+		return inputs() + outputs() + byproducts() + energySlots() + matterSlots();
 	}
 
 	public int inputIndex() {
@@ -191,24 +171,16 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return outputIndex() + outputs;
 	}
 	
-	public int energyInputsIndex() {
+	public int energySlotsIndex() {
 		return byproductIndex() + byproducts;
 	}
 	
-	public int energyOutputsIndex() {
-		return energyInputsIndex() + energyInput;
-	}
-	
-	public int matterInputsIndex() {
-		return energyOutputsIndex() + energyOutput;
-	}
-	
-	public int matterOutputsIndex() {
-		return matterInputsIndex() + matterInput;
+	public int matterSlotsIndex() {
+		return energySlotsIndex() + energySlot;
 	}
 
 	public int upgradeIndex() {
-		return matterOutputsIndex() + matterOutput;
+		return matterSlotsIndex() + matterSlot;
 	}
 
 	@Override
@@ -343,18 +315,18 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> {
-			int[] slots = new int[inputs() + energyInputs() + matterInputs()];
+			int[] slots = new int[inputs() + energySlots() + matterSlots()];
 			int index = 0;
 			for (int i = 0; i < inputs(); i++) {
 				slots[index] = inputIndex() + i;
 				index++;
 			}
-			for(int i = 0; i < energyInputs(); i++) {
-				slots[index] = energyInputsIndex() + i;
+			for(int i = 0; i < energySlots(); i++) {
+				slots[index] = energySlotsIndex() + i;
 				index++;
 			}
-			for(int i = 0; i < matterInputs(); i++) {
-				slots[index] = matterInputsIndex() + i;
+			for(int i = 0; i < matterSlots(); i++) {
+				slots[index] = matterSlotsIndex() + i;
 				index++;
 			}
 			return new ChildInventoryHandler(this, slots);
@@ -373,7 +345,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> {
-			int[] slots = new int[outputs() + byproducts() + energyOutputs() + matterOutputs()];
+			int[] slots = new int[outputs() + byproducts() + energySlots() + matterSlots()];
 			int index = 0;
 			for (int i = 0; i < outputs(); i++) {
 				slots[index] = outputIndex() + i;
@@ -383,12 +355,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				slots[index] = byproductIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < energyOutputs(); i++) {
-				slots[index] = energyOutputsIndex() + i;
+			for (int i = 0; i < energySlots(); i++) {
+				slots[index] = energySlotsIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < matterOutputs(); i++) {
-				slots[index] = matterOutputsIndex() + i;
+			for (int i = 0; i < matterSlots(); i++) {
+				slots[index] = matterSlotsIndex() + i;
 				index++;
 			}
 			return new ChildInventoryHandler(this, slots);
@@ -429,34 +401,18 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return byprouducts;
 	}
 	
-	public List<ItemStack> getEnergyInputs() {
+	public List<ItemStack> getEnergyItems() {
 		List<ItemStack> energy = new ArrayList<>();
-		for (int i = 0; i < energyInputs(); i++) {
-			energy.add(getStackInSlot(energyInputsIndex() + i));
+		for (int i = 0; i < energySlots(); i++) {
+			energy.add(getStackInSlot(energySlotsIndex() + i));
 		}
 		return energy;
 	}
 	
-	public List<ItemStack> getEnergyOutputs() {
-		List<ItemStack> energy = new ArrayList<>();
-		for (int i = 0; i < energyOutputs(); i++) {
-			energy.add(getStackInSlot(energyOutputsIndex() + i));
-		}
-		return energy;
-	}
-	
-	public List<ItemStack> getMatterInputs() {
+	public List<ItemStack> getMatterItems() {
 		List<ItemStack> matter = new ArrayList<>();
-		for (int i = 0; i < matterInputs(); i++) {
-			matter.add(getStackInSlot(matterInputsIndex() + i));
-		}
-		return matter;
-	}
-	
-	public List<ItemStack> getMatterOutputs() {
-		List<ItemStack> matter = new ArrayList<>();
-		for (int i = 0; i < matterOutputs(); i++) {
-			matter.add(getStackInSlot(matterOutputsIndex() + i));
+		for (int i = 0; i < matterSlots(); i++) {
+			matter.add(getStackInSlot(matterSlotsIndex() + i));
 		}
 		return matter;
 	}
