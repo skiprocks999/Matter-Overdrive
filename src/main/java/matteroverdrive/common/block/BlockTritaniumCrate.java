@@ -13,7 +13,6 @@ import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Containers;
@@ -38,8 +37,6 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 
 	private static final VoxelShape NS = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 12.0D, 14.0D);
 	private static final VoxelShape EW = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 12.0D, 16.0D);
-
-	public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
 
 	public BlockTritaniumCrate(Properties properties) {
 		super(properties);
@@ -84,7 +81,7 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 		if (tile instanceof GenericTile generic && generic != null) {
 			if (generic.hasMenu) {
 				player.openMenu(generic.getMenuProvider());
-				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATEOPEN.get(),
+				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATE_OPEN.get(),
 						SoundSource.BLOCKS, 0.5F, 1.0F);
 			}
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);
@@ -102,11 +99,6 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));
 			}
-			builder = builder.withDynamicDrop(CONTENTS, (context, consumer) -> {
-				for (ItemStack stack : inv.getItems()) {
-					consumer.accept(stack);
-				}
-			});
 		}
 		return super.getDrops(state, builder);
 	}
@@ -114,7 +106,7 @@ public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
 		ItemStack stack = super.getCloneItemStack(level, pPos, pState);
-		level.getBlockEntity(pPos, DeferredRegisters.TILE_TRITANIUMCRATE.get()).ifPresent(crate -> {
+		level.getBlockEntity(pPos, DeferredRegisters.TILE_TRITANIUM_CRATE.get()).ifPresent(crate -> {
 			crate.saveToItem(stack);
 		});
 		return stack;

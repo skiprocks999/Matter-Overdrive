@@ -81,7 +81,7 @@ public class ButtonMenuBar extends Button {
 	@Override
 	public void playDownSound(SoundManager pHandler) {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
-		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTONEXPAND.get(), pitch));
+		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_EXPAND.get(), pitch));
 	}
 
 

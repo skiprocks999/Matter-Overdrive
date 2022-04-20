@@ -15,13 +15,13 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	protected void addTables() {
 		for (Block block : DeferredRegisters.TRITANIUM_CRATES.<Block>getAllObjects()) {
 			lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block,
-					DeferredRegisters.TILE_TRITANIUMCRATE.get()));
+					DeferredRegisters.TILE_TRITANIUM_CRATE.get()));
 		}
 		Block solarPanel = DeferredRegisters.BLOCK_SOLAR_PANEL.get();
 		lootTables.put(solarPanel, itemAndEnergyTable(solarPanel.getRegistryName().getPath(), solarPanel,
-				DeferredRegisters.TILE_SOLARPANEL.get()));
+				DeferredRegisters.TILE_SOLAR_PANEL.get()));
 		Block matterDecomposer = DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get();
-		lootTables.put(matterDecomposer, itemEnergyMatterTable(matterDecomposer.getRegistryName().getPath(), matterDecomposer, DeferredRegisters.TILE_MATTERDECOMPOSER.get()));
+		lootTables.put(matterDecomposer, itemEnergyMatterTable(matterDecomposer.getRegistryName().getPath(), matterDecomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER.get()));
 	}
 
 }

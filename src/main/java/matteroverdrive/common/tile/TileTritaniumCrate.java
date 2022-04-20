@@ -15,7 +15,7 @@ public class TileTritaniumCrate extends GenericTile {
 	public static final int SIZE = 54;
 
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_TRITANIUMCRATE.get(), pos, state);
+		super(DeferredRegisters.TILE_TRITANIUM_CRATE.get(), pos, state);
 
 		addCapability(new CapabilityInventory(SIZE).setOwner(this).setInputs(SIZE));
 		setMenuProvider(

@@ -32,7 +32,7 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 	public int clientMaxStorage;
 	
 	public TileSolarPanel(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_SOLARPANEL.get(), pos, state);
+		super(DeferredRegisters.TILE_SOLAR_PANEL.get(), pos, state);
 		addCapability(new CapabilityInventory(2).setUpgrades(2).setOwner(this));
 		addCapability(new CapabilityEnergyStorage(64000, false, true).setOwner(this).setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
 		setMenuProvider(

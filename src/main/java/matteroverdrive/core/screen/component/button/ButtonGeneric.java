@@ -55,7 +55,7 @@ public class ButtonGeneric extends Button {
 
 	public enum ButtonType {
 
-		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTONSOFT1.get());
+		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get());
 
 		public final int xOffset;
 		public final int yOffset;

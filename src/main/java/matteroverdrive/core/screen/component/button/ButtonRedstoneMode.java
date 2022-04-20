@@ -75,7 +75,7 @@ public class ButtonRedstoneMode extends Button {
 	
 	@Override
 	public void playDownSound(SoundManager pHandler) {
-		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTONLOUD3.get(), 1.0F));
+		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 	}
 	
 	@Override

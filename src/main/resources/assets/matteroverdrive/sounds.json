@@ -1,44 +1,44 @@
 {
-	"crateopen": {
+	"crate_open": {
 		"category": "blocks",
-		"subtitle": "subtitles.matteroverdrive.crateopen",
+		"subtitle": "subtitles.matteroverdrive.crate_open",
 		"sounds": [
-			"matteroverdrive:crateopen"
+			"matteroverdrive:block/crate_open"
 		]
 	},
-	"crateclose": {
+	"crate_close": {
 		"category": "blocks",
-		"subtitle": "subtitles.matteroverdrive.crateclose",
+		"subtitle": "subtitles.matteroverdrive.crate_close",
 		"sounds": [
-			"matteroverdrive:crateclose"
+			"matteroverdrive:block/crate_close"
 		]
 	},
-	"buttonexpand": {
+	"button_expand": {
 		"category": "master",
-		"subtitle": "subtitles.matteroverdrive.buttonexpand",
+		"subtitle": "subtitles.matteroverdrive.button_expand",
 		"sounds": [
-			"matteroverdrive:buttonexpand"
+			"matteroverdrive:button/button_expand"
 		]
 	},
-	"buttonsoft0": {
+	"button_soft0": {
 		"category": "master",
-		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"subtitle": "subtitles.matteroverdrive.button_generic",
 		"sounds": [
-			"matteroverdrive:buttonsoft0"
+			"matteroverdrive:button/button_soft0"
 		]
 	},
-	"buttonsoft1": {
+	"button_soft1": {
 		"category": "master",
-		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"subtitle": "subtitles.matteroverdrive.button_generic",
 		"sounds": [
-			"matteroverdrive:buttonsoft1"
+			"matteroverdrive:button/button_soft1"
 		]
 	},
-	"buttonloud3": {
+	"button_loud3": {
 		"category": "master",
-		"subtitle": "subtitles.matteroverdrive.buttongeneric",
+		"subtitle": "subtitles.matteroverdrive.button_generic",
 		"sounds": [
-			"matteroverdrive:buttonloud3"
+			"matteroverdrive:button/button_loud3"
 		]
 	}
 }

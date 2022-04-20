@@ -3,8 +3,6 @@ package matteroverdrive.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -12,7 +10,6 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -27,8 +24,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
-
-	public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
 	
 	public TypeMachine type;
 	private RegistryObject<BlockEntityType<T>> blockEntityType;
@@ -65,11 +60,6 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));
 			}
-			builder = builder.withDynamicDrop(CONTENTS, (context, consumer) -> {
-				for (ItemStack stack : inv.getItems()) {
-					consumer.accept(stack);
-				}
-			});
 		}
 		return super.getDrops(state, builder);
 	}

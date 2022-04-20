@@ -24,7 +24,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	}
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv, IItemHandler invcap, ContainerData coords) {
-		super(DeferredRegisters.MENU_TRITANIUMCRATE.get(), id, playerinv, invcap, coords);
+		super(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		super.removed(pPlayer);
 		GenericTile tile = getTile();
 		if (tile != null) {
-			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATECLOSE.get(),
+			tile.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATE_CLOSE.get(),
 					SoundSource.BLOCKS, 0.5F, 1.0F);
 		}
 	}

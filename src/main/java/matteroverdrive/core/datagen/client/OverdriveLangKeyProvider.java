@@ -26,11 +26,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 
-			add(DeferredRegisters.ITEM_IONSNIPER.get(), "Ion Sniper");
-			add(DeferredRegisters.ITEM_PHASERRIFLE.get(), "Phaser Rifle");
+			add(DeferredRegisters.ITEM_ION_SNIPER.get(), "Ion Sniper");
+			add(DeferredRegisters.ITEM_PHASER_RIFLE.get(), "Phaser Rifle");
 			add(DeferredRegisters.ITEM_PHASER.get(), "Phaser");
-			add(DeferredRegisters.ITEM_PLASMASHOTGUN.get(), "Plasma Shotgun");
-			add(DeferredRegisters.ITEM_OMNITOOL.get(), "Omni Tool");
+			add(DeferredRegisters.ITEM_PLASMA_SHOTGUN.get(), "Plasma Shotgun");
+			add(DeferredRegisters.ITEM_OMNI_TOOL.get(), "Omni Tool");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -78,10 +78,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addCommand("assignedvalue", "Assigned %1$s kM to %2$s");
 			addCommand("endmanualassign", "Saved under \"Matter Overdrive/manual.json\"");
 
-			addSubtitle("crateopen", "Tritanium Crate Opens");
-			addSubtitle("crateclose", "Tritanium Crate Closes");
-			addSubtitle("buttonexpand", "Button Shifts");
-			addSubtitle("buttongeneric", "Button is pressed");
+			addSubtitle("crate_open", "Tritanium Crate Opens");
+			addSubtitle("crate_close", "Tritanium Crate Closes");
+			addSubtitle("button_expand", "Button Shifts");
+			addSubtitle("button_generic", "Button is pressed");
 		}
 	}
 

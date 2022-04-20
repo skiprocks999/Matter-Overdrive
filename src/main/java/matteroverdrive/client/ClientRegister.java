@@ -9,8 +9,8 @@ public class ClientRegister {
 
 	public static void init() {
 
-		MenuScreens.register(DeferredRegisters.MENU_TRITANIUMCRATE.get(), ScreenTritaniumCrate::new);
-		MenuScreens.register(DeferredRegisters.MENU_SOLARPANEL.get(), ScreenSolarPanel::new);
+		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
+		MenuScreens.register(DeferredRegisters.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
 
 	}
 

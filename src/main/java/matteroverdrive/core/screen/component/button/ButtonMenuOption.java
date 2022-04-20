@@ -86,7 +86,7 @@ public class ButtonMenuOption extends Button {
 
 	@Override
 	public void playDownSound(SoundManager pHandler) {
-		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTONSOFT0.get(), 1.0F));
+		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F));
 	}
 
 	public enum MenuButtonType {

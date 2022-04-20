@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 
 	public InventorySolarPanel(int id, Inventory playerinv, IItemHandler invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_SOLARPANEL.get(), id, playerinv, invcap, tilecoords);
+		super(DeferredRegisters.MENU_SOLAR_PANEL.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	public InventorySolarPanel(int id, Inventory playerinv) {

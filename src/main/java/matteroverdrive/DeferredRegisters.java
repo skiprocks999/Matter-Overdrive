@@ -77,45 +77,45 @@ public class DeferredRegisters {
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.solar_panel.toString(),
-			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.solar_panel, DeferredRegisters.TILE_SOLARPANEL));
+			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.solar_panel, DeferredRegisters.TILE_SOLAR_PANEL));
 	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(TypeMachine.matter_decomposer.toString(),
-			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new, TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTERDECOMPOSER));
+			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new, TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER));
 
 	/* ITEMS */
 
-	public static final RegistryObject<Item> ITEM_IONSNIPER = ITEMS.register("ion_sniper",
+	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final RegistryObject<Item> ITEM_PHASERRIFLE = ITEMS.register("phaser_rifle",
+	public static final RegistryObject<Item> ITEM_PHASER_RIFLE = ITEMS.register("phaser_rifle",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
 	public static final RegistryObject<Item> ITEM_PHASER = ITEMS.register("phaser",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final RegistryObject<Item> ITEM_PLASMASHOTGUN = ITEMS.register("plasma_shotgun",
+	public static final RegistryObject<Item> ITEM_PLASMA_SHOTGUN = ITEMS.register("plasma_shotgun",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final RegistryObject<Item> ITEM_OMNITOOL = ITEMS.register("omni_tool",
+	public static final RegistryObject<Item> ITEM_OMNI_TOOL = ITEMS.register("omni_tool",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
 
 	/* TILES */
 
-	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUMCRATE = TILES
+	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUM_CRATE = TILES
 			.register("tritanium_crate", () -> new BlockEntityType<>(TileTritaniumCrate::new,
 					Sets.newHashSet(TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0])), null));
-	public static final RegistryObject<BlockEntityType<TileSolarPanel>> TILE_SOLARPANEL = TILES.register(
+	public static final RegistryObject<BlockEntityType<TileSolarPanel>> TILE_SOLAR_PANEL = TILES.register(
 			TypeMachine.solar_panel.toString(),
 			() -> new BlockEntityType<>(TileSolarPanel::new, Sets.newHashSet(BLOCK_SOLAR_PANEL.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTERDECOMPOSER = TILES.register(
+	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTER_DECOMPOSER = TILES.register(
 			TypeMachine.matter_decomposer.toString(),
 			() -> new BlockEntityType<>(TileMatterDecomposer::new, Sets.newHashSet(BLOCK_MATTER_DECOMPOSER.get()), null));
 
 	/* MENUS */
 
-	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUMCRATE = CONTAINERS
+	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUM_CRATE = CONTAINERS
 			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
-	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLARPANEL = CONTAINERS
+	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLAR_PANEL = CONTAINERS
 			.register("solar_panel", () -> new MenuType<>(InventorySolarPanel::new));
 
 	// Functional Methods

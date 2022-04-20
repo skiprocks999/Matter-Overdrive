@@ -1,15 +1,11 @@
 package matteroverdrive.core.block;
 
-import matteroverdrive.core.capability.types.CapabilityType;
-import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -31,17 +27,6 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 				.requiresCorrectToolForDrops());
 		blockEntitySupplier = supplier;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if (!(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING))
-				&& tile instanceof GenericTile generic && generic.hasCapability(CapabilityType.Item)) {
-			CapabilityInventory cap = generic.exposeCapability(CapabilityType.Item);
-			Containers.dropContents(worldIn, pos, new SimpleContainer(cap.getItemsArray()));
-		}
-		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
