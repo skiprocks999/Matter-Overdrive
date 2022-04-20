@@ -74,7 +74,7 @@ public class ScreenComponentCharge extends ScreenComponent {
 	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
 			final int guiHeight) {
 		UtilsRendering.bindTexture(resource);
-		double progress = maxStorage.get() > 0 ?  (double) currStorage.get() / (double) maxStorage.get() : 0;
+		double progress = maxStorage.get() > 0 ?  Math.min(1.0, (double) currStorage.get() / (double) maxStorage.get()) : 0;
 		if (isMatter) {
 
 			int height = (int) (progress * matterHeight);

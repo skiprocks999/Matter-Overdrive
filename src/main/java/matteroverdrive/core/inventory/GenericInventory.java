@@ -10,11 +10,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
 
 public abstract class GenericInventory extends AbstractContainerMenu {
 
-	private IItemHandler invcap;
+	private CapabilityInventory invcap;
 	protected Player player;
 	protected Level world;
 	protected final int slotCount;
@@ -27,7 +26,7 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return nextIndex++;
 	}
 
-	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, IItemHandler invcap) {
+	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap) {
 		super(menu, id);
 		world = playerinv.player.level;
 		slotCount = slots.size();
@@ -63,17 +62,14 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		}
 	}
 
-	public abstract void addInvSlots(IItemHandler invcap, Inventory playerinv);
+	public abstract void addInvSlots(CapabilityInventory invcap, Inventory playerinv);
 
 	@Override
 	public boolean stillValid(Player pPlayer) {
-		if (invcap instanceof CapabilityInventory inv) {
-			inv.isInRange(pPlayer);
-		}
-		return true;
+		return invcap.isInRange(pPlayer);
 	}
 
-	public IItemHandler getHandler() {
+	public CapabilityInventory getInventory() {
 		return invcap;
 	}
 

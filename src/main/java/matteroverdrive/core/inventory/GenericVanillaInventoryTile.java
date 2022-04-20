@@ -1,16 +1,16 @@
 package matteroverdrive.core.inventory;
 
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.slot.SlotContainer;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
 
 public abstract class GenericVanillaInventoryTile<T extends BlockEntity> extends GenericInventoryTile<T> {
 
-	protected GenericVanillaInventoryTile(MenuType<?> menu, int id, Inventory playerinv, IItemHandler invcap,
+	protected GenericVanillaInventoryTile(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap,
 			ContainerData tilecoords) {
 		super(menu, id, playerinv, invcap, tilecoords);
 	}
