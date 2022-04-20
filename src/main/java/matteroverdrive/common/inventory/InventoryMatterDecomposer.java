@@ -3,6 +3,7 @@ package matteroverdrive.common.inventory;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileTritaniumCrate;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
@@ -14,15 +15,15 @@ import net.minecraftforge.items.ItemStackHandler;
 public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDecomposer> {
 
 	public InventoryMatterDecomposer(int id, Inventory playerinv) {
-		this(id, playerinv, new ItemStackHandler(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
 	}
 	
-	public InventoryMatterDecomposer(int id, Inventory playerinv, IItemHandler invcap, ContainerData tilecoords) {
+	public InventoryMatterDecomposer(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	@Override
-	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
+	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		// Upgrades: Speed, Hyper Speed, Power Reduction, Power Storage, Matter Storage, Failure Reduction, Muffler
 		
 	}

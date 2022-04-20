@@ -3,6 +3,7 @@ package matteroverdrive.common.inventory;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
@@ -11,33 +12,28 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraft.world.inventory.SimpleContainerData;;
 
 public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTritaniumCrate> {
 
 	public static final int OFFSET = 56;
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv) {
-		this(id, playerinv, new ItemStackHandler(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
 	}
 
-	public InventoryTritaniumCrate(int id, Inventory playerinv, IItemHandler invcap, ContainerData coords) {
+	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {
 		super(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
 	}
 
 	@Override
-	public void addInvSlots(IItemHandler invcap, Inventory playerinv) {
+	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		playerInvOffset = OFFSET;
-		if (getHandler() != null) {
-			for (int j = 0; j < 6; ++j) {
-				for (int k = 0; k < 9; ++k) {
-					this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] {0, 1, 2}, SlotType.VANILLA, null));
-				}
+		for (int j = 0; j < 6; ++j) {
+			for (int k = 0; k < 9; ++k) {
+				this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] {0, 1, 2}, SlotType.VANILLA, null));
 			}
 		}
-
 	}
 
 	@Override

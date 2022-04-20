@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 
+	public static final int SLOT_COUNT = 2;
 	public static final int GENERATION = 5;
 	
 	private int currRedstoneMode;
@@ -33,7 +34,7 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 	
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_SOLAR_PANEL.get(), pos, state);
-		addCapability(new CapabilityInventory(2).setUpgrades(2).setOwner(this));
+		addCapability(new CapabilityInventory(SLOT_COUNT).setUpgrades(SLOT_COUNT).setOwner(this));
 		addCapability(new CapabilityEnergyStorage(64000, false, true).setOwner(this).setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
 		setMenuProvider(
 				new SimpleMenuProvider(
