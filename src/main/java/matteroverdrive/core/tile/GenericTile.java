@@ -37,7 +37,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 
 	public boolean hasMenuPacketHandler = false;
 	private PacketHandler menuHandler;
-	
+
 	public boolean hasRenderPacketHandler = false;
 	private PacketHandler renderHandler;
 
@@ -71,7 +71,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 	public PacketHandler getMenuPacketHandler() {
 		return menuHandler;
 	}
-	
+
 	public void setRenderPacketHandler(PacketHandler handler) {
 		hasRenderPacketHandler = true;
 		this.renderHandler = handler;
@@ -104,7 +104,6 @@ public class GenericTile extends BlockEntity implements Nameable {
 		}
 		capabilities.add(cap);
 	}
-	
 
 	public boolean hasCapability(CapabilityType type) {
 		for (IOverdriveCapability cap : capabilities) {

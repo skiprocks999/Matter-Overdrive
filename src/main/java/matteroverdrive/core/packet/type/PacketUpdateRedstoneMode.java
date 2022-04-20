@@ -10,13 +10,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketUpdateRedstoneMode {
-	
+
 	private final BlockPos pos;
-	
+
 	public PacketUpdateRedstoneMode(BlockPos pos) {
 		this.pos = pos;
 	}
-	
+
 	public static void handle(PacketUpdateRedstoneMode message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -25,7 +25,7 @@ public class PacketUpdateRedstoneMode {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof IRedstoneMode mode) {
 					int nextMode = mode.getCurrMod() + 1;
-					if(nextMode > mode.getMaxMode()) {
+					if (nextMode > mode.getMaxMode()) {
 						mode.setMode(0);
 					} else {
 						mode.setMode(nextMode);

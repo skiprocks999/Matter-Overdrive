@@ -34,11 +34,12 @@ public abstract class GenericInventoryTile<T extends BlockEntity> extends Generi
 	public BlockEntity getTileUnsafe() {
 		return world.getBlockEntity(new BlockPos(tilecoords.get(0), tilecoords.get(1), tilecoords.get(2)));
 	}
-	
+
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
-		if(!player.level.isClientSide && getTile() != null && getTile() instanceof GenericTile generic && generic.hasMenuPacketHandler) {
+		if (!player.level.isClientSide && getTile() != null && getTile() instanceof GenericTile generic
+				&& generic.hasMenuPacketHandler) {
 			generic.getMenuPacketHandler().sendCustomPacket(player);
 		}
 	}

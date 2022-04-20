@@ -25,7 +25,7 @@ public class ButtonMenuBar extends Button {
 	public ButtonMenuBar(int pX, int pY, boolean inidialCondition, OnPress press, OnTooltip tooltip) {
 		super(pX, pY, 16, 143, TextComponent.EMPTY, press, tooltip);
 		isExtended = inidialCondition;
-		if(isExtended) {
+		if (isExtended) {
 			this.x += EXTEND_DISTANCE;
 		}
 	}
@@ -83,6 +83,5 @@ public class ButtonMenuBar extends Button {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
 		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_EXPAND.get(), pitch));
 	}
-
 
 }

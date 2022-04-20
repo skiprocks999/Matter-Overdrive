@@ -7,17 +7,17 @@ import net.minecraft.nbt.CompoundTag;
  */
 
 public interface IRedstoneMode {
-	
+
 	void setMode(int mode);
-	
+
 	int getCurrMod();
-	
+
 	int getMaxMode();
-	
+
 	default void saveMode(CompoundTag tag) {
 		tag.putInt("redmode", getCurrMod());
 	}
-	
+
 	default void loadMode(CompoundTag tag) {
 		setMode(tag.getInt("redmode"));
 	}

@@ -14,8 +14,8 @@ public class ScreenComponentLabel extends ScreenComponent {
 
 	private final Component component;
 	private final int fontColor;
-	
-	public ScreenComponentLabel(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers, 
+
+	public ScreenComponentLabel(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers,
 			final Component component, final int color) {
 		super(new ResourceLocation(""), gui, x, y, screenNumbers);
 		this.component = component;
@@ -24,9 +24,9 @@ public class ScreenComponentLabel extends ScreenComponent {
 
 	@Override
 	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(0,0,0,0);
+		return new Rectangle(0, 0, 0, 0);
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
 		Font font = gui.getFontRenderer();

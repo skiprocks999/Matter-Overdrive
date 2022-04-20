@@ -62,7 +62,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("matterstored", "%1$s / %2$s kM");
 			addTooltip("energyusage", "%s FE");
 			addTooltip("matterusage", "%s kM");
-			
+
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
 			addGuiLabel("redstonenone", "None");
@@ -70,6 +70,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer("solar_panel", "Solar Panel");
+			addContainer("matter_decomposer", "Matter Decomposer");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
@@ -119,7 +120,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	private void addSubtitle(String key, String translation) {
 		add("subtitles." + References.ID + "." + key, translation);
 	}
-	
+
 	private void addGuiLabel(String key, String translation) {
 		add("gui." + References.ID + "." + key, translation);
 	}

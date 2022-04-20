@@ -102,21 +102,21 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 		if (isSided) {
 			int inDirSize = relativeInputDirs == null ? 0 : relativeInputDirs.size();
-			if(inDirSize > 0) {
+			if (inDirSize > 0) {
 				tag.putInt("inDirSize", inDirSize);
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
-				for(int i = 0; i < inDirSize; i++) {
+				for (int i = 0; i < inDirSize; i++) {
 					tag.putString("inDir" + i, inDirs.get(i).getName());
 				}
 			}
-			
+
 			int outDirSize = relativeOutputDirs == null ? 0 : relativeOutputDirs.size();
-			if(outDirSize > 0) {
+			if (outDirSize > 0) {
 				tag.putInt("outDirSize", outDirSize);
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
-				for(int i = 0; i < outDirSize; i++) {
+				for (int i = 0; i < outDirSize; i++) {
 					tag.putString("outDir" + i, outDirs.get(i).getName());
 				}
 			}
@@ -133,7 +133,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public void deserializeNBT(CompoundTag nbt) {
 		currStorage = nbt.getInt("stored");
 
-		if(nbt.contains("inDirSize")) {
+		if (nbt.contains("inDirSize")) {
 			relativeInputDirs = new HashSet<>();
 			int inDirSize = nbt.getInt("inDirSize");
 			for (int i = 0; i < inDirSize; i++) {
@@ -141,7 +141,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			}
 
 		}
-		if(nbt.contains("outDirSize")) {
+		if (nbt.contains("outDirSize")) {
 			relativeOutputDirs = new HashSet<>();
 			int outDirSize = nbt.getInt("outDirSize");
 			for (int i = 0; i < outDirSize; i++) {
@@ -310,18 +310,18 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	public String getSaveKey() {
 		return "energy";
 	}
-	
+
 	private void onChange() {
-		if(hasOwner) {
+		if (hasOwner) {
 			owner.setChanged();
 		}
 	}
-	
+
 	public boolean isSided() {
 		return isSided;
 	}
-	
-	public HashSet<Direction> getOutputDirections(){
+
+	public HashSet<Direction> getOutputDirections() {
 		return relativeOutputDirs;
 	}
 
@@ -337,7 +337,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate) {
-			if(canExtract()) {
+			if (canExtract()) {
 				return parent.extractEnergy(maxExtract, simulate);
 			}
 			return 0;
@@ -345,7 +345,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate) {
-			if(canReceive()) {
+			if (canReceive()) {
 				return parent.receiveEnergy(maxReceive, simulate);
 			}
 			return 0;

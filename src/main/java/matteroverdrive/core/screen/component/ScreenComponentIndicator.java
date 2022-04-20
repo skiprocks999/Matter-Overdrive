@@ -23,8 +23,8 @@ public class ScreenComponentIndicator extends ScreenComponent {
 	private final int blueHeight = 5;
 	private final int redHeight = 5;
 
-	public ScreenComponentIndicator(final BooleanSupplier supplier, final IScreenWrapper gui, final int x,
-			final int y, final int[] screenNumbers) {
+	public ScreenComponentIndicator(final BooleanSupplier supplier, final IScreenWrapper gui, final int x, final int y,
+			final int[] screenNumbers) {
 		super(new ResourceLocation(References.ID + ":textures/gui/base/indicator.png"), gui, x, y, screenNumbers);
 		active = supplier;
 	}

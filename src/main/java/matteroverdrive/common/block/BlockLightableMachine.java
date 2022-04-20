@@ -15,12 +15,13 @@ import net.minecraftforge.registries.RegistryObject;
 public class BlockLightableMachine<T extends GenericTile> extends BlockMachine<T> {
 
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
-	
-	public BlockLightableMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
+
+	public BlockLightableMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
+			RegistryObject<BlockEntityType<T>> entity) {
 		super(supplier, type, entity);
 		registerDefaultState(stateDefinition.any().setValue(LIT, Boolean.valueOf(false)));
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);

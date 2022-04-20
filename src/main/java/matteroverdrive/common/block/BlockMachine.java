@@ -24,11 +24,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
-	
+
 	public TypeMachine type;
 	private RegistryObject<BlockEntityType<T>> blockEntityType;
 
-	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
+	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
+			RegistryObject<BlockEntityType<T>> entity) {
 		super(supplier);
 		this.type = type;
 		this.blockEntityType = entity;
@@ -41,7 +42,7 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 		}
 		return super.getShape(state, level, pos, context);
 	}
-	
+
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
 		ItemStack stack = super.getCloneItemStack(level, pPos, pState);

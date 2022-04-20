@@ -101,21 +101,21 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 		if (isSided) {
 			int inDirSize = relativeInputDirs == null ? 0 : relativeInputDirs.size();
-			if(inDirSize > 0) {
+			if (inDirSize > 0) {
 				tag.putInt("inDirSize", inDirSize);
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
-				for(int i = 0; i < inDirSize; i++) {
+				for (int i = 0; i < inDirSize; i++) {
 					tag.putString("inDir" + i, inDirs.get(i).getName());
 				}
 			}
-			
+
 			int outDirSize = relativeOutputDirs == null ? 0 : relativeOutputDirs.size();
-			if(outDirSize > 0) {
+			if (outDirSize > 0) {
 				tag.putInt("outDirSize", outDirSize);
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
-				for(int i = 0; i < outDirSize; i++) {
+				for (int i = 0; i < outDirSize; i++) {
 					tag.putString("outDir" + i, outDirs.get(i).getName());
 				}
 			}
@@ -132,7 +132,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	public void deserializeNBT(CompoundTag nbt) {
 		currStorage = nbt.getInt("stored");
 
-		if(nbt.contains("inDirSize")) {
+		if (nbt.contains("inDirSize")) {
 			relativeInputDirs = new HashSet<>();
 			int inDirSize = nbt.getInt("inDirSize");
 			for (int i = 0; i < inDirSize; i++) {
@@ -140,7 +140,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			}
 
 		}
-		if(nbt.contains("outDirSize")) {
+		if (nbt.contains("outDirSize")) {
 			relativeOutputDirs = new HashSet<>();
 			int outDirSize = nbt.getInt("outDirSize");
 			for (int i = 0; i < outDirSize; i++) {
@@ -308,9 +308,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
 		}
 	}
-	
+
 	private void onChange() {
-		if(hasOwner) {
+		if (hasOwner) {
 			owner.setChanged();
 		}
 	}

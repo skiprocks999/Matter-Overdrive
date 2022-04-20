@@ -17,7 +17,7 @@ public abstract class GenericVanillaInventoryTile<T extends BlockEntity> extends
 
 	@Override
 	protected void addPlayerInventory(Inventory playerinv, SlotType type1, SlotType type2) {
-		if(hasInventorySlots) {
+		if (hasInventorySlots) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 9; ++j) {
 					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + playerInvOffset,
@@ -25,9 +25,10 @@ public abstract class GenericVanillaInventoryTile<T extends BlockEntity> extends
 				}
 			}
 		}
-		if(hasHotbarSlots) {
+		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset, getHotbarNumbers(), SlotType.VANILLA));
+				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset, getHotbarNumbers(),
+						SlotType.VANILLA));
 			}
 		}
 	}

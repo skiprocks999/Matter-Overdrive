@@ -7,7 +7,8 @@ import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;import matteroverdrive.core.screen.component.ScreenComponentLabel;
+import matteroverdrive.core.screen.component.ScreenComponentIndicator;
+import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
@@ -22,14 +23,14 @@ import net.minecraft.world.entity.player.Inventory;
 public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 
 	private static boolean EXTENDED = false;
-	
+
 	private ButtonGeneric close;
 	private ButtonMenuBar menu;
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;
 	private ButtonMenuOption upgrades;
 	private ButtonRedstoneMode redstone;
-	
+
 	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
@@ -39,32 +40,33 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentCharge(() -> {
 			TileSolarPanel solar = menu.getTile();
-			if(solar != null) {
+			if (solar != null) {
 				return solar.clientStored;
 			}
 			return 0;
 		}, () -> {
 			TileSolarPanel solar = menu.getTile();
-			if(solar != null) {
+			if (solar != null) {
 				return solar.clientMaxStorage;
 			}
 			return 0;
 		}, () -> {
 			TileSolarPanel solar = menu.getTile();
-			if(solar != null && solar.clientGenerating) {
+			if (solar != null && solar.clientGenerating) {
 				return solar.clientGeneratingBonus * TileSolarPanel.GENERATION;
 			}
 			return 0;
-		},this, 81, 35, new int[]{0}).setGenerator());
+		}, this, 81, 35, new int[] { 0 }).setGenerator());
 		components.add(new ScreenComponentIndicator(() -> {
 			TileSolarPanel solar = menu.getTile();
-			if(solar != null) {
+			if (solar != null) {
 				return solar.clientGenerating;
 			}
 			return false;
-		}, this, -31, 159, new int[]{0, 1, 2}));
-		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[]{0, 1, 2}));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] {1}, new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
+		}, this, -31, 159, new int[] { 0, 1, 2 }));
+		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2 }));
+		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 },
+				new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
 	}
 
 	@Override
@@ -104,34 +106,34 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 			settings.isActivated = false;
 			redstone.visible = false;
 		}, MenuButtonType.UPGRADES, menu, false);
-		
+
 		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
 			TileSolarPanel solar = getMenu().getTile();
-			if(solar != null) {
+			if (solar != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(solar.getBlockPos()));
 			}
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
-			if(solar != null) {
+			if (solar != null) {
 				return solar.clientRedstoneMod;
 			}
 			return 0;
 		});
-		
+
 		addRenderableWidget(close);
 		addRenderableWidget(menu);
 		addRenderableWidget(home);
 		addRenderableWidget(settings);
 		addRenderableWidget(upgrades);
 		addRenderableWidget(redstone);
-		
+
 		redstone.visible = false;
 	}
-	
+
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
 	}
-	
+
 	private void updateScreen(int screenNumber) {
 		this.screenNumber = screenNumber;
 		updateSlotActivity(this.screenNumber);

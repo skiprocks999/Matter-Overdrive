@@ -115,12 +115,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		byproducts = count;
 		return this;
 	}
-	
+
 	public CapabilityInventory setEnergySlots(int count) {
 		energySlot = count;
 		return this;
 	}
-	
+
 	public CapabilityInventory setMatterSlots(int count) {
 		matterSlot = count;
 		return this;
@@ -142,11 +142,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public int byproducts() {
 		return byproducts;
 	}
-	
+
 	public int energySlots() {
 		return energySlot;
 	}
-	
+
 	public int matterSlots() {
 		return matterSlot;
 	}
@@ -154,7 +154,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public int upgrades() {
 		return upgrades;
 	}
-	
+
 	public int externalCount() {
 		return inputs() + outputs() + byproducts() + energySlots() + matterSlots();
 	}
@@ -170,11 +170,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public int byproductIndex() {
 		return outputIndex() + outputs;
 	}
-	
+
 	public int energySlotsIndex() {
 		return byproductIndex() + byproducts;
 	}
-	
+
 	public int matterSlotsIndex() {
 		return energySlotsIndex() + energySlot;
 	}
@@ -224,19 +224,19 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		int outDirSize = 0;
 
 		if (isSided) {
-			if(relativeInputDirs != null) {
+			if (relativeInputDirs != null) {
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
-				for(int i = 0; i < inDirSize; i++) {
+				for (int i = 0; i < inDirSize; i++) {
 					CompoundTag dirTag = new CompoundTag();
 					dirTag.putString("inDir" + i, inDirs.get(i).toString());
 					inList.add(dirTag);
 				}
 			}
-			if(relativeOutputDirs != null) {
+			if (relativeOutputDirs != null) {
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
-				for(int i = 0; i < outDirSize; i++) {
+				for (int i = 0; i < outDirSize; i++) {
 					CompoundTag dirTag = new CompoundTag();
 					dirTag.putString("outDir" + i, outDirs.get(i).toString());
 					outList.add(dirTag);
@@ -244,11 +244,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			}
 		}
 
-		if(inDirSize > 0) {
+		if (inDirSize > 0) {
 			tag.putInt("inDirSize", inDirSize);
 			tag.put("inDirs", inList);
 		}
-		if(outDirSize > 0) {
+		if (outDirSize > 0) {
 			tag.putInt("outDirSize", outDirSize);
 			tag.put("outDirs", inList);
 		}
@@ -259,7 +259,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		super.deserializeNBT(nbt);
-		if(nbt.contains("inDirSize")) {
+		if (nbt.contains("inDirSize")) {
 			relativeInputDirs = new HashSet<>();
 			ListTag inList = nbt.getList("inDirs", 10);
 			for (int i = 0; i < nbt.getInt("inDirSize"); i++) {
@@ -267,7 +267,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			}
 
 		}
-		if(nbt.contains("outDirSize")) {
+		if (nbt.contains("outDirSize")) {
 			relativeOutputDirs = new HashSet<>();
 			ListTag outList = nbt.getList("outDirs", 10);
 			for (int i = 0; i < nbt.getInt("outDirSize"); i++) {
@@ -305,7 +305,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		} else {
 			holder = LazyOptional.of(() -> {
 				int[] slots = new int[externalCount()];
-				for(int i = 0; i < slots.length; i++) {
+				for (int i = 0; i < slots.length; i++) {
 					slots[i] = i;
 				}
 				return new ChildInventoryHandler(this, slots);
@@ -321,11 +321,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				slots[index] = inputIndex() + i;
 				index++;
 			}
-			for(int i = 0; i < energySlots(); i++) {
+			for (int i = 0; i < energySlots(); i++) {
 				slots[index] = energySlotsIndex() + i;
 				index++;
 			}
-			for(int i = 0; i < matterSlots(); i++) {
+			for (int i = 0; i < matterSlots(); i++) {
 				slots[index] = matterSlotsIndex() + i;
 				index++;
 			}
@@ -400,7 +400,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return byprouducts;
 	}
-	
+
 	public List<ItemStack> getEnergyItems() {
 		List<ItemStack> energy = new ArrayList<>();
 		for (int i = 0; i < energySlots(); i++) {
@@ -408,7 +408,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		return energy;
 	}
-	
+
 	public List<ItemStack> getMatterItems() {
 		List<ItemStack> matter = new ArrayList<>();
 		for (int i = 0; i < matterSlots(); i++) {
@@ -446,10 +446,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public ItemStack[] getItemsArray() {
 		return getItems().toArray(new ItemStack[getItems().size()]);
 	}
-	
+
 	@Override
 	protected void onContentsChanged(int slot) {
-		if(hasOwner) {
+		if (hasOwner) {
 			owner.setChanged();
 		}
 	}
@@ -464,32 +464,32 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			this.parent = parent;
 			this.indexes = indexes;
 		}
-		
+
 		@Override
 		public void setStackInSlot(int slot, ItemStack stack) {
 			parent.setStackInSlot(indexes[slot], stack);
 		}
-		
+
 		@Override
 		public int getSlots() {
 			return indexes.length;
 		}
-		
+
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			return parent.insertItem(indexes[slot], stack, simulate);
 		}
-		
+
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			return parent.extractItem(indexes[slot], amount, simulate);
 		}
-		
+
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
 			return parent.isItemValid(indexes[slot], stack);
 		}
-		
+
 		@Override
 		public int getSlotLimit(int slot) {
 			return parent.getSlotLimit(indexes[slot]);

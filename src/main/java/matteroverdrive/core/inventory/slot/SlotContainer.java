@@ -15,13 +15,14 @@ public class SlotContainer extends Slot implements IToggleableSlot {
 	private int[] screenNumbers;
 	private boolean isActive;
 
-	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type, IconType icon) {
+	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type,
+			IconType icon) {
 		super(pContainer, pIndex, pX, pY);
 		this.type = type;
 		this.screenNumbers = screenNumbers;
 		this.icon = icon;
 	}
-	
+
 	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type) {
 		this(pContainer, pIndex, pX, pY, screenNumbers, type, null);
 	}
@@ -38,12 +39,13 @@ public class SlotContainer extends Slot implements IToggleableSlot {
 
 	@Override
 	public boolean isScreenNumber(int number) {
-		for(int num : screenNumbers) {
-			if (num == number) return true;
+		for (int num : screenNumbers) {
+			if (num == number)
+				return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean isActive() {
 		return isActive;

@@ -13,15 +13,14 @@ public class SoundRegister {
 
 	public static final RegistryObject<SoundEvent> SOUND_CRATE_OPEN = sound("crate_open");
 	public static final RegistryObject<SoundEvent> SOUND_CRATE_CLOSE = sound("crate_close");
-	
+
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_EXPAND = sound("button_expand");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_SOFT0 = sound("button_soft0");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_SOFT1 = sound("button_soft1");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_LOUD3 = sound("button_loud3");
-	
-	
+
 	private static RegistryObject<SoundEvent> sound(String name) {
 		return SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(References.ID + ":" + name)));
 	}
-	
+
 }

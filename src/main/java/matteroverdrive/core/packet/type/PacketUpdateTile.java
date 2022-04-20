@@ -42,12 +42,12 @@ public class PacketUpdateTile {
 						PacketHandler handler = generic.getMenuPacketHandler();
 						if (handler.getPacketConsumer() != null) {
 							handler.getPacketConsumer().accept(message.updateTag);
-						} 
+						}
 					} else if (generic.hasRenderPacketHandler && !message.isGui) {
 						PacketHandler handler = generic.getRenderPacketHandler();
 						if (handler.getPacketConsumer() != null) {
 							handler.getPacketConsumer().accept(message.updateTag);
-						} 
+						}
 					}
 				}
 			}

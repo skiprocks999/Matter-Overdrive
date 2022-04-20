@@ -57,7 +57,8 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		}
 		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, getHotbarNumbers(), hotbar));
+				addSlot(new SlotContainer(playerinv, k, 8 + k * 18, 142 + playerInvOffset + 8, getHotbarNumbers(),
+						hotbar));
 			}
 		}
 	}
@@ -77,9 +78,9 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	public ItemStack quickMoveStack(Player player, int index) {
 		return UtilsInventory.handleShiftClick(slots, player, index);
 	}
-	
+
 	public abstract int[] getHotbarNumbers();
 
 	public abstract int[] getPlayerInvNumbers();
-	
+
 }

@@ -14,27 +14,28 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class UtilsTile {
-	
+
 	public static void outputEnergy(GenericTile tile) {
-		if(tile.hasCapability(CapabilityType.Energy)) {
+		if (tile.hasCapability(CapabilityType.Energy)) {
 			CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityType.Energy);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
-			if(energy.canExtract()) {
-				if(energy.isSided()) {
+			if (energy.canExtract()) {
+				if (energy.isSided()) {
 					Direction facing = tile.getFacing();
 					HashSet<Direction> directions = energy.getOutputDirections();
-					if(directions != null) {
-						for(Direction direction : directions) {
+					if (directions != null) {
+						for (Direction direction : directions) {
 							Direction relative = UtilsDirection.getRelativeSide(facing, direction);
 							BlockEntity entity = world.getBlockEntity(pos.relative(relative));
-							if(entity != null && energy.getEnergyStored() > 0) {
-								LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY, relative.getOpposite());
-								if(lazy.isPresent()) {
+							if (entity != null && energy.getEnergyStored() > 0) {
+								LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY,
+										relative.getOpposite());
+								if (lazy.isPresent()) {
 									IEnergyStorage storage = lazy.resolve().get();
-									if(storage.canReceive()) {
+									if (storage.canReceive()) {
 										int accepted = storage.receiveEnergy(energy.getEnergyStored(), true);
-										if(accepted > 0) {
+										if (accepted > 0) {
 											storage.receiveEnergy(accepted, false);
 											energy.extractEnergy(accepted, false);
 										}
@@ -46,13 +47,14 @@ public class UtilsTile {
 				} else {
 					for (Direction dir : Direction.values()) {
 						BlockEntity entity = world.getBlockEntity(pos.relative(dir));
-						if(entity != null && energy.getEnergyStored() > 0) {
-							LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite());
-							if(lazy.isPresent()) {
+						if (entity != null && energy.getEnergyStored() > 0) {
+							LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY,
+									dir.getOpposite());
+							if (lazy.isPresent()) {
 								IEnergyStorage storage = lazy.resolve().get();
-								if(storage.canReceive()) {
+								if (storage.canReceive()) {
 									int accepted = storage.receiveEnergy(energy.getEnergyStored(), true);
-									if(accepted > 0) {
+									if (accepted > 0) {
 										storage.receiveEnergy(accepted, false);
 										energy.extractEnergy(accepted, false);
 									}

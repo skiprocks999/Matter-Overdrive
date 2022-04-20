@@ -54,13 +54,14 @@ public abstract class ScreenComponent implements IGuiComponent {
 	protected boolean isPointInRegion(int x, int y, double xAxis, double yAxis, int width, int height) {
 		return xAxis >= x && xAxis <= x + width - 1 && yAxis >= y && yAxis <= y + height - 1;
 	}
-	
+
 	@Override
 	public boolean matchesScreenNumber(int num) {
-		for(int screen : screenNumbers) {
-			if(num == screen) return true;
+		for (int screen : screenNumbers) {
+			if (num == screen)
+				return true;
 		}
 		return false;
 	}
-	
+
 }

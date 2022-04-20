@@ -16,7 +16,8 @@ public class ScreenComponentIcon extends ScreenComponent {
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/icon/";
 
-	public ScreenComponentIcon(final IconType type, final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+	public ScreenComponentIcon(final IconType type, final IScreenWrapper gui, final int x, final int y,
+			final int[] screenNumbers) {
 		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
 		this.type = type;
 	}
@@ -42,10 +43,11 @@ public class ScreenComponentIcon extends ScreenComponent {
 
 	public enum IconType {
 
-		PAGE_WRENCH(16, 16, "page_icon_config"), PAGE_HOME(14, 14, "page_icon_home"),
+		PAGE_WRENCH("page_icon_config"), PAGE_HOME(14, 14, "page_icon_home"),
 		PAGE_UPGRADES(12, 12, "page_icon_upgrades"),
-		
-		UPGRADE("upgrade");
+
+		UPGRADE_SLOT_DARK("upgrade"), MATTER_SLOT_DARK("matter"), MATTER_DUST_SLOT_DARK("matter_dust"),
+		ENERGY_SLOT_DARK("energy");
 
 		private final int width;
 		private final int height;

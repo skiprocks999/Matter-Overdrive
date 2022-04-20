@@ -21,19 +21,19 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		//upgrades: energy storage
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] {2}));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] {2}));
+		// upgrades: energy storage
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }));
 	}
 
 	@Override
 	public int[] getHotbarNumbers() {
-		return new int[]{0,1,2};
+		return new int[] { 0, 1, 2 };
 	}
 
 	@Override
 	public int[] getPlayerInvNumbers() {
-		return new int[]{0};
+		return new int[] { 0 };
 	}
 
 }

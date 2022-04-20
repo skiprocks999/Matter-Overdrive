@@ -78,9 +78,12 @@ public class DeferredRegisters {
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.solar_panel.toString(),
-			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.solar_panel, DeferredRegisters.TILE_SOLAR_PANEL));
-	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(TypeMachine.matter_decomposer.toString(),
-			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new, TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER));
+			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.solar_panel,
+					DeferredRegisters.TILE_SOLAR_PANEL));
+	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(
+			TypeMachine.matter_decomposer.toString(),
+			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new,
+					TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER));
 
 	/* ITEMS */
 
@@ -108,9 +111,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileSolarPanel>> TILE_SOLAR_PANEL = TILES.register(
 			TypeMachine.solar_panel.toString(),
 			() -> new BlockEntityType<>(TileSolarPanel::new, Sets.newHashSet(BLOCK_SOLAR_PANEL.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTER_DECOMPOSER = TILES.register(
-			TypeMachine.matter_decomposer.toString(),
-			() -> new BlockEntityType<>(TileMatterDecomposer::new, Sets.newHashSet(BLOCK_MATTER_DECOMPOSER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTER_DECOMPOSER = TILES
+			.register(TypeMachine.matter_decomposer.toString(), () -> new BlockEntityType<>(TileMatterDecomposer::new,
+					Sets.newHashSet(BLOCK_MATTER_DECOMPOSER.get()), null));
 
 	/* MENUS */
 
@@ -119,7 +122,7 @@ public class DeferredRegisters {
 	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLAR_PANEL = CONTAINERS
 			.register("solar_panel", () -> new MenuType<>(InventorySolarPanel::new));
 	public static final RegistryObject<MenuType<InventoryMatterDecomposer>> MENU_MATTER_DECOMPOSER = CONTAINERS
-			.register("solar_panel", () -> new MenuType<>(InventoryMatterDecomposer::new));
+			.register("matter_decomposer", () -> new MenuType<>(InventoryMatterDecomposer::new));
 
 	// Functional Methods
 

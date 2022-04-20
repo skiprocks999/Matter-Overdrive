@@ -15,7 +15,8 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 	private boolean isActive;
 	private int[] screenNumbers;
 
-	public SlotGeneric(CapabilityInventory inventory, int index, int xPosition, int yPosition, int[] screenNumbers, SlotType type, IconType icon) {
+	public SlotGeneric(CapabilityInventory inventory, int index, int xPosition, int yPosition, int[] screenNumbers,
+			SlotType type, IconType icon) {
 		super(inventory, index, xPosition, yPosition);
 		this.type = type;
 		this.screenNumbers = screenNumbers;
@@ -38,8 +39,9 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 
 	@Override
 	public boolean isScreenNumber(int number) {
-		for(int num : screenNumbers) {
-			if (num == number) return true;
+		for (int num : screenNumbers) {
+			if (num == number)
+				return true;
 		}
 		return false;
 	}
@@ -48,7 +50,7 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 	public int[] getScreenNumbers() {
 		return screenNumbers;
 	}
-	
+
 	@Override
 	public boolean isActive() {
 		return isActive;
@@ -59,8 +61,8 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 		return icon;
 	}
 
-    public CapabilityInventory getInventory() {
-        return (CapabilityInventory)getItemHandler();
-    }
-	
+	public CapabilityInventory getInventory() {
+		return (CapabilityInventory) getItemHandler();
+	}
+
 }

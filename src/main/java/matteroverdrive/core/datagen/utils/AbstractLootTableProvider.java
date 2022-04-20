@@ -73,7 +73,7 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 								"BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)));
 		return LootTable.lootTable().withPool(builder);
 	}
-	
+
 	protected LootTable.Builder itemEnergyMatterTable(String name, Block block, BlockEntityType<?> type) {
 		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
 				.add(LootItem.lootTableItem(block)

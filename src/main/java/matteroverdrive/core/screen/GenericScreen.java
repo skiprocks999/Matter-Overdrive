@@ -22,7 +22,8 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> implements IScreenWrapper {
+public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T>
+		implements IScreenWrapper {
 
 	protected ResourceLocation defaultBackground = new ResourceLocation(
 			References.ID + ":textures/gui/base/base_gui.png");
@@ -43,9 +44,10 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
 		if (slot instanceof IToggleableSlot type) {
-			return new ScreenComponentSlot(type.getSlotType(), type.getIconType(), this, slot.x - 1, slot.y - 1, type.getScreenNumbers());
+			return new ScreenComponentSlot(type.getSlotType(), type.getIconType(), this, slot.x - 1, slot.y - 1,
+					type.getScreenNumbers());
 		}
-		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1, new int[] {0});
+		return new ScreenComponentSlot(SlotType.SMALL, this, slot.x - 1, slot.y - 1, new int[] { 0 });
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		int xAxis = x - (width - imageWidth) / 2;
 		int yAxis = y - (height - imageHeight) / 2;
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.renderForeground(stack, xAxis, yAxis);
 			}
 		}
@@ -79,7 +81,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		int xAxis = x - guiWidth;
 		int yAxis = y - guiHeight;
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
 			}
 		}
@@ -91,7 +93,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		double yAxis = y - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.preMouseClicked(xAxis, yAxis, button);
 			}
 		}
@@ -99,7 +101,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		boolean ret = super.mouseClicked(x, y, button);
 
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.mouseClicked(xAxis, yAxis, button);
 			}
 		}
@@ -112,7 +114,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		double yAxis = mouseY - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.mouseClicked(xAxis, yAxis, button);
 			}
 		}
@@ -127,7 +129,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		double yAxis = mouseY - (height - imageHeight) / 2.0;
 
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.mouseReleased(xAxis, yAxis, button);
 			}
 		}
@@ -137,7 +139,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		for (IGuiComponent component : components) {
-			if(component.matchesScreenNumber(getScreenNumber())) {
+			if (component.matchesScreenNumber(getScreenNumber())) {
 				component.mouseWheel(mouseX, mouseY, delta);
 			}
 		}
@@ -190,19 +192,19 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		int guiHeight = (height - imageHeight) / 2;
 		return new int[] { guiWidth, guiHeight, mouseX - guiWidth, mouseY - guiHeight };
 	}
-	
+
 	public void updateSlotActivity(int screenNum) {
-		for(Slot slot : menu.slots) {
-			if(slot instanceof IToggleableSlot toggle) {
+		for (Slot slot : menu.slots) {
+			if (slot instanceof IToggleableSlot toggle) {
 				toggle.setActive(toggle.isScreenNumber(screenNum));
 			}
 		}
 	}
-	
+
 	public T getMenu() {
 		return this.menu;
 	}
-	
+
 	public abstract int getScreenNumber();
 
 }

@@ -18,15 +18,17 @@ public class ScreenComponentSlot extends ScreenComponent {
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
 	private ScreenComponentIcon icon = null;
 
-	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y,
+			final int[] screenNumbers) {
 		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
 		this.type = type;
 	}
-	
-	public ScreenComponentSlot(final SlotType type, final IconType icon, final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
+
+	public ScreenComponentSlot(final SlotType type, final IconType icon, final IScreenWrapper gui, final int x,
+			final int y, final int[] screenNumbers) {
 		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
 		this.type = type;
-		if(icon != null) {
+		if (icon != null) {
 			this.icon = new ScreenComponentIcon(icon, gui, this.xLocation, this.yLocation, this.screenNumbers);
 		}
 	}
@@ -41,20 +43,22 @@ public class ScreenComponentSlot extends ScreenComponent {
 			final int guiHeight) {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
-		gui.drawTexturedRect(stack, guiWidth + xLocation + type.getXOffset(), guiHeight + yLocation + type.getYOffset(), type.getTextureX(), type.getTextureY(),
-				type.getWidth(), type.getHeight(), type.getWidth(), type.getHeight());
+		gui.drawTexturedRect(stack, guiWidth + xLocation + type.getXOffset(), guiHeight + yLocation + type.getYOffset(),
+				type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight(), type.getWidth(),
+				type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 		if (icon != null) {
 			IconType iType = icon.getType();
 			int widthOffset = (int) ((type.getWidth() - iType.getTextWidth()) / 2);
 			int heightOffset = (int) ((type.getHeight() - iType.getTextHeight()) / 2);
-			icon.renderBackground(stack, xAxis, yAxis, guiWidth + widthOffset + type.getXOffset(), guiHeight + heightOffset + type.getYOffset());
+			icon.renderBackground(stack, xAxis, yAxis, guiWidth + widthOffset + type.getXOffset(),
+					guiHeight + heightOffset + type.getYOffset());
 		}
 	}
 
 	public enum SlotType {
-		SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2), BIG_DARK(22, 22, 0, 0, "slot_big_dark", -1, -1), HOLO("slot_holo"),
-		HOLO_BG("slot_holo_with_bg"), MAIN(37, 22, 0, 0, "slot_big_main", 0, 0),
+		SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2), BIG_DARK(22, 22, 0, 0, "slot_big_dark", -1, -1),
+		HOLO("slot_holo"), HOLO_BG("slot_holo_with_bg"), MAIN(37, 22, 0, 0, "slot_big_main", 0, 0),
 		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", 0, 0), MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active", 0, 0),
 		VANILLA("slot_vanilla");
 
@@ -99,11 +103,11 @@ public class ScreenComponentSlot extends ScreenComponent {
 		public String getName() {
 			return name;
 		}
-		
+
 		public int getXOffset() {
 			return xOffset;
 		}
-		
+
 		public int getYOffset() {
 			return yOffset;
 		}

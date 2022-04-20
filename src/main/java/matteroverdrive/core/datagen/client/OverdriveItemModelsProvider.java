@@ -29,7 +29,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		slab("solar_panel", new ResourceLocation(References.ID, "block/base"),
 				new ResourceLocation(References.ID, "block/base"),
 				new ResourceLocation(References.ID, "block/solar_panel"));
-		withExistingParent(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get().getRegistryName().getPath(), modLoc("block/matter_decomposer"));
+		withExistingParent(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get().getRegistryName().getPath(),
+				modLoc("block/matter_decomposer"));
 	}
 
 }

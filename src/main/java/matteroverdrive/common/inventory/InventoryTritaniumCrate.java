@@ -31,7 +31,8 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		playerInvOffset = OFFSET;
 		for (int j = 0; j < 6; ++j) {
 			for (int k = 0; k < 9; ++k) {
-				this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] {0, 1, 2}, SlotType.VANILLA, null));
+				this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] { 0, 1, 2 },
+						SlotType.VANILLA, null));
 			}
 		}
 	}
@@ -48,12 +49,12 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 
 	@Override
 	public int[] getHotbarNumbers() {
-		return new int[]{0,1,2};
+		return new int[] { 0, 1, 2 };
 	}
 
 	@Override
 	public int[] getPlayerInvNumbers() {
-		return new int[]{0,1,2};
+		return new int[] { 0, 1, 2 };
 	}
 
 }
