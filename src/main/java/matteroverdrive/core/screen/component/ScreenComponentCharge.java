@@ -88,7 +88,7 @@ public class ScreenComponentCharge extends ScreenComponent {
 
 			int height = (int) (progress * matterHeight);
 			int offset = matterHeight - height;
-			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, 0, energyWidth * 2, energyWidth,
+			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, energyWidth * 2, 0, energyWidth,
 					energyHeight);
 			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation + offset, energyWidth * 3, offset,
 					energyWidth, height);

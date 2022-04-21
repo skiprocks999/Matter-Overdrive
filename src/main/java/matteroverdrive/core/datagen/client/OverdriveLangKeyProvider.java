@@ -62,11 +62,25 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("matterstored", "%1$s / %2$s kM");
 			addTooltip("energyusage", "%s FE");
 			addTooltip("matterusage", "%s kM");
+			addTooltip("menuio", "I/O");
+			addTooltip("ioinput", "Input");
+			addTooltip("iooutput", "Output");
+			addTooltip("ionone", "None");
+			addTooltip("iotop", "Top");
+			addTooltip("iobottom", "Bottom");
+			addTooltip("ioleft", "Left");
+			addTooltip("ioright", "Right");
+			addTooltip("iofront", "Front");
+			addTooltip("ioback", "Back");
+			addTooltip("io", "%1$s (%2$s)");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
 			addGuiLabel("redstonenone", "None");
 			addGuiLabel("redstone", "Redstone");
+			addGuiLabel("ioitems", "Items");
+			addGuiLabel("ioenergy", "Energy");
+			addGuiLabel("iomatter", "Matter");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer("solar_panel", "Solar Panel");

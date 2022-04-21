@@ -1,5 +1,6 @@
 package matteroverdrive.core.screen;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +28,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 
 	protected ResourceLocation defaultBackground = new ResourceLocation(
 			References.ID + ":textures/gui/base/base_gui.png");
-	protected Set<IGuiComponent> components = new HashSet<>();
+	protected List<IGuiComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
 
 	public GenericScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -161,7 +162,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 
 	@Override
 	public void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h, int tW, int tH) {
-		blit(stack, x, y, u, v, w, h, tH, tW);
+		blit(stack, x, y, getBlitOffset(), u, v, w, h, tW, tH);
 	}
 
 	@Override

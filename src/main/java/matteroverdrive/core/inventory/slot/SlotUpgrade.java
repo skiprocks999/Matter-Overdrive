@@ -7,7 +7,7 @@ import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 public class SlotUpgrade extends SlotGeneric {
 
 	public SlotUpgrade(CapabilityInventory inventory, int index, int xPosition, int yPosition, int[] screenNumbers) {
-		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.UPGRADE_SLOT_DARK);
+		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.UPGRADE_DARK);
 	}
 
 }

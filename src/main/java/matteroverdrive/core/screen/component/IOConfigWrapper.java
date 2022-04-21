@@ -1,0 +1,83 @@
+package matteroverdrive.core.screen.component;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Supplier;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.component.button.ButtonIO;
+import matteroverdrive.core.screen.component.button.ButtonIO.BlockSide;
+import matteroverdrive.core.screen.component.button.ButtonIO.IOMode;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+
+public class IOConfigWrapper {
+
+	private Supplier<HashSet<Direction>> inputDirs;
+	private Supplier<HashSet<Direction>> outputDirs;
+	private ButtonIO[] buttons = new ButtonIO[6];
+	private final CapabilityType type;
+	private IScreenWrapper gui;
+	private int guiWidth;
+	private int guiHeight;
+	
+	public IOConfigWrapper(IScreenWrapper gui, int guiWidth, int guiHeight,
+			Supplier<HashSet<Direction>> inputDirs, Supplier<HashSet<Direction>> outputDirs, CapabilityType type) {
+		this.gui = gui;
+		this.guiWidth = guiWidth;
+		this.guiHeight = guiHeight;
+		this.type = type;
+		this.inputDirs = inputDirs;
+		this.outputDirs = outputDirs;
+	}
+
+	public void displayTooltip(PoseStack stack, Component tooltip, int xAxis, int yAxis) {
+		gui.displayTooltip(stack, tooltip, xAxis, yAxis);
+	}
+	
+	public void hideButtons() {
+		for(ButtonIO button : buttons) {
+			button.visible = false;
+		}
+	}
+	
+	public void showButtons() {
+		for(ButtonIO button : buttons) {
+			button.visible = true;
+		}
+	}
+	
+	public void initButtons() {
+		buttons[0] = new ButtonIO(guiWidth + 19 , guiHeight, getModeForButton(BlockSide.TOP), BlockSide.TOP, this);
+		buttons[1] = new ButtonIO(guiWidth, guiHeight + 19, getModeForButton(BlockSide.LEFT), BlockSide.LEFT, this);
+		buttons[2] = new ButtonIO(guiWidth + 19, guiHeight + 38, getModeForButton(BlockSide.BOTTOM), BlockSide.BOTTOM, this);
+		buttons[3] = new ButtonIO(guiWidth + 19, guiHeight + 19, getModeForButton(BlockSide.FRONT), BlockSide.FRONT, this);
+		buttons[4] = new ButtonIO(guiWidth + 38, guiHeight + 19, getModeForButton(BlockSide.RIGHT), BlockSide.RIGHT, this);
+		buttons[5] = new ButtonIO(guiWidth + 38, guiHeight + 38, getModeForButton(BlockSide.BACK), BlockSide.BACK, this);
+	}
+	
+	public ButtonIO[] getButtons() {
+		return buttons;
+	}
+	
+	public void childPressed() {
+		
+	}
+	
+	private IOMode getModeForButton(BlockSide side) {
+		Direction mappedDir = side.mappedDir;
+		Set<Direction> inDirs = inputDirs.get();
+		if(inDirs.contains(mappedDir)) {
+			return IOMode.INPUT;
+		}
+		Set<Direction> outDirs = outputDirs.get();
+		if(outDirs.contains(mappedDir)) {
+			return IOMode.OUTPUT;
+		}
+		return IOMode.NONE;
+	}
+
+}

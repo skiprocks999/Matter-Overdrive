@@ -44,10 +44,11 @@ public class ScreenComponentIcon extends ScreenComponent {
 	public enum IconType {
 
 		PAGE_WRENCH("page_icon_config"), PAGE_HOME(14, 14, "page_icon_home"),
-		PAGE_UPGRADES(12, 12, "page_icon_upgrades"),
+		PAGE_UPGRADES(12, 12, "page_icon_upgrades"), PAGE_GEAR("page_icon_gear"),
 
-		UPGRADE_SLOT_DARK("upgrade"), MATTER_SLOT_DARK("matter"), MATTER_DUST_SLOT_DARK("matter_dust"),
-		ENERGY_SLOT_DARK("energy");
+		UPGRADE_DARK("upgrade"), MATTER_DARK("matter"), MATTER_LIGHT("matter_white"), 
+		MATTER_DUST_DARK("matter_dust"), ENERGY_DARK("energy"), ENERGY_LIGHT("energy_white"),
+		BLOCK_DARK("decompose"), BLOCK_LIGHT("decompose_white");
 
 		private final int width;
 		private final int height;

@@ -28,7 +28,10 @@ public class ButtonMenuOption extends Button {
 
 	public ButtonMenuOption(int pX, int pY, IScreenWrapper gui, OnPress pOnPress, MenuButtonType type,
 			ButtonMenuBar bar, boolean isActivated) {
-		super(pX, pY, 18, 18, TextComponent.EMPTY, pOnPress);
+		super(pX, pY, 18, 18, TextComponent.EMPTY, pOnPress, (button, stack, mouseX, mouseY) -> {
+			ButtonMenuOption menuOption = (ButtonMenuOption) button;
+			menuOption.gui.displayTooltip(stack, type.tooltip, mouseX, mouseY);
+		});
 		this.type = type;
 		this.gui = gui;
 		this.bar = bar;
@@ -80,11 +83,6 @@ public class ButtonMenuOption extends Button {
 	}
 
 	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-		gui.displayTooltip(pPoseStack, type.tooltip, pMouseX, pMouseY);
-	}
-
-	@Override
 	public void playDownSound(SoundManager pHandler) {
 		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F));
 	}
@@ -96,7 +94,9 @@ public class ButtonMenuOption extends Button {
 		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH,
 				new TranslatableComponent("tooltip.matteroverdrive.menusettings")),
 		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES,
-				new TranslatableComponent("tooltip.matteroverdrive.menuupgrades"));
+				new TranslatableComponent("tooltip.matteroverdrive.menuupgrades")),
+		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR,
+				new TranslatableComponent("tooltip.matteroverdrive.menuio"));
 
 		public final SlotType defaultSlot;
 		public final SlotType activeSlot;

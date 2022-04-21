@@ -10,7 +10,7 @@ public class SlotMatterCharging extends SlotGeneric {
 
 	public SlotMatterCharging(CapabilityInventory inventory, int index, int xPosition, int yPosition,
 			int[] screenNumbers) {
-		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.MATTER_SLOT_DARK);
+		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.MATTER_DARK);
 	}
 
 	@Override

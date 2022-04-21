@@ -10,7 +10,7 @@ public class SlotEnergyCharging extends SlotGeneric {
 
 	public SlotEnergyCharging(CapabilityInventory inventory, int index, int xPosition, int yPosition,
 			int[] screenNumbers) {
-		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.ENERGY_SLOT_DARK);
+		super(inventory, index, xPosition, yPosition, screenNumbers, SlotType.BIG, IconType.ENERGY_DARK);
 	}
 
 	@Override

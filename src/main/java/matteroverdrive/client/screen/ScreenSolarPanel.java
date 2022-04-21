@@ -80,14 +80,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
-		}, (button, stack, mouseX, mouseY) -> {
-			ButtonMenuBar bar = (ButtonMenuBar) button;
-			if (bar.isExtended) {
-				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), mouseX, mouseY);
-			} else {
-				displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), mouseX, mouseY);
-			}
-		});
+		}, this);
 		home = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT, this, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
