@@ -16,25 +16,26 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ButtonIOConfig extends Button {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID + ":textures/gui/button/buttons.png");
-	
+	private static final ResourceLocation TEXTURE = new ResourceLocation(
+			References.ID + ":textures/gui/button/buttons.png");
+
 	private IOConfigButtonType type;
 	private final ResourceLocation iconLightLoc;
 	private final ResourceLocation iconDarkLoc;
 	public boolean isActivated = false;
-	
+
 	private static final int X_START = 0;
 	private static final int Y_START = 69;
 	private static final int WIDTH = 28;
 	private static final int HEIGHT = 27;
-	
+
 	public ButtonIOConfig(int x, int y, OnPress onPress, IOConfigButtonType type) {
 		super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, onPress);
 		this.type = type;
 		iconDarkLoc = new ResourceLocation(type.iconDark.getTextureLoc());
 		iconLightLoc = new ResourceLocation(type.iconLight.getTextureLoc());
 	}
-	
+
 	@Override
 	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -59,32 +60,31 @@ public class ButtonIOConfig extends Button {
 		blit(pPoseStack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
 				icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
 	}
-	
+
 	@Override
 	public void onPress() {
 		super.onPress();
 		isActivated = !isActivated;
 	}
-	
+
 	@Override
 	public void playDownSound(SoundManager pHandler) {
 		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 	}
-	
+
 	public enum IOConfigButtonType {
-		
-		ITEM(IconType.BLOCK_DARK, IconType.BLOCK_LIGHT), ENERGY(IconType.ENERGY_DARK, IconType.ENERGY_LIGHT), 
+
+		ITEM(IconType.BLOCK_DARK, IconType.BLOCK_LIGHT), ENERGY(IconType.ENERGY_DARK, IconType.ENERGY_LIGHT),
 		MATTER(IconType.MATTER_DARK, IconType.MATTER_LIGHT);
-		
+
 		public final IconType iconDark;
 		public final IconType iconLight;
-		
+
 		private IOConfigButtonType(IconType iconDark, IconType iconLight) {
 			this.iconDark = iconDark;
 			this.iconLight = iconLight;
 		}
-		
-		
+
 	}
 
 }

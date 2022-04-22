@@ -16,7 +16,8 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 	}
 
 	public InventorySolarPanel(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileSolarPanel.SLOT_COUNT), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileSolarPanel.SLOT_COUNT, false, false),
+				new SimpleContainerData(3));
 	}
 
 	@Override

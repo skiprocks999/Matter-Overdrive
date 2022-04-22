@@ -242,6 +242,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			if (relativeOutputDirs != null) {
 				setOutputCaps();
 			}
+			initialFacing = null;
 		} else {
 			holder = LazyOptional.of(() -> this);
 		}
@@ -254,7 +255,6 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
@@ -268,7 +268,6 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
@@ -321,8 +320,26 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		return isSided;
 	}
 
+	public HashSet<Direction> getInputDirections() {
+		return relativeInputDirs;
+	}
+
 	public HashSet<Direction> getOutputDirections() {
 		return relativeOutputDirs;
+	}
+	
+	public void setInputDirs(@Nonnull List<Direction> dirs) {
+		relativeInputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeInputDirs.add(dir);
+		}
+	}
+	
+	public void setOutputDirs(@Nonnull List<Direction> dirs) {
+		relativeOutputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeOutputDirs.add(dir);
+		}
 	}
 
 	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {

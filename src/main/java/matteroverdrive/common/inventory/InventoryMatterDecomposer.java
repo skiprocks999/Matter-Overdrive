@@ -23,15 +23,17 @@ public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDe
 	}
 
 	public InventoryMatterDecomposer(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileMatterDecomposer.SLOT_COUNT), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileMatterDecomposer.SLOT_COUNT, true, true),
+				new SimpleContainerData(3));
 	}
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotGeneric(invcap, nextIndex(), -29, 48, new int[] {0}, SlotType.MAIN, null));
-		addSlot(new SlotRestricted(invcap, nextIndex(), 30, 48, new int[] {0}, SlotType.BIG, IconType.MATTER_DUST_DARK));
-		addSlot(new SlotEnergyCharging(invcap, nextIndex(), -29, 75, new int[] {0}));
-		addSlot(new SlotMatterCharging(invcap, nextIndex(), 84, 48, new int[] {0}));
+		addSlot(new SlotGeneric(invcap, nextIndex(), -29, 48, new int[] { 0 }, SlotType.MAIN, null));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 30, 48, new int[] { 0 }, SlotType.BIG,
+				IconType.MATTER_DUST_DARK));
+		addSlot(new SlotEnergyCharging(invcap, nextIndex(), -29, 75, new int[] { 0 }));
+		addSlot(new SlotMatterCharging(invcap, nextIndex(), 84, 48, new int[] { 0 }));
 		// Upgrades: Speed, Hyper Speed, Power Reduction, Power Storage, Matter Storage,
 		// Failure Reduction, Muffler
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 44, 55, new int[] { 2 }));

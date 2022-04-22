@@ -240,6 +240,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			if (relativeOutputDirs != null) {
 				setOutputCaps();
 			}
+			initialFacing = null;
 		} else {
 			holder = LazyOptional.of(() -> this);
 		}
@@ -288,7 +289,6 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
@@ -302,7 +302,6 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
@@ -312,6 +311,28 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private void onChange() {
 		if (hasOwner) {
 			owner.setChanged();
+		}
+	}
+
+	public HashSet<Direction> getInputDirections() {
+		return relativeInputDirs;
+	}
+
+	public HashSet<Direction> getOutputDirections() {
+		return relativeOutputDirs;
+	}
+	
+	public void setInputDirs(@Nonnull List<Direction> dirs) {
+		relativeInputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeInputDirs.add(dir);
+		}
+	}
+	
+	public void setOutputDirs(@Nonnull List<Direction> dirs) {
+		relativeOutputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeOutputDirs.add(dir);
 		}
 	}
 

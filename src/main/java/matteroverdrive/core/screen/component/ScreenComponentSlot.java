@@ -59,8 +59,8 @@ public class ScreenComponentSlot extends ScreenComponent {
 	public enum SlotType {
 		SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2), BIG_DARK(22, 22, 0, 0, "slot_big_dark", -2, -2),
 		HOLO("slot_holo"), HOLO_BG("slot_holo_with_bg"), MAIN(37, 22, 0, 0, "slot_big_main", -2, -2),
-		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", -2, -2), MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active", -2, -2),
-		VANILLA("slot_vanilla");
+		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", -2, -2),
+		MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active", -2, -2), VANILLA("slot_vanilla");
 
 		private final int width;
 		private final int height;

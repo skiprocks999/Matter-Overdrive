@@ -23,17 +23,18 @@ public class ButtonMenuBar extends Button {
 
 	public boolean isExtended;
 	private boolean isPressed;
-	
+
 	private IScreenWrapper gui;
 
 	public ButtonMenuBar(int pX, int pY, boolean inidialCondition, OnPress press, IScreenWrapper owner) {
 		super(pX, pY, 16, 143, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
-			MatterOverdrive.LOGGER.info("called");
 			if (bar.isExtended) {
-				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), mouseX, mouseY);
+				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), mouseX,
+						mouseY);
 			} else {
-				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), mouseX, mouseY);
+				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), mouseX,
+						mouseY);
 			}
 		});
 		this.gui = owner;
@@ -57,8 +58,8 @@ public class ButtonMenuBar extends Button {
 			this.blit(pPoseStack, this.x - EXTEND_DISTANCE, this.y, 32, 0, 32, 143);
 		}
 		if (this.isHoveredOrFocused()) {
-	         this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-	    }
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
+		}
 	}
 
 	@Override

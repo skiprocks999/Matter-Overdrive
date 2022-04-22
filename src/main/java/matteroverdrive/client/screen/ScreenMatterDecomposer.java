@@ -24,6 +24,7 @@ import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -34,20 +35,20 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 	private static boolean EXTENDED = false;
 
 	private ButtonGeneric close;
-	
+
 	private ButtonMenuBar menu;
-	
+
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;
 	private ButtonMenuOption upgrades;
 	private ButtonMenuOption ioconfig;
-	
+
 	private ButtonRedstoneMode redstone;
-	
+
 	private ButtonIOConfig items;
 	private ButtonIOConfig energy;
 	private ButtonIOConfig matter;
-	
+
 	private IOConfigWrapper itemWrapper;
 	private IOConfigWrapper energyWrapper;
 	private IOConfigWrapper matterWrapper;
@@ -56,20 +57,22 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenMatterDecomposer(InventoryMatterDecomposer menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
-		components.add(new ScreenComponentProgress(() -> { return 0; }, this, -4, 48, new int[] {0}));
+		components.add(new ScreenComponentProgress(() -> {
+			return 0;
+		}, this, -4, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
-				return matter.clientEnergyStored;
+				return matter.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
-				return matter.clientMaxEnergyStorage;
+				return matter.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
@@ -82,19 +85,19 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		components.add(new ScreenComponentCharge(() -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
-				return matter.clientMatterStored;
+				return matter.clientMatter.getMatterStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
-				return matter.clientMaxMatterStorage;
+				return matter.clientMatter.getMaxMatterStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null && matter.clientRunning) {
-				return matter.clientCurrRecipeValue;
+				return matter.clientRecipeValue;
 			}
 			return 0;
 		}, this, 58, 35, new int[] { 0 }).setGenerator().setMatter());
@@ -238,15 +241,105 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.showButtons();
 		}, IOConfigButtonType.MATTER);
-		
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 30, () -> {return new HashSet<Direction>();}, () -> {return new HashSet<Direction>();}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 30, () -> {return new HashSet<Direction>();}, () -> {return new HashSet<Direction>();}, CapabilityType.Energy);
-		matterWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 30, () -> {return new HashSet<Direction>();}, () -> {return new HashSet<Direction>();}, CapabilityType.Matter);
-	
+
+		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientInventory.getInputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientInventory.getOutputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientInventory.hasInput;
+			}
+			return false;
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientInventory.hasOutput;
+			}
+			return false;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.getBlockPos();
+			}
+			return new BlockPos(0, -100, 0);
+		}, CapabilityType.Item);
+		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.getInputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.getOutputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.canReceive();
+			}
+			return false;
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.canExtract();
+			}
+			return false;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.getBlockPos();
+			}
+			return new BlockPos(0, -100, 0);
+		}, CapabilityType.Energy);
+		matterWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.getInputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.getOutputDirections();
+			}
+			return new HashSet<Direction>();
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.canReceive();
+			}
+			return false;
+		}, () -> { 
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.canExtract();
+			}
+			return false;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.getBlockPos();
+			}
+			return new BlockPos(0, -100, 0);
+		}, CapabilityType.Matter);
+
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
 		matterWrapper.initButtons();
-		
+
 		addRenderableWidget(close);
 		addRenderableWidget(menu);
 		addRenderableWidget(home);
@@ -257,13 +350,13 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		addRenderableWidget(items);
 		addRenderableWidget(energy);
 		addRenderableWidget(matter);
-		for(ButtonIO button : itemWrapper.getButtons()) {
+		for (ButtonIO button : itemWrapper.getButtons()) {
 			addRenderableWidget(button);
 		}
-		for(ButtonIO button : energyWrapper.getButtons()) {
+		for (ButtonIO button : energyWrapper.getButtons()) {
 			addRenderableWidget(button);
 		}
-		for(ButtonIO button : matterWrapper.getButtons()) {
+		for (ButtonIO button : matterWrapper.getButtons()) {
 			addRenderableWidget(button);
 		}
 

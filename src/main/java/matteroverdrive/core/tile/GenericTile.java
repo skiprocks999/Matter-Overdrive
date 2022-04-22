@@ -171,6 +171,7 @@ public class GenericTile extends BlockEntity implements Nameable {
 		if (state.hasProperty(GenericEntityBlock.FACING)) {
 			return state.getValue(GenericEntityBlock.FACING);
 		}
+
 		return Direction.UP;
 	}
 

@@ -19,7 +19,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	public static final int OFFSET = 56;
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileTritaniumCrate.SIZE, true, true), new SimpleContainerData(3));
 	}
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {

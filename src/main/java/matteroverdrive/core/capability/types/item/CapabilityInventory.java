@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,6 +36,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private HashSet<Direction> relativeOutputDirs;
 
 	private boolean isSided = false;
+	public boolean hasInput = false;
+	public boolean hasOutput = false;
 
 	private int inputs = 0;
 	private int outputs = 0;
@@ -62,12 +63,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		super();
 	}
 
-	public CapabilityInventory(int size) {
+	public CapabilityInventory(int size, boolean hasInput, boolean hasOutput) {
 		super(size);
-	}
-
-	public CapabilityInventory(NonNullList<ItemStack> stacks) {
-		super(stacks);
+		this.hasInput = hasInput;
+		this.hasOutput = hasOutput;
 	}
 
 	public CapabilityInventory setOwner(GenericTile tile) {
@@ -218,40 +217,29 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = super.serializeNBT();
 
-		ListTag inList = new ListTag();
-		ListTag outList = new ListTag();
-		int inDirSize = 0;
-		int outDirSize = 0;
-
 		if (isSided) {
-			if (relativeInputDirs != null) {
+			int inDirSize = relativeInputDirs == null ? -1 : relativeInputDirs.size();
+			if (inDirSize >= 0) {
+				tag.putInt("inDirSize", inDirSize);
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
 				for (int i = 0; i < inDirSize; i++) {
-					CompoundTag dirTag = new CompoundTag();
-					dirTag.putString("inDir" + i, inDirs.get(i).toString());
-					inList.add(dirTag);
+					tag.putString("inDir" + i, inDirs.get(i).getName());
 				}
 			}
-			if (relativeOutputDirs != null) {
+
+			int outDirSize = relativeOutputDirs == null ? -1 : relativeOutputDirs.size();
+			if (outDirSize >= 0) {
+				tag.putInt("outDirSize", outDirSize);
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
 				for (int i = 0; i < outDirSize; i++) {
-					CompoundTag dirTag = new CompoundTag();
-					dirTag.putString("outDir" + i, outDirs.get(i).toString());
-					outList.add(dirTag);
+					tag.putString("outDir" + i, outDirs.get(i).getName());
 				}
 			}
 		}
-
-		if (inDirSize > 0) {
-			tag.putInt("inDirSize", inDirSize);
-			tag.put("inDirs", inList);
-		}
-		if (outDirSize > 0) {
-			tag.putInt("outDirSize", outDirSize);
-			tag.put("outDirs", inList);
-		}
+		tag.putBoolean("hasInput", hasInput);
+		tag.putBoolean("hasOutput", hasOutput);
 
 		return tag;
 	}
@@ -259,21 +247,24 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		super.deserializeNBT(nbt);
+
 		if (nbt.contains("inDirSize")) {
 			relativeInputDirs = new HashSet<>();
-			ListTag inList = nbt.getList("inDirs", 10);
-			for (int i = 0; i < nbt.getInt("inDirSize"); i++) {
-				relativeInputDirs.add(Direction.byName(inList.getCompound(i).getString("inDir" + i)));
+			int inDirSize = nbt.getInt("inDirSize");
+			for (int i = 0; i < inDirSize; i++) {
+				relativeInputDirs.add(Direction.valueOf(nbt.getString("inDir" + i).toUpperCase()));
 			}
 
 		}
 		if (nbt.contains("outDirSize")) {
 			relativeOutputDirs = new HashSet<>();
-			ListTag outList = nbt.getList("outDirs", 10);
-			for (int i = 0; i < nbt.getInt("outDirSize"); i++) {
-				relativeOutputDirs.add(Direction.byName(outList.getCompound(i).getString("outDir" + i)));
+			int outDirSize = nbt.getInt("outDirSize");
+			for (int i = 0; i < outDirSize; i++) {
+				relativeOutputDirs.add(Direction.valueOf(nbt.getString("outDir" + i).toUpperCase()));
 			}
 		}
+		hasInput = nbt.getBoolean("hasInput");
+		hasOutput = nbt.getBoolean("hasOutput");
 	}
 
 	@Override
@@ -302,6 +293,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			if (relativeOutputDirs.size() > 0) {
 				setOutputCaps();
 			}
+			initialFacing = null;
 		} else {
 			holder = LazyOptional.of(() -> {
 				int[] slots = new int[externalCount()];
@@ -336,7 +328,6 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeInputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childInput;
@@ -370,7 +361,6 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			facing = owner.getFacing();
 		} else {
 			facing = initialFacing;
-			initialFacing = null;
 		}
 		for (Direction dir : relativeOutputDirs) {
 			sideCaps[UtilsDirection.getRelativeSide(facing, dir).ordinal()] = childOutput;
@@ -454,15 +444,42 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 	}
 
+	public HashSet<Direction> getInputDirections() {
+		return relativeInputDirs;
+	}
+
+	public HashSet<Direction> getOutputDirections() {
+		return relativeOutputDirs;
+	}
+	
+	public void setInputDirs(@Nonnull List<Direction> dirs) {
+		relativeInputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeInputDirs.add(dir);
+		}
+	}
+	
+	public void setOutputDirs(@Nonnull List<Direction> dirs) {
+		relativeOutputDirs = new HashSet<>();
+		for(Direction dir : dirs) {
+			relativeOutputDirs.add(dir);
+		}
+	}
+
 	private class ChildInventoryHandler extends CapabilityInventory {
 
 		private int[] indexes;
 		private CapabilityInventory parent;
 
 		public ChildInventoryHandler(CapabilityInventory parent, @Nonnull int[] indexes) {
-			super(0);
+			super();
 			this.parent = parent;
 			this.indexes = indexes;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return parent.getStackInSlot(indexes[slot]);
 		}
 
 		@Override
