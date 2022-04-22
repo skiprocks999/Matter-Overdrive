@@ -254,13 +254,13 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return matter.clientInventory.getOutputDirections();
 			}
 			return new HashSet<Direction>();
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientInventory.hasInput;
 			}
 			return false;
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientInventory.hasOutput;
@@ -285,13 +285,13 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return matter.clientEnergy.getOutputDirections();
 			}
 			return new HashSet<Direction>();
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientEnergy.canReceive();
 			}
 			return false;
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientEnergy.canExtract();
@@ -316,13 +316,13 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return matter.clientMatter.getOutputDirections();
 			}
 			return new HashSet<Direction>();
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientMatter.canReceive();
 			}
 			return false;
-		}, () -> { 
+		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientMatter.canExtract();

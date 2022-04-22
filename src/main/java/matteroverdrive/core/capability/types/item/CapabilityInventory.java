@@ -451,17 +451,17 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	public HashSet<Direction> getOutputDirections() {
 		return relativeOutputDirs;
 	}
-	
+
 	public void setInputDirs(@Nonnull List<Direction> dirs) {
 		relativeInputDirs = new HashSet<>();
-		for(Direction dir : dirs) {
+		for (Direction dir : dirs) {
 			relativeInputDirs.add(dir);
 		}
 	}
-	
+
 	public void setOutputDirs(@Nonnull List<Direction> dirs) {
 		relativeOutputDirs = new HashSet<>();
-		for(Direction dir : dirs) {
+		for (Direction dir : dirs) {
 			relativeOutputDirs.add(dir);
 		}
 	}

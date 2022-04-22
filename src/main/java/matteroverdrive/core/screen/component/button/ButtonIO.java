@@ -118,17 +118,17 @@ public class ButtonIO extends Button {
 			cycleMode();
 		}
 	}
-	
+
 	private void validateNull() {
-		if(hasInput == null) {
-			if(supplierInput != null) {
+		if (hasInput == null) {
+			if (supplierInput != null) {
 				hasInput = supplierInput.get();
 			} else {
 				hasInput = false;
 			}
 		}
-		if(hasOutput == null) {
-			if(supplierOutput != null) {
+		if (hasOutput == null) {
+			if (supplierOutput != null) {
 				hasOutput = supplierOutput.get();
 			} else {
 				hasOutput = false;

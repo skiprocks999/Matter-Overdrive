@@ -5,8 +5,11 @@ import matteroverdrive.References;
 import matteroverdrive.common.block.utils.BlockColors;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveItemModelsProvider extends ItemModelProvider {
 
@@ -16,21 +19,33 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
+		withExistingParent(blockPath(DeferredRegisters.REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
 		for (BlockColors color : BlockColors.values()) {
-			withExistingParent(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get().getRegistryName().getPath(),
-					modLoc("block/tritanium_plating"));
-			withExistingParent(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color).get().getRegistryName().getPath(),
+			withExistingParent(blockPath(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color)),
 					modLoc("block/tritanium_plating_colorless"));
-			withExistingParent(DeferredRegisters.FLOOR_TILE.get(color).get().getRegistryName().getPath(),
+			withExistingParent(blockPath(DeferredRegisters.FLOOR_TILE.get(color)),
 					modLoc("block/floor_tile_colorless"));
-			withExistingParent(DeferredRegisters.FLOOR_TILES.get(color).get().getRegistryName().getPath(),
+			withExistingParent(blockPath(DeferredRegisters.FLOOR_TILES.get(color)),
 					modLoc("block/floor_tiles_colorless"));
 		}
-		slab("solar_panel", new ResourceLocation(References.ID, "block/base"),
-				new ResourceLocation(References.ID, "block/base"),
-				new ResourceLocation(References.ID, "block/solar_panel"));
-		withExistingParent(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get().getRegistryName().getPath(),
-				modLoc("block/matter_decomposer"));
+		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
+
+		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
+	}
+
+	private String blockPath(RegistryObject<Block> block) {
+		return block.get().getRegistryName().getPath();
+	}
+
+	private void modSlab(String name, String side, String bottom, String top) {
+		slab(name, new ResourceLocation(References.ID, side), new ResourceLocation(References.ID, bottom),
+				new ResourceLocation(References.ID, top));
+	}
+
+	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
+		singleTexture(item.get().getRegistryName().getPath(), new ResourceLocation("item/generated"), "layer0",
+				new ResourceLocation(References.ID, textureLoc));
 	}
 
 }

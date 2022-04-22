@@ -26,8 +26,9 @@ public class PacketUpdateCapabilitySides {
 	private final List<Direction> outDirs;
 	private final boolean input;
 	private final boolean output;
-	
-	public PacketUpdateCapabilitySides(BlockPos pos, CapabilityType type, boolean input, boolean output, @Nullable List<Direction> inDirs, @Nullable List<Direction> outDirs) {
+
+	public PacketUpdateCapabilitySides(BlockPos pos, CapabilityType type, boolean input, boolean output,
+			@Nullable List<Direction> inDirs, @Nullable List<Direction> outDirs) {
 		this.pos = pos;
 		this.type = type;
 		this.inDirs = inDirs;
@@ -35,7 +36,7 @@ public class PacketUpdateCapabilitySides {
 		this.input = input;
 		this.output = output;
 	}
-	
+
 	public static void handle(PacketUpdateCapabilitySides message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -43,14 +44,14 @@ public class PacketUpdateCapabilitySides {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof GenericTile generic) {
-					if(generic.hasCapability(message.type)) {
-						switch(message.type) {
+					if (generic.hasCapability(message.type)) {
+						switch (message.type) {
 						case Item:
 							CapabilityInventory inv = generic.exposeCapability(message.type);
-							if(message.input) {
+							if (message.input) {
 								inv.setInputDirs(message.inDirs);
 							}
-							if(message.output) {
+							if (message.output) {
 								inv.setOutputDirs(message.outDirs);
 							}
 							inv.refreshCapability();
@@ -58,10 +59,10 @@ public class PacketUpdateCapabilitySides {
 							break;
 						case Energy:
 							CapabilityEnergyStorage energy = generic.exposeCapability(message.type);
-							if(message.input) {
+							if (message.input) {
 								energy.setInputDirs(message.inDirs);
 							}
-							if(message.output) {
+							if (message.output) {
 								energy.setOutputDirs(message.outDirs);
 							}
 							energy.refreshCapability();
@@ -69,10 +70,10 @@ public class PacketUpdateCapabilitySides {
 							break;
 						case Matter:
 							CapabilityMatterStorage matter = generic.exposeCapability(message.type);
-							if(message.input) {
+							if (message.input) {
 								matter.setInputDirs(message.inDirs);
 							}
-							if(message.output) {
+							if (message.output) {
 								matter.setOutputDirs(message.outDirs);
 							}
 							matter.refreshCapability();
@@ -87,21 +88,21 @@ public class PacketUpdateCapabilitySides {
 		});
 		ctx.setPacketHandled(true);
 	}
-	
+
 	public static void encode(PacketUpdateCapabilitySides pkt, FriendlyByteBuf buf) {
 		buf.writeBlockPos(pkt.pos);
 		buf.writeEnum(pkt.type);
 		buf.writeBoolean(pkt.input);
-		if(pkt.input) {
+		if (pkt.input) {
 			buf.writeInt(pkt.inDirs.size());
-			for(Direction dir : pkt.inDirs) {
+			for (Direction dir : pkt.inDirs) {
 				buf.writeEnum(dir);
 			}
 		}
 		buf.writeBoolean(pkt.output);
-		if(pkt.output) {
+		if (pkt.output) {
 			buf.writeInt(pkt.outDirs.size());
-			for(Direction dir : pkt.outDirs) {
+			for (Direction dir : pkt.outDirs) {
 				buf.writeEnum(dir);
 			}
 		}
@@ -112,23 +113,23 @@ public class PacketUpdateCapabilitySides {
 		CapabilityType type = buf.readEnum(CapabilityType.class);
 		boolean input = buf.readBoolean();
 		List<Direction> inDirs = null;
-		if(input) {
+		if (input) {
 			inDirs = new ArrayList<>();
 			int inDirSize = buf.readInt();
-			for(int i = 0; i < inDirSize; i++) {
+			for (int i = 0; i < inDirSize; i++) {
 				inDirs.add(buf.readEnum(Direction.class));
 			}
 		}
 		boolean output = buf.readBoolean();
 		List<Direction> outDirs = null;
-		if(output) {
+		if (output) {
 			outDirs = new ArrayList<>();
 			int outDirSize = buf.readInt();
-			for(int i = 0; i < outDirSize; i++) {
+			for (int i = 0; i < outDirSize; i++) {
 				outDirs.add(buf.readEnum(Direction.class));
 			}
 		}
 		return new PacketUpdateCapabilitySides(pos, type, input, output, inDirs, outDirs);
 	}
-	
+
 }

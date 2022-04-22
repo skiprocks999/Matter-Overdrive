@@ -33,8 +33,8 @@ public class IOConfigWrapper {
 	private int guiHeight;
 
 	public IOConfigWrapper(IScreenWrapper gui, int guiWidth, int guiHeight, Supplier<HashSet<Direction>> inputDirs,
-			Supplier<HashSet<Direction>> outputDirs, Supplier<Boolean> input, Supplier<Boolean> output, Supplier<BlockPos> pos,
-			CapabilityType type) {
+			Supplier<HashSet<Direction>> outputDirs, Supplier<Boolean> input, Supplier<Boolean> output,
+			Supplier<BlockPos> pos, CapabilityType type) {
 		this.gui = gui;
 		this.guiWidth = guiWidth;
 		this.guiHeight = guiHeight;
@@ -63,7 +63,8 @@ public class IOConfigWrapper {
 	}
 
 	public void initButtons() {
-		buttons[0] = new ButtonIO(guiWidth + 19, guiHeight, () -> getModeForButton(BlockSide.TOP), BlockSide.TOP, this, input, output);
+		buttons[0] = new ButtonIO(guiWidth + 19, guiHeight, () -> getModeForButton(BlockSide.TOP), BlockSide.TOP, this,
+				input, output);
 		buttons[1] = new ButtonIO(guiWidth + 38, guiHeight + 19, () -> getModeForButton(BlockSide.RIGHT),
 				BlockSide.RIGHT, this, input, output);
 		buttons[2] = new ButtonIO(guiWidth + 38, guiHeight + 38, () -> getModeForButton(BlockSide.BACK), BlockSide.BACK,
@@ -83,25 +84,26 @@ public class IOConfigWrapper {
 	public void childPressed() {
 		boolean hasInput = input.get();
 		List<Direction> inputs = null;
-		if(hasInput) {
+		if (hasInput) {
 			inputs = new ArrayList<>();
-			for(ButtonIO button : buttons) {
-				if(button.mode == IOMode.INPUT) {
+			for (ButtonIO button : buttons) {
+				if (button.mode == IOMode.INPUT) {
 					inputs.add(button.side.mappedDir);
 				}
 			}
 		}
 		boolean hasOutput = input.get();
 		List<Direction> outputs = null;
-		if(hasOutput) {
+		if (hasOutput) {
 			outputs = new ArrayList<>();
-			for(ButtonIO button : buttons) {
-				if(button.mode == IOMode.OUTPUT) {
+			for (ButtonIO button : buttons) {
+				if (button.mode == IOMode.OUTPUT) {
 					outputs.add(button.side.mappedDir);
 				}
 			}
 		}
-		NetworkHandler.CHANNEL.sendToServer(new PacketUpdateCapabilitySides(position.get(), type, hasInput, hasOutput, inputs, outputs));
+		NetworkHandler.CHANNEL.sendToServer(
+				new PacketUpdateCapabilitySides(position.get(), type, hasInput, hasOutput, inputs, outputs));
 	}
 
 	private IOMode getModeForButton(BlockSide side) {

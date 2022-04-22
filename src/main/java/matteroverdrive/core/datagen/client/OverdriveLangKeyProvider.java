@@ -26,6 +26,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 
+			add(DeferredRegisters.ITEM_RAW_MATTER_DUST.get(), "Raw Matter Dust");
 			add(DeferredRegisters.ITEM_ION_SNIPER.get(), "Ion Sniper");
 			add(DeferredRegisters.ITEM_PHASER_RIFLE.get(), "Phaser Rifle");
 			add(DeferredRegisters.ITEM_PHASER.get(), "Phaser");
