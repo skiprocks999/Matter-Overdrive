@@ -1,5 +1,7 @@
 package matteroverdrive.core.matter;
 
+import matteroverdrive.DeferredRegisters;
+import matteroverdrive.core.utils.UtilsItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -39,6 +41,18 @@ public class MatterUtils {
 		}
 
 		return true;
+	}
+	
+	public static boolean isDust(ItemStack item) {
+		return isRawDust(item) || isRefinedDust(item);
+	}
+	
+	public static boolean isRefinedDust(ItemStack item) {
+		return UtilsItem.compareItems(item.getItem(), DeferredRegisters.ITEM_MATTER_DUST.get());
+	}
+	
+	public static boolean isRawDust(ItemStack item) {
+		return UtilsItem.compareItems(item.getItem(), DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 	}
 
 }

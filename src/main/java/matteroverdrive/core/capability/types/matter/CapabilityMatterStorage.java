@@ -35,8 +35,8 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private boolean hasInput = false;
 	private boolean hasOutput = false;
 
-	private int maxStorage = 0;
-	private int currStorage = 0;
+	private double maxStorage = 0;
+	private double currStorage = 0;
 
 	private LazyOptional<ICapabilityMatterStorage> holder = LazyOptional.of(() -> this);
 
@@ -45,7 +45,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	// Down Up North South West East
 	private LazyOptional<ICapabilityMatterStorage>[] sideCaps = new LazyOptional[6];
 
-	public CapabilityMatterStorage(int maxStorage, boolean hasInput, boolean hasOutput) {
+	public CapabilityMatterStorage(double maxStorage, boolean hasInput, boolean hasOutput) {
 		// will be overwritten by nbt load!
 		this.maxStorage = maxStorage;
 		this.hasInput = hasInput;
@@ -97,7 +97,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = new CompoundTag();
-		tag.putInt("stored", currStorage);
+		tag.putDouble("stored", currStorage);
 
 		if (isSided) {
 			int inDirSize = relativeInputDirs == null ? 0 : relativeInputDirs.size();
@@ -121,7 +121,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			}
 		}
 
-		tag.putInt("maxStorage", maxStorage);
+		tag.putDouble("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
 
@@ -154,10 +154,10 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	@Override
-	public int receiveMatter(int maxReceive, boolean simulate) {
+	public double receiveMatter(double maxReceive, boolean simulate) {
 		if (canReceive()) {
-			int room = maxStorage - currStorage;
-			int accepted = room <= maxReceive ? room : maxReceive;
+			double room = maxStorage - currStorage;
+			double accepted = room <= maxReceive ? room : maxReceive;
 			if (!simulate) {
 				currStorage += accepted;
 				onChange();
@@ -168,9 +168,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	@Override
-	public int extractMatter(int maxExtract, boolean simulate) {
+	public double extractMatter(double maxExtract, boolean simulate) {
 		if (canExtract()) {
-			int taken = currStorage <= maxExtract ? currStorage : maxExtract;
+			double taken = currStorage <= maxExtract ? currStorage : maxExtract;
 			if (!simulate) {
 				currStorage -= taken;
 				onChange();
@@ -181,12 +181,12 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	@Override
-	public int getMatterStored() {
+	public double getMatterStored() {
 		return currStorage;
 	}
 
 	@Override
-	public int getMaxMatterStored() {
+	public double getMaxMatterStored() {
 		return maxStorage;
 	}
 
@@ -265,8 +265,8 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	// method for us to allow for matter removal on items/blocks that aren't
 	// meant to provide matter
-	public int removeMatter(int amt) {
-		int taken = currStorage <= amt ? currStorage : amt;
+	public double removeMatter(double amt) {
+		double taken = currStorage <= amt ? currStorage : amt;
 		currStorage -= taken;
 		onChange();
 		return taken;
@@ -274,9 +274,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	// method for us to allow matter addition on items/blocks that aren't
 	// meant to receive matter
-	public int giveMatter(int amt) {
-		int room = maxStorage - currStorage;
-		int accepted = room <= amt ? room : amt;
+	public double giveMatter(double amt) {
+		double room = maxStorage - currStorage;
+		double accepted = room <= amt ? room : amt;
 		currStorage += accepted;
 		onChange();
 		return accepted;
@@ -347,7 +347,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 
 		@Override
-		public int extractMatter(int maxExtract, boolean simulate) {
+		public double extractMatter(double maxExtract, boolean simulate) {
 			if (canExtract()) {
 				return parent.extractMatter(maxExtract, simulate);
 			}
@@ -355,7 +355,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 
 		@Override
-		public int receiveMatter(int maxReceive, boolean simulate) {
+		public double receiveMatter(double maxReceive, boolean simulate) {
 			if (canReceive()) {
 				return parent.receiveMatter(maxReceive, simulate);
 			}

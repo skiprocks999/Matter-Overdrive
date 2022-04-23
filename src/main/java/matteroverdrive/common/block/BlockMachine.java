@@ -10,6 +10,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -63,6 +64,11 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 			}
 		}
 		return super.getDrops(state, builder);
+	}
+	
+	@Override
+	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+		return type.isRedstoneConnected;
 	}
 
 }

@@ -89,7 +89,8 @@ public class DeferredRegisters {
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
-
+	public static final RegistryObject<Item> ITEM_MATTER_DUST = ITEMS.register("matter_dust",
+			() -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));

@@ -11,13 +11,13 @@ package matteroverdrive.core.capability.types.matter;
  */
 public interface ICapabilityMatterStorage {
 
-	int receiveMatter(int maxReceive, boolean simulate);
+	double receiveMatter(double maxReceive, boolean simulate);
 
-	int extractMatter(int maxExtract, boolean simulate);
+	double extractMatter(double maxExtract, boolean simulate);
 
-	int getMatterStored();
+	double getMatterStored();
 
-	int getMaxMatterStored();
+	double getMaxMatterStored();
 
 	boolean canExtract();
 

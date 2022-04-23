@@ -13,6 +13,13 @@
 			"matteroverdrive:block/crate_close"
 		]
 	},
+	"matter_decomposer": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.matter_decomposer",
+		"sounds": [
+			"matteroverdrive:block/matter_decomposer"
+		]
+	},
 	"button_expand": {
 		"category": "master",
 		"subtitle": "subtitles.matteroverdrive.button_expand",

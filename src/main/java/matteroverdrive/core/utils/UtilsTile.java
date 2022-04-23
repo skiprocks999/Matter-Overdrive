@@ -66,5 +66,9 @@ public class UtilsTile {
 			}
 		}
 	}
+	
+	public static boolean adjacentRedstoneSignal(GenericTile tile) {
+		return tile.getLevel().hasNeighborSignal(tile.getBlockPos());
+	}
 
 }

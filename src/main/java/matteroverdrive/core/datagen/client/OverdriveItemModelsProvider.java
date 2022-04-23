@@ -32,6 +32,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
+		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

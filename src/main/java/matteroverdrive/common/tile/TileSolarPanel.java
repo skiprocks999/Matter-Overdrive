@@ -48,15 +48,19 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 	}
 
 	private void tickServer(Ticker ticker) {
-		if (ticker.getTicks() % 5 == 0) {
-			Level world = getLevel();
-			generating = world.isDay() && world.canSeeSky(getBlockPos());
+		if(canRun()) {
+			if (ticker.getTicks() % 5 == 0) {
+				Level world = getLevel();
+				generating = world.isDay() && world.canSeeSky(getBlockPos());
+			}
+			if (generating) {
+				CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+				energy.giveEnergy(GENERATION * generatingBonus);
+			}
+			UtilsTile.outputEnergy(this);
+		} else {
+			generating = false;
 		}
-		if (generating) {
-			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-			energy.giveEnergy(GENERATION * generatingBonus);
-		}
-		UtilsTile.outputEnergy(this);
 	}
 
 	@Override
@@ -101,6 +105,12 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 	@Override
 	public int getMaxMode() {
 		return 2;
+	}
+
+	@Override
+	public boolean canRun() {
+		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
+		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
 	}
 
 }

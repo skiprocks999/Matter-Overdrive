@@ -61,6 +61,10 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 	public ScreenMatterDecomposer(InventoryMatterDecomposer menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentProgress(() -> {
+			TileMatterDecomposer matter = menu.getTile();
+			if (matter != null) {
+				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
+			}
 			return 0;
 		}, this, -4, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {

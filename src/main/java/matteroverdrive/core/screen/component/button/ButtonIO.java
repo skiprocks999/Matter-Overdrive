@@ -39,6 +39,8 @@ public class ButtonIO extends Button {
 
 	private boolean isActivated = false;
 	private IOConfigWrapper owner;
+	
+	private int mouseButton = 0;
 
 	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, IOConfigWrapper owner,
 			Supplier<Boolean> canInput, Supplier<Boolean> canOutput) {
@@ -118,6 +120,13 @@ public class ButtonIO extends Button {
 			cycleMode();
 		}
 	}
+	
+	
+	@Override
+	protected boolean isValidClickButton(int pButton) {
+		mouseButton = pButton;
+		return pButton > -1 && pButton < 2;
+	}
 
 	private void validateNull() {
 		if (hasInput == null) {
@@ -151,10 +160,18 @@ public class ButtonIO extends Button {
 	private void cycleMode() {
 		int modeVal = mode.ordinal();
 		IOMode[] vals = IOMode.values();
-		if (modeVal >= vals.length - 1) {
-			mode = vals[0];
+		if(mouseButton == 0) {
+			if (modeVal >= vals.length - 1) {
+				mode = vals[0];
+			} else {
+				mode = vals[modeVal + 1];
+			}
 		} else {
-			mode = vals[modeVal + 1];
+			if (modeVal == 0) {
+				mode = vals[vals.length - 1];
+			} else {
+				mode = vals[modeVal - 1];
+			}
 		}
 		owner.childPressed();
 	}

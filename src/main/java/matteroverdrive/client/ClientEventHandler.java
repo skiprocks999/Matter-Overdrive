@@ -3,10 +3,13 @@ package matteroverdrive.client;
 import matteroverdrive.References;
 import matteroverdrive.core.formatting.MatterFormatting;
 import matteroverdrive.core.matter.MatterRegister;
+import matteroverdrive.core.matter.MatterUtils;
+import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,11 +21,24 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void matterTooltipApplier(ItemTooltipEvent event) {
 		if (Screen.hasShiftDown()) {
-			Double val = MatterRegister.INSTANCE.getClientMatterValue(event.getItemStack());
+			ItemStack stack = event.getItemStack();
+			Double val = MatterRegister.INSTANCE.getClientMatterValue(stack);
 			if (val != null) {
 				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
 						new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
 								.withStyle(ChatFormatting.BLUE));
+			} else if (MatterUtils.isDust(stack)) {
+				val = UtilsNbt.readMatterVal(stack);
+				if(val > 0) {
+					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
+							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
+									.withStyle(ChatFormatting.BLUE));
+				} else {
+					event.getToolTip()
+					.add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
+							new TranslatableComponent("tooltip." + References.ID + ".nomatter")
+									.withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.BLUE));
+				}
 			} else {
 				event.getToolTip()
 						.add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
