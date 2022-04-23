@@ -8,5 +8,5 @@ public class UtilsItem {
 	public static boolean compareItems(Item a, Item b) {
 		return ItemStack.isSame(new ItemStack(a), new ItemStack(b));
 	}
-	
+
 }

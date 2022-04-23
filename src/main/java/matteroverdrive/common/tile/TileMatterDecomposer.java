@@ -13,6 +13,7 @@ import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.IRedstoneMode;
+import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsNbt;
@@ -26,25 +27,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
+public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, IUpgradableTile {
 
 	public static final int SLOT_COUNT = 8;
-
+	
+	public static final int OPERATING_TIME = 500;
+	private static final int USAGE_PER_TICK = 10;
+	private static final float FAILURE_CHANCE = 0.005F;
+	private static final int MATTER_STORAGE = 1024;
+	private static final int ENERGY_STORAGE = 512000;
+	private static final int DEFAULT_SPEED = 1;
+	
 	private int currRedstoneMode;
 	private boolean running = false;
-	private int usage = 0;
 	private double currRecipeValue = 0;
-	
-	public static final int OPERATING_TIME = 2000;
-	private static final int USAGE_PER_TICK = 10;
-	private int currProgress = 0;
-	private static final float FAILURE_CHANCE = 0.005F;
+	private double currProgress = 0;
+	private double currSpeed = DEFAULT_SPEED;
+	private float currFailureChance = FAILURE_CHANCE;
+	private int usage = USAGE_PER_TICK;
+	private boolean isMuffled = false;
 	
 	public int clientRedstoneMode;
 	public boolean clientRunning;
 	public int clientEnergyUsage;
 	public double clientRecipeValue;
-	public int clientProgress;
+	public double clientProgress;
+	public double clientSpeed;
+	public float clientFailure;
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
@@ -55,10 +64,11 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN }));
-		addCapability(new CapabilityEnergyStorage(512000, true, false).setOwner(this).setDefaultDirections(state,
+				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
+				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES));
+		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setDefaultDirections(state,
 				new Direction[] { Direction.WEST, Direction.EAST }, null));
-		addCapability(new CapabilityMatterStorage(1024, false, true).setOwner(this).setDefaultDirections(state, null,
+		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this).setDefaultDirections(state, null,
 				new Direction[] { Direction.SOUTH }));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
@@ -68,32 +78,33 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 				new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
 	}
-	
+
 	private void tickServer(Ticker ticker) {
-		if(canRun()) {
+		if (canRun()) {
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
-			if(!input.isEmpty()) {
-				Double matterVal = currRecipeValue > 0 ? currRecipeValue : MatterRegister.INSTANCE.getServerMatterValue(input);
-				if(matterVal != null || (MatterUtils.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
+			if (!input.isEmpty()) {
+				Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
+						: MatterRegister.INSTANCE.getServerMatterValue(input);
+				if (matterVal != null || (MatterUtils.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					if(energy.getEnergyStored() >= USAGE_PER_TICK) {
-						currRecipeValue = matterVal;
+					if (energy.getEnergyStored() >= USAGE_PER_TICK) {
+						currRecipeValue = matterVal.doubleValue();
 						CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);
 						boolean room = (storage.getMaxMatterStored() - storage.getMatterStored()) >= currRecipeValue;
 						ItemStack output = inv.getOutputs().get(0);
-						boolean outputRoom = output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue && (output.getCount() + 1 <= output.getMaxStackSize()));
-						if(room && outputRoom) {
+						boolean outputRoom = output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
+								&& (output.getCount() + 1 <= output.getMaxStackSize()));
+						if (room && outputRoom) {
 							running = true;
-							currProgress++;
-							usage = USAGE_PER_TICK;
-							energy.removeEnergy(USAGE_PER_TICK);
-							if(currProgress >= OPERATING_TIME) {
-								if(roll() > FAILURE_CHANCE) {
+							currProgress += currSpeed;
+							energy.removeEnergy(usage);
+							if (currProgress >= OPERATING_TIME) {
+								if (roll() > currFailureChance) {
 									storage.giveMatter(currRecipeValue);
 									input.shrink(1);
 								} else {
-									if(output.isEmpty()) {
+									if (output.isEmpty()) {
 										ItemStack dust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 										UtilsNbt.writeMatterVal(dust, currRecipeValue);
 										inv.setStackInSlot(1, dust.copy());
@@ -102,51 +113,46 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 									}
 								}
 								currProgress = 0;
-								currRecipeValue = 0;
-								running = false;
-								updateState(Boolean.FALSE);
 							}
 							setChanged();
 						} else {
-							usage = 0;
 							running = false;
 						}
 					} else {
 						running = false;
-						usage = 0;
 					}
 				} else {
-					MatterOverdrive.LOGGER.info("called");
 					running = false;
 					currRecipeValue = 0;
-					usage = 0;
+					currProgress = 0;
 				}
 			} else {
 				running = false;
 				currRecipeValue = 0;
-				usage = 0;
+				currProgress = 0;
 			}
 		} else {
 			currRecipeValue = 0;
 			running = false;
-			usage = 0;
+			currProgress = 0;
 		}
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
-		if(currState && !running) {
+		if (currState && !running) {
 			updateState(Boolean.FALSE);
 		} else if (!currState && running) {
 			updateState(Boolean.TRUE);
 		}
-		
-		if(running && ticker.getTicks() % 42 == 0) {
-			getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_DECOMPOSER.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+
+		if (running && !isMuffled && ticker.getTicks() % 42 == 0) {
+			getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_DECOMPOSER.get(), SoundSource.BLOCKS, 0.5F,
+					1.0F);
 		}
 	}
-	
+
 	private float roll() {
 		return MatterOverdrive.RANDOM.nextFloat();
 	}
-	
+
 	private void updateState(Boolean value) {
 		Level world = getLevel();
 		BlockPos pos = getBlockPos();
@@ -154,7 +160,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 	}
 
 	private void tickClient(Ticker ticker) {
-		
+
 	}
 
 	@Override
@@ -176,14 +182,22 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		saveMode(tag);
-		tag.putInt("progress", currProgress);
+		tag.putDouble("progress", currProgress);
+		tag.putDouble("speed", currSpeed);
+		tag.putFloat("failure", currFailureChance);
+		tag.putInt("usage", usage);
+		tag.putBoolean("muffled", isMuffled);
 	}
 
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
 		loadMode(tag);
-		currProgress = tag.getInt("progress");
+		currProgress = tag.getDouble("progress");
+		currSpeed = tag.getDouble("speed");
+		currFailureChance = tag.getFloat("failure");
+		usage = tag.getInt("usage");
+		isMuffled = tag.getBoolean("muffled");
 	}
 
 	private void clientSave(CompoundTag tag) {
@@ -197,7 +211,9 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
 		tag.put(matter.getSaveKey(), matter.serializeNBT());
-		tag.putInt("progress", currProgress);
+		tag.putDouble("progress", currProgress);
+		tag.putDouble("speed", currSpeed);
+		tag.putFloat("failure", currFailureChance);
 	}
 
 	private void clientLoad(CompoundTag tag) {
@@ -211,13 +227,107 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode {
 		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
 		clientMatter = new CapabilityMatterStorage(0, false, false);
 		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
-		clientProgress = tag.getInt("progress");
+		clientProgress = tag.getDouble("progress");
+		clientSpeed = tag.getDouble("speed");
+		clientFailure = tag.getFloat("failure");
 	}
 
 	@Override
 	public boolean canRun() {
 		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
 		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
+	}
+
+	@Override
+	public double getDefaultSpeed() {
+		return DEFAULT_SPEED;
+	}
+
+	@Override
+	public float getDefaultFailure() {
+		return FAILURE_CHANCE;
+	}
+
+	@Override
+	public double getDefaultMatterStorage() {
+		return MATTER_STORAGE;
+	}
+
+	@Override
+	public double getDefaultPowerStorage() {
+		return ENERGY_STORAGE;
+	}
+
+	@Override
+	public double getDefaultPowerUsage() {
+		return USAGE_PER_TICK;
+	}
+
+	@Override
+	public boolean isMuffled(boolean clientSide) {
+		return clientSide ? false : isMuffled;
+	}
+	
+	@Override
+	public double getCurrentSpeed(boolean clientSide) { 
+		return clientSide ? clientSpeed : currSpeed;
+	}
+
+	@Override
+	public float getCurrentFailure(boolean clientSide) {
+		return clientSide ? clientFailure : currFailureChance;
+	}
+
+	@Override
+	public double getCurrentMatterStorage(boolean clientSide) { 
+		return clientSide ? clientMatter.getMatterStored() : this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMatterStored();
+	}
+
+	@Override
+	public double getCurrentPowerStorage(boolean clientSide) {
+		return clientSide ? clientEnergy.getEnergyStored() : this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getEnergyStored();
+	}
+
+	@Override
+	public double getCurrentPowerUsage(boolean clientSide) {
+		return clientSide ? clientEnergyUsage : usage;
+	}
+
+	@Override
+	public void setSpeed(double speed) {
+		currSpeed = speed;
+	}
+
+	@Override
+	public void setFailure(float failure) {
+		currFailureChance = failure;
+	}
+
+	@Override
+	public void setMatterStorage(double storage) {
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		matter.updateMaxMatterStorage(storage);
+	}
+
+	@Override
+	public void setPowerStorage(int storage) {
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		energy.updateMaxEnergyStorage(storage);
+	}
+
+	@Override
+	public void setPowerUsage(int usage) {
+		this.usage = usage;
+	}
+
+	@Override
+	public void setMuffled(boolean muffled) {
+		isMuffled = muffled;
+	}
+	
+	@Override
+	public int getProcessingTime() {
+		return OPERATING_TIME;
 	}
 
 }

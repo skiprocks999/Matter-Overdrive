@@ -65,7 +65,7 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 		}
 		return super.getDrops(state, builder);
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return type.isRedstoneConnected;

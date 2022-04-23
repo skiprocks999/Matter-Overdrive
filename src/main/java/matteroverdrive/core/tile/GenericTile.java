@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import matteroverdrive.References;
+import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
+import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,12 +21,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.TriPredicate;
 
 public class GenericTile extends BlockEntity implements Nameable {
 
@@ -187,6 +192,13 @@ public class GenericTile extends BlockEntity implements Nameable {
 	// TODO allow translations
 	public Component getName() {
 		return new TextComponent(References.ID + ".default.tile.name");
+	}
+
+	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {
+		return (x, y, i) -> x < i.outputIndex()
+				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
+				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade && i.isUpgradeValid(upgrade.type);
 	}
 
 }

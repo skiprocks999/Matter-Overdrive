@@ -34,7 +34,8 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_SOLAR_PANEL.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this));
+		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
+				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(64000, false, true).setOwner(this).setDefaultDirections(state, null,
 				new Direction[] { Direction.DOWN }));
 		setMenuProvider(
@@ -48,7 +49,7 @@ public class TileSolarPanel extends GenericTile implements IRedstoneMode {
 	}
 
 	private void tickServer(Ticker ticker) {
-		if(canRun()) {
+		if (canRun()) {
 			if (ticker.getTicks() % 5 == 0) {
 				Level world = getLevel();
 				generating = world.isDay() && world.canSeeSky(getBlockPos());

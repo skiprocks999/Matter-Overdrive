@@ -8,10 +8,13 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import matteroverdrive.common.item.ItemUpgrade;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,6 +61,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private LazyOptional<IItemHandlerModifiable> childOutput;
 	// Down Up North South West East
 	private LazyOptional<IItemHandlerModifiable>[] sideCaps = new LazyOptional[6];
+	
+	private UpgradeType[] validUpgrades;
 
 	public CapabilityInventory() {
 		super();
@@ -129,6 +134,16 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		upgrades = count;
 		return this;
 	}
+	
+	public CapabilityInventory setValidUpgrades(UpgradeType[] upgrades) {
+		this.validUpgrades = upgrades;
+		return this;
+	}
+	
+	public CapabilityInventory setValidator(TriPredicate<Integer, ItemStack, CapabilityInventory> valid) {
+		this.valid = valid;
+		return this;
+	}
 
 	public int inputs() {
 		return inputs;
@@ -180,6 +195,15 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	public int upgradeIndex() {
 		return matterSlotsIndex() + matterSlot;
+	}
+	
+	@Override
+	public int getSlotLimit(int slot) {
+		if(slot >= upgradeIndex()) {
+			return 1;
+		} else {
+			return super.getSlotLimit(slot);
+		}
 	}
 
 	@Override
@@ -440,6 +464,37 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Override
 	protected void onContentsChanged(int slot) {
 		if (hasOwner) {
+			if(slot >= upgradeIndex() && upgrades() > 0&& owner instanceof IUpgradableTile upgradable) {
+				double speed = upgradable.getDefaultSpeed();
+				double matterUsage = upgradable.getDefaultMatterUsage();
+				double matterStorage = upgradable.getDefaultMatterStorage();
+				float failure = upgradable.getDefaultFailure();
+				double powerStorage = upgradable.getDefaultPowerStorage();
+				double powerUsage = upgradable.getDefaultPowerUsage();
+				double range = upgradable.getDefaultRange();
+				boolean isMuffled = false;
+				for(ItemStack stack : getUpgrades()) {
+					if(!stack.isEmpty()) {
+						UpgradeType upgrade = ((ItemUpgrade) stack.getItem()).type;
+						speed *= upgrade.speedBonus;
+						matterUsage *= upgrade.matterUsageBonus;
+						matterStorage *= upgrade.matterStorageBonus;
+						failure *= upgrade.failureChanceBonus;
+						powerStorage *= upgrade.powerStorageBonus;
+						powerUsage *= upgrade.powerUsageBonus;
+						range *= upgrade.rangeBonus;
+						if(upgrade == UpgradeType.MUFFLER) isMuffled = true;
+					}
+				}
+				upgradable.setSpeed(speed);
+				upgradable.setMatterUsage(matterUsage);
+				upgradable.setMatterStorage(matterStorage);
+				upgradable.setFailure(failure);
+				upgradable.setPowerStorage((int) powerStorage);
+				upgradable.setPowerUsage((int) powerUsage);
+				upgradable.setRange((int) range);
+				upgradable.setMuffled(isMuffled);
+			}
 			owner.setChanged();
 		}
 	}
@@ -464,6 +519,15 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		for (Direction dir : dirs) {
 			relativeOutputDirs.add(dir);
 		}
+	}
+	
+	public boolean isUpgradeValid(UpgradeType type) {
+		if(validUpgrades != null) {
+			for(UpgradeType upgrade : validUpgrades) {
+				if(upgrade == type) return true;
+			}
+		}
+		return false;
 	}
 
 	private class ChildInventoryHandler extends CapabilityInventory {

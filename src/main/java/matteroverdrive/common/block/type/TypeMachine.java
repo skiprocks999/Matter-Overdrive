@@ -13,7 +13,7 @@ public enum TypeMachine {
 	// DUNSEW
 	public final VoxelShape[] shapes = new VoxelShape[6];
 	public final boolean hasCustomAABB;
-	
+
 	public final boolean isRedstoneConnected;
 
 	private TypeMachine(boolean isRedstoneConnected) {

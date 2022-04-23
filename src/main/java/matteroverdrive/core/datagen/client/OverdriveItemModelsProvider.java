@@ -3,6 +3,7 @@ package matteroverdrive.core.datagen.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.utils.BlockColors;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -33,6 +34,11 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
+		simpleItem(DeferredRegisters.ITEM_BASE_UPGRADE, "item/upgrade/upgrade_base");
+		for (UpgradeType type : UpgradeType.values()) {
+			simpleItem(DeferredRegisters.ITEM_UPGRADES.get(type),
+					"item/upgrade/upgrade_" + type.toString().toLowerCase());
+		}
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

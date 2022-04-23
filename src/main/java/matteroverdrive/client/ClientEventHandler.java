@@ -27,17 +27,29 @@ public class ClientEventHandler {
 				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
 						new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
 								.withStyle(ChatFormatting.BLUE));
-			} else if (MatterUtils.isDust(stack)) {
+			} else if (MatterUtils.isRawDust(stack)) {
 				val = UtilsNbt.readMatterVal(stack);
-				if(val > 0) {
-					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
-							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
+				if (val > 0) {
+					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".potmatterval",
+							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
 									.withStyle(ChatFormatting.BLUE));
 				} else {
 					event.getToolTip()
-					.add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
-							new TranslatableComponent("tooltip." + References.ID + ".nomatter")
-									.withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.BLUE));
+							.add(new TranslatableComponent("tooltip." + References.ID + ".potmatterval",
+									new TranslatableComponent("tooltip." + References.ID + ".nomatter")
+											.withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.BLUE));
+				}
+			} else if(MatterUtils.isRefinedDust(stack)) {
+				val = UtilsNbt.readMatterVal(stack);
+				if (val > 0) {
+					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
+							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
+									.withStyle(ChatFormatting.BLUE));
+				} else {
+					event.getToolTip()
+							.add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
+									new TranslatableComponent("tooltip." + References.ID + ".nomatter")
+											.withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.BLUE));
 				}
 			} else {
 				event.getToolTip()

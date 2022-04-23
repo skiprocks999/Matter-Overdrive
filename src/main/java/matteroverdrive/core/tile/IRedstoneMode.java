@@ -13,7 +13,7 @@ public interface IRedstoneMode {
 	int getCurrMod();
 
 	int getMaxMode();
-	
+
 	boolean canRun();
 
 	default void saveMode(CompoundTag tag) {

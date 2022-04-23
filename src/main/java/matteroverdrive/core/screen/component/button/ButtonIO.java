@@ -39,7 +39,7 @@ public class ButtonIO extends Button {
 
 	private boolean isActivated = false;
 	private IOConfigWrapper owner;
-	
+
 	private int mouseButton = 0;
 
 	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, IOConfigWrapper owner,
@@ -120,8 +120,7 @@ public class ButtonIO extends Button {
 			cycleMode();
 		}
 	}
-	
-	
+
 	@Override
 	protected boolean isValidClickButton(int pButton) {
 		mouseButton = pButton;
@@ -160,7 +159,7 @@ public class ButtonIO extends Button {
 	private void cycleMode() {
 		int modeVal = mode.ordinal();
 		IOMode[] vals = IOMode.values();
-		if(mouseButton == 0) {
+		if (mouseButton == 0) {
 			if (modeVal >= vals.length - 1) {
 				mode = vals[0];
 			} else {

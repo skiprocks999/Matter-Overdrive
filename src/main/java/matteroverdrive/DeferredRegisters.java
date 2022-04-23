@@ -15,6 +15,8 @@ import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
+import matteroverdrive.common.item.ItemUpgrade;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileSolarPanel;
@@ -91,6 +93,11 @@ public class DeferredRegisters {
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_MATTER_DUST = ITEMS.register("matter_dust",
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
+	public static final RegistryObject<Item> ITEM_BASE_UPGRADE = ITEMS.register("upgrade_base",
+			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(16)));
+	public static final BulkRegistryObject<Item> ITEM_UPGRADES = new BulkRegistryObject<>(upgrade -> ITEMS
+			.register("upgrade_" + upgrade.toString().toLowerCase(), () -> new ItemUpgrade((UpgradeType) upgrade)),
+			UpgradeType.values());
 	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));

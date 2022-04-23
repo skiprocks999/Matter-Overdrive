@@ -3,10 +3,14 @@ package matteroverdrive.core.datagen.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.utils.BlockColors;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveLangKeyProvider extends LanguageProvider {
 
@@ -26,35 +30,46 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 
-			add(DeferredRegisters.ITEM_RAW_MATTER_DUST.get(), "Raw Matter Dust");
-			add(DeferredRegisters.ITEM_MATTER_DUST.get(), "Matter Dust");
-			add(DeferredRegisters.ITEM_ION_SNIPER.get(), "Ion Sniper");
-			add(DeferredRegisters.ITEM_PHASER_RIFLE.get(), "Phaser Rifle");
-			add(DeferredRegisters.ITEM_PHASER.get(), "Phaser");
-			add(DeferredRegisters.ITEM_PLASMA_SHOTGUN.get(), "Plasma Shotgun");
-			add(DeferredRegisters.ITEM_OMNI_TOOL.get(), "Omni Tool");
+			addItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "Raw Matter Dust");
+			addItem(DeferredRegisters.ITEM_MATTER_DUST, "Matter Dust");
+			addItem(DeferredRegisters.ITEM_BASE_UPGRADE, "Upgrade Shell");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.SPEED), "Speed Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.MATTER_STORAGE), "Matter Storage Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.POWER), "Power Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.POWER_STORAGE), "Power Storage Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.FAIL_SAFE), "Fail-Safe Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.HYPER_SPEED), "Hyper Speed Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.RANGE), "Range Upgrade");
+			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.MUFFLER), "Muffler Upgrade");
+
+			addItem(DeferredRegisters.ITEM_ION_SNIPER, "Ion Sniper");
+			addItem(DeferredRegisters.ITEM_PHASER_RIFLE, "Phaser Rifle");
+			addItem(DeferredRegisters.ITEM_PHASER, "Phaser");
+			addItem(DeferredRegisters.ITEM_PLASMA_SHOTGUN, "Plasma Shotgun");
+			addItem(DeferredRegisters.ITEM_OMNI_TOOL, "Omni Tool");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
-				add(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color).get(), name + " Tritanium Plating");
-				add(DeferredRegisters.FLOOR_TILE.get(color).get(), name + " Floor Tile");
-				add(DeferredRegisters.FLOOR_TILES.get(color).get(), name + " Floor Tiles");
+				addBlock(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
+				addBlock(DeferredRegisters.FLOOR_TILE.get(color), name + " Floor Tile");
+				addBlock(DeferredRegisters.FLOOR_TILES.get(color), name + " Floor Tiles");
 			}
-			add(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get(), "Tritanium Plating");
+			addBlock(DeferredRegisters.REGULAR_TRITANIUM_PLATING, "Tritanium Plating");
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				if (name.equals("Reg")) {
-					add(DeferredRegisters.TRITANIUM_CRATES.get(color).get(), "Tritanium Crate");
+					addBlock(DeferredRegisters.TRITANIUM_CRATES.get(color), "Tritanium Crate");
 				} else {
-					add(DeferredRegisters.TRITANIUM_CRATES.get(color).get(), name + " Tritanium Crate");
+					addBlock(DeferredRegisters.TRITANIUM_CRATES.get(color), name + " Tritanium Crate");
 				}
 
 			}
-			add(DeferredRegisters.BLOCK_SOLAR_PANEL.get(), "Solar Panel");
-			add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get(), "Matter Decomposer");
+			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
+			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 
 			addTooltip("energystored", "%1$s / %2$s FE");
 			addTooltip("matterval", "Matter: %s");
+			addTooltip("potmatterval", "Potential Matter: %s");
 			addTooltip("nomatter", "NONE");
 			addTooltip("openmenu", "Open Menu");
 			addTooltip("closemenu", "Close Menu");
@@ -75,6 +90,16 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("iofront", "Front");
 			addTooltip("ioback", "Back");
 			addTooltip("io", "%1$s (%2$s)");
+			addTooltip("upgradeinfo", "Hold %s for Details");
+			addTooltip("upgradeshift", "Shift");
+			addTooltip("speedbonus", "Speed: %s");
+			addTooltip("mattstorebonus", "Matter Storage: %s");
+			addTooltip("mattusebonus", "Matter Usage: %s");
+			addTooltip("failurebonus", "Failure: %s");
+			addTooltip("powstorebonus", "Power Storage: %s");
+			addTooltip("powusebonus", "Power Usage: %s");
+			addTooltip("rangebonus", "Range: %s");
+			addTooltip("mufflerupgrade", "Mutes machine sound");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -103,23 +128,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 		}
 	}
 
-	private static String getNameFromEnum(String baseString) {
-		String name = baseString.toLowerCase();
-		if (name.contains("_")) {
-			String[] split = name.split("_");
-			name = "";
-			for (String str : split) {
-				if (str.length() > 0) {
-					name = name + str.substring(0, 1).toUpperCase() + str.substring(1) + " ";
-				}
-			}
-			while (name.charAt(name.length() - 1) == ' ') {
-				name = name.substring(0, name.length() - 1);
-			}
-		} else {
-			name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		}
-		return name;
+	private void addItem(RegistryObject<Item> item, String translation) {
+		add(item.get(), translation);
+	}
+
+	private void addBlock(RegistryObject<Block> block, String translation) {
+		add(block.get(), translation);
 	}
 
 	private void addTooltip(String key, String translation) {
@@ -140,6 +154,25 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 	private void addGuiLabel(String key, String translation) {
 		add("gui." + References.ID + "." + key, translation);
+	}
+
+	private static String getNameFromEnum(String baseString) {
+		String name = baseString.toLowerCase();
+		if (name.contains("_")) {
+			String[] split = name.split("_");
+			name = "";
+			for (String str : split) {
+				if (str.length() > 0) {
+					name = name + str.substring(0, 1).toUpperCase() + str.substring(1) + " ";
+				}
+			}
+			while (name.charAt(name.length() - 1) == ' ') {
+				name = name.substring(0, name.length() - 1);
+			}
+		} else {
+			name = name.substring(0, 1).toUpperCase() + name.substring(1);
+		}
+		return name;
 	}
 
 }

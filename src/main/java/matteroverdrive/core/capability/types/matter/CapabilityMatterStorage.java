@@ -251,7 +251,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		return "matter";
 	}
 
-	public void updateMaxMatterStorage(int maxStorage) {
+	public void updateMaxMatterStorage(double maxStorage) {
 		this.maxStorage = maxStorage;
 	}
 

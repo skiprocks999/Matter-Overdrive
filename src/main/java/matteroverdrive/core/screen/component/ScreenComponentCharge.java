@@ -52,11 +52,12 @@ public class ScreenComponentCharge extends ScreenComponent {
 				isMatter ? matterHeight : energyHeight)) {
 			String storeLoc = isMatter ? "tooltip.matteroverdrive.matterstored"
 					: "tooltip.matteroverdrive.energystored";
-			gui.displayTooltip(stack, new TranslatableComponent(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble()), xAxis,
+			gui.displayTooltip(stack,
+					new TranslatableComponent(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble()), xAxis,
 					yAxis);
 			String usageLoc = isMatter ? "tooltip.matteroverdrive.matterusage" : "tooltip.matteroverdrive.energyusage";
 			double use = usage.getAsDouble();
-			if(use > 0) {
+			if (use > 0) {
 				if (isGenerator) {
 					gui.displayTooltip(stack,
 							new TranslatableComponent(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN), xAxis,
@@ -80,7 +81,8 @@ public class ScreenComponentCharge extends ScreenComponent {
 	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
 			final int guiHeight) {
 		UtilsRendering.bindTexture(resource);
-		double progress = maxStorage.getAsDouble() > 0 ? Math.min(1.0, (double) currStorage.getAsDouble() / (double) maxStorage.getAsDouble())
+		double progress = maxStorage.getAsDouble() > 0
+				? Math.min(1.0, (double) currStorage.getAsDouble() / (double) maxStorage.getAsDouble())
 				: 0;
 		if (isMatter) {
 

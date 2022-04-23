@@ -1,6 +1,7 @@
 package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
@@ -10,6 +11,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
 public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
+
+	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.POWER_STORAGE };
 
 	public InventorySolarPanel(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_SOLAR_PANEL.get(), id, playerinv, invcap, tilecoords);
@@ -22,7 +25,6 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		// upgrades: energy storage
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }));
 	}
