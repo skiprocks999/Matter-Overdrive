@@ -108,6 +108,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("ioitems", "Items");
 			addGuiLabel("ioenergy", "Energy");
 			addGuiLabel("iomatter", "Matter");
+			addGuiLabel("time", "Time: %s");
+			addGuiLabel("usage", "Usage: %s");
+			addGuiLabel("failure", "Failure: %s");
+			addGuiLabel("range", "Range: %s Blocks");
+			addGuiLabel("storage", "Storage: %s");
+			addGuiLabel("soundmuted", "Sound Muffled");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer("solar_panel", "Solar Panel");

@@ -1,9 +1,9 @@
 package matteroverdrive.client;
 
 import matteroverdrive.References;
-import matteroverdrive.core.formatting.MatterFormatting;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.matter.MatterUtils;
+import matteroverdrive.core.utils.UtilsFormatting;
 import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,13 +25,13 @@ public class ClientEventHandler {
 			Double val = MatterRegister.INSTANCE.getClientMatterValue(stack);
 			if (val != null) {
 				event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
-						new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
+						new TextComponent(UtilsFormatting.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
 								.withStyle(ChatFormatting.BLUE));
 			} else if (MatterUtils.isRawDust(stack)) {
 				val = UtilsNbt.readMatterVal(stack);
 				if (val > 0) {
 					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".potmatterval",
-							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
+							new TextComponent(UtilsFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
 									.withStyle(ChatFormatting.BLUE));
 				} else {
 					event.getToolTip()
@@ -43,7 +43,7 @@ public class ClientEventHandler {
 				val = UtilsNbt.readMatterVal(stack);
 				if (val > 0) {
 					event.getToolTip().add(new TranslatableComponent("tooltip." + References.ID + ".matterval",
-							new TextComponent(MatterFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
+							new TextComponent(UtilsFormatting.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
 									.withStyle(ChatFormatting.BLUE));
 				} else {
 					event.getToolTip()

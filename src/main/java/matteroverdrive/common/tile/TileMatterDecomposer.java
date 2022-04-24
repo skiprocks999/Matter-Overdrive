@@ -32,7 +32,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	public static final int SLOT_COUNT = 8;
 	
 	public static final int OPERATING_TIME = 500;
-	private static final int USAGE_PER_TICK = 10;
+	private static final int USAGE_PER_TICK = 80;
 	private static final float FAILURE_CHANCE = 0.005F;
 	private static final int MATTER_STORAGE = 1024;
 	private static final int ENERGY_STORAGE = 512000;
@@ -54,6 +54,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	public double clientProgress;
 	public double clientSpeed;
 	public float clientFailure;
+	private boolean clientMuffled;
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
@@ -214,6 +215,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 		tag.putDouble("progress", currProgress);
 		tag.putDouble("speed", currSpeed);
 		tag.putFloat("failure", currFailureChance);
+		tag.putBoolean("muffled", isMuffled);
 	}
 
 	private void clientLoad(CompoundTag tag) {
@@ -230,6 +232,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 		clientProgress = tag.getDouble("progress");
 		clientSpeed = tag.getDouble("speed");
 		clientFailure = tag.getFloat("failure");
+		clientMuffled = tag.getBoolean("muffled");
 	}
 
 	@Override
@@ -265,7 +268,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 
 	@Override
 	public boolean isMuffled(boolean clientSide) {
-		return clientSide ? false : isMuffled;
+		return clientSide ? clientMuffled : isMuffled;
 	}
 	
 	@Override
@@ -280,12 +283,12 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) { 
-		return clientSide ? clientMatter.getMatterStored() : this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMatterStored();
+		return clientSide ? clientMatter.getMaxMatterStored() : this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getEnergyStored() : this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
 	}
 
 	@Override

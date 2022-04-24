@@ -9,6 +9,7 @@ import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
+import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
@@ -41,13 +42,13 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		components.add(new ScreenComponentCharge(() -> {
 			TileSolarPanel solar = menu.getTile();
 			if (solar != null) {
-				return solar.clientStored;
+				return solar.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileSolarPanel solar = menu.getTile();
 			if (solar != null) {
-				return solar.clientMaxStorage;
+				return solar.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
@@ -67,6 +68,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2 }));
 		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 },
 				new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
+		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] {2}, () -> menu.getTile()));
 	}
 
 	@Override
