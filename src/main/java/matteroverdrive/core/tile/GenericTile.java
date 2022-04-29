@@ -30,7 +30,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
 
-public class GenericTile extends BlockEntity implements Nameable {
+public abstract class GenericTile extends BlockEntity implements Nameable {
 
 	private List<IOverdriveCapability> capabilities = new ArrayList<>();
 
@@ -198,7 +198,8 @@ public class GenericTile extends BlockEntity implements Nameable {
 		return (x, y, i) -> x < i.outputIndex()
 				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
 				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
-				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade && i.isUpgradeValid(upgrade.type);
+				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
+						&& i.isUpgradeValid(upgrade.type);
 	}
 
 }

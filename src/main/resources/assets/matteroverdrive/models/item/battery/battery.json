@@ -1,0 +1,38 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/battery/battery"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"charge": 5
+			},
+			"model": "matteroverdrive:item/battery/battery4"
+		},
+		{
+			"predicate": {
+				"charge": 4
+			},
+			"model": "matteroverdrive:item/battery/battery3"
+		},
+		{
+			"predicate": {
+				"charge": 3
+			},
+			"model": "matteroverdrive:item/battery/battery2"
+		},
+		{
+			"predicate": {
+				"charge": 2
+			},
+			"model": "matteroverdrive:item/battery/battery1"
+		},
+		{
+			"predicate": {
+				"charge": 1
+			},
+			"model": "matteroverdrive:item/battery/battery0"
+		}
+	]
+}

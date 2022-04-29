@@ -13,12 +13,16 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
+import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.tools.electric.ItemBattery;
+import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.tile.TileMatterDecomposer;
+import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.registers.BulkRegistryObject;
@@ -86,6 +90,10 @@ public class DeferredRegisters {
 			TypeMachine.matter_decomposer.toString(),
 			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new,
 					TypeMachine.matter_decomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER));
+	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(
+			TypeMachine.matter_recycler.toString(),
+			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.matter_recycler,
+					DeferredRegisters.TILE_MATTER_RECYCLER));
 
 	/* ITEMS */
 
@@ -113,6 +121,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<Item> ITEM_OMNI_TOOL = ITEMS.register("omni_tool",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
+	public static final BulkRegistryObject<Item> ITEM_BATTERIES = new BulkRegistryObject<>(battery -> ITEMS
+			.register("battery_" + battery.toString().toLowerCase(), () -> new ItemBattery((BatteryType) battery)),
+			BatteryType.values());
 
 	/* TILES */
 
@@ -125,6 +136,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterDecomposer>> TILE_MATTER_DECOMPOSER = TILES
 			.register(TypeMachine.matter_decomposer.toString(), () -> new BlockEntityType<>(TileMatterDecomposer::new,
 					Sets.newHashSet(BLOCK_MATTER_DECOMPOSER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterRecycler>> TILE_MATTER_RECYCLER = TILES.register(
+			TypeMachine.matter_recycler.toString(),
+			() -> new BlockEntityType<>(TileMatterRecycler::new, Sets.newHashSet(BLOCK_MATTER_RECYCLER.get()), null));
 
 	/* MENUS */
 
@@ -134,6 +148,8 @@ public class DeferredRegisters {
 			.register("solar_panel", () -> new MenuType<>(InventorySolarPanel::new));
 	public static final RegistryObject<MenuType<InventoryMatterDecomposer>> MENU_MATTER_DECOMPOSER = CONTAINERS
 			.register("matter_decomposer", () -> new MenuType<>(InventoryMatterDecomposer::new));
+	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
+			.register("matter_recycler", () -> new MenuType<>(InventoryMatterRecycler::new));
 
 	// Functional Methods
 

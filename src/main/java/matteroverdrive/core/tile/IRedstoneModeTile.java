@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
  * Indexing starts at 0!
  */
 
-public interface IRedstoneMode {
+public interface IRedstoneModeTile {
 
 	void setMode(int mode);
 

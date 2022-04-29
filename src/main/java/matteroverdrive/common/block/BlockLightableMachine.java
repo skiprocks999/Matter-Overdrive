@@ -2,6 +2,8 @@ package matteroverdrive.common.block;
 
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.tile.GenericTile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,6 +28,14 @@ public class BlockLightableMachine<T extends GenericTile> extends BlockMachine<T
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(LIT);
+	}
+
+	@Override
+	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+		if (state.hasProperty(LIT)) {
+			return state.getValue(LIT) ? 15 : super.getLightEmission(state, level, pos);
+		}
+		return super.getLightEmission(state, level, pos);
 	}
 
 }

@@ -2,7 +2,7 @@ package matteroverdrive.core.packet.type;
 
 import java.util.function.Supplier;
 
-import matteroverdrive.core.tile.IRedstoneMode;
+import matteroverdrive.core.tile.IRedstoneModeTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -23,7 +23,7 @@ public class PacketUpdateRedstoneMode {
 			ServerLevel world = ctx.getSender().getLevel();
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
-				if (tile instanceof IRedstoneMode mode) {
+				if (tile instanceof IRedstoneModeTile mode) {
 					int nextMode = mode.getCurrMod() + 1;
 					if (nextMode > mode.getMaxMode()) {
 						mode.setMode(0);

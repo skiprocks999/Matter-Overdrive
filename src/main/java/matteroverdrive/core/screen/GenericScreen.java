@@ -1,15 +1,14 @@
 package matteroverdrive.core.screen;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.core.inventory.GenericInventory;
 import matteroverdrive.core.inventory.slot.IToggleableSlot;
+import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentSlot;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.IGuiComponent;
@@ -31,8 +30,8 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	protected List<IGuiComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
 
-	public GenericScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-		super(pMenu, pPlayerInventory, pTitle);
+	public GenericScreen(T menu, Inventory playerinventory, Component title) {
+		super(menu, playerinventory, title);
 		updateSlotActivity(getScreenNumber());
 		initializeComponents();
 	}
@@ -44,7 +43,10 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
-		if (slot instanceof IToggleableSlot type) {
+		if (slot instanceof SlotUpgrade upgrade) {
+			return new ScreenComponentSlot(upgrade.getSlotType(), upgrade.getIconType(), this, slot.x - 1, slot.y - 1,
+					upgrade.getScreenNumbers()).setUpgrades(upgrade.getUpgrades());
+		} else if (slot instanceof IToggleableSlot type) {
 			return new ScreenComponentSlot(type.getSlotType(), type.getIconType(), this, slot.x - 1, slot.y - 1,
 					type.getScreenNumbers());
 		}

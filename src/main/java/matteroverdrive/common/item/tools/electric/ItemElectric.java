@@ -74,10 +74,7 @@ public class ItemElectric extends OverdriveItem {
 	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, level, tooltips, advanced);
-		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(),
-					h.getMaxEnergyStored()).withStyle(ChatFormatting.GRAY));
-		});
+		applyTooltip(stack, level, tooltips, advanced);
 	}
 
 	@Override
@@ -105,6 +102,13 @@ public class ItemElectric extends OverdriveItem {
 			});
 		}
 		super.readShareTag(stack, nbt);
+	}
+
+	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
+		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(),
+					h.getMaxEnergyStored()).withStyle(ChatFormatting.YELLOW));
+		});
 	}
 
 }

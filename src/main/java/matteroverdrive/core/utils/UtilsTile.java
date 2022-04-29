@@ -2,6 +2,7 @@ package matteroverdrive.core.utils;
 
 import java.util.HashSet;
 
+import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.tile.GenericTile;
@@ -69,6 +70,12 @@ public class UtilsTile {
 
 	public static boolean adjacentRedstoneSignal(GenericTile tile) {
 		return tile.getLevel().hasNeighborSignal(tile.getBlockPos());
+	}
+
+	public static void updateLit(GenericTile tile, Boolean value) {
+		Level world = tile.getLevel();
+		BlockPos pos = tile.getBlockPos();
+		world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(BlockLightableMachine.LIT, value));
 	}
 
 }

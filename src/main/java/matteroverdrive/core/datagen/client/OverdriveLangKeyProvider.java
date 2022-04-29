@@ -4,6 +4,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import net.minecraft.data.DataGenerator;
@@ -48,6 +49,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_PLASMA_SHOTGUN, "Plasma Shotgun");
 			addItem(DeferredRegisters.ITEM_OMNI_TOOL, "Omni Tool");
 
+			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR), "Battery");
+			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "High-Capacity Battery");
+			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
+
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				addBlock(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
@@ -66,8 +71,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			}
 			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
+			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
 
 			addTooltip("energystored", "%1$s / %2$s FE");
+			addTooltip("creativeenergystored", "INFINITE");
 			addTooltip("matterval", "Matter: %s");
 			addTooltip("potmatterval", "Potential Matter: %s");
 			addTooltip("nomatter", "NONE");
@@ -118,6 +125,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer("solar_panel", "Solar Panel");
 			addContainer("matter_decomposer", "Matter Decomposer");
+			addContainer("matter_recycler", "Matter Recycler");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

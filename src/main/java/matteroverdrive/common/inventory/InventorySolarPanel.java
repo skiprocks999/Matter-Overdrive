@@ -25,8 +25,8 @@ public class InventorySolarPanel extends GenericInventoryTile<TileSolarPanel> {
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }, UPGRADES));
 	}
 
 	@Override

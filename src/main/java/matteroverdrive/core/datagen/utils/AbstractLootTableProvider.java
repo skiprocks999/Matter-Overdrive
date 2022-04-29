@@ -46,8 +46,9 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
 				.add(LootItem.lootTableItem(block)
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("inventory",
-								"BlockEntityTag.inventory", CopyNbtFunction.MergeStrategy.REPLACE))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+								.copy("inventory", "BlockEntityTag.inventory", CopyNbtFunction.MergeStrategy.REPLACE)
+								.copy("additional", "BlockEntityTag.additional", CopyNbtFunction.MergeStrategy.REPLACE))
 						.apply(SetContainerContents.setContents(type)
 								.withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents")))));
 		return LootTable.lootTable().withPool(builder);
@@ -59,18 +60,19 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
 						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 								.copy("inventory", "BlockEntityTag.inventory", CopyNbtFunction.MergeStrategy.REPLACE)
-								.copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE))
+								.copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)
+								.copy("additional", "BlockEntityTag.additional", CopyNbtFunction.MergeStrategy.REPLACE))
 						.apply(SetContainerContents.setContents(type)
 								.withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents")))));
 		return LootTable.lootTable().withPool(builder);
 	}
 
 	protected LootTable.Builder energyTable(String name, Block block, BlockEntityType<?> type) {
-		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
-				.add(LootItem.lootTableItem(block)
-						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("energy",
-								"BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)));
+		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem
+				.lootTableItem(block).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+				.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+						.copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)
+						.copy("additional", "BlockEntityTag.additional", CopyNbtFunction.MergeStrategy.REPLACE)));
 		return LootTable.lootTable().withPool(builder);
 	}
 
@@ -81,7 +83,8 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 								.copy("inventory", "BlockEntityTag.inventory", CopyNbtFunction.MergeStrategy.REPLACE)
 								.copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE)
-								.copy("matter", "BlockEntityTag.matter", CopyNbtFunction.MergeStrategy.REPLACE))
+								.copy("matter", "BlockEntityTag.matter", CopyNbtFunction.MergeStrategy.REPLACE)
+								.copy("additional", "BlockEntityTag.additional", CopyNbtFunction.MergeStrategy.REPLACE))
 						.apply(SetContainerContents.setContents(type)
 								.withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents")))));
 		return LootTable.lootTable().withPool(builder);

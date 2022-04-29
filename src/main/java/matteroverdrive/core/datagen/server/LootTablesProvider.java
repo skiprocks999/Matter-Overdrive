@@ -1,9 +1,16 @@
 package matteroverdrive.core.datagen.server;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.common.tile.TileMatterDecomposer;
+import matteroverdrive.common.tile.TileMatterRecycler;
+import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.datagen.utils.AbstractLootTableProvider;
+import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.registries.RegistryObject;
 
 public class LootTablesProvider extends AbstractLootTableProvider {
 
@@ -13,16 +20,34 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 
 	@Override
 	protected void addTables() {
-		for (Block block : DeferredRegisters.TRITANIUM_CRATES.<Block>getAllObjects()) {
-			lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block,
-					DeferredRegisters.TILE_TRITANIUM_CRATE.get()));
+
+		for (RegistryObject<Block> crate : DeferredRegisters.TRITANIUM_CRATES.getAll()) {
+			this.<TileTritaniumCrate>addITable(crate, DeferredRegisters.TILE_TRITANIUM_CRATE);
 		}
-		Block solarPanel = DeferredRegisters.BLOCK_SOLAR_PANEL.get();
-		lootTables.put(solarPanel, itemAndEnergyTable(solarPanel.getRegistryName().getPath(), solarPanel,
-				DeferredRegisters.TILE_SOLAR_PANEL.get()));
-		Block matterDecomposer = DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get();
-		lootTables.put(matterDecomposer, itemEnergyMatterTable(matterDecomposer.getRegistryName().getPath(),
-				matterDecomposer, DeferredRegisters.TILE_MATTER_DECOMPOSER.get()));
+		this.<TileSolarPanel>addIETable(DeferredRegisters.BLOCK_SOLAR_PANEL, DeferredRegisters.TILE_SOLAR_PANEL);
+		this.<TileMatterDecomposer>addIEMTable(DeferredRegisters.BLOCK_MATTER_DECOMPOSER,
+				DeferredRegisters.TILE_MATTER_DECOMPOSER);
+		this.<TileMatterRecycler>addIETable(DeferredRegisters.BLOCK_MATTER_RECYCLER,
+				DeferredRegisters.TILE_MATTER_RECYCLER);
+
+	}
+
+	private <T extends GenericTile> void addITable(RegistryObject<Block> reg,
+			RegistryObject<BlockEntityType<T>> tilereg) {
+		Block block = reg.get();
+		lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block, tilereg.get()));
+	}
+
+	private <T extends GenericTile> void addIETable(RegistryObject<Block> reg,
+			RegistryObject<BlockEntityType<T>> tilereg) {
+		Block block = reg.get();
+		lootTables.put(block, itemAndEnergyTable(block.getRegistryName().getPath(), block, tilereg.get()));
+	}
+
+	private <T extends GenericTile> void addIEMTable(RegistryObject<Block> reg,
+			RegistryObject<BlockEntityType<T>> tilereg) {
+		Block block = reg.get();
+		lootTables.put(block, itemEnergyMatterTable(block.getRegistryName().getPath(), block, tilereg.get()));
 	}
 
 }

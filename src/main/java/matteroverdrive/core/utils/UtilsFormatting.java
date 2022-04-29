@@ -16,16 +16,16 @@ public class UtilsFormatting {
 			return FORMAT.format(matterValue / 1000000.0) + "M kM";
 		}
 	}
-	
+
 	public static String formatTimeValue(double time) {
 		if (time > 0.1) {
 			return FORMAT.format(time) + " s";
-		} 
-		
+		}
+
 		time = time * 1000;
 		return FORMAT.format(time) + " ms";
 	}
-	
+
 	public static String formatPowerValue(double power) {
 		if (power < 1000) {
 			return FORMAT.format(power) + " FE";
@@ -36,7 +36,7 @@ public class UtilsFormatting {
 			return FORMAT.format(power / 1000000.0) + "M FE";
 		}
 	}
-	
+
 	public static String formatPercentage(double percentage) {
 		return FORMAT.format(percentage) + "%";
 	}

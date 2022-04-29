@@ -31,7 +31,7 @@ public class ScreenComponentLabel extends ScreenComponent {
 	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
 		Font font = gui.getFontRenderer();
 		font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation, fontColor);
-		
+
 	}
 
 }

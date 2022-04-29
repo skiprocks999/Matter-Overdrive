@@ -68,7 +68,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2 }));
 		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 },
 				new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
-		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] {2}, () -> menu.getTile()));
+		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
 	}
 
 	@Override

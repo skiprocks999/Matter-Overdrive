@@ -21,6 +21,11 @@
                   "source": "inventory",
                   "target": "BlockEntityTag.inventory",
                   "op": "replace"
+                },
+                {
+                  "source": "additional",
+                  "target": "BlockEntityTag.additional",
+                  "op": "replace"
                 }
               ]
             },

@@ -1,15 +1,22 @@
 package matteroverdrive.core.screen.component;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.utils.ScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 
 public class ScreenComponentSlot extends ScreenComponent {
 
@@ -17,6 +24,8 @@ public class ScreenComponentSlot extends ScreenComponent {
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
 	private ScreenComponentIcon icon = null;
+
+	private UpgradeType[] upgradeSlotTypes;
 
 	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y,
 			final int[] screenNumbers) {
@@ -33,9 +42,15 @@ public class ScreenComponentSlot extends ScreenComponent {
 		}
 	}
 
+	public ScreenComponentSlot setUpgrades(UpgradeType[] types) {
+		this.upgradeSlotTypes = types;
+		return this;
+	}
+
 	@Override
 	public Rectangle getBounds(final int guiWidth, final int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, type.getWidth(), type.getHeight());
+		return new Rectangle(guiWidth + xLocation + type.getXOffset(), guiHeight + yLocation + type.getYOffset(),
+				type.getWidth(), type.getHeight());
 	}
 
 	@Override
@@ -53,6 +68,22 @@ public class ScreenComponentSlot extends ScreenComponent {
 			int heightOffset = (int) ((type.getHeight() - iType.getTextHeight()) / 2);
 			icon.renderBackground(stack, xAxis, yAxis, guiWidth + widthOffset + type.getXOffset(),
 					guiHeight + heightOffset + type.getYOffset());
+		}
+	}
+
+	@Override
+	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
+		if (isPointInRegion(xLocation + type.getXOffset(), yLocation + type.getYOffset(), xAxis, yAxis, type.getWidth(),
+				type.getHeight())) {
+			if (upgradeSlotTypes != null && Screen.hasShiftDown()) {
+				List<FormattedCharSequence> components = new ArrayList<>();
+				for (UpgradeType upgrade : upgradeSlotTypes) {
+					components.add(new TranslatableComponent(
+							DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
+									.getVisualOrderText());
+				}
+				gui.displayTooltips(stack, components, xAxis, yAxis);
+			}
 		}
 	}
 

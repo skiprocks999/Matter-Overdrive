@@ -14,6 +14,7 @@ public class SoundRegister {
 	public static final RegistryObject<SoundEvent> SOUND_CRATE_OPEN = sound("crate_open");
 	public static final RegistryObject<SoundEvent> SOUND_CRATE_CLOSE = sound("crate_close");
 	public static final RegistryObject<SoundEvent> SOUND_DECOMPOSER = sound("matter_decomposer");
+	public static final RegistryObject<SoundEvent> SOUND_RECYCLER = sound("matter_recycler");
 
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_EXPAND = sound("button_expand");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_SOFT0 = sound("button_soft0");

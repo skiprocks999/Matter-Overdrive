@@ -1,6 +1,8 @@
 package matteroverdrive.core.screen.component;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,6 +14,7 @@ import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 
 public class ScreenComponentCharge extends ScreenComponent {
 
@@ -50,24 +53,25 @@ public class ScreenComponentCharge extends ScreenComponent {
 	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
 		if (isPointInRegion(xLocation, yLocation, xAxis, yAxis, isMatter ? matterWidth : energyWidth,
 				isMatter ? matterHeight : energyHeight)) {
+			List<FormattedCharSequence> components = new ArrayList<>();
 			String storeLoc = isMatter ? "tooltip.matteroverdrive.matterstored"
 					: "tooltip.matteroverdrive.energystored";
-			gui.displayTooltip(stack,
-					new TranslatableComponent(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble()), xAxis,
-					yAxis);
-			String usageLoc = isMatter ? "tooltip.matteroverdrive.matterusage" : "tooltip.matteroverdrive.energyusage";
+			components.add(new TranslatableComponent(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble())
+					.getVisualOrderText());
+
 			double use = usage.getAsDouble();
 			if (use > 0) {
+				String usageLoc = isMatter ? "tooltip.matteroverdrive.matterusage"
+						: "tooltip.matteroverdrive.energyusage";
 				if (isGenerator) {
-					gui.displayTooltip(stack,
-							new TranslatableComponent(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN), xAxis,
-							yAxis + 10);
+					components.add(new TranslatableComponent(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN)
+							.getVisualOrderText());
 				} else {
-					gui.displayTooltip(stack,
-							new TranslatableComponent(usageLoc, "-" + use).withStyle(ChatFormatting.RED), xAxis,
-							yAxis + 10);
+					components.add(new TranslatableComponent(usageLoc, "-" + use).withStyle(ChatFormatting.RED)
+							.getVisualOrderText());
 				}
 			}
+			gui.displayTooltips(stack, components, xAxis, yAxis);
 		}
 	}
 

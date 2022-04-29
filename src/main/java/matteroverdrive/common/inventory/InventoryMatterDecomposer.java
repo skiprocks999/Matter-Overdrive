@@ -39,10 +39,10 @@ public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDe
 				IconType.MATTER_DUST_DARK));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), -29, 75, new int[] { 0 }));
 		addSlot(new SlotMatterCharging(invcap, nextIndex(), 84, 48, new int[] { 0 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 44, 55, new int[] { 2 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 116, 55, new int[] { 2 }));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 44, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 116, 55, new int[] { 2 }, UPGRADES));
 
 	}
 

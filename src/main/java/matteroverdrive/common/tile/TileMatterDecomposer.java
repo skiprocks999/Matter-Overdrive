@@ -11,33 +11,33 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.matter.MatterUtils;
-import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.tile.IRedstoneMode;
-import matteroverdrive.core.tile.utils.IUpgradableTile;
+import matteroverdrive.core.sound.TickableSoundTile;
+import matteroverdrive.core.tile.GenericSoundTile;
+import matteroverdrive.core.tile.IRedstoneModeTile;
+import matteroverdrive.core.tile.IUpgradableTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, IUpgradableTile {
+public class TileMatterDecomposer extends GenericSoundTile implements IRedstoneModeTile, IUpgradableTile {
 
 	public static final int SLOT_COUNT = 8;
-	
+
 	public static final int OPERATING_TIME = 500;
 	private static final int USAGE_PER_TICK = 80;
 	private static final float FAILURE_CHANCE = 0.005F;
 	private static final int MATTER_STORAGE = 1024;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
-	
+
 	private int currRedstoneMode;
 	private boolean running = false;
 	private double currRecipeValue = 0;
@@ -46,15 +46,16 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	private float currFailureChance = FAILURE_CHANCE;
 	private int usage = USAGE_PER_TICK;
 	private boolean isMuffled = false;
-	
+
 	public int clientRedstoneMode;
-	public boolean clientRunning;
 	public int clientEnergyUsage;
 	public double clientRecipeValue;
 	public double clientProgress;
 	public double clientSpeed;
 	public float clientFailure;
 	private boolean clientMuffled;
+	public boolean clientRunning;
+	private boolean clientSoundPlaying = false;
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
@@ -67,16 +68,18 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setDefaultDirections(state,
-				new Direction[] { Direction.WEST, Direction.EAST }, null));
-		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this).setDefaultDirections(state, null,
-				new Direction[] { Direction.SOUTH }));
+		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
+		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this)
+				.setDefaultDirections(state, null, new Direction[] { Direction.SOUTH }));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
 				getContainerName("matter_decomposer")));
 		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));
+				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
+		setRenderPacketHandler(
+				new PacketHandler(this, false).packetReader(this::clientTileLoad).packetWriter(this::clientTileSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
 	}
 
@@ -112,6 +115,7 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 									} else {
 										output.grow(1);
 									}
+									input.shrink(1);
 								}
 								currProgress = 0;
 							}
@@ -139,29 +143,89 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 		}
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
 		if (currState && !running) {
-			updateState(Boolean.FALSE);
+			UtilsTile.updateLit(this, Boolean.FALSE);
 		} else if (!currState && running) {
-			updateState(Boolean.TRUE);
+			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 
-		if (running && !isMuffled && ticker.getTicks() % 42 == 0) {
-			getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_DECOMPOSER.get(), SoundSource.BLOCKS, 0.5F,
-					1.0F);
-		}
-	}
-
-	private float roll() {
-		return MatterOverdrive.RANDOM.nextFloat();
-	}
-
-	private void updateState(Boolean value) {
-		Level world = getLevel();
-		BlockPos pos = getBlockPos();
-		world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(BlockLightableMachine.LIT, value));
 	}
 
 	private void tickClient(Ticker ticker) {
+		if (shouldPlaySound() && !clientSoundPlaying) {
+			clientSoundPlaying = true;
+			Minecraft.getInstance().getSoundManager()
+					.play(new TickableSoundTile(SoundRegister.SOUND_DECOMPOSER.get(), this));
+		}
+	}
 
+	private void clientMenuSave(CompoundTag tag) {
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		tag.put(inv.getSaveKey(), inv.serializeNBT());
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		tag.put(energy.getSaveKey(), energy.serializeNBT());
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		tag.put(matter.getSaveKey(), matter.serializeNBT());
+
+		tag.putInt("redstone", currRedstoneMode);
+		tag.putInt("usage", usage);
+		tag.putDouble("recipe", currRecipeValue);
+		tag.putDouble("progress", currProgress);
+		tag.putDouble("speed", currSpeed);
+		tag.putFloat("failure", currFailureChance);
+	}
+
+	private void clientMenuLoad(CompoundTag tag) {
+		clientInventory = new CapabilityInventory();
+		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
+		clientEnergy = new CapabilityEnergyStorage(0, false, false);
+		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
+		clientMatter = new CapabilityMatterStorage(0, false, false);
+		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
+
+		clientRedstoneMode = tag.getInt("redstone");
+		clientEnergyUsage = tag.getInt("usage");
+		clientRecipeValue = tag.getDouble("recipe");
+		clientProgress = tag.getDouble("progress");
+		clientSpeed = tag.getDouble("speed");
+		clientFailure = tag.getFloat("failure");
+	}
+
+	private void clientTileSave(CompoundTag tag) {
+		tag.putBoolean("running", running);
+		tag.putBoolean("muffled", isMuffled);
+	}
+
+	private void clientTileLoad(CompoundTag tag) {
+		clientRunning = tag.getBoolean("running");
+		clientMuffled = tag.getBoolean("muffled");
+	}
+
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+
+		CompoundTag additional = new CompoundTag();
+		saveMode(additional);
+		additional.putDouble("progress", currProgress);
+		additional.putDouble("speed", currSpeed);
+		additional.putFloat("failure", currFailureChance);
+		additional.putInt("usage", usage);
+		additional.putBoolean("muffled", isMuffled);
+
+		tag.put("additional", additional);
+	}
+
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+
+		CompoundTag additional = tag.getCompound("additional");
+		loadMode(additional);
+		currProgress = additional.getDouble("progress");
+		currSpeed = additional.getDouble("speed");
+		currFailureChance = additional.getFloat("failure");
+		usage = additional.getInt("usage");
+		isMuffled = additional.getBoolean("muffled");
 	}
 
 	@Override
@@ -180,65 +244,19 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-		saveMode(tag);
-		tag.putDouble("progress", currProgress);
-		tag.putDouble("speed", currSpeed);
-		tag.putFloat("failure", currFailureChance);
-		tag.putInt("usage", usage);
-		tag.putBoolean("muffled", isMuffled);
-	}
-
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-		loadMode(tag);
-		currProgress = tag.getDouble("progress");
-		currSpeed = tag.getDouble("speed");
-		currFailureChance = tag.getFloat("failure");
-		usage = tag.getInt("usage");
-		isMuffled = tag.getBoolean("muffled");
-	}
-
-	private void clientSave(CompoundTag tag) {
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putBoolean("running", running);
-		tag.putInt("usage", usage);
-		tag.putDouble("recipe", currRecipeValue);
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
-		tag.put(matter.getSaveKey(), matter.serializeNBT());
-		tag.putDouble("progress", currProgress);
-		tag.putDouble("speed", currSpeed);
-		tag.putFloat("failure", currFailureChance);
-		tag.putBoolean("muffled", isMuffled);
-	}
-
-	private void clientLoad(CompoundTag tag) {
-		clientRedstoneMode = tag.getInt("redstone");
-		clientRunning = tag.getBoolean("running");
-		clientEnergyUsage = tag.getInt("usage");
-		clientRecipeValue = tag.getDouble("recipe");
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientMatter = new CapabilityMatterStorage(0, false, false);
-		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
-		clientProgress = tag.getDouble("progress");
-		clientSpeed = tag.getDouble("speed");
-		clientFailure = tag.getFloat("failure");
-		clientMuffled = tag.getBoolean("muffled");
-	}
-
-	@Override
 	public boolean canRun() {
 		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
 		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
+	}
+
+	@Override
+	public boolean shouldPlaySound() {
+		return clientRunning && !clientMuffled;
+	}
+
+	@Override
+	public void setNotPlaying() {
+		clientSoundPlaying = false;
 	}
 
 	@Override
@@ -270,9 +288,9 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	public boolean isMuffled(boolean clientSide) {
 		return clientSide ? clientMuffled : isMuffled;
 	}
-	
+
 	@Override
-	public double getCurrentSpeed(boolean clientSide) { 
+	public double getCurrentSpeed(boolean clientSide) {
 		return clientSide ? clientSpeed : currSpeed;
 	}
 
@@ -282,13 +300,15 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	}
 
 	@Override
-	public double getCurrentMatterStorage(boolean clientSide) { 
-		return clientSide ? clientMatter.getMaxMatterStored() : this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
+	public double getCurrentMatterStorage(boolean clientSide) {
+		return clientSide ? clientMatter.getMaxMatterStored()
+				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored()
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
 	}
 
 	@Override
@@ -327,10 +347,14 @@ public class TileMatterDecomposer extends GenericTile implements IRedstoneMode, 
 	public void setMuffled(boolean muffled) {
 		isMuffled = muffled;
 	}
-	
+
 	@Override
 	public int getProcessingTime() {
 		return OPERATING_TIME;
+	}
+
+	private float roll() {
+		return MatterOverdrive.RANDOM.nextFloat();
 	}
 
 }

@@ -20,6 +20,13 @@
 			"matteroverdrive:block/matter_decomposer"
 		]
 	},
+	"matter_recycler": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.matter_recycler",
+		"sounds": [
+			"matteroverdrive:block/matter_recycler"
+		]
+	},
 	"button_expand": {
 		"category": "master",
 		"subtitle": "subtitles.matteroverdrive.button_expand",
