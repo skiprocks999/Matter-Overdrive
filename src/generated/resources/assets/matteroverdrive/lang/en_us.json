@@ -118,7 +118,7 @@
   "subtitles.matteroverdrive.matter_decomposer": "Matter Decomposer running",
   "tooltip.matteroverdrive.closemenu": "Close Menu",
   "tooltip.matteroverdrive.creativeenergystored": "INFINITE",
-  "tooltip.matteroverdrive.energystored": "%1$s / %2$s FE",
+  "tooltip.matteroverdrive.energystored": "%1$s / %2$s %3$sFE",
   "tooltip.matteroverdrive.energyusage": "%s FE",
   "tooltip.matteroverdrive.failurebonus": "Failure: %s",
   "tooltip.matteroverdrive.io": "%1$s (%2$s)",

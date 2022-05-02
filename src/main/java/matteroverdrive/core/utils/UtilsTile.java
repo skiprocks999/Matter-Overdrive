@@ -5,9 +5,11 @@ import java.util.HashSet;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
@@ -63,6 +65,22 @@ public class UtilsTile {
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+
+	public static void drainElectricSlot(GenericTile tile) {
+		CapabilityInventory inv = tile.exposeCapability(CapabilityType.Item);
+		CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityType.Energy);
+		for (ItemStack stack : inv.getEnergyItems()) {
+			if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+				IEnergyStorage storage = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve()
+						.get();
+				if (storage.canExtract()) {
+					int accepted = energy.receiveEnergy(storage.getEnergyStored(), true);
+					energy.receiveEnergy(accepted, false);
+					storage.extractEnergy(accepted, false);
 				}
 			}
 		}

@@ -5,10 +5,12 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.sound.TickableSoundTile;
@@ -85,6 +87,7 @@ public class TileMatterDecomposer extends GenericSoundTile implements IRedstoneM
 
 	private void tickServer(Ticker ticker) {
 		if (canRun()) {
+			UtilsTile.drainElectricSlot(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
 			if (!input.isEmpty()) {
@@ -94,6 +97,8 @@ public class TileMatterDecomposer extends GenericSoundTile implements IRedstoneM
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 					if (energy.getEnergyStored() >= USAGE_PER_TICK) {
 						currRecipeValue = matterVal.doubleValue();
+						currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
+								.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
 						CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);
 						boolean room = (storage.getMaxMatterStored() - storage.getMatterStored()) >= currRecipeValue;
 						ItemStack output = inv.getOutputs().get(0);

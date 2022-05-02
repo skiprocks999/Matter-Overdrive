@@ -1,3 +1,35 @@
 {
-	"parent": "matteroverdrive:item/battery/battery"
+	"parent": "matteroverdrive:item/battery/battery",
+	"overrides": [
+		{
+			"predicate": {
+				"charge": 1.0
+			},
+			"model": "matteroverdrive:item/battery/battery0"
+		},
+		{
+			"predicate": {
+				"charge": 2.0
+			},
+			"model": "matteroverdrive:item/battery/battery1"
+		},
+		{
+			"predicate": {
+				"charge": 3.0
+			},
+			"model": "matteroverdrive:item/battery/battery2"
+		},
+		{
+			"predicate": {
+				"charge": 4.0
+			},
+			"model": "matteroverdrive:item/battery/battery3"
+		},
+		{
+			"predicate": {
+				"charge": 5.0
+			},
+			"model": "matteroverdrive:item/battery/battery4"
+		}
+	]
 }

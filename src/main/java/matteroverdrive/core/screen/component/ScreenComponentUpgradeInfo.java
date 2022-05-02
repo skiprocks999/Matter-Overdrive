@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.utils.ScreenComponent;
 import matteroverdrive.core.tile.IUpgradableTile;
-import matteroverdrive.core.utils.UtilsFormatting;
+import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -44,8 +44,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currSpeed = owner.getCurrentSpeed(true);
 			double operatingTime = owner.getProcessingTime();
 			if (currSpeed > 0 && owner.getDefaultSpeed() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.time",
-						UtilsFormatting.formatTimeValue(operatingTime / currSpeed / 20.0));
+				component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
 				color = currSpeed >= owner.getDefaultSpeed() ? GREEN : RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -53,8 +52,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currPowerUsage = owner.getCurrentPowerUsage(true);
 			if (currPowerUsage > 0 && owner.getDefaultPowerUsage() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.usage",
-						UtilsFormatting.formatPowerValue(currPowerUsage));
+				component = UtilsText.gui("usage", UtilsText.formatPowerValue(currPowerUsage));
 				color = currPowerUsage > owner.getDefaultPowerUsage() ? RED : GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -62,8 +60,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currMatterUsage = owner.getCurrentMatterUsage(true);
 			if (currMatterUsage > 0 && owner.getDefaultMatterUsage() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.usage",
-						UtilsFormatting.formatMatterValue(currMatterUsage));
+				component = UtilsText.gui("usage", UtilsText.formatMatterValue(currMatterUsage));
 				color = currMatterUsage > owner.getDefaultMatterUsage() ? RED : GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -71,8 +68,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			float failureChance = owner.getCurrentFailure(true);
 			if (owner.getDefaultFailure() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.failure",
-						UtilsFormatting.formatPercentage(failureChance * 100));
+				component = UtilsText.gui("failure", UtilsText.formatPercentage(failureChance * 100));
 				color = failureChance > owner.getDefaultFailure() ? RED : GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -80,7 +76,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			int range = (int) owner.getCurrentRange(true);
 			if (owner.getDefaultRange() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.range", range);
+				component = UtilsText.gui("range", range);
 				color = range >= owner.getDefaultRange() ? GREEN : RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -88,8 +84,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currPowerStorage = owner.getCurrentPowerStorage(true);
 			if (currPowerStorage > 0 && owner.getDefaultPowerStorage() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.storage",
-						UtilsFormatting.formatPowerValue(currPowerStorage));
+				component = UtilsText.gui("storage", UtilsText.formatPowerValue(currPowerStorage));
 				color = currPowerStorage >= owner.getDefaultPowerStorage() ? GREEN : RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -97,14 +92,13 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currMatterStorage = owner.getCurrentMatterStorage(true);
 			if (currMatterStorage > 0 && owner.getDefaultMatterStorage() > 0) {
-				component = new TranslatableComponent("gui.matteroverdrive.storage",
-						UtilsFormatting.formatMatterValue(currMatterStorage));
+				component = UtilsText.gui("storage", UtilsText.formatMatterValue(currMatterStorage));
 				color = currMatterStorage >= owner.getDefaultMatterStorage() ? GREEN : RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
 			if (owner.isMuffled(true)) {
-				font.draw(stack, new TranslatableComponent("gui.matteroverdrive.soundmuted"), guiWidth + this.xLocation,
+				font.draw(stack, UtilsText.gui("soundmuted"), guiWidth + this.xLocation,
 						guiHeight + this.yLocation + offset, GREEN);
 			}
 

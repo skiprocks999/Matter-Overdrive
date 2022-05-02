@@ -17,8 +17,8 @@ import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
@@ -66,8 +66,8 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 			return false;
 		}, this, -31, 159, new int[] { 0, 1, 2 }));
 		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 },
-				new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
+		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+				UtilsRendering.TEXT_BLUE));
 		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
 	}
 

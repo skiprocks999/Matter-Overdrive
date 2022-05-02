@@ -11,8 +11,8 @@ import matteroverdrive.References;
 import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.utils.ScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -54,21 +54,19 @@ public class ScreenComponentCharge extends ScreenComponent {
 		if (isPointInRegion(xLocation, yLocation, xAxis, yAxis, isMatter ? matterWidth : energyWidth,
 				isMatter ? matterHeight : energyHeight)) {
 			List<FormattedCharSequence> components = new ArrayList<>();
-			String storeLoc = isMatter ? "tooltip.matteroverdrive.matterstored"
-					: "tooltip.matteroverdrive.energystored";
-			components.add(new TranslatableComponent(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble())
+			String storeLoc = isMatter ? "matterstored" : "energystored";
+			components.add(UtilsText.tooltip(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble())
 					.getVisualOrderText());
 
 			double use = usage.getAsDouble();
 			if (use > 0) {
-				String usageLoc = isMatter ? "tooltip.matteroverdrive.matterusage"
-						: "tooltip.matteroverdrive.energyusage";
+				String usageLoc = isMatter ? "matterusage" : "energyusage";
 				if (isGenerator) {
-					components.add(new TranslatableComponent(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN)
+					components.add(UtilsText.tooltip(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN)
 							.getVisualOrderText());
 				} else {
-					components.add(new TranslatableComponent(usageLoc, "-" + use).withStyle(ChatFormatting.RED)
-							.getVisualOrderText());
+					components.add(
+							UtilsText.tooltip(usageLoc, "+" + use).withStyle(ChatFormatting.RED).getVisualOrderText());
 				}
 			}
 			gui.displayTooltips(stack, components, xAxis, yAxis);

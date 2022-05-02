@@ -20,11 +20,18 @@
 			"matteroverdrive:block/matter_decomposer"
 		]
 	},
-	"matter_recycler": {
+	"machine": {
 		"category": "blocks",
-		"subtitle": "subtitles.matteroverdrive.matter_recycler",
+		"subtitle": "subtitles.matteroverdrive.generic_machine",
 		"sounds": [
-			"matteroverdrive:block/matter_recycler"
+			"matteroverdrive:block/machine"
+		]
+	},
+	"machine_electric": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.generic_machine",
+		"sounds": [
+			"matteroverdrive:block/machine_electric"
 		]
 	},
 	"button_expand": {

@@ -34,7 +34,7 @@ public class ScreenComponentIcon extends ScreenComponent {
 		UtilsRendering.color(color);
 		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(),
 				type.getTextWidth(), type.getTextHeight(), type.getTextWidth(), type.getTextHeight());
-		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
+		UtilsRendering.color(color);
 	}
 
 	public IconType getType() {

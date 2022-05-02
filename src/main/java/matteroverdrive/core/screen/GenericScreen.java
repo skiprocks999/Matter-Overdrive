@@ -65,7 +65,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		float length = font.width(this.title);
 		float offset = (144.0F - length) / 2.0F;
 		this.font.draw(stack, this.title, (float) this.titleLabelX + 3 + offset, (float) this.titleLabelY + 1,
-				UtilsRendering.getRGBA(1, 191, 228, 230));
+				UtilsRendering.TITLE_BLUE);
 		int xAxis = x - (width - imageWidth) / 2;
 		int yAxis = y - (height - imageHeight) / 2;
 		for (IGuiComponent component : components) {

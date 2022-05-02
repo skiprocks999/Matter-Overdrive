@@ -7,12 +7,12 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonMenuBar extends Button {
@@ -30,11 +30,9 @@ public class ButtonMenuBar extends Button {
 		super(pX, pY, 16, 143, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
 			if (bar.isExtended) {
-				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.closemenu"), mouseX,
-						mouseY);
+				bar.gui.displayTooltip(stack, UtilsText.tooltip("closemenu"), mouseX, mouseY);
 			} else {
-				bar.gui.displayTooltip(stack, new TranslatableComponent("tooltip.matteroverdrive.openmenu"), mouseX,
-						mouseY);
+				bar.gui.displayTooltip(stack, UtilsText.tooltip("openmenu"), mouseX, mouseY);
 			}
 		});
 		this.gui = owner;

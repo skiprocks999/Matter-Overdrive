@@ -74,6 +74,7 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 
 	private void tickServer(Ticker ticker) {
 		if (canRun()) {
+			UtilsTile.drainElectricSlot(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
 			if (!input.isEmpty() && MatterUtils.isRawDust(input)) {
@@ -130,7 +131,7 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
 			Minecraft.getInstance().getSoundManager()
-					.play(new TickableSoundTile(SoundRegister.SOUND_RECYCLER.get(), this, 1.0F, 1.0F));
+					.play(new TickableSoundTile(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F));
 		}
 	}
 

@@ -8,6 +8,7 @@ import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -89,14 +90,10 @@ public class ButtonMenuOption extends Button {
 
 	public enum MenuButtonType {
 
-		HOME(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_HOME,
-				new TranslatableComponent("tooltip.matteroverdrive.menuhome")),
-		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH,
-				new TranslatableComponent("tooltip.matteroverdrive.menusettings")),
-		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES,
-				new TranslatableComponent("tooltip.matteroverdrive.menuupgrades")),
-		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR,
-				new TranslatableComponent("tooltip.matteroverdrive.menuio"));
+		HOME(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_HOME, UtilsText.tooltip("menuhome")),
+		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH, UtilsText.tooltip("menusettings")),
+		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES, UtilsText.tooltip("menuupgrades")),
+		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("matteroverdrive.menuio"));
 
 		public final SlotType defaultSlot;
 		public final SlotType activeSlot;

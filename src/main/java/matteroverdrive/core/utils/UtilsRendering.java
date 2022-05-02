@@ -6,6 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public class UtilsRendering {
 
+	public static final int TEXT_BLUE = getRGBA(1, 169, 226, 251);
+	public static final int TITLE_BLUE = getRGBA(1, 191, 228, 230);
+
 	public static void bindTexture(ResourceLocation resource) {
 		RenderSystem.setShaderTexture(0, resource);
 	}

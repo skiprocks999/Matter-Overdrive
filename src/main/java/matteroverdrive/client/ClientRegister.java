@@ -1,7 +1,6 @@
 package matteroverdrive.client;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenSolarPanel;
@@ -14,6 +13,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 
 public class ClientRegister {
 
+	private static final ResourceLocation CHARGE = new ResourceLocation("charge");
+
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
@@ -21,11 +22,12 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
 
-		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(),
-				new ResourceLocation("charge"), (stack, world, entity, call) -> {
+		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
+				(stack, world, entity, call) -> {
 					return stack.getCapability(CapabilityEnergy.ENERGY).map(m -> {
-						double chargeRatio = m.getMaxEnergyStored() > 0 ? m.getEnergyStored() / m.getMaxEnergyStored()
-								: 0;
+						double chargeRatio = m.getMaxEnergyStored() > 0
+								? (double) m.getEnergyStored() / (double) m.getMaxEnergyStored()
+								: 0.0;
 						if (chargeRatio >= 0.8) {
 							return 5;
 						} else if (chargeRatio >= 0.6) {
@@ -40,12 +42,12 @@ public class ClientRegister {
 						return 0;
 					}).orElse(0);
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY).get(),
-				new ResourceLocation("charge"), (stack, world, entity, call) -> {
+		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY).get(), CHARGE,
+				(stack, world, entity, call) -> {
 					return stack.getCapability(CapabilityEnergy.ENERGY).map(m -> {
-						double chargeRatio = m.getMaxEnergyStored() > 0 ? m.getEnergyStored() / m.getMaxEnergyStored()
-								: 0;
-						MatterOverdrive.LOGGER.info(chargeRatio + "");
+						double chargeRatio = m.getMaxEnergyStored() > 0
+								? (double) m.getEnergyStored() / (double) m.getMaxEnergyStored()
+								: 0.0;
 						if (chargeRatio >= 0.8) {
 							return 5;
 						} else if (chargeRatio >= 0.6) {

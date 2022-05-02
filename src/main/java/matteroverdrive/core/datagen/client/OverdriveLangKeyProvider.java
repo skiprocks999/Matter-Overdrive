@@ -73,7 +73,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
 
-			addTooltip("energystored", "%1$s / %2$s FE");
+			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
 			addTooltip("matterval", "Matter: %s");
 			addTooltip("potmatterval", "Potential Matter: %s");
@@ -139,6 +139,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("button_expand", "Button Shifts");
 			addSubtitle("button_generic", "Button is pressed");
 			addSubtitle("matter_decomposer", "Matter Decomposer running");
+			addSubtitle("generic_machine", "Machine runs");
 		}
 	}
 

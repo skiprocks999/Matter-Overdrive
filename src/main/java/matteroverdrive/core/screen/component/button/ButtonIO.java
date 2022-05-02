@@ -9,6 +9,7 @@ import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.component.IOConfigWrapper;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -47,9 +48,7 @@ public class ButtonIO extends Button {
 		super(x, Y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {
 		}, (button, stack, mouseX, mouseY) -> {
 			ButtonIO io = (ButtonIO) button;
-			TranslatableComponent text = new TranslatableComponent("tooltip.matteroverdrive.io", io.mode.name,
-					io.side.name);
-			owner.displayTooltip(stack, text, mouseX, mouseY);
+			owner.displayTooltip(stack, UtilsText.tooltip("io", io.mode.name, io.side.name), mouseX, mouseY);
 		});
 		this.startingMode = startingMode;
 		this.side = side;
@@ -181,7 +180,7 @@ public class ButtonIO extends Button {
 		public final TranslatableComponent name;
 
 		private IOMode() {
-			name = new TranslatableComponent("tooltip.matteroverdrive.io" + this.toString().toLowerCase());
+			name = UtilsText.tooltip("io" + this.toString().toLowerCase());
 		}
 	}
 
@@ -193,7 +192,7 @@ public class ButtonIO extends Button {
 		public final Direction mappedDir;
 
 		private BlockSide(Direction dir) {
-			name = new TranslatableComponent("tooltip.matteroverdrive.io" + this.toString().toLowerCase());
+			name = UtilsText.tooltip("io" + this.toString().toLowerCase());
 			mappedDir = dir;
 		}
 	}

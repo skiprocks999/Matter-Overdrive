@@ -25,10 +25,10 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler> {
@@ -93,13 +93,13 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 			return false;
 		}, this, -31, 159, new int[] { 0, 1, 2, 3 }));
 		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 },
-				new TranslatableComponent("gui.matteroverdrive.redstone"), UtilsRendering.getRGBA(1, 169, 226, 251)));
+		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+				UtilsRendering.TEXT_BLUE));
 		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 43, 42, new int[] { 3 },
-				new TranslatableComponent("gui.matteroverdrive.ioitems"), UtilsRendering.getRGBA(1, 169, 226, 251)));
-		components.add(new ScreenComponentLabel(this, 43, 80, new int[] { 3 },
-				new TranslatableComponent("gui.matteroverdrive.ioenergy"), UtilsRendering.getRGBA(1, 169, 226, 251)));
+		components.add(new ScreenComponentLabel(this, 43, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+				UtilsRendering.TEXT_BLUE));
+		components.add(new ScreenComponentLabel(this, 43, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+				UtilsRendering.TEXT_BLUE));
 	}
 
 	@Override

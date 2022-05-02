@@ -4,6 +4,7 @@ import java.util.List;
 
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -106,8 +107,12 @@ public class ItemElectric extends OverdriveItem {
 
 	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", h.getEnergyStored(),
-					h.getMaxEnergyStored()).withStyle(ChatFormatting.YELLOW));
+			int max = h.getMaxEnergyStored();
+			int base = UtilsText.getBigBase(max);
+			String stored = UtilsText.getFormattedBig(h.getEnergyStored(), base);
+			String maxE = UtilsText.getFormattedBig(max, base);
+			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", stored, maxE,
+					UtilsText.getPrefixForBase(base)).withStyle(ChatFormatting.YELLOW));
 		});
 	}
 
