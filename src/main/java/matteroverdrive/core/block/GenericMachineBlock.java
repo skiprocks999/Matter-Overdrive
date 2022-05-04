@@ -1,12 +1,18 @@
 package matteroverdrive.core.block;
 
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -48,6 +54,26 @@ public class GenericMachineBlock extends WaterloggableEntityBlock {
 		}
 		BlockEntity tile = level.getBlockEntity(pos);
 		if (tile instanceof GenericTile generic && generic != null) {
+			ItemStack stack = player.getItemInHand(hand);
+			if (UtilsCapability.hasMatterCap(stack)) {
+				if (generic.hasCapability(CapabilityType.Matter)) {
+					CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.Matter);
+					ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
+							.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
+					if (storage.canReceive() && matter.canExtract()) {
+						double accepted = storage.receiveMatter(matter.getMatterStored(), true);
+						storage.receiveMatter(accepted, false);
+						matter.extractMatter(accepted, false);
+						return InteractionResult.CONSUME;
+					}
+					if (storage.canExtract() && matter.canReceive()) {
+						double accepted = matter.receiveMatter(storage.getMatterStored(), true);
+						matter.receiveMatter(accepted, false);
+						storage.extractMatter(accepted, false);
+						return InteractionResult.CONSUME;
+					}
+				}
+			}
 			if (generic.hasMenu) {
 				player.openMenu(generic.getMenuProvider());
 			}

@@ -93,7 +93,7 @@ public class ButtonMenuOption extends Button {
 		HOME(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_HOME, UtilsText.tooltip("menuhome")),
 		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH, UtilsText.tooltip("menusettings")),
 		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES, UtilsText.tooltip("menuupgrades")),
-		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("matteroverdrive.menuio"));
+		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("menuio"));
 
 		public final SlotType defaultSlot;
 		public final SlotType activeSlot;

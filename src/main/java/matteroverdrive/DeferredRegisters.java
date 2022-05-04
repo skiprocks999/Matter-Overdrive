@@ -7,8 +7,10 @@ import org.apache.commons.compress.utils.Sets;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
+import matteroverdrive.common.block.BlockMultiSubnode;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
+import matteroverdrive.common.block.MultiBlockMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
@@ -18,13 +20,16 @@ import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.tools.ItemMatterContainer;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
+import matteroverdrive.common.tile.utils.TileMultiSubnode;
 import matteroverdrive.core.registers.BulkRegistryObject;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
@@ -94,6 +99,10 @@ public class DeferredRegisters {
 			TypeMachine.matter_recycler.toString(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.matter_recycler,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
+	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
+			() -> new BlockMultiSubnode());
+	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.charger.toString(),
+			() -> new MultiBlockMachine<TileCharger>(TileCharger::new, TypeMachine.charger, DeferredRegisters.TILE_CHARGER, MultiBlockMachine.CHARGER_NODES));
 
 	/* ITEMS */
 
@@ -124,6 +133,8 @@ public class DeferredRegisters {
 	public static final BulkRegistryObject<Item> ITEM_BATTERIES = new BulkRegistryObject<>(battery -> ITEMS
 			.register("battery_" + battery.toString().toLowerCase(), () -> new ItemBattery((BatteryType) battery)),
 			BatteryType.values());
+	public static final RegistryObject<Item> ITEM_MATTER_CONTAINER = ITEMS.register("matter_container",
+			() -> new ItemMatterContainer());
 
 	/* TILES */
 
@@ -139,6 +150,11 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterRecycler>> TILE_MATTER_RECYCLER = TILES.register(
 			TypeMachine.matter_recycler.toString(),
 			() -> new BlockEntityType<>(TileMatterRecycler::new, Sets.newHashSet(BLOCK_MATTER_RECYCLER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMultiSubnode>> TILE_MULTI_SUBNODE = TILES.register(
+			"multisubnode",
+			() -> new BlockEntityType<>(TileMultiSubnode::new, Sets.newHashSet(BLOCK_MULTI_SUBNODE.get()), null));
+	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(TypeMachine.charger.toString(), 
+			() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
 
 	/* MENUS */
 

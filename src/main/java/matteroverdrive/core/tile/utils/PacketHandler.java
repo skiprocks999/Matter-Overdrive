@@ -56,6 +56,10 @@ public class PacketHandler {
 		return customPacketReader;
 	}
 
+	public void sendCustomPacketNull() {
+		sendCustomPacket(null);
+	}
+
 	public void sendCustomPacket(@Nullable Player player) {
 		PacketUpdateTile packet = new PacketUpdateTile(this, owner.getBlockPos(), new CompoundTag(), isGuiPacket);
 		if (player != null && player instanceof ServerPlayer server) {

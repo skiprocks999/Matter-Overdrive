@@ -9,7 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -111,8 +110,8 @@ public class ItemElectric extends OverdriveItem {
 			int base = UtilsText.getBigBase(max);
 			String stored = UtilsText.getFormattedBig(h.getEnergyStored(), base);
 			String maxE = UtilsText.getFormattedBig(max, base);
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.energystored", stored, maxE,
-					UtilsText.getPrefixForBase(base)).withStyle(ChatFormatting.YELLOW));
+			tooltips.add(UtilsText.tooltip("energystored", stored, maxE, UtilsText.getPrefixForBase(base))
+					.withStyle(ChatFormatting.YELLOW));
 		});
 	}
 

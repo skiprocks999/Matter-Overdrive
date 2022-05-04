@@ -53,6 +53,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "High-Capacity Battery");
 			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
 
+			addItem(DeferredRegisters.ITEM_MATTER_CONTAINER, "Matter Container");
+
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				addBlock(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
@@ -72,6 +74,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
+			addBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "Multiblock Subnode");
+			addBlock(DeferredRegisters.BLOCK_CHARGER, "Charging Station");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
@@ -83,7 +87,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("menuhome", "Home");
 			addTooltip("menusettings", "Settings");
 			addTooltip("menuupgrades", "Upgrades");
-			addTooltip("matterstored", "%1$s / %2$s kM");
+			addTooltip("matterstored", "%1$s / %2$s %3$skM");
 			addTooltip("energyusage", "%s FE");
 			addTooltip("matterusage", "%s kM");
 			addTooltip("menuio", "I/O");

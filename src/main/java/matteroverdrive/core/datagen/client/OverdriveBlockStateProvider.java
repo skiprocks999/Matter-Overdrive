@@ -37,6 +37,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 			simpleBlock(DeferredRegisters.FLOOR_TILES.get(color).get(), floorTilesFile);
 		}
 		simpleBlock(DeferredRegisters.BLOCK_SOLAR_PANEL.get());
+		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE.get());
 	}
 
 }

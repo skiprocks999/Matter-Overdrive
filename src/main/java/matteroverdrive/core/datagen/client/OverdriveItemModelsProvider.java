@@ -32,7 +32,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
-
+		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "block/multisubnode");
+		
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
 		simpleItem(DeferredRegisters.ITEM_BASE_UPGRADE, "item/upgrade/upgrade_base");
@@ -54,6 +55,10 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
 		singleTexture(item.get().getRegistryName().getPath(), new ResourceLocation("item/generated"), "layer0",
 				new ResourceLocation(References.ID, textureLoc));
+	}
+	
+	private void simpleBlock(RegistryObject<Block> block, String textureLoc) {
+		cubeAll(block.get().getRegistryName().getPath(), new ResourceLocation(References.ID, textureLoc));
 	}
 
 }

@@ -1,0 +1,57 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/matter_container/container",
+		"layer1" : "matteroverdrive:item/matter_container/container_bottom_overlay"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"charge": 1.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container0"
+		},
+		{
+			"predicate": {
+				"charge": 2.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container1"
+		},
+		{
+			"predicate": {
+				"charge": 3.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container2"
+		},
+		{
+			"predicate": {
+				"charge": 4.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container3"
+		},
+		{
+			"predicate": {
+				"charge": 5.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container4"
+		},
+		{
+			"predicate": {
+				"charge": 6.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container5"
+		},
+		{
+			"predicate": {
+				"charge": 7.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container6"
+		},
+		{
+			"predicate": {
+				"charge": 8.0
+			},
+			"model": "matteroverdrive:item/matter_container/matter_container7"
+		}
+	]
+}

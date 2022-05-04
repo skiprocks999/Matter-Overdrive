@@ -88,6 +88,7 @@ public class TileMatterDecomposer extends GenericSoundTile implements IRedstoneM
 	private void tickServer(Ticker ticker) {
 		if (canRun()) {
 			UtilsTile.drainElectricSlot(this);
+			UtilsTile.fillMatterSlot(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
 			if (!input.isEmpty()) {

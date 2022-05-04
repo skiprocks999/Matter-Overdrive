@@ -3,9 +3,12 @@ package matteroverdrive.core.utils;
 import java.util.HashSet;
 
 import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -81,6 +84,22 @@ public class UtilsTile {
 					int accepted = energy.receiveEnergy(storage.getEnergyStored(), true);
 					energy.receiveEnergy(accepted, false);
 					storage.extractEnergy(accepted, false);
+				}
+			}
+		}
+	}
+
+	public static void fillMatterSlot(GenericTile tile) {
+		CapabilityInventory inv = tile.exposeCapability(CapabilityType.Item);
+		CapabilityMatterStorage matter = tile.exposeCapability(CapabilityType.Matter);
+		for (ItemStack stack : inv.getMatterItems()) {
+			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
+				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
+						.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
+				if (storage.canExtract()) {
+					double accepted = storage.receiveMatter(matter.getMatterStored(), true);
+					storage.receiveMatter(accepted, false);
+					matter.extractMatter(accepted, false);
 				}
 			}
 		}

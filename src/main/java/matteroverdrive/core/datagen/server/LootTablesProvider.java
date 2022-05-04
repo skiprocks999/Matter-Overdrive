@@ -1,6 +1,7 @@
 package matteroverdrive.core.datagen.server;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileSolarPanel;
@@ -29,6 +30,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 				DeferredRegisters.TILE_MATTER_DECOMPOSER);
 		this.<TileMatterRecycler>addIETable(DeferredRegisters.BLOCK_MATTER_RECYCLER,
 				DeferredRegisters.TILE_MATTER_RECYCLER);
+		this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.TILE_CHARGER);
 
 	}
 

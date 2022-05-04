@@ -5,10 +5,10 @@ import java.util.List;
 import matteroverdrive.References;
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.registers.IBulkRegistryObject;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,47 +28,39 @@ public class ItemUpgrade extends OverdriveItem {
 		super.appendHoverText(stack, level, tooltips, isAdvanced);
 		if (Screen.hasShiftDown()) {
 			if (type.speedBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.speedbonus",
-						(int) (type.speedBonus * 100) + "%")
-								.withStyle(type.speedBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
+				tooltips.add(UtilsText.tooltip("speedbonus", (int) (type.speedBonus * 100) + "%")
+						.withStyle(type.speedBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
 			}
 			if (type.matterStorageBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.mattstorebonus",
-						(int) (type.matterStorageBonus * 100) + "%")
-								.withStyle(type.matterStorageBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
+				tooltips.add(UtilsText.tooltip("mattstorebonus", (int) (type.matterStorageBonus * 100) + "%")
+						.withStyle(type.matterStorageBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
 			}
 			if (type.matterUsageBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.mattusebonus",
-						(int) (type.matterUsageBonus * 100) + "%")
-								.withStyle(type.matterUsageBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
+				tooltips.add(UtilsText.tooltip("mattusebonus", (int) (type.matterUsageBonus * 100) + "%")
+						.withStyle(type.matterUsageBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
 			}
 			if (type.failureChanceBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.failurebonus",
-						(int) (type.failureChanceBonus * 100) + "%")
-								.withStyle(type.failureChanceBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
+				tooltips.add(UtilsText.tooltip("failurebonus", (int) (type.failureChanceBonus * 100) + "%")
+						.withStyle(type.failureChanceBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
 			}
 			if (type.powerStorageBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.powstorebonus",
-						(int) (type.powerStorageBonus * 100) + "%")
-								.withStyle(type.powerStorageBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
+				tooltips.add(UtilsText.tooltip("powstorebonus", (int) (type.powerStorageBonus * 100) + "%")
+						.withStyle(type.powerStorageBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
 			}
 			if (type.powerUsageBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.powusebonus",
-						(int) (type.powerUsageBonus * 100) + "%")
-								.withStyle(type.powerUsageBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
+				tooltips.add(UtilsText.tooltip("powusebonus", (int) (type.powerUsageBonus * 100) + "%")
+						.withStyle(type.powerUsageBonus < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
 			}
 			if (type.rangeBonus != 1.0) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.rangebonus",
-						(int) (type.rangeBonus * 100) + "%")
-								.withStyle(type.rangeBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
+				tooltips.add(UtilsText.tooltip("rangebonus", (int) (type.rangeBonus * 100) + "%")
+						.withStyle(type.rangeBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
 			}
 			if (type == UpgradeType.MUFFLER) {
-				tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.mufflerupgrade")
-						.withStyle(ChatFormatting.GREEN));
+				tooltips.add(UtilsText.tooltip("mufflerupgrade").withStyle(ChatFormatting.GREEN));
 			}
 		} else {
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.upgradeinfo",
-					new TranslatableComponent("tooltip.matteroverdrive.upgradeshift").withStyle(ChatFormatting.YELLOW))
+			tooltips.add(
+					UtilsText.tooltip("upgradeinfo", UtilsText.tooltip("upgradeshift").withStyle(ChatFormatting.YELLOW))
 							.withStyle(ChatFormatting.GRAY));
 		}
 

@@ -1,0 +1,8 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/matter_container/container",
+		"layer1" : "matteroverdrive:item/matter_container/container_bottom_overlay",
+		"layer2" : "matteroverdrive:item/matter_container/container_overlay4"
+	}
+}

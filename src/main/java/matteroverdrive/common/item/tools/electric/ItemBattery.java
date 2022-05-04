@@ -7,11 +7,11 @@ import matteroverdrive.References;
 import matteroverdrive.core.capability.types.energy.CapabilityCreativeEnergyStorage;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -70,8 +70,7 @@ public class ItemBattery extends ItemElectric {
 	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		ItemBattery battery = (ItemBattery) stack.getItem();
 		if (battery.type == BatteryType.CREATIVE) {
-			tooltips.add(new TranslatableComponent("tooltip.matteroverdrive.creativeenergystored")
-					.withStyle(ChatFormatting.YELLOW));
+			tooltips.add(UtilsText.tooltip("creativeenergystored").withStyle(ChatFormatting.YELLOW));
 		} else {
 			super.applyTooltip(stack, level, tooltips, advanced);
 		}
