@@ -1,21 +1,7 @@
 {
   "variants": {
-		"facing=east": {
-			"model": "matteroverdrive:block/charger",
-			"y": 0
-		},
-		"facing=north": {
-			"model": "matteroverdrive:block/charger",
-			"y": 270
-		},
-		"facing=south": {
-			"model": "matteroverdrive:block/charger",
-			"y": 90
-		},
-		"facing=west": {
-			"model": "matteroverdrive:block/charger",
-			"y": 180
-		}
-	}
+    "": {
+      "model": "matteroverdrive:block/charger"
+    }
   }
 }

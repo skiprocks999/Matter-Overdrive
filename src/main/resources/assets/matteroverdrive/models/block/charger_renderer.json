@@ -1,0 +1,10 @@
+{
+	"parent" : "block/cube",
+	"loader": "forge:obj",
+	"model": "matteroverdrive:models/block/charger.obj",
+	"flip-v": true,
+	"textures": {
+		"texture0": "matteroverdrive:block/charger",
+		"particle" : "#texture0"
+	}
+}

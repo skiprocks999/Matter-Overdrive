@@ -20,6 +20,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TileMultiSubnode extends GenericTile {
+	
 	public Location nodePos;
 	public VoxelShape shapeCache;
 
@@ -41,15 +42,18 @@ public class TileMultiSubnode extends GenericTile {
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		nodePos = Location.readFromNBT(compound, "node");
-		Scheduler.schedule(20, getRenderPacketHandler()::sendCustomPacketNull);
+		getRenderPacketHandler().sendCustomPacket(null));
+		Scheduler.schedule(20, () -> getRenderPacketHandler().sendCustomPacket(null));
 	}
 
 	protected void readCustomPacket(CompoundTag tag) {
-		load(tag);
+		nodePos = Location.readFromNBT(tag, "node");
 	}
 
 	protected void writeCustomPacket(CompoundTag nbt) {
-		saveAdditional(nbt);
+		if (nodePos != null) {
+			nodePos.writeToNBT(nbt, "node");
+		}
 	}
 
 	public VoxelShape getShape() {

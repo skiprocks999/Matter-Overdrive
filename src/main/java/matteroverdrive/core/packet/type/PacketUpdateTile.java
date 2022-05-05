@@ -2,6 +2,7 @@ package matteroverdrive.core.packet.type;
 
 import java.util.function.Supplier;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import net.minecraft.client.Minecraft;

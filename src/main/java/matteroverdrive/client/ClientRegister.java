@@ -1,6 +1,8 @@
 package matteroverdrive.client;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.References;
+import matteroverdrive.client.renderer.RendererCharger;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenSolarPanel;
@@ -10,12 +12,24 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
+@EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientRegister {
 
 	private static final ResourceLocation CHARGE = new ResourceLocation("charge");
 
+	/* MODELS */
+	
+	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
+	
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
@@ -87,6 +101,22 @@ public class ClientRegister {
 			}).orElse(0);
 		});
 
+	}
+	
+	@SubscribeEvent
+	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
+		
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
+		
+	}
+	
+	@SubscribeEvent
+	public static void onModelEvent(ModelRegistryEvent event) {
+		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
+	}
+	
+	private static ResourceLocation blockModel(String path) {
+		return new ResourceLocation(References.ID + ":block/" + path);
 	}
 
 }
