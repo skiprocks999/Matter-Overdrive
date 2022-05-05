@@ -42,7 +42,7 @@ public class TileMultiSubnode extends GenericTile {
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		nodePos = Location.readFromNBT(compound, "node");
-		getRenderPacketHandler().sendCustomPacket(null));
+		getRenderPacketHandler().sendCustomPacket(null);
 		Scheduler.schedule(20, () -> getRenderPacketHandler().sendCustomPacket(null));
 	}
 
