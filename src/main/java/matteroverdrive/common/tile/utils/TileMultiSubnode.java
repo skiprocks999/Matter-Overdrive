@@ -8,9 +8,7 @@ import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.block.multiblock.IMultiblockTileNode;
 import matteroverdrive.core.block.multiblock.Subnode;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.utils.misc.Location;
-import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,8 +24,6 @@ public class TileMultiSubnode extends GenericTile {
 
 	public TileMultiSubnode(BlockPos worldPosition, BlockState blockState) {
 		super(DeferredRegisters.TILE_MULTI_SUBNODE.get(), worldPosition, blockState);
-		setRenderPacketHandler(new PacketHandler(this, false).packetReader(this::readCustomPacket)
-				.packetWriter(this::writeCustomPacket));
 	}
 
 	@Override
@@ -42,18 +38,21 @@ public class TileMultiSubnode extends GenericTile {
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		nodePos = Location.readFromNBT(compound, "node");
-		getRenderPacketHandler().sendCustomPacket(null);
-		Scheduler.schedule(20, () -> getRenderPacketHandler().sendCustomPacket(null));
 	}
-
-	protected void readCustomPacket(CompoundTag tag) {
-		nodePos = Location.readFromNBT(tag, "node");
-	}
-
-	protected void writeCustomPacket(CompoundTag nbt) {
+	
+	@Override
+	public CompoundTag getUpdateTag() {
+		CompoundTag superTag = super.getUpdateTag();
 		if (nodePos != null) {
-			nodePos.writeToNBT(nbt, "node");
+			nodePos.writeToNBT(superTag, "node");
 		}
+		return superTag;
+	}
+	
+	@Override
+	public void handleUpdateTag(CompoundTag tag) {
+		super.handleUpdateTag(tag);
+		nodePos = Location.readFromNBT(tag, "node");
 	}
 
 	public VoxelShape getShape() {
