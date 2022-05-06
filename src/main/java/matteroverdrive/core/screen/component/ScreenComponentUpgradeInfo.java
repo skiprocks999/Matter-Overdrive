@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.utils.ScreenComponent;
-import matteroverdrive.core.tile.IUpgradableTile;
+import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;

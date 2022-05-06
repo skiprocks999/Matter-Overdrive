@@ -14,7 +14,7 @@ import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.tile.IUpgradableTile;
+import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

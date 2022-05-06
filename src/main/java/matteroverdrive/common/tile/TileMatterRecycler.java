@@ -9,9 +9,7 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.sound.TickableSoundTile;
-import matteroverdrive.core.tile.GenericSoundTile;
-import matteroverdrive.core.tile.IRedstoneModeTile;
-import matteroverdrive.core.tile.IUpgradableTile;
+import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsNbt;
@@ -24,7 +22,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileMatterRecycler extends GenericSoundTile implements IRedstoneModeTile, IUpgradableTile {
+public class TileMatterRecycler extends GenericSoundTile {
 
 	public static final int SLOT_COUNT = 7;
 
@@ -33,14 +31,12 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
 
-	private int currRedstoneMode;
 	private boolean running = false;
 	private double currProgress = 0;
 	private double currSpeed = DEFAULT_SPEED;
 	private int usage = USAGE_PER_TICK;
 	private boolean isMuffled = false;
 
-	public int clientRedstoneMode;
 	public int clientEnergyUsage;
 	public double clientProgress;
 	public double clientSpeed;
@@ -81,7 +77,7 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 				double value = UtilsNbt.readMatterVal(input);
 				if (value > 0) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					if (energy.getEnergyStored() >= USAGE_PER_TICK) {
+					if (energy.getEnergyStored() >= usage) {
 						ItemStack output = inv.getOutputs().get(0);
 						boolean outputRoom = output.isEmpty() || (output.getCount() < output.getMaxStackSize()
 								&& UtilsNbt.readMatterVal(output) == value);
@@ -174,7 +170,6 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		saveMode(additional);
 		additional.putDouble("progress", currProgress);
 		additional.putDouble("speed", currSpeed);
 		additional.putInt("usage", usage);
@@ -188,7 +183,6 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		loadMode(additional);
 		currProgress = additional.getDouble("progress");
 		currSpeed = additional.getDouble("speed");
 		usage = additional.getInt("usage");
@@ -206,24 +200,8 @@ public class TileMatterRecycler extends GenericSoundTile implements IRedstoneMod
 	}
 
 	@Override
-	public void setMode(int mode) {
-		currRedstoneMode = mode;
-	}
-
-	@Override
-	public int getCurrMod() {
-		return currRedstoneMode;
-	}
-
-	@Override
 	public int getMaxMode() {
 		return 2;
-	}
-
-	@Override
-	public boolean canRun() {
-		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
-		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
 	}
 
 	@Override

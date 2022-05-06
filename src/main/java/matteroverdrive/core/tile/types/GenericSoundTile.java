@@ -1,10 +1,11 @@
-package matteroverdrive.core.tile;
+package matteroverdrive.core.tile.types;
 
+import matteroverdrive.core.sound.ITickingSoundTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class GenericSoundTile extends GenericTile implements ITickingSoundTile {
+public abstract class GenericSoundTile extends GenericUpgradableTile implements ITickingSoundTile {
 
 	protected GenericSoundTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

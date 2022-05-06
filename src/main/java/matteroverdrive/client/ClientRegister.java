@@ -3,8 +3,10 @@ package matteroverdrive.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.client.renderer.RendererCharger;
+import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
+import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenTritaniumCrate;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
@@ -36,6 +38,8 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
+		MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
+		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {

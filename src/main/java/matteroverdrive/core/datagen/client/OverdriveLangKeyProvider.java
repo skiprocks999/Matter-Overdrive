@@ -75,7 +75,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
 			addBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "Multiblock Subnode");
-			addBlock(DeferredRegisters.BLOCK_CHARGER, "Charging Station");
+			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
+			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
@@ -130,6 +131,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer("solar_panel", "Solar Panel");
 			addContainer("matter_decomposer", "Matter Decomposer");
 			addContainer("matter_recycler", "Matter Recycler");
+			addContainer("charger", "Android Charger");
+			addContainer("microwave", "Microwave");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

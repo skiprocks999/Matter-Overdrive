@@ -3,7 +3,7 @@
  */
 package matteroverdrive.common.block;
 
-import matteroverdrive.common.tile.utils.TileMultiSubnode;
+import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.block.multiblock.IMultiblockSubnode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

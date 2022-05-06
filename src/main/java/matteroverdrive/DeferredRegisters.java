@@ -14,8 +14,10 @@ import matteroverdrive.common.block.MultiBlockMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.utils.BlockColors;
 import matteroverdrive.common.blockitem.BlockItemColored;
+import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
+import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.ItemUpgrade;
@@ -27,9 +29,10 @@ import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
+import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
-import matteroverdrive.common.tile.utils.TileMultiSubnode;
+import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.registers.BulkRegistryObject;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
@@ -103,7 +106,9 @@ public class DeferredRegisters {
 			() -> new BlockMultiSubnode());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.charger.toString(),
 			() -> new MultiBlockMachine<TileCharger>(TileCharger::new, TypeMachine.charger, DeferredRegisters.TILE_CHARGER, MultiBlockMachine.CHARGER_NODES));
-
+	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.microwave.toString(),
+			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.microwave, DeferredRegisters.TILE_MICROWAVE));
+	
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
@@ -155,6 +160,8 @@ public class DeferredRegisters {
 			() -> new BlockEntityType<>(TileMultiSubnode::new, Sets.newHashSet(BLOCK_MULTI_SUBNODE.get()), null));
 	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(TypeMachine.charger.toString(), 
 			() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(TypeMachine.microwave.toString(), 
+			() -> new BlockEntityType<>(TileMicrowave::new, Sets.newHashSet(BLOCK_MICROWAVE.get()), null));
 
 	/* MENUS */
 
@@ -166,6 +173,10 @@ public class DeferredRegisters {
 			.register("matter_decomposer", () -> new MenuType<>(InventoryMatterDecomposer::new));
 	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
 			.register("matter_recycler", () -> new MenuType<>(InventoryMatterRecycler::new));
+	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
+			.register("charger", () -> new MenuType<>(InventoryCharger::new));
+	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS
+			.register("microwave", () -> new MenuType<>(InventoryMicrowave::new));
 
 	// Functional Methods
 

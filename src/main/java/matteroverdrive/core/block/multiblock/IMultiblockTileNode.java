@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.tile.utils.TileMultiSubnode;
+import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.utils.misc.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;

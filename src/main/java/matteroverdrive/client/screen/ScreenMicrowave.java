@@ -2,8 +2,8 @@ package matteroverdrive.client.screen;
 
 import java.util.HashSet;
 
-import matteroverdrive.common.inventory.InventoryMatterRecycler;
-import matteroverdrive.common.tile.TileMatterRecycler;
+import matteroverdrive.common.inventory.InventoryMicrowave;
+import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
@@ -31,7 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler> {
+public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 
 	private static boolean EXTENDED = false;
 
@@ -56,39 +56,39 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-
-	public ScreenMatterRecycler(InventoryMatterRecycler menu, Inventory playerinventory, Component title) {
+	
+	public ScreenMicrowave(InventoryMicrowave menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentProgress(() -> {
-			TileMatterRecycler matter = menu.getTile();
-			if (matter != null) {
-				return (double) matter.clientProgress / (double) TileMatterRecycler.OPERATING_TIME;
+			TileMicrowave microwave = menu.getTile();
+			if (microwave != null) {
+				return (double) microwave.clientProgress / (double) TileMicrowave.OPERATING_TIME;
 			}
 			return 0;
 		}, this, -4, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
-			TileMatterRecycler matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
+			TileMicrowave microwave = menu.getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterRecycler matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
+			TileMicrowave microwave = menu.getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterRecycler matter = menu.getTile();
-			if (matter != null && matter.clientRunning) {
-				return matter.clientEnergyUsage;
+			TileMicrowave microwave = menu.getTile();
+			if (microwave != null && microwave.clientRunning) {
+				return microwave.clientEnergyUsage;
 			}
 			return 0;
 		}, this, 81, 35, new int[] { 0 }));
 		components.add(new ScreenComponentIndicator(() -> {
-			TileMatterRecycler matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientRunning;
+			TileMicrowave microwave = menu.getTile();
+			if (microwave != null) {
+				return microwave.clientRunning;
 			}
 			return false;
 		}, this, -31, 159, new int[] { 0, 1, 2, 3 }));
@@ -168,14 +168,14 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 			energyWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
 		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(microwave.getBlockPos()));
 			}
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientRedstoneMode;
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientRedstoneMode;
 			}
 			return 0;
 		});
@@ -199,64 +199,64 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 		}, IOConfigButtonType.ENERGY);
 
 		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.getInputDirections();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientInventory.getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.getOutputDirections();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientInventory.getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.hasInput;
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientInventory.hasInput;
 			}
 			return false;
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.hasOutput;
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientInventory.hasOutput;
 			}
 			return false;
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
 		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getInputDirections();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getOutputDirections();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.canReceive();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.canReceive();
 			}
 			return false;
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.canExtract();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.clientEnergy.canExtract();
 			}
 			return false;
 		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
+			TileMicrowave microwave = getMenu().getTile();
+			if (microwave != null) {
+				return microwave.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
@@ -300,5 +300,5 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 	public int getScreenNumber() {
 		return screenNumber;
 	}
-	
+
 }

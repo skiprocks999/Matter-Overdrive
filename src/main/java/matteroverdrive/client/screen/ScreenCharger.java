@@ -1,7 +1,7 @@
 package matteroverdrive.client.screen;
 
-import matteroverdrive.common.inventory.InventorySolarPanel;
-import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.inventory.InventoryCharger;
+import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
@@ -11,17 +11,17 @@ import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
+import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
+public class ScreenCharger extends GenericScreen<InventoryCharger> {
 
 	private static boolean EXTENDED = false;
 
@@ -37,31 +37,32 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
 
-	public ScreenSolarPanel(InventorySolarPanel menu, Inventory playerinventory, Component title) {
+	
+	public ScreenCharger(InventoryCharger menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentCharge(() -> {
-			TileSolarPanel solar = menu.getTile();
-			if (solar != null) {
-				return solar.clientEnergy.getEnergyStored();
+			TileCharger charger = menu.getTile();
+			if (charger != null) {
+				return charger.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileSolarPanel solar = menu.getTile();
-			if (solar != null) {
-				return solar.clientEnergy.getMaxEnergyStored();
+			TileCharger charger = menu.getTile();
+			if (charger != null) {
+				return charger.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileSolarPanel solar = menu.getTile();
-			if (solar != null && solar.clientGenerating) {
-				return solar.clientGeneratingBonus * TileSolarPanel.GENERATION;
+			TileCharger charger = menu.getTile();
+			if (charger != null && charger.clientRunning) {
+				return charger.clientEnergyUsage;
 			}
 			return 0;
-		}, this, 81, 35, new int[] { 0 }).setGenerator());
+		}, this, 81, 35, new int[] { 0 }));
 		components.add(new ScreenComponentIndicator(() -> {
-			TileSolarPanel solar = menu.getTile();
-			if (solar != null) {
-				return solar.clientGenerating;
+			TileCharger charger = menu.getTile();
+			if (charger != null) {
+				return charger.clientRunning;
 			}
 			return false;
 		}, this, -31, 159, new int[] { 0, 1, 2 }));
@@ -70,7 +71,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 				UtilsRendering.TEXT_BLUE));
 		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
 	}
-
+	
 	@Override
 	protected void init() {
 		super.init();
@@ -103,14 +104,14 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		}, MenuButtonType.UPGRADES, menu, false);
 
 		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(solar.getBlockPos()));
+			TileCharger charger = getMenu().getTile();
+			if (charger != null) {
+				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(charger.getBlockPos()));
 			}
 		}, () -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				return solar.clientRedstoneMode;
+			TileCharger charger = getMenu().getTile();
+			if (charger != null) {
+				return charger.clientRedstoneMode;
 			}
 			return 0;
 		});

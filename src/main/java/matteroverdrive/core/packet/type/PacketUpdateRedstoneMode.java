@@ -2,7 +2,7 @@ package matteroverdrive.core.packet.type;
 
 import java.util.function.Supplier;
 
-import matteroverdrive.core.tile.IRedstoneModeTile;
+import matteroverdrive.core.tile.utils.IRedstoneModeTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;

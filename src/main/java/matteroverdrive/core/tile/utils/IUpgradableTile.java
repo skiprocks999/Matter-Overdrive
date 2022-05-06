@@ -1,4 +1,4 @@
-package matteroverdrive.core.tile;
+package matteroverdrive.core.tile.utils;
 
 public interface IUpgradableTile {
 

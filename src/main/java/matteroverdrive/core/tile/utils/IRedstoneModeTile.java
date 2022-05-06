@@ -1,4 +1,4 @@
-package matteroverdrive.core.tile;
+package matteroverdrive.core.tile.utils;
 
 import net.minecraft.nbt.CompoundTag;
 

@@ -66,7 +66,7 @@ public class ScreenComponentCharge extends ScreenComponent {
 							.getVisualOrderText());
 				} else {
 					components.add(
-							UtilsText.tooltip(usageLoc, "+" + use).withStyle(ChatFormatting.RED).getVisualOrderText());
+							UtilsText.tooltip(usageLoc, "-" + use).withStyle(ChatFormatting.RED).getVisualOrderText());
 				}
 			}
 			gui.displayTooltips(stack, components, xAxis, yAxis);

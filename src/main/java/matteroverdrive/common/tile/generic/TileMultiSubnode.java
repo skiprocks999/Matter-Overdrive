@@ -1,7 +1,7 @@
 /**
  * Credit to AurilisDev for this
  */
-package matteroverdrive.common.tile.utils;
+package matteroverdrive.common.tile.generic;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.core.block.GenericEntityBlock;

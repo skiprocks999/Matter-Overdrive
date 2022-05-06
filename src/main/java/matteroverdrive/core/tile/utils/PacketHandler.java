@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTile;
 import matteroverdrive.core.tile.GenericTile;
@@ -70,7 +69,6 @@ public class PacketHandler {
 			BlockPos pos = owner.getBlockPos();
 			if (world instanceof ServerLevel level) {
 				level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> {
-					MatterOverdrive.LOGGER.info("called");
 					NetworkHandler.CHANNEL.sendTo(packet, p.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 				});
 			}
