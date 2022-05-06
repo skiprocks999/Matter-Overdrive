@@ -90,6 +90,11 @@ public class ItemBattery extends ItemElectric {
 			this.color = color;
 		}
 
+		@Override
+		public String id() {
+			return "battery_" + this.toString().toLowerCase();
+		}
+
 	}
 
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)

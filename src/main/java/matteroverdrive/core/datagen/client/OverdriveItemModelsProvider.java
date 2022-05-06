@@ -2,7 +2,7 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.common.block.utils.BlockColors;
+import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -20,13 +20,13 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(blockPath(DeferredRegisters.REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
 		for (BlockColors color : BlockColors.values()) {
-			withExistingParent(blockPath(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color)),
+			withExistingParent(blockPath(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color)),
 					modLoc("block/tritanium_plating_colorless"));
-			withExistingParent(blockPath(DeferredRegisters.FLOOR_TILE.get(color)),
+			withExistingParent(blockPath(DeferredRegisters.BLOCK_FLOOR_TILE.get(color)),
 					modLoc("block/floor_tile_colorless"));
-			withExistingParent(blockPath(DeferredRegisters.FLOOR_TILES.get(color)),
+			withExistingParent(blockPath(DeferredRegisters.BLOCK_FLOOR_TILES.get(color)),
 					modLoc("block/floor_tiles_colorless"));
 		}
 		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");

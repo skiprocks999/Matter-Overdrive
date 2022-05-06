@@ -2,7 +2,7 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.common.block.utils.BlockColors;
+import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.tile.TileTritaniumCrate;
@@ -57,17 +57,17 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
-				addBlock(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
-				addBlock(DeferredRegisters.FLOOR_TILE.get(color), name + " Floor Tile");
-				addBlock(DeferredRegisters.FLOOR_TILES.get(color), name + " Floor Tiles");
+				addBlock(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
+				addBlock(DeferredRegisters.BLOCK_FLOOR_TILE.get(color), name + " Floor Tile");
+				addBlock(DeferredRegisters.BLOCK_FLOOR_TILES.get(color), name + " Floor Tiles");
 			}
-			addBlock(DeferredRegisters.REGULAR_TRITANIUM_PLATING, "Tritanium Plating");
+			addBlock(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING, "Tritanium Plating");
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				if (name.equals("Reg")) {
-					addBlock(DeferredRegisters.TRITANIUM_CRATES.get(color), "Tritanium Crate");
+					addBlock(DeferredRegisters.BLOCK_TRITANIUM_CRATES.get(color), "Tritanium Crate");
 				} else {
-					addBlock(DeferredRegisters.TRITANIUM_CRATES.get(color), name + " Tritanium Crate");
+					addBlock(DeferredRegisters.BLOCK_TRITANIUM_CRATES.get(color), name + " Tritanium Crate");
 				}
 
 			}

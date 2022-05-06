@@ -1,4 +1,4 @@
-package matteroverdrive.common.block.utils;
+package matteroverdrive.common.block.type;
 
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -14,6 +14,11 @@ public enum BlockColors implements IBulkRegistryObject {
 
 	private BlockColors(int r, int g, int b, int a) {
 		color = UtilsRendering.getRGBA(a, r, g, b);
+	}
+
+	@Override
+	public String id() {
+		return this.toString().toLowerCase();
 	}
 
 }

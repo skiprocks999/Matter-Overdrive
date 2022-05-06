@@ -91,6 +91,11 @@ public class ItemUpgrade extends OverdriveItem {
 			this.rangeBonus = rangeBonus;
 		}
 
+		@Override
+		public String id() {
+			return "upgrade_" + this.toString().toLowerCase(); 
+		}
+
 	}
 
 }

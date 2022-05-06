@@ -23,7 +23,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	@Override
 	protected void addTables() {
 
-		for (RegistryObject<Block> crate : DeferredRegisters.TRITANIUM_CRATES.getAll()) {
+		for (RegistryObject<Block> crate : DeferredRegisters.BLOCK_TRITANIUM_CRATES.getAll()) {
 			this.<TileTritaniumCrate>addITable(crate, DeferredRegisters.TILE_TRITANIUM_CRATE);
 		}
 		this.<TileSolarPanel>addIETable(DeferredRegisters.BLOCK_SOLAR_PANEL, DeferredRegisters.TILE_SOLAR_PANEL);

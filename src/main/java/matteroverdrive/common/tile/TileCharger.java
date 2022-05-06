@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.MultiBlockMachine;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.core.block.multiblock.IMultiblockTileNode;
 import matteroverdrive.core.block.multiblock.Subnode;
@@ -46,7 +47,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null));
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryCharger(id, play.getInventory(),
-				exposeCapability(CapabilityType.Item), getCoordsData()), getContainerName("charger")));
+				exposeCapability(CapabilityType.Item), getCoordsData()), getContainerName(TypeMachine.CHARGER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer));

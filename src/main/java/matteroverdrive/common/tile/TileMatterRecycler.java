@@ -3,6 +3,7 @@ package matteroverdrive.common.tile;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -60,7 +61,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName("matter_recycler")));
+						getContainerName(TypeMachine.MATTER_RECYCLER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setRenderPacketHandler(

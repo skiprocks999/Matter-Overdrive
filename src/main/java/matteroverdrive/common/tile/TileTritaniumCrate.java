@@ -29,6 +29,11 @@ public class TileTritaniumCrate extends GenericTile {
 
 		BLACK, BLUE, BROWN, CYAN, DARK_GREY, GREEN, LIGHT_BLUE, LIGHT_GREY, LIME_GREEN, MAGENTA, ORANGE, PINK, PURPLE,
 		RED, REG, WHITE, YELLOW;
+
+		@Override
+		public String id() {
+			return "tritanium_crate_" + this.toString().toLowerCase();
+		}
 	}
 
 }

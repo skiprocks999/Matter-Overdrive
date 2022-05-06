@@ -2,7 +2,7 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.common.block.utils.BlockColors;
+import matteroverdrive.common.block.type.BlockColors;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -30,11 +30,11 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 
 	@Override
 	protected void registerStatesAndModels() {
-		simpleBlock(DeferredRegisters.REGULAR_TRITANIUM_PLATING.get(), tritaniumPlatingFile);
+		simpleBlock(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING.get(), tritaniumPlatingFile);
 		for (BlockColors color : BlockColors.values()) {
-			simpleBlock(DeferredRegisters.COLORED_TRITANIUM_PLATING.get(color).get(), coloredTritaniumPlatingFile);
-			simpleBlock(DeferredRegisters.FLOOR_TILE.get(color).get(), floorTileFile);
-			simpleBlock(DeferredRegisters.FLOOR_TILES.get(color).get(), floorTilesFile);
+			simpleBlock(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color).get(), coloredTritaniumPlatingFile);
+			simpleBlock(DeferredRegisters.BLOCK_FLOOR_TILE.get(color).get(), floorTileFile);
+			simpleBlock(DeferredRegisters.BLOCK_FLOOR_TILES.get(color).get(), floorTilesFile);
 		}
 		simpleBlock(DeferredRegisters.BLOCK_SOLAR_PANEL.get());
 		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE.get());

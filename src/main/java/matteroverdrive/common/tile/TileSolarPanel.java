@@ -1,6 +1,7 @@
 package matteroverdrive.common.tile;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -40,7 +41,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName("solar_panel")));
+						getContainerName(TypeMachine.SOLAR_PANEL.id())));
 		setTicker(new Ticker(this).tickServer(this::tickServer));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));

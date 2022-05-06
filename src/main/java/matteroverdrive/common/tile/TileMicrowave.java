@@ -3,6 +3,7 @@ package matteroverdrive.common.tile;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -64,7 +65,7 @@ public class TileMicrowave extends GenericSoundTile {
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMicrowave(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName("microwave")));
+						getContainerName(TypeMachine.MICROWAVE.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setRenderPacketHandler(

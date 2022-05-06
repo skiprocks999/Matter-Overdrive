@@ -4,6 +4,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -73,7 +74,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
-				getContainerName("matter_decomposer")));
+				getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setRenderPacketHandler(
