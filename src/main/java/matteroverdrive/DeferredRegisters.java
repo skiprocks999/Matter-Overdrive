@@ -105,10 +105,12 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
 			() -> new BlockMultiSubnode());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.charger.toString(),
-			() -> new MultiBlockMachine<TileCharger>(TileCharger::new, TypeMachine.charger, DeferredRegisters.TILE_CHARGER, MultiBlockMachine.CHARGER_NODES));
+			() -> new MultiBlockMachine<TileCharger>(TileCharger::new, TypeMachine.charger,
+					DeferredRegisters.TILE_CHARGER, MultiBlockMachine.CHARGER_NODES));
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.microwave.toString(),
-			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.microwave, DeferredRegisters.TILE_MICROWAVE));
-	
+			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.microwave,
+					DeferredRegisters.TILE_MICROWAVE));
+
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
@@ -158,9 +160,11 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMultiSubnode>> TILE_MULTI_SUBNODE = TILES.register(
 			"multisubnode",
 			() -> new BlockEntityType<>(TileMultiSubnode::new, Sets.newHashSet(BLOCK_MULTI_SUBNODE.get()), null));
-	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(TypeMachine.charger.toString(), 
+	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(
+			TypeMachine.charger.toString(),
 			() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(TypeMachine.microwave.toString(), 
+	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(
+			TypeMachine.microwave.toString(),
 			() -> new BlockEntityType<>(TileMicrowave::new, Sets.newHashSet(BLOCK_MICROWAVE.get()), null));
 
 	/* MENUS */
@@ -173,10 +177,10 @@ public class DeferredRegisters {
 			.register("matter_decomposer", () -> new MenuType<>(InventoryMatterDecomposer::new));
 	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
 			.register("matter_recycler", () -> new MenuType<>(InventoryMatterRecycler::new));
-	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
-			.register("charger", () -> new MenuType<>(InventoryCharger::new));
-	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS
-			.register("microwave", () -> new MenuType<>(InventoryMicrowave::new));
+	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS.register("charger",
+			() -> new MenuType<>(InventoryCharger::new));
+	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS.register("microwave",
+			() -> new MenuType<>(InventoryMicrowave::new));
 
 	// Functional Methods
 

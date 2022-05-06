@@ -35,7 +35,7 @@ public class BlockMultiSubnode extends BaseEntityBlock implements IMultiblockSub
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if(worldIn.getBlockEntity(pos) instanceof TileMultiSubnode subnode) {
+		if (worldIn.getBlockEntity(pos) instanceof TileMultiSubnode subnode) {
 			return subnode.getShape();
 		}
 		return Shapes.block();
@@ -113,6 +113,7 @@ public class BlockMultiSubnode extends BaseEntityBlock implements IMultiblockSub
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) { }
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
+	}
 
 }

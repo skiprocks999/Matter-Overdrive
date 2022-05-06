@@ -29,9 +29,9 @@ public class ClientRegister {
 	private static final ResourceLocation CHARGE = new ResourceLocation("charge");
 
 	/* MODELS */
-	
+
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
-	
+
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
@@ -106,19 +106,19 @@ public class ClientRegister {
 		});
 
 	}
-	
+
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
-		
+
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
-		
+
 	}
-	
+
 	@SubscribeEvent
 	public static void onModelEvent(ModelRegistryEvent event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
 	}
-	
+
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}

@@ -48,9 +48,9 @@ public class TileMicrowave extends GenericSoundTile {
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
-	
+
 	private SmokingRecipe cachedRecipe;
-	
+
 	public TileMicrowave(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MICROWAVE.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
@@ -79,10 +79,10 @@ public class TileMicrowave extends GenericSoundTile {
 			ItemStack input = inv.getInputs().get(0);
 			if (!input.isEmpty()) {
 				boolean matched = false;
-				if(cachedRecipe == null) {
+				if (cachedRecipe == null) {
 					Level world = getLevel();
-					for(SmokingRecipe recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.SMOKING)) {
-						if(recipe.getIngredients().get(0).test(input)) {
+					for (SmokingRecipe recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.SMOKING)) {
+						if (recipe.getIngredients().get(0).test(input)) {
 							cachedRecipe = recipe;
 							matched = true;
 						}
@@ -90,11 +90,13 @@ public class TileMicrowave extends GenericSoundTile {
 				} else {
 					matched = cachedRecipe.getIngredients().get(0).test(input);
 				}
-				if(matched) {
+				if (matched) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 					ItemStack output = inv.getOutputs().get(0);
 					ItemStack result = cachedRecipe.getResultItem();
-					if(energy.getEnergyStored() >= usage && (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem()) && (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+					if (energy.getEnergyStored() >= usage
+							&& (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
+									&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
 						running = true;
 						currProgress += currSpeed;
 						energy.removeEnergy(usage);

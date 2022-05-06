@@ -23,11 +23,11 @@ import net.minecraft.world.phys.AABB;
 public class TileCharger extends GenericUpgradableTile implements IMultiblockTileNode {
 
 	public static final int SLOT_COUNT = 2;
-	
+
 	public static final int CHARGE_RATE = 512;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_RADIUS = 8;
-	
+
 	private int usage = CHARGE_RATE;
 	private int radius = DEFAULT_RADIUS;
 	private boolean running = false;
@@ -38,26 +38,24 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
-	
+
 	public TileCharger(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_CHARGER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null));
-		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryCharger(id, play.getInventory(),
-						exposeCapability(CapabilityType.Item), getCoordsData()),
-				getContainerName("charger")));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryCharger(id, play.getInventory(),
+				exposeCapability(CapabilityType.Item), getCoordsData()), getContainerName("charger")));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer));
 	}
-	
+
 	private void tickServer(Ticker ticker) {
-		//TODO implement
+		// TODO implement
 	}
-	
+
 	private void clientMenuSave(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
@@ -69,7 +67,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		tag.putInt("radius", radius);
 		tag.putBoolean("running", running);
 	}
-	
+
 	private void clientMenuLoad(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
@@ -81,11 +79,11 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		clientRadius = tag.getInt("radius");
 		clientRunning = tag.getBoolean("running");
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
-		
+
 		CompoundTag additional = new CompoundTag();
 		additional.putInt("usage", usage);
 		additional.putInt("radius", radius);
@@ -93,17 +91,17 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 
 		tag.put("additional", additional);
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		
+
 		CompoundTag additional = tag.getCompound("additional");
 		usage = additional.getInt("usage");
 		radius = additional.getInt("radius");
 		running = additional.getBoolean("runnning");
 	}
-	
+
 	@Override
 	public AABB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().inflate(2);
@@ -128,7 +126,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 	public double getDefaultPowerUsage() {
 		return CHARGE_RATE;
 	}
-	
+
 	@Override
 	public double getDefaultRange() {
 		return DEFAULT_RADIUS;
@@ -144,7 +142,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 	public double getCurrentPowerUsage(boolean clientSide) {
 		return clientSide ? clientEnergyUsage : usage;
 	}
-	
+
 	@Override
 	public double getCurrentRange(boolean clientSide) {
 		return clientSide ? clientRadius : radius;
@@ -160,7 +158,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 	public void setPowerUsage(int usage) {
 		this.usage = usage;
 	}
-	
+
 	@Override
 	public void setRange(int range) {
 		radius = range;

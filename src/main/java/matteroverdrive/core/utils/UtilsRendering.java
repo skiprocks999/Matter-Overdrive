@@ -50,13 +50,16 @@ public class UtilsRendering {
 	public static void color(int color) {
 		RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
 	}
-	
+
 	public static BakedModel getBakedModel(ResourceLocation model) {
 		return Minecraft.getInstance().getModelManager().getModel(model);
 	}
-	
-	public static void renderModel(BakedModel model, BlockEntity tile, RenderType type, PoseStack stack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
-		Minecraft.getInstance().getItemRenderer().render(new ItemStack(type == RenderType.translucent() ? Items.BLACK_STAINED_GLASS : Blocks.STONE), TransformType.NONE, false, stack, buffer, combinedLightIn, combinedOverlayIn, model);
+
+	public static void renderModel(BakedModel model, BlockEntity tile, RenderType type, PoseStack stack,
+			MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
+		Minecraft.getInstance().getItemRenderer().render(
+				new ItemStack(type == RenderType.translucent() ? Items.BLACK_STAINED_GLASS : Blocks.STONE),
+				TransformType.NONE, false, stack, buffer, combinedLightIn, combinedOverlayIn, model);
 	}
 
 }

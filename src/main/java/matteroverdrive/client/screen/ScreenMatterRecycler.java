@@ -300,5 +300,5 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 	public int getScreenNumber() {
 		return screenNumber;
 	}
-	
+
 }

@@ -37,7 +37,6 @@ public class ScreenCharger extends GenericScreen<InventoryCharger> {
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
 
-	
 	public ScreenCharger(InventoryCharger menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentCharge(() -> {
@@ -71,7 +70,7 @@ public class ScreenCharger extends GenericScreen<InventoryCharger> {
 				UtilsRendering.TEXT_BLUE));
 		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();

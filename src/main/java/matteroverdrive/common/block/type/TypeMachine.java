@@ -10,12 +10,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public enum TypeMachine {
 
 	solar_panel(Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), true), matter_decomposer(true), matter_recycler(true),
-	charger(new VoxelShape[] { Shapes.block(), Shapes.block(), 
-			Shapes.box(0.09375D, 0.0D, 0.0D, 0.90625D, 1.0D, 1.0D),
+	charger(new VoxelShape[] { Shapes.block(), Shapes.block(), Shapes.box(0.09375D, 0.0D, 0.0D, 0.90625D, 1.0D, 1.0D),
 			Shapes.box(0.09375D, 0.0D, 0.0D, 0.90625D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.09375D, 1.0D, 1.0D, 0.90625D),
 			Shapes.box(0.0D, 0.0D, 0.09375D, 1.0D, 1.0D, 0.90625D) }, true),
-	microwave(new VoxelShape[] { Shapes.block(), Shapes.block(), 
+	microwave(new VoxelShape[] { Shapes.block(), Shapes.block(),
 			Shapes.box(0.0625D, 0.0D, 0.125D, 0.9375D, 0.625D, 0.875D),
 			Shapes.box(0.0625D, 0.0D, 0.125D, 0.9375D, 0.625D, 0.875D),
 			Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D),

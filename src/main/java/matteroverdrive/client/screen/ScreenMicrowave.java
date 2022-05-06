@@ -56,7 +56,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenMicrowave(InventoryMicrowave menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentProgress(() -> {

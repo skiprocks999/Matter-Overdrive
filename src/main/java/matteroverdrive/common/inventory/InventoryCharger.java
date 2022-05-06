@@ -13,15 +13,14 @@ import matteroverdrive.common.tile.TileCharger;
 public class InventoryCharger extends GenericInventoryTile<TileCharger> {
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
-			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.RANGE};
-	
+			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.RANGE };
+
 	public InventoryCharger(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_CHARGER.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryCharger(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileCharger.SLOT_COUNT, true, true),
-				new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileCharger.SLOT_COUNT, true, true), new SimpleContainerData(3));
 	}
 
 	@Override

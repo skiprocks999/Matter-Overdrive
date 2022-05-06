@@ -69,7 +69,8 @@ public class PacketHandler {
 			BlockPos pos = owner.getBlockPos();
 			if (world instanceof ServerLevel level) {
 				level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> {
-					NetworkHandler.CHANNEL.sendTo(packet, p.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+					NetworkHandler.CHANNEL.sendTo(packet, p.connection.getConnection(),
+							NetworkDirection.PLAY_TO_CLIENT);
 				});
 			}
 		}

@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TileMultiSubnode extends GenericTile {
-	
+
 	public Location nodePos;
 	public VoxelShape shapeCache;
 
@@ -39,7 +39,7 @@ public class TileMultiSubnode extends GenericTile {
 		super.load(compound);
 		nodePos = Location.readFromNBT(compound, "node");
 	}
-	
+
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag superTag = super.getUpdateTag();
@@ -48,7 +48,7 @@ public class TileMultiSubnode extends GenericTile {
 		}
 		return superTag;
 	}
-	
+
 	@Override
 	public void handleUpdateTag(CompoundTag tag) {
 		super.handleUpdateTag(tag);

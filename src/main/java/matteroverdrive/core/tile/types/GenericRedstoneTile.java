@@ -11,13 +11,13 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
 
 	protected int currRedstoneMode;
-	
+
 	public int clientRedstoneMode;
-	
+
 	protected GenericRedstoneTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
@@ -25,7 +25,7 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 		saveMode(redstone);
 		tag.put("redstone", redstone);
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
