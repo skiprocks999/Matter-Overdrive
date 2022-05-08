@@ -1,3 +1,4 @@
+// Modified variant of class by AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.screen;
 
 import java.util.ArrayList;

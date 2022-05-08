@@ -3,7 +3,7 @@ package matteroverdrive.common.tile;
 import java.util.HashSet;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.MultiBlockMachine;
+import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.core.block.multiblock.IMultiblockTileNode;
@@ -113,7 +113,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 
 	@Override
 	public HashSet<Subnode> getSubNodes() {
-		return MultiBlockMachine.CHARGER_NODES;
+		return BlockMachineMultiblock.CHARGER_NODES;
 	}
 
 	@Override

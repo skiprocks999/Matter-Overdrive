@@ -11,7 +11,7 @@ import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockMultiSubnode;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
-import matteroverdrive.common.block.MultiBlockMachine;
+import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.blockitem.BlockItemColored;
@@ -38,7 +38,7 @@ import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.common.tile.generic.TileMultiSubnode;
-import matteroverdrive.core.registers.BulkRegistryObject;
+import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
@@ -71,28 +71,28 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
-	public static final BulkRegistryObject<Block> BLOCK_COLORED_TRITANIUM_PLATING = bulkBlock(
+	public static final BulkRegister<Block> BLOCK_COLORED_TRITANIUM_PLATING = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("tritanium_plating_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILE = bulkBlock(
+	public static final BulkRegister<Block> BLOCK_FLOOR_TILE = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("floor_tile_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILES = bulkBlock(
+	public static final BulkRegister<Block> BLOCK_FLOOR_TILES = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("floor_tiles_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(
+	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(
 			crate -> registerBlock(((CrateColors) crate).id(), () -> new BlockTritaniumCrate(
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
@@ -109,8 +109,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
 			() -> new BlockMultiSubnode());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
-			() -> new MultiBlockMachine<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
-					DeferredRegisters.TILE_CHARGER, MultiBlockMachine.CHARGER_NODES));
+			() -> new BlockMachineMultiblock<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
+					DeferredRegisters.TILE_CHARGER, BlockMachineMultiblock.CHARGER_NODES));
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
@@ -126,7 +126,7 @@ public class DeferredRegisters {
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_BASE_UPGRADE = ITEMS.register("upgrade_base",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(16)));
-	public static final BulkRegistryObject<Item> ITEM_UPGRADES = bulkItem(
+	public static final BulkRegister<Item> ITEM_UPGRADES = bulkItem(
 			upgrade -> ITEMS.register(((UpgradeType) upgrade).id(), () -> new ItemUpgrade((UpgradeType) upgrade)),
 			UpgradeType.values());
 	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
@@ -144,12 +144,12 @@ public class DeferredRegisters {
 	public static final RegistryObject<Item> ITEM_OMNI_TOOL = ITEMS.register("omni_tool",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final BulkRegistryObject<Item> ITEM_BATTERIES = bulkItem(
+	public static final BulkRegister<Item> ITEM_BATTERIES = bulkItem(
 			battery -> ITEMS.register(((BatteryType) battery).id(), () -> new ItemBattery((BatteryType) battery)),
 			BatteryType.values());
 	public static final RegistryObject<Item> ITEM_MATTER_CONTAINER = ITEMS.register("matter_container",
 			() -> new ItemMatterContainer());
-	public static final BulkRegistryObject<Item> ITEM_ISOLINEAR_CIRCUITS = bulkItem(
+	public static final BulkRegister<Item> ITEM_ISOLINEAR_CIRCUITS = bulkItem(
 			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
 					() -> new Item(new Item.Properties().tab(References.MAIN))),
 			TypeIsolinearCircuit.values());
@@ -222,14 +222,14 @@ public class DeferredRegisters {
 		return block;
 	}
 
-	private static BulkRegistryObject<Block> bulkBlock(Function<IBulkRegistryObject, RegistryObject<Block>> factory,
+	private static BulkRegister<Block> bulkBlock(Function<IBulkRegistryObject, RegistryObject<Block>> factory,
 			IBulkRegistryObject[] bulkValues) {
-		return new BulkRegistryObject<>(factory, bulkValues);
+		return new BulkRegister<>(factory, bulkValues);
 	}
 
-	private static BulkRegistryObject<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
+	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {
-		return new BulkRegistryObject<>(factory, bulkValues);
+		return new BulkRegister<>(factory, bulkValues);
 	}
 
 }

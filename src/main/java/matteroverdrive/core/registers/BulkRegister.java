@@ -8,11 +8,11 @@ import java.util.function.Function;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
-public class BulkRegistryObject<T extends IForgeRegistryEntry<T>> {
+public class BulkRegister<T extends IForgeRegistryEntry<T>> {
 
 	private final HashMap<IBulkRegistryObject, RegistryObject<T>> objects = new HashMap<>();
 
-	public BulkRegistryObject(Function<IBulkRegistryObject, RegistryObject<T>> factory,
+	public BulkRegister(Function<IBulkRegistryObject, RegistryObject<T>> factory,
 			IBulkRegistryObject[] bulkValues) {
 		for (IBulkRegistryObject val : bulkValues) {
 			objects.put(val, factory.apply(val));

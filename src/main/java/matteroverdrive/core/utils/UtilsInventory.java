@@ -1,3 +1,7 @@
+/**
+ * handleShiftClick() and mergeStack() are 
+ * credited to AurilisDev https://github.com/aurilisdev/Electrodynamics
+ */
 package matteroverdrive.core.utils;
 
 import java.util.List;

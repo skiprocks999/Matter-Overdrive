@@ -1,3 +1,4 @@
+// Credit to AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.screen.component.utils;
 
 import java.util.List;

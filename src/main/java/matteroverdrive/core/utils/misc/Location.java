@@ -1,6 +1,4 @@
-/**
- * Credit to AurilisDev for this
- */
+// Credit to AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.utils.misc;
 
 import com.mojang.math.Vector3f;

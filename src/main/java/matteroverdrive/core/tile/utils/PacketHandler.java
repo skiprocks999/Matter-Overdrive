@@ -1,3 +1,4 @@
+// Modified variant of class by AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.tile.utils;
 
 import java.util.function.Consumer;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 
-// Credit goes to AurilisDev for this class idea
 public class PacketHandler {
 
 	private GenericTile owner;

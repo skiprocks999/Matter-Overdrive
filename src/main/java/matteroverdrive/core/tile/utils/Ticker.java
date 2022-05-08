@@ -1,3 +1,4 @@
+// Credit to AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.tile.utils;
 
 import java.util.function.Consumer;
@@ -7,7 +8,6 @@ import javax.annotation.Nonnull;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.world.level.Level;
 
-// Credit for class idea goes to AurilisDev
 public class Ticker {
 
 	private GenericTile owner;

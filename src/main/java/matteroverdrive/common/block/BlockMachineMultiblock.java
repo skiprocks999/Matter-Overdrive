@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.registries.RegistryObject;
 
-public class MultiBlockMachine<T extends GenericTile> extends BlockMachine<T> implements IMultiblockNode {
+public class BlockMachineMultiblock<T extends GenericTile> extends BlockMachine<T> implements IMultiblockNode {
 
 	public static final HashSet<Subnode> CHARGER_NODES = new HashSet<>();
 
@@ -48,7 +48,7 @@ public class MultiBlockMachine<T extends GenericTile> extends BlockMachine<T> im
 
 	private HashSet<Subnode> nodes;
 
-	public MultiBlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
+	public BlockMachineMultiblock(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
 			RegistryObject<BlockEntityType<T>> entity, HashSet<Subnode> nodes) {
 		super(supplier, type, entity);
 		this.nodes = nodes;

@@ -1,6 +1,4 @@
-/**
- * Credit to AurilisDev for this
- */
+// Credit to AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.block.multiblock;
 
 import java.util.Collection;
