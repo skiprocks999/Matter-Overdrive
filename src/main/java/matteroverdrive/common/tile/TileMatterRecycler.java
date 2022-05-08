@@ -57,11 +57,10 @@ public class TileMatterRecycler extends GenericSoundTile {
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterRecycler.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName(TypeMachine.MATTER_RECYCLER.id())));
+		setMenuProvider(new SimpleMenuProvider(
+				(id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
+						exposeCapability(CapabilityType.Item), getCoordsData()),
+				getContainerName(TypeMachine.MATTER_RECYCLER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setRenderPacketHandler(

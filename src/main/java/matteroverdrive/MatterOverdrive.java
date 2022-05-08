@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.DefaultGeneratorConsumers;
@@ -45,12 +46,15 @@ public class MatterOverdrive {
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
-
+		RecipeInit.RECIPE_TYPES.register(bus);
+		RecipeInit.RECIPE_SERIALIZER.register(bus);
+		
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
 				"matteroverdrive/matteroverdrive.common.toml");
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();
+		
 	}
 
 	@SubscribeEvent

@@ -46,8 +46,11 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null));
-		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryCharger(id, play.getInventory(),
-				exposeCapability(CapabilityType.Item), getCoordsData()), getContainerName(TypeMachine.CHARGER.id())));
+		setMenuProvider(
+				new SimpleMenuProvider(
+						(id, inv, play) -> new InventoryCharger(id, play.getInventory(),
+								exposeCapability(CapabilityType.Item), getCoordsData()),
+						getContainerName(TypeMachine.CHARGER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer));

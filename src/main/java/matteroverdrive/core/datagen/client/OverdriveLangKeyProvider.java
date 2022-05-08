@@ -5,6 +5,7 @@ import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
+import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import net.minecraft.data.DataGenerator;
@@ -54,6 +55,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
 
 			addItem(DeferredRegisters.ITEM_MATTER_CONTAINER, "Matter Container");
+			
+			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER1), "Isolinear Circuit Mk1");
+			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Isolinear Circuit Mk2");
+			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3), "Isolinear Circuit Mk3");
+			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -77,6 +83,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "Multiblock Subnode");
 			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
+			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
@@ -89,7 +96,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("menusettings", "Settings");
 			addTooltip("menuupgrades", "Upgrades");
 			addTooltip("matterstored", "%1$s / %2$s %3$skM");
-			addTooltip("energyusage", "%s FE");
+			addTooltip("energyusage", "%s FE/t");
 			addTooltip("matterusage", "%s kM");
 			addTooltip("menuio", "I/O");
 			addTooltip("ioinput", "Input");
@@ -133,6 +140,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer("matter_recycler", "Matter Recycler");
 			addContainer("charger", "Android Charger");
 			addContainer("microwave", "Microwave");
+			addContainer("inscriber", "Inscriber");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

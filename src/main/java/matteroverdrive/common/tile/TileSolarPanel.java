@@ -37,11 +37,10 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
 				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName(TypeMachine.SOLAR_PANEL.id())));
+		setMenuProvider(new SimpleMenuProvider(
+				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
+						exposeCapability(CapabilityType.Item), getCoordsData()),
+				getContainerName(TypeMachine.SOLAR_PANEL.id())));
 		setTicker(new Ticker(this).tickServer(this::tickServer));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));

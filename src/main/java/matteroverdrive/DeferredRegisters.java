@@ -1,5 +1,6 @@
 package matteroverdrive;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.compress.utils.Sets;
@@ -15,6 +16,7 @@ import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryCharger;
+import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventoryMicrowave;
@@ -26,6 +28,7 @@ import matteroverdrive.common.item.tools.ItemMatterContainer;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileInscriber;
 import matteroverdrive.common.tile.TileMatterDecomposer;
@@ -36,6 +39,7 @@ import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.registers.BulkRegistryObject;
+import matteroverdrive.core.registers.IBulkRegistryObject;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -67,30 +71,29 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
-	public static final BulkRegistryObject<Block> BLOCK_COLORED_TRITANIUM_PLATING = new BulkRegistryObject<>(
+	public static final BulkRegistryObject<Block> BLOCK_COLORED_TRITANIUM_PLATING = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("tritanium_plating_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILE = new BulkRegistryObject<>(
+	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILE = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("floor_tile_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILES = new BulkRegistryObject<>(
+	public static final BulkRegistryObject<Block> BLOCK_FLOOR_TILES = bulkBlock(
 			color -> registerColoredBlock(((BlockColors) color).id("floor_tiles_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegistryObject<Block> BLOCK_TRITANIUM_CRATES = new BulkRegistryObject<>(crate -> registerBlock(
-			((CrateColors)crate).id(),
-			() -> new BlockTritaniumCrate(
+	public static final BulkRegistryObject<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(
+			crate -> registerBlock(((CrateColors) crate).id(), () -> new BlockTritaniumCrate(
 					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.SOLAR_PANEL.id(),
@@ -100,8 +103,7 @@ public class DeferredRegisters {
 			TypeMachine.MATTER_DECOMPOSER.id(),
 			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new,
 					TypeMachine.MATTER_DECOMPOSER, DeferredRegisters.TILE_MATTER_DECOMPOSER));
-	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(
-			TypeMachine.MATTER_RECYCLER.id(),
+	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
 	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
@@ -113,7 +115,8 @@ public class DeferredRegisters {
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
 	public static final RegistryObject<Block> BLOCK_INSCRIBER = registerBlock(TypeMachine.INSCRIBER.id(),
-			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER, DeferredRegisters.TILE_INSCRIBER));
+			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER,
+					DeferredRegisters.TILE_INSCRIBER));
 
 	/* ITEMS */
 
@@ -123,8 +126,8 @@ public class DeferredRegisters {
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_BASE_UPGRADE = ITEMS.register("upgrade_base",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(16)));
-	public static final BulkRegistryObject<Item> ITEM_UPGRADES = new BulkRegistryObject<>(upgrade -> ITEMS
-			.register(((UpgradeType)upgrade).id(), () -> new ItemUpgrade((UpgradeType) upgrade)),
+	public static final BulkRegistryObject<Item> ITEM_UPGRADES = bulkItem(
+			upgrade -> ITEMS.register(((UpgradeType) upgrade).id(), () -> new ItemUpgrade((UpgradeType) upgrade)),
 			UpgradeType.values());
 	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
@@ -141,11 +144,15 @@ public class DeferredRegisters {
 	public static final RegistryObject<Item> ITEM_OMNI_TOOL = ITEMS.register("omni_tool",
 			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
 					true, 1000));
-	public static final BulkRegistryObject<Item> ITEM_BATTERIES = new BulkRegistryObject<>(battery -> ITEMS
-			.register(((BatteryType)battery).id(), () -> new ItemBattery((BatteryType) battery)),
+	public static final BulkRegistryObject<Item> ITEM_BATTERIES = bulkItem(
+			battery -> ITEMS.register(((BatteryType) battery).id(), () -> new ItemBattery((BatteryType) battery)),
 			BatteryType.values());
 	public static final RegistryObject<Item> ITEM_MATTER_CONTAINER = ITEMS.register("matter_container",
 			() -> new ItemMatterContainer());
+	public static final BulkRegistryObject<Item> ITEM_ISOLINEAR_CIRCUITS = bulkItem(
+			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
+					() -> new Item(new Item.Properties().tab(References.MAIN))),
+			TypeIsolinearCircuit.values());
 
 	/* TILES */
 
@@ -170,7 +177,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(
 			TypeMachine.MICROWAVE.id(),
 			() -> new BlockEntityType<>(TileMicrowave::new, Sets.newHashSet(BLOCK_MICROWAVE.get()), null));
-	public static final RegistryObject<BlockEntityType<TileInscriber>> TILE_INSCRIBER = TILES.register(TypeMachine.INSCRIBER.id(), 
+	public static final RegistryObject<BlockEntityType<TileInscriber>> TILE_INSCRIBER = TILES.register(
+			TypeMachine.INSCRIBER.id(),
 			() -> new BlockEntityType<>(TileInscriber::new, Sets.newHashSet(BLOCK_INSCRIBER.get()), null));
 
 	/* MENUS */
@@ -183,10 +191,12 @@ public class DeferredRegisters {
 			.register(TypeMachine.MATTER_DECOMPOSER.id(), () -> new MenuType<>(InventoryMatterDecomposer::new));
 	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
 			.register(TypeMachine.MATTER_RECYCLER.id(), () -> new MenuType<>(InventoryMatterRecycler::new));
-	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS.register(TypeMachine.CHARGER.id(),
-			() -> new MenuType<>(InventoryCharger::new));
-	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS.register(TypeMachine.MICROWAVE.id(),
-			() -> new MenuType<>(InventoryMicrowave::new));
+	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
+			.register(TypeMachine.CHARGER.id(), () -> new MenuType<>(InventoryCharger::new));
+	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS
+			.register(TypeMachine.MICROWAVE.id(), () -> new MenuType<>(InventoryMicrowave::new));
+	public static final RegistryObject<MenuType<InventoryInscriber>> MENU_INSCRIBER = CONTAINERS
+			.register(TypeMachine.INSCRIBER.id(), () -> new MenuType<>(InventoryInscriber::new));
 
 	// Functional Methods
 
@@ -210,6 +220,16 @@ public class DeferredRegisters {
 		RegistryObject<Block> block = BLOCKS.register(name, supplier);
 		ITEMS.register(name, () -> new BlockItemColored(block.get(), properties, color));
 		return block;
+	}
+
+	private static BulkRegistryObject<Block> bulkBlock(Function<IBulkRegistryObject, RegistryObject<Block>> factory,
+			IBulkRegistryObject[] bulkValues) {
+		return new BulkRegistryObject<>(factory, bulkValues);
+	}
+
+	private static BulkRegistryObject<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
+			IBulkRegistryObject[] bulkValues) {
+		return new BulkRegistryObject<>(factory, bulkValues);
 	}
 
 }

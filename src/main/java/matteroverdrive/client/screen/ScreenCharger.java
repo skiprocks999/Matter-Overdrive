@@ -26,7 +26,7 @@ public class ScreenCharger extends GenericScreen<InventoryCharger> {
 	private static boolean EXTENDED = false;
 
 	private ButtonGeneric close;
-	private ButtonMenuBar menu;
+	public ButtonMenuBar menu;
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;
 	private ButtonMenuOption upgrades;

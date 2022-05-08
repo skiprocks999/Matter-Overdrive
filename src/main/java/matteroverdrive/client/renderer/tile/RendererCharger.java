@@ -1,22 +1,23 @@
-package matteroverdrive.client.renderer;
+package matteroverdrive.client.renderer.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.client.renderer.tile.utils.AbstractTileRenderer;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 
-public class RendererCharger implements BlockEntityRenderer<TileCharger> {
+public class RendererCharger extends AbstractTileRenderer<TileCharger> {
 
-	public RendererCharger(BlockEntityRendererProvider.Context context) {
+	public RendererCharger(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -24,7 +25,6 @@ public class RendererCharger implements BlockEntityRenderer<TileCharger> {
 			int overlay) {
 
 		Direction facing = charger.getFacing();
-		float angleDeg;
 		switch (facing) {
 		case NORTH:
 			stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));

@@ -37,7 +37,7 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 
 	private ButtonGeneric close;
 
-	private ButtonMenuBar menu;
+	public ButtonMenuBar menu;
 
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;

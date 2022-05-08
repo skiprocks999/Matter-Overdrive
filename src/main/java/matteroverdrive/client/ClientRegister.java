@@ -2,8 +2,10 @@ package matteroverdrive.client;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.client.renderer.RendererCharger;
+import matteroverdrive.client.renderer.tile.RendererCharger;
+import matteroverdrive.client.renderer.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
+import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenMicrowave;
@@ -40,6 +42,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
 		MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
 		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
+		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -111,6 +114,7 @@ public class ClientRegister {
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
 
 	}
 

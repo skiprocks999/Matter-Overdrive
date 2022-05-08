@@ -93,7 +93,7 @@ public class ItemUpgrade extends OverdriveItem {
 
 		@Override
 		public String id() {
-			return "upgrade_" + this.toString().toLowerCase(); 
+			return "upgrade_" + this.toString().toLowerCase();
 		}
 
 	}

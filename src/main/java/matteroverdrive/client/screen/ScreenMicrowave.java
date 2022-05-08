@@ -37,7 +37,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 
 	private ButtonGeneric close;
 
-	private ButtonMenuBar menu;
+	public ButtonMenuBar menu;
 
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;

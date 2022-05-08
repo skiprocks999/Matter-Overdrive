@@ -4,6 +4,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -20,7 +21,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(blockPath(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING),
+				modLoc("block/tritanium_plating"));
 		for (BlockColors color : BlockColors.values()) {
 			withExistingParent(blockPath(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color)),
 					modLoc("block/tritanium_plating_colorless"));
@@ -40,6 +42,9 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		for (UpgradeType type : UpgradeType.values()) {
 			simpleItem(DeferredRegisters.ITEM_UPGRADES.get(type),
 					"item/upgrade/upgrade_" + type.toString().toLowerCase());
+		}
+		for (TypeIsolinearCircuit circuit : TypeIsolinearCircuit.values()) {
+			simpleItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(circuit),"item/isolinear_circuit/" + circuit.id());
 		}
 	}
 
