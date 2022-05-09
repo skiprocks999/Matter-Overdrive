@@ -70,7 +70,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
 		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this)
-				.setDefaultDirections(state, null, new Direction[] { Direction.NORTH }));
+				.setDefaultDirections(state, null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),

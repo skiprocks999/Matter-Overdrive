@@ -8,7 +8,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
@@ -79,7 +78,6 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 		if (changed) {
 			initialFacing = initialState.getValue(GenericMachineBlock.FACING);
-			MatterOverdrive.LOGGER.info(initialFacing.toString());
 			refreshCapability();
 		}
 		return this;
@@ -108,7 +106,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
 				for (int i = 0; i < inDirSize; i++) {
-					tag.putString("inDir" + i, inDirs.get(i).getName());
+					tag.putString("inDir" + i, inDirs.get(i).toString());
 				}
 			}
 
@@ -118,7 +116,8 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
 				for (int i = 0; i < outDirSize; i++) {
-					tag.putString("outDir" + i, outDirs.get(i).getName());
+					String str = outDirs.get(i).toString();
+					tag.putString("outDir" + i, str);
 				}
 			}
 		}
@@ -132,7 +131,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		currStorage = nbt.getInt("stored");
+		currStorage = nbt.getDouble("stored");
 
 		if (nbt.contains("inDirSize")) {
 			relativeInputDirs = new HashSet<>();
@@ -150,7 +149,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			}
 		}
 
-		maxStorage = nbt.getInt("maxStorage");
+		maxStorage = nbt.getDouble("maxStorage");
 		hasInput = nbt.getBoolean("hasInput");
 		hasOutput = nbt.getBoolean("hasOutput");
 	}
