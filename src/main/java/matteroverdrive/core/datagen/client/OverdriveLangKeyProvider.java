@@ -3,6 +3,7 @@ package matteroverdrive.core.datagen.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
+import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
@@ -84,6 +85,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
+			
+			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
+			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");

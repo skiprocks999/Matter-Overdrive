@@ -56,7 +56,7 @@ public class TileMicrowave extends GenericSoundTile {
 		super(DeferredRegisters.TILE_MICROWAVE.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.SOUTH },
+				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMicrowave.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)

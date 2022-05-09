@@ -11,6 +11,7 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -47,7 +48,7 @@ public class PacketUpdateCapabilitySides {
 					if (generic.hasCapability(message.type)) {
 						switch (message.type) {
 						case Item:
-							CapabilityInventory inv = generic.exposeCapability(message.type);
+							CapabilityInventory inv = generic.exposeCapability(CapabilityType.Item);
 							if (message.input) {
 								inv.setInputDirs(message.inDirs);
 							}
@@ -58,7 +59,7 @@ public class PacketUpdateCapabilitySides {
 							generic.setChanged();
 							break;
 						case Energy:
-							CapabilityEnergyStorage energy = generic.exposeCapability(message.type);
+							CapabilityEnergyStorage energy = generic.exposeCapability(CapabilityType.Energy);
 							if (message.input) {
 								energy.setInputDirs(message.inDirs);
 							}
@@ -69,7 +70,7 @@ public class PacketUpdateCapabilitySides {
 							generic.setChanged();
 							break;
 						case Matter:
-							CapabilityMatterStorage matter = generic.exposeCapability(message.type);
+							CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.Matter);
 							if (message.input) {
 								matter.setInputDirs(message.inDirs);
 							}
@@ -78,6 +79,7 @@ public class PacketUpdateCapabilitySides {
 							}
 							matter.refreshCapability();
 							generic.setChanged();
+							UtilsMatter.updateAdjacentMatterCables(generic);
 							break;
 						default:
 							break;
@@ -95,7 +97,7 @@ public class PacketUpdateCapabilitySides {
 		buf.writeBoolean(pkt.input);
 		if (pkt.input) {
 			buf.writeInt(pkt.inDirs.size());
-			for (Direction dir : pkt.inDirs) {
+			for (Direction dir : pkt.inDirs) {	
 				buf.writeEnum(dir);
 			}
 		}

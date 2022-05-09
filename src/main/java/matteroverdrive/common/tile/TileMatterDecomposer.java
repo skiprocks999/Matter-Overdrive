@@ -13,11 +13,11 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
-import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.sound.TickableSoundTile;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
+import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.client.Minecraft;
@@ -70,7 +70,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
 		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this)
-				.setDefaultDirections(state, null, new Direction[] { Direction.SOUTH }));
+				.setDefaultDirections(state, null, new Direction[] { Direction.NORTH }));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
@@ -91,7 +91,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			if (!input.isEmpty()) {
 				Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
 						: MatterRegister.INSTANCE.getServerMatterValue(input);
-				if (matterVal != null || (MatterUtils.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
+				if (matterVal != null || (UtilsMatter.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 					if (energy.getEnergyStored() >= usage) {
 						currRecipeValue = matterVal.doubleValue();

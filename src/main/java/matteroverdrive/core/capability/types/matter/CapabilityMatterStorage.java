@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
@@ -78,6 +79,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 		if (changed) {
 			initialFacing = initialState.getValue(GenericMachineBlock.FACING);
+			MatterOverdrive.LOGGER.info(initialFacing.toString());
 			refreshCapability();
 		}
 		return this;

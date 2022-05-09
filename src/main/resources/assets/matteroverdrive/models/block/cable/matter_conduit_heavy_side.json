@@ -1,0 +1,7 @@
+{
+	"parent": "matteroverdrive:block/parent/matter_conduit_big_side",
+	"textures": {
+		"particle": "matteroverdrive:block/matter_conduit/matter_conduit_heavy_side",
+		"texture": "matteroverdrive:block/matter_conduit/matter_conduit_heavy_side"
+	}
+}

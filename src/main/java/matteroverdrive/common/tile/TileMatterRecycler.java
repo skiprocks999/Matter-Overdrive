@@ -8,11 +8,11 @@ import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.sound.TickableSoundTile;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
+import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.client.Minecraft;
@@ -52,7 +52,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 		super(DeferredRegisters.TILE_MATTER_RECYCLER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.SOUTH },
+				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterRecycler.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
@@ -73,7 +73,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 			UtilsTile.drainElectricSlot(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
-			if (!input.isEmpty() && MatterUtils.isRawDust(input)) {
+			if (!input.isEmpty() && UtilsMatter.isRawDust(input)) {
 				double value = UtilsNbt.readMatterVal(input);
 				if (value > 0) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);

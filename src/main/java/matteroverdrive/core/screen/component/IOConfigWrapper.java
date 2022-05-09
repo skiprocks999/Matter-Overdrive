@@ -92,7 +92,7 @@ public class IOConfigWrapper {
 				}
 			}
 		}
-		boolean hasOutput = input.get();
+		boolean hasOutput = output.get();
 		List<Direction> outputs = null;
 		if (hasOutput) {
 			outputs = new ArrayList<>();

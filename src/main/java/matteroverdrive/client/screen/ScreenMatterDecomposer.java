@@ -310,6 +310,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
+		//this is initially bugged and I have no idea why
 		matterWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {

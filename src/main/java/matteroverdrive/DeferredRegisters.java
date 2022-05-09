@@ -11,9 +11,11 @@ import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockMultiSubnode;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
+import matteroverdrive.common.block.cable.BlockMatterConduit;
 import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
+import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryInscriber;
@@ -31,6 +33,7 @@ import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileInscriber;
+import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileMicrowave;
@@ -117,6 +120,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_INSCRIBER = registerBlock(TypeMachine.INSCRIBER.id(),
 			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER,
 					DeferredRegisters.TILE_INSCRIBER));
+	public static final BulkRegister<Block> BLOCK_MATTER_CONDUITS = bulkBlock(
+			conduit -> registerBlock(((TypeMatterConduit) conduit).id(), () -> new BlockMatterConduit((TypeMatterConduit) conduit)), TypeMatterConduit.values());
 
 	/* ITEMS */
 
@@ -180,6 +185,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileInscriber>> TILE_INSCRIBER = TILES.register(
 			TypeMachine.INSCRIBER.id(),
 			() -> new BlockEntityType<>(TileInscriber::new, Sets.newHashSet(BLOCK_INSCRIBER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterConduit>> TILE_MATTER_CONDUIT = TILES.register(
+			"matter_conduit", () -> new BlockEntityType<>(TileMatterConduit::new, Sets.newHashSet(BLOCK_MATTER_CONDUITS.getObjectsAsArray(new Block[0])), null));
 
 	/* MENUS */
 

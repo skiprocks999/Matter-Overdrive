@@ -1,8 +1,8 @@
 package matteroverdrive.client;
 
 import matteroverdrive.core.matter.MatterRegister;
-import matteroverdrive.core.matter.MatterUtils;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,7 +25,7 @@ public class ClientEventHandler {
 	}
 
 	private static Component getMatterTooltip(ItemStack stack) {
-		if (MatterUtils.isRawDust(stack)) {
+		if (UtilsMatter.isRawDust(stack)) {
 			double val = UtilsNbt.readMatterVal(stack);
 			return val > 0
 					? UtilsText.tooltip("potmatterval",
@@ -33,7 +33,7 @@ public class ClientEventHandler {
 							.withStyle(ChatFormatting.BLUE)
 					: UtilsText.tooltip("potmatterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 							.withStyle(ChatFormatting.BLUE);
-		} else if (MatterUtils.isRefinedDust(stack)) {
+		} else if (UtilsMatter.isRefinedDust(stack)) {
 			double val = UtilsNbt.readMatterVal(stack);
 			return val > 0
 					? UtilsText

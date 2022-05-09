@@ -185,8 +185,8 @@ public class ButtonIO extends Button {
 	}
 
 	public enum BlockSide {
-		TOP(Direction.UP), BOTTOM(Direction.DOWN), LEFT(Direction.EAST), RIGHT(Direction.WEST), FRONT(Direction.NORTH),
-		BACK(Direction.SOUTH);
+		TOP(Direction.UP), BOTTOM(Direction.DOWN), LEFT(Direction.EAST), RIGHT(Direction.WEST), FRONT(Direction.SOUTH),
+		BACK(Direction.NORTH);
 
 		public final TranslatableComponent name;
 		public final Direction mappedDir;
