@@ -106,7 +106,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 				List<Direction> inDirs = new ArrayList<>(relativeInputDirs);
 				inDirSize = inDirs.size();
 				for (int i = 0; i < inDirSize; i++) {
-					tag.putString("inDir" + i, inDirs.get(i).toString());
+					tag.putString("inDir" + i, inDirs.get(i).getName());
 				}
 			}
 
@@ -116,7 +116,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
 				for (int i = 0; i < outDirSize; i++) {
-					String str = outDirs.get(i).toString();
+					String str = outDirs.get(i).getName();
 					tag.putString("outDir" + i, str);
 				}
 			}
