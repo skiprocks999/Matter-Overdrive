@@ -23,7 +23,7 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(DeferredRegisters.BLOCK_TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get()).add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get())
 				.add(DeferredRegisters.BLOCK_MATTER_RECYCLER.get()).add(DeferredRegisters.BLOCK_CHARGER.get())
-				.add(DeferredRegisters.BLOCK_MICROWAVE.get());
+				.add(DeferredRegisters.BLOCK_MICROWAVE.get()).add(DeferredRegisters.BLOCK_TRANSPORTER.get());
 
 		tag(BlockTags.NEEDS_STONE_TOOL).add(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING.get())
 				.add(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.<Block>getObjectsAsArray(new Block[0]))
@@ -32,7 +32,7 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(DeferredRegisters.BLOCK_TRITANIUM_CRATES.<Block>getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.BLOCK_SOLAR_PANEL.get()).add(DeferredRegisters.BLOCK_MATTER_DECOMPOSER.get())
 				.add(DeferredRegisters.BLOCK_MATTER_RECYCLER.get()).add(DeferredRegisters.BLOCK_CHARGER.get())
-				.add(DeferredRegisters.BLOCK_MICROWAVE.get());
+				.add(DeferredRegisters.BLOCK_MICROWAVE.get()).add(DeferredRegisters.BLOCK_TRANSPORTER.get());
 	}
 
 }

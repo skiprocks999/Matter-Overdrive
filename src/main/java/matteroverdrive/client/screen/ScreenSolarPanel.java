@@ -57,18 +57,18 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 				return solar.clientGeneratingBonus * TileSolarPanel.GENERATION;
 			}
 			return 0;
-		}, this, 81, 35, new int[] { 0 }).setGenerator());
+		}, this, 118, 35, new int[] { 0 }).setGenerator());
 		components.add(new ScreenComponentIndicator(() -> {
 			TileSolarPanel solar = menu.getTile();
 			if (solar != null) {
 				return solar.clientGenerating;
 			}
 			return false;
-		}, this, -31, 159, new int[] { 0, 1, 2 }));
-		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+		}, this, 6, 159, new int[] { 0, 1, 2 }));
+		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
+		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
+		components.add(new ScreenComponentUpgradeInfo(this, 109, 76, new int[] { 2 }, () -> menu.getTile()));
 	}
 
 	@Override
@@ -76,33 +76,33 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		super.init();
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 170, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 175, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 		}, this);
-		home = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT, this, button -> {
+		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
 			redstone.visible = false;
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
 			redstone.visible = true;
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
 			redstone.visible = false;
 		}, MenuButtonType.UPGRADES, menu, false);
 
-		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(solar.getBlockPos()));

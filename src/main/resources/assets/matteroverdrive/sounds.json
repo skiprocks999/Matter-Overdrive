@@ -34,6 +34,13 @@
 			"matteroverdrive:block/machine_electric"
 		]
 	},
+	"transporter": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.transporter",
+		"sounds": [
+			"matteroverdrive:block/transporter"
+		]
+	},
 	"button_expand": {
 		"category": "master",
 		"subtitle": "subtitles.matteroverdrive.button_expand",

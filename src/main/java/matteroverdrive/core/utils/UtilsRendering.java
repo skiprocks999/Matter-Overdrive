@@ -60,6 +60,7 @@ public class UtilsRendering {
 		Minecraft.getInstance().getItemRenderer().render(
 				new ItemStack(type == RenderType.translucent() ? Items.BLACK_STAINED_GLASS : Blocks.STONE),
 				TransformType.NONE, false, stack, buffer, combinedLightIn, combinedOverlayIn, model);
+		
 	}
 	
 	public static void renderItem(ItemStack stack, int light, int overlay, PoseStack pose, MultiBufferSource buffer) {

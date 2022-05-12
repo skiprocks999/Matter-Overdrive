@@ -67,7 +67,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
 			}
 			return 0;
-		}, this, -4, 48, new int[] { 0 }));
+		}, this, 33, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
@@ -86,7 +86,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return matter.clientEnergyUsage;
 			}
 			return 0;
-		}, this, 130, 35, new int[] { 0 }));
+		}, this, 167, 35, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
@@ -105,23 +105,23 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				return matter.clientRecipeValue;
 			}
 			return 0;
-		}, this, 58, 35, new int[] { 0 }).setGenerator().setMatter());
+		}, this, 95, 35, new int[] { 0 }).setGenerator().setMatter());
 		components.add(new ScreenComponentIndicator(() -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null) {
 				return matter.clientRunning;
 			}
 			return false;
-		}, this, -31, 159, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 43, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
+		components.add(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 43, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+		components.add(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 43, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
+		components.add(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
 				UtilsRendering.TEXT_BLUE));
 	}
 
@@ -130,15 +130,15 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		super.init();
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 170, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 175, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
 		}, this);
-		home = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT, this, button -> {
+		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -154,7 +154,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
@@ -170,7 +170,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -186,7 +186,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
+		ioconfig = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
 			updateScreen(3);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -202,7 +202,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
@@ -214,7 +214,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return 0;
 		});
-		items = new ButtonIOConfig(guiWidth + 11, guiHeight + 32, button -> {
+		items = new ButtonIOConfig(guiWidth + 48, guiHeight + 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -225,7 +225,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, IOConfigButtonType.ITEM);
-		energy = new ButtonIOConfig(guiWidth + 11, guiHeight + 72, button -> {
+		energy = new ButtonIOConfig(guiWidth + 48, guiHeight + 72, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -236,7 +236,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.showButtons();
 			matterWrapper.hideButtons();
 		}, IOConfigButtonType.ENERGY);
-		matter = new ButtonIOConfig(guiWidth + 11, guiHeight + 112, button -> {
+		matter = new ButtonIOConfig(guiWidth + 48, guiHeight + 112, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -248,7 +248,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			matterWrapper.showButtons();
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientInventory.getInputDirections();
@@ -279,7 +279,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientEnergy.getInputDirections();
@@ -311,7 +311,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
 		//this is initially bugged and I have no idea why
-		matterWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		matterWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientMatter.getInputDirections();

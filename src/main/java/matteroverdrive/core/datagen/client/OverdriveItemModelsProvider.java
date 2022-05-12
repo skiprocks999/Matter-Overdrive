@@ -35,6 +35,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
 		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "block/multisubnode");
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_TRANSPORTER), modLoc("block/transporter"));
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
@@ -46,6 +47,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		for (TypeIsolinearCircuit circuit : TypeIsolinearCircuit.values()) {
 			simpleItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(circuit),"item/isolinear_circuit/" + circuit.id());
 		}
+	
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

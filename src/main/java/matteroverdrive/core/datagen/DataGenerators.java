@@ -1,6 +1,7 @@
 package matteroverdrive.core.datagen;
 
 import matteroverdrive.References;
+import matteroverdrive.core.datagen.client.OverdriveBlockModelsProvider;
 import matteroverdrive.core.datagen.client.OverdriveBlockStateProvider;
 import matteroverdrive.core.datagen.client.OverdriveLangKeyProvider;
 import matteroverdrive.core.datagen.client.OverdriveItemModelsProvider;
@@ -26,8 +27,9 @@ public class DataGenerators {
 			generator.addProvider(new MatterValueGenerator(generator));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(new OverdriveBlockModelsProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new OverdriveItemModelsProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new OverdriveLangKeyProvider(generator, "en_us"));
 		}
 	}

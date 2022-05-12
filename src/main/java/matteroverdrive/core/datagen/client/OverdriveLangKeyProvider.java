@@ -3,6 +3,7 @@ package matteroverdrive.core.datagen.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
+import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
@@ -85,6 +86,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
+			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
 			
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
@@ -137,14 +139,16 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("range", "Range: %s Blocks");
 			addGuiLabel("storage", "Storage: %s");
 			addGuiLabel("soundmuted", "Sound Muffled");
+			addGuiLabel("unknown", "Unknown");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
-			addContainer("solar_panel", "Solar Panel");
-			addContainer("matter_decomposer", "Matter Decomposer");
-			addContainer("matter_recycler", "Matter Recycler");
-			addContainer("charger", "Android Charger");
-			addContainer("microwave", "Microwave");
-			addContainer("inscriber", "Inscriber");
+			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");
+			addContainer(TypeMachine.MATTER_DECOMPOSER.id(), "Matter Decomposer");
+			addContainer(TypeMachine.MATTER_RECYCLER.id(), "Matter Recycler");
+			addContainer(TypeMachine.CHARGER.id(), "Android Charger");
+			addContainer(TypeMachine.MICROWAVE.id(), "Microwave");
+			addContainer(TypeMachine.INSCRIBER.id(), "Inscriber");
+			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

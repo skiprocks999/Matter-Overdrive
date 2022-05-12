@@ -38,6 +38,7 @@ import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.tile.TileTransporter;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.common.tile.generic.TileMultiSubnode;
@@ -122,6 +123,8 @@ public class DeferredRegisters {
 					DeferredRegisters.TILE_INSCRIBER));
 	public static final BulkRegister<Block> BLOCK_MATTER_CONDUITS = bulkBlock(
 			conduit -> registerBlock(((TypeMatterConduit) conduit).id(), () -> new BlockMatterConduit((TypeMatterConduit) conduit)), TypeMatterConduit.values());
+	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
+			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER));
 
 	/* ITEMS */
 
@@ -187,6 +190,8 @@ public class DeferredRegisters {
 			() -> new BlockEntityType<>(TileInscriber::new, Sets.newHashSet(BLOCK_INSCRIBER.get()), null));
 	public static final RegistryObject<BlockEntityType<TileMatterConduit>> TILE_MATTER_CONDUIT = TILES.register(
 			"matter_conduit", () -> new BlockEntityType<>(TileMatterConduit::new, Sets.newHashSet(BLOCK_MATTER_CONDUITS.getObjectsAsArray(new Block[0])), null));
+	public static final RegistryObject<BlockEntityType<TileTransporter>> TILE_TRANSPORTER = TILES.register(TypeMachine.TRANSPORTER.id(), 
+			() -> new BlockEntityType<>(TileTransporter::new, Sets.newHashSet(BLOCK_TRANSPORTER.get()), null));
 
 	/* MENUS */
 

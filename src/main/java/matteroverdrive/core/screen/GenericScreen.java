@@ -30,9 +30,15 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 			References.ID + ":textures/gui/base/base_gui.png");
 	protected List<IGuiComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
+	
+	private static final int OFFSET = 37;
+	
+	public static final int GUI_WIDTH = 224;
+	public static final int GUI_HEIGHT = 176;
 
 	public GenericScreen(T menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
+		setScreenParams();
 		updateSlotActivity(getScreenNumber());
 		initializeComponents();
 	}
@@ -81,7 +87,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		UtilsRendering.bindTexture(defaultBackground);
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		blit(stack, guiWidth - 37, guiHeight, 0, 0, 224, 176);
+		blit(stack, guiWidth, guiHeight, 0, 0, imageWidth, imageHeight);
 		int xAxis = x - guiWidth;
 		int yAxis = y - guiHeight;
 		for (IGuiComponent component : components) {
@@ -204,11 +210,22 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 			}
 		}
 	}
-
-	public T getMenu() {
-		return this.menu;
+	
+	public void setScreenParams() {
+		leftPos -= OFFSET;
+		imageWidth = GUI_WIDTH;
+		imageHeight = GUI_HEIGHT;
+		titleLabelX += OFFSET;
 	}
-
+	
+	public int getGuiRight() {
+		return getGuiLeft() + getXSize();
+	}
+	
+	public int getGuiBottom() {
+		return getGuiTop() + getYSize();
+	}
+	
 	public abstract int getScreenNumber();
 
 }

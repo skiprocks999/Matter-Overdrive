@@ -116,8 +116,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 				List<Direction> outDirs = new ArrayList<>(relativeOutputDirs);
 				outDirSize = outDirs.size();
 				for (int i = 0; i < outDirSize; i++) {
-					String str = outDirs.get(i).getName();
-					tag.putString("outDir" + i, str);
+					tag.putString("outDir" + i, outDirs.get(i).getName());
 				}
 			}
 		}

@@ -29,13 +29,13 @@ public class InventoryMicrowave extends GenericInventoryTile<TileMicrowave> {
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotGeneric(invcap, nextIndex(), -29, 48, new int[] { 0 }, SlotType.MAIN, null));
-		addSlot(new SlotRestricted(invcap, nextIndex(), 30, 48, new int[] { 0 }, SlotType.BIG, null));
-		addSlot(new SlotEnergyCharging(invcap, nextIndex(), -29, 75, new int[] { 0 }));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 44, 55, new int[] { 2 }, UPGRADES));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 68, 55, new int[] { 2 }, UPGRADES));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 92, 55, new int[] { 2 }, UPGRADES));
-		addSlot(new SlotUpgrade(invcap, nextIndex(), 116, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotGeneric(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, null));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, null));
+		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 81, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 105, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 129, 55, new int[] { 2 }, UPGRADES));
+		addSlot(new SlotUpgrade(invcap, nextIndex(), 153, 55, new int[] { 2 }, UPGRADES));
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 				return (double) microwave.clientProgress / (double) TileMicrowave.OPERATING_TIME;
 			}
 			return 0;
-		}, this, -4, 48, new int[] { 0 }));
+		}, this, 33, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
 			TileMicrowave microwave = menu.getTile();
 			if (microwave != null) {
@@ -84,21 +84,21 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 				return microwave.clientEnergyUsage;
 			}
 			return 0;
-		}, this, 81, 35, new int[] { 0 }));
+		}, this, 118, 35, new int[] { 0 }));
 		components.add(new ScreenComponentIndicator(() -> {
 			TileMicrowave microwave = menu.getTile();
 			if (microwave != null) {
 				return microwave.clientRunning;
 			}
 			return false;
-		}, this, -31, 159, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 43, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
+		components.add(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 43, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+		components.add(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
 	}
 
@@ -107,15 +107,15 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 		super.init();
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 170, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 175, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
 		}, this);
-		home = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT, this, button -> {
+		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -128,7 +128,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
@@ -141,7 +141,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -154,7 +154,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
+		ioconfig = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
 			updateScreen(3);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -167,7 +167,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(microwave.getBlockPos()));
@@ -179,7 +179,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			}
 			return 0;
 		});
-		items = new ButtonIOConfig(guiWidth + 11, guiHeight + 32, button -> {
+		items = new ButtonIOConfig(guiWidth + 48, guiHeight + 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -188,7 +188,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			itemWrapper.showButtons();
 			energyWrapper.hideButtons();
 		}, IOConfigButtonType.ITEM);
-		energy = new ButtonIOConfig(guiWidth + 11, guiHeight + 72, button -> {
+		energy = new ButtonIOConfig(guiWidth + 48, guiHeight + 72, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -198,7 +198,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
 				return microwave.clientInventory.getInputDirections();
@@ -229,7 +229,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
 				return microwave.clientEnergy.getInputDirections();

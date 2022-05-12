@@ -54,8 +54,8 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 
 	private int screenNumber = 0;
 
-	private static final int BETWEEN_MENUS = 26;
-	private static final int FIRST_HEIGHT = 40;
+	public static final int BETWEEN_MENUS = 26;
+	public static final int FIRST_HEIGHT = 40;
 	
 	public ScreenInscriber(InventoryInscriber menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
@@ -65,7 +65,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 				return (double) inscriber.clientProgress / (double) TileInscriber.OPERATING_TIME;
 			}
 			return 0;
-		}, this, -4, 48, new int[] { 0 }));
+		}, this, 33, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
 			TileInscriber inscriber = menu.getTile();
 			if (inscriber != null) {
@@ -84,21 +84,21 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 				return inscriber.clientEnergyUsage;
 			}
 			return 0;
-		}, this, 81, 35, new int[] { 0 }));
+		}, this, 118, 35, new int[] { 0 }));
 		components.add(new ScreenComponentIndicator(() -> {
 			TileInscriber inscriber = menu.getTile();
 			if (inscriber != null) {
 				return inscriber.clientRunning;
 			}
 			return false;
-		}, this, -31, 159, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentHotbarBar(this, 3, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 73, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 42, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 43, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
+		components.add(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 43, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+		components.add(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
 	}
 
@@ -107,15 +107,15 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 		super.init();
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 170, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 175, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
 		}, this);
-		home = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT, this, button -> {
+		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -128,7 +128,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
@@ -141,7 +141,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -154,7 +154,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(guiWidth + 180, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
+		ioconfig = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
 			updateScreen(3);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -167,7 +167,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(guiWidth + 11, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(inscriber.getBlockPos()));
@@ -179,7 +179,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			}
 			return 0;
 		});
-		items = new ButtonIOConfig(guiWidth + 11, guiHeight + 32, button -> {
+		items = new ButtonIOConfig(guiWidth + 48, guiHeight + 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -188,7 +188,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			itemWrapper.showButtons();
 			energyWrapper.hideButtons();
 		}, IOConfigButtonType.ITEM);
-		energy = new ButtonIOConfig(guiWidth + 11, guiHeight + 72, button -> {
+		energy = new ButtonIOConfig(guiWidth + 48, guiHeight + 72, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -198,7 +198,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
 				return inscriber.clientInventory.getInputDirections();
@@ -229,7 +229,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 100, guiHeight + 59, () -> {
+		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
 				return inscriber.clientEnergy.getInputDirections();

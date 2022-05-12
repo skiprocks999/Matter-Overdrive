@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
@@ -21,6 +22,7 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 		this.type = type;
 		this.screenNumbers = screenNumbers;
 		this.icon = icon;
+		isActive = true;
 	}
 
 	public SlotGeneric(CapabilityInventory inventory, int index, int xPosition, int yPosition, int[] screenNumbers) {
@@ -63,6 +65,14 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 
 	public CapabilityInventory getInventory() {
 		return (CapabilityInventory) getItemHandler();
+	}
+	
+	@Override
+	public boolean mayPlace(ItemStack stack) {
+		if(isActive()) {
+			return super.mayPlace(stack);
+		}
+		return false;
 	}
 
 }
