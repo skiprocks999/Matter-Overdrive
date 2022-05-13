@@ -32,7 +32,7 @@ public class ParticleReplicator extends TextureSheetParticle {
 		this.initialScale = quadSize;
 		this.rCol = this.gCol = this.bCol = 1.0F;
 		this.lifetime = (int) (8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
-		setSprite(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft:block/glass")));
+		//setSprite(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft:block/glass")));
 	}
 
 	@Override
