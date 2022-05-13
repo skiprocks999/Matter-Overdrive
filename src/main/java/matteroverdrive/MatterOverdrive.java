@@ -46,6 +46,7 @@ public class MatterOverdrive {
 		DeferredRegisters.CONTAINERS.register(bus);
 		DeferredRegisters.FLUIDS.register(bus);
 		DeferredRegisters.ENTITIES.register(bus);
+		DeferredRegisters.PARTICLES.register(bus);
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
 		

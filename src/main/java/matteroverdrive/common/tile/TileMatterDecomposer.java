@@ -86,6 +86,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		if (canRun()) {
 			UtilsTile.drainElectricSlot(this);
 			UtilsTile.fillMatterSlot(this);
+			UtilsTile.outputMatter(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 			ItemStack input = inv.getInputs().get(0);
 			if (!input.isEmpty()) {

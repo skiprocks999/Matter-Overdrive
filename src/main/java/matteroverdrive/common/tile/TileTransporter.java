@@ -1,5 +1,6 @@
 package matteroverdrive.common.tile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -11,8 +12,9 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
+import matteroverdrive.client.particle.ParticleReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.common.inventory.InventoryMatterDecomposer;
+import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -23,12 +25,14 @@ import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsMath;
+import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -57,7 +61,8 @@ public class TileTransporter extends GenericSoundTile {
 	private int cooldownTimer = 0;
 	private double matterUsage = MATTER_USAGE;
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
-	private int currDestination = -1;
+	private int currDestination = 0;
+	private List<LivingEntity> currEntities = new ArrayList<>();
 
 	public int clientEnergyUsage;
 	public double clientMatterUsage;
@@ -70,6 +75,7 @@ public class TileTransporter extends GenericSoundTile {
 	public int clientCooldown;
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
 	public int clientDestination;
+	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
 
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
@@ -80,15 +86,15 @@ public class TileTransporter extends GenericSoundTile {
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
 		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this).setDefaultDirections(
-				state, null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }));
+				state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null));
 		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
+				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
-				getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
+				getContainerName(TypeMachine.TRANSPORTER.id())));
 		setMenuPacketHandler(
 				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
 		setRenderPacketHandler(
@@ -109,19 +115,22 @@ public class TileTransporter extends GenericSoundTile {
 						CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 						CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
 						if (energy.getEnergyStored() >= energyUsage && matter.getMatterStored() >= matterUsage) {
+							int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
+									: entitiesAbove.size();
 							energy.removeEnergy(energyUsage);
 							running = true;
 							currProgress += getProgress(validData.getSecond());
+							currEntities.clear();
+							currEntities.addAll(entitiesAbove.subList(0, size));
 							if (currProgress >= BUILD_UP_TIME) {
 								cooldownTimer = 0;
 								matter.removeMatter(matterUsage);
-								int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
-										: entitiesAbove.size();
+								
 								double x = curLoc.getDestination().getX() + 0.5;
 								double y = curLoc.getDestination().getY() + 0.01;
 								double z = curLoc.getDestination().getZ() + 0.5;
-								for (int i = 0; i < size; i++) {
-									entitiesAbove.get(i).teleportToWithTicket(x, y, z);
+								for (LivingEntity entity : currEntities) {
+									entity.teleportToWithTicket(x, y, z);
 								}
 							}
 						} else {
@@ -151,6 +160,11 @@ public class TileTransporter extends GenericSoundTile {
 			clientSoundPlaying = true;
 			Minecraft.getInstance().getSoundManager()
 					.play(new TickableSoundTile(SoundRegister.SOUND_TRANSPORTER.get(), this));
+		}
+		if(clientProgress > 0 && clientEntityData != null && clientRunning) {
+			for(EntityDataWrapper entityData : clientEntityData) {
+				handleParticles(entityData, new Vector3f((float) entityData.xPos(), (float) getBlockPos().getY(), (float) entityData.zPos()));
+			}
 		}
 	}
 
@@ -201,12 +215,23 @@ public class TileTransporter extends GenericSoundTile {
 		tag.putBoolean("running", running);
 		tag.putBoolean("muffled", isMuffled);
 		tag.putDouble("progress", currProgress);
+		tag.putInt("entities", currEntities.size());
+		for(int i = 0; i < currEntities.size(); i++) {
+			Entity entity = currEntities.get(i);
+			EntityDataWrapper wrapper = new EntityDataWrapper(entity.getBbHeight(), entity.getBbWidth(), entity.getX(), entity.getZ());
+			wrapper.serializeNbt(tag, "entity" + i);
+		}
 	}
 
 	private void clientTileLoad(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
 		clientMuffled = tag.getBoolean("muffled");
 		clientProgress = tag.getDouble("progress");
+		clientEntityData = new ArrayList<>();
+		int size = tag.getInt("entities");
+		for(int i = 0; i < size; i++) {
+			clientEntityData.add(EntityDataWrapper.fromNbt(tag.getCompound("entity" + i)));
+		}
 	}
 
 	@Override
@@ -369,37 +394,36 @@ public class TileTransporter extends GenericSoundTile {
 		return val < 1 ? 1 : val;
 	}
 
-	private void handleParticles(LivingEntity entity, Vector3f vec) {
-
-		double entityRadius = entity.getBbWidth();
-		double entityArea = Math.max(entityRadius * entity.getBbHeight(), 0.3);
+	private void handleParticles(EntityDataWrapper entityData, Vector3f vec) {
+		double entityRadius = entityData.bbWidth();
+		double entityArea = Math.max(entityRadius * entityData.bbHeight(), 0.3);
 		Random random = MatterOverdrive.RANDOM;
 		double radiusX = entityRadius + random.nextDouble() * 0.2f;
 		double radiusZ = entityRadius + random.nextDouble() * 0.2f;
 		double time = Math.min((double) currProgress / (double) (BUILD_UP_TIME), 1);
-		double gravity = 0.015f;
+		float gravity = 0.015f;
 		int age = (int) Math.round(UtilsMath.easeIn(time, 5, 15, 1));
 		int count = (int) Math.round(UtilsMath.easeIn(time, 2, entityArea * 15, 1));
 
 		for (int i = 0; i < count; i++) {
 			float speed = random.nextFloat() * 0.05f + 0.15f;
-			float height = vec.y() + random.nextFloat() * entity.getBbHeight();
+			float height = vec.y() + random.nextFloat() * entityData.bbHeight();
 
 			Vector3f origin = new Vector3f(vec.x(), height, vec.z());
 			Vector3f pos = UtilsMath.randomSpherePoint(origin.x(), origin.y(), origin.z(),
 					new Vector3d(radiusX, 0, radiusZ), random);
 			origin.sub(pos);
-			origin.cross(new Vector3f(0, 0, 0));
+			//origin.cross(new Vector3f(0, 0, 0));
 			
 			//Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos, null), new Vector3f(0, 0, 0), null);
 			origin.mul(speed);
 			// dir.scale(speed);
-			ReplicatorParticle replicatorParticle = new ReplicatorParticle(this.level, pos.x(), pos.y(), pos.z(),
+			ParticleReplicator replicatorParticle = new ParticleReplicator((ClientLevel) this.level, pos.x(), pos.y(), pos.z(),
 					origin.x(), origin.y(), origin.z());
 			replicatorParticle.setCenter(origin.x(), origin.y(), origin.z());
 
-			replicatorParticle.setParticleAge(age);
-			replicatorParticle.setPointGravityScale(gravity);
+			replicatorParticle.setParticleMaxAge(age);
+			replicatorParticle.setGravity(gravity);
 
 			Minecraft.getInstance().particleEngine.add(replicatorParticle);
 			//Minecraft.getInstance().effectRenderer.addEffect(replicatorParticle);

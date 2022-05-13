@@ -1,7 +1,9 @@
 package matteroverdrive.client;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
+import matteroverdrive.client.particle.ParticleReplicator;
 import matteroverdrive.client.renderer.tile.RendererCharger;
 import matteroverdrive.client.renderer.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
@@ -10,15 +12,20 @@ import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenSolarPanel;
+import matteroverdrive.client.screen.ScreenTransporter;
 import matteroverdrive.client.screen.ScreenTritaniumCrate;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.utils.UtilsNbt;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,6 +50,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
 		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
+		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -107,6 +115,12 @@ public class ClientRegister {
 				return 0;
 			}).orElse(0);
 		});
+		ItemProperties.register(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE, (stack, world, entity, call) -> {
+			if(stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
+				return 1;
+			}
+			return 0;
+		});
 
 	}
 
@@ -122,9 +136,18 @@ public class ClientRegister {
 	public static void onModelEvent(ModelRegistryEvent event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
 	}
+	
+	@SubscribeEvent
+	public static void registerParticles(ParticleFactoryRegisterEvent event) {
+		MatterOverdrive.LOGGER.info("fired");
+		ParticleEngine engine = Minecraft.getInstance().particleEngine;
+		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
+	}
 
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
+	
+
 
 }

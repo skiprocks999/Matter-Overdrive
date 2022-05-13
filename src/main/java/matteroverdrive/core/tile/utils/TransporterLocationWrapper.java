@@ -15,7 +15,7 @@ public class TransporterLocationWrapper {
 	private TextComponent customName;
 	private boolean hasCustomName;
 	
-	private BlockPos destination = new BlockPos(0, -1000, 0);
+	private BlockPos destination = new BlockPos(0, -60, 0);
 	
 	public TransporterLocationWrapper() {
 		

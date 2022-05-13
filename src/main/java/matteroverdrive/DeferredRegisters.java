@@ -23,10 +23,12 @@ import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.common.inventory.InventorySolarPanel;
+import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
+import matteroverdrive.common.item.tools.ItemTransporterFlashdrive;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
@@ -44,6 +46,8 @@ import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -69,6 +73,7 @@ public class DeferredRegisters {
 	public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, References.ID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,
 			References.ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, References.ID);
 
 	/* BLOCKS */
 
@@ -161,6 +166,8 @@ public class DeferredRegisters {
 			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
 					() -> new Item(new Item.Properties().tab(References.MAIN))),
 			TypeIsolinearCircuit.values());
+	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive", 
+			() -> new ItemTransporterFlashdrive());
 
 	/* TILES */
 
@@ -209,7 +216,14 @@ public class DeferredRegisters {
 			.register(TypeMachine.MICROWAVE.id(), () -> new MenuType<>(InventoryMicrowave::new));
 	public static final RegistryObject<MenuType<InventoryInscriber>> MENU_INSCRIBER = CONTAINERS
 			.register(TypeMachine.INSCRIBER.id(), () -> new MenuType<>(InventoryInscriber::new));
+	public static final RegistryObject<MenuType<InventoryTransporter>> MENU_TRANSPORTER = CONTAINERS
+			.register(TypeMachine.TRANSPORTER.id(), () -> new MenuType<>(InventoryTransporter::new));
 
+	/* Particles */
+	
+	public static final RegistryObject<ParticleType<SimpleParticleType>> PARTICLE_REPLICATOR = PARTICLES.register("replicator", 
+			() -> new SimpleParticleType(false));
+	
 	// Functional Methods
 
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {

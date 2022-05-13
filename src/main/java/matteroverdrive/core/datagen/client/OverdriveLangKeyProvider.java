@@ -62,6 +62,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Isolinear Circuit Mk2");
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3), "Isolinear Circuit Mk3");
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
+			
+			addItem(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());

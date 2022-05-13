@@ -2,8 +2,8 @@ package matteroverdrive.client.screen;
 
 import java.util.HashSet;
 
-import matteroverdrive.common.inventory.InventoryMatterDecomposer;
-import matteroverdrive.common.tile.TileMatterDecomposer;
+import matteroverdrive.common.inventory.InventoryTransporter;
+import matteroverdrive.common.tile.TileTransporter;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
@@ -13,15 +13,14 @@ import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
-import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
+import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
-import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -31,7 +30,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecomposer> {
+public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 
 	private static boolean EXTENDED = false;
 
@@ -58,58 +57,51 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-
-	public ScreenMatterDecomposer(InventoryMatterDecomposer menu, Inventory playerinventory, Component title) {
+	
+	public ScreenTransporter(InventoryTransporter menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
-		components.add(new ScreenComponentProgress(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
-			}
-			return 0;
-		}, this, 33, 48, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null && matter.clientRunning) {
-				return matter.clientEnergyUsage;
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null && transporter.clientRunning) {
+				return transporter.clientEnergyUsage;
 			}
 			return 0;
 		}, this, 167, 35, new int[] { 0 }));
 		components.add(new ScreenComponentCharge(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientMatter.getMatterStored();
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getMatterStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientMatter.getMaxMatterStored();
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getMaxMatterStored();
 			}
 			return 0;
 		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null && matter.clientRunning) {
-				return matter.clientRecipeValue;
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null && transporter.clientRunning) {
+				return transporter.clientMatterUsage;
 			}
 			return 0;
-		}, this, 95, 35, new int[] { 0 }).setGenerator().setMatter());
+		}, this, 167, 80, new int[] { 0 }).setMatter());
 		components.add(new ScreenComponentIndicator(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientRunning;
+			TileTransporter transporter = menu.getTile();
+			if (transporter != null) {
+				return transporter.clientRunning;
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
@@ -203,14 +195,14 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			matterWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
 		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(transporter.getBlockPos()));
 			}
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientRedstoneMode;
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientRedstoneMode;
 			}
 			return 0;
 		});
@@ -249,95 +241,95 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		}, IOConfigButtonType.MATTER);
 
 		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.getInputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientInventory.getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.getOutputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientInventory.getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.hasInput;
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientInventory.hasInput;
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientInventory.hasOutput;
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientInventory.hasOutput;
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
 		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getInputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getOutputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.canReceive();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.canReceive();
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientEnergy.canExtract();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.canExtract();
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
 		matterWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientMatter.getInputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientMatter.getOutputDirections();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientMatter.canReceive();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.canReceive();
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.clientMatter.canExtract();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.canExtract();
 			}
 			return false;
 		}, () -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Matter);

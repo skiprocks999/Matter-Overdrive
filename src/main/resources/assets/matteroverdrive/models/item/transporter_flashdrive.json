@@ -1,0 +1,14 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/flashdrive/flashdrive_transporter_empty"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"charge": 1.0
+			},
+			"model": "matteroverdrive:item/transporter_flashdrive_stored"
+		}
+	]
+}

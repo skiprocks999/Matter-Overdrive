@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 public class UtilsNbt {
 
 	public static final String STORED_MATTER_VAL = "matter_val";
+	public static final String BLOCK_POS = "block_pos";
 
 	public static void writeMatterVal(ItemStack item, double value) {
 		clearMatterVal(item);
