@@ -53,7 +53,7 @@ public class TileInscriber extends GenericSoundTile {
 	public CapabilityEnergyStorage clientEnergy;
 
 	private InscriberRecipe cachedRecipe;
-	
+
 	public TileInscriber(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_INSCRIBER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
@@ -85,7 +85,8 @@ public class TileInscriber extends GenericSoundTile {
 				boolean matched = false;
 				if (cachedRecipe == null) {
 					Level world = getLevel();
-					for (InscriberRecipe recipe : world.getRecipeManager().getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get())) {
+					for (InscriberRecipe recipe : world.getRecipeManager()
+							.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get())) {
 						if (recipe.matchesRecipe(inv, 0)) {
 							cachedRecipe = recipe;
 							matched = true;
@@ -115,7 +116,8 @@ public class TileInscriber extends GenericSoundTile {
 							List<Integer> slotOrientation = cachedRecipe.getItemArrangment(0);
 							for (int i = 0; i < inputs.size(); i++) {
 								inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
-							};
+							}
+							;
 						}
 						setChanged();
 					} else {
@@ -166,7 +168,7 @@ public class TileInscriber extends GenericSoundTile {
 	private void clientTileSave(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		
+
 		tag.putBoolean("running", running);
 		tag.putBoolean("muffled", isMuffled);
 	}
@@ -174,7 +176,7 @@ public class TileInscriber extends GenericSoundTile {
 	private void clientTileLoad(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		
+
 		clientRunning = tag.getBoolean("running");
 		clientMuffled = tag.getBoolean("muffled");
 	}

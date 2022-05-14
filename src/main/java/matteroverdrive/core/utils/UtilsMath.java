@@ -38,9 +38,9 @@ public class UtilsMath {
 		double z = z0 + (radius.z * Math.cos(phi));
 		return new Vector3f((float) x, (float) y, (float) z);
 	}
-	
-    public static double easeIn(double time, double fromValue, double toValue, double maxTime) {
-        return toValue * (time /= maxTime) * time * time * time + fromValue;
-    }
+
+	public static double easeIn(double time, double fromValue, double toValue, double maxTime) {
+		return toValue * (time /= maxTime) * time * time * time + fromValue;
+	}
 
 }

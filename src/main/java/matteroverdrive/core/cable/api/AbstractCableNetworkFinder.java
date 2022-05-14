@@ -17,7 +17,8 @@ public class AbstractCableNetworkFinder {
 	public List<BlockEntity> iteratedTiles = new ArrayList<>();
 	public List<BlockPos> toIgnore = new ArrayList<>();
 
-	public AbstractCableNetworkFinder(Level world, BlockPos location, AbstractNetwork<?, ?, ?, ?> net, BlockPos... ignore) {
+	public AbstractCableNetworkFinder(Level world, BlockPos location, AbstractNetwork<?, ?, ?, ?> net,
+			BlockPos... ignore) {
 		worldObj = world;
 		start = location;
 		this.net = net;
@@ -50,7 +51,8 @@ public class AbstractCableNetworkFinder {
 		for (BlockEntity connections : conductor.getAdjacentConnections()) {
 			if (connections != null) {
 				BlockPos pos = connections.getBlockPos();
-				if (!iteratedTiles.contains(connections) && !(toIgnore.size() == 1 ? toIgnore.get(0) == pos : toIgnore.contains(pos))) {
+				if (!iteratedTiles.contains(connections)
+						&& !(toIgnore.size() == 1 ? toIgnore.get(0) == pos : toIgnore.contains(pos))) {
 					if (net.isConductor(connections)) {
 						loopAll((IAbstractCable) connections);
 					}

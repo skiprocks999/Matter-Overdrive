@@ -66,10 +66,10 @@ public class SlotGeneric extends SlotItemHandler implements IToggleableSlot {
 	public CapabilityInventory getInventory() {
 		return (CapabilityInventory) getItemHandler();
 	}
-	
+
 	@Override
 	public boolean mayPlace(ItemStack stack) {
-		if(isActive()) {
+		if (isActive()) {
 			return super.mayPlace(stack);
 		}
 		return false;

@@ -18,7 +18,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdriveRecipe> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
+public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdriveRecipe>
+		extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
 
 	private static final String COUNT = "count";
 	private static final String ITEM_INPUTS = "iteminputs";

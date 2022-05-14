@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.compress.utils.Sets;
 
+import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
@@ -47,7 +48,6 @@ import matteroverdrive.common.tile.generic.TileMultiSubnode;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -73,7 +73,8 @@ public class DeferredRegisters {
 	public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, References.ID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,
 			References.ID);
-	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, References.ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister
+			.create(ForgeRegistries.PARTICLE_TYPES, References.ID);
 
 	/* BLOCKS */
 
@@ -127,9 +128,12 @@ public class DeferredRegisters {
 			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER,
 					DeferredRegisters.TILE_INSCRIBER));
 	public static final BulkRegister<Block> BLOCK_MATTER_CONDUITS = bulkBlock(
-			conduit -> registerBlock(((TypeMatterConduit) conduit).id(), () -> new BlockMatterConduit((TypeMatterConduit) conduit)), TypeMatterConduit.values());
+			conduit -> registerBlock(((TypeMatterConduit) conduit).id(),
+					() -> new BlockMatterConduit((TypeMatterConduit) conduit)),
+			TypeMatterConduit.values());
 	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
-			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER));
+			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER,
+					DeferredRegisters.TILE_TRANSPORTER));
 
 	/* ITEMS */
 
@@ -166,7 +170,7 @@ public class DeferredRegisters {
 			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
 					() -> new Item(new Item.Properties().tab(References.MAIN))),
 			TypeIsolinearCircuit.values());
-	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive", 
+	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive",
 			() -> new ItemTransporterFlashdrive());
 
 	/* TILES */
@@ -195,9 +199,11 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileInscriber>> TILE_INSCRIBER = TILES.register(
 			TypeMachine.INSCRIBER.id(),
 			() -> new BlockEntityType<>(TileInscriber::new, Sets.newHashSet(BLOCK_INSCRIBER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMatterConduit>> TILE_MATTER_CONDUIT = TILES.register(
-			"matter_conduit", () -> new BlockEntityType<>(TileMatterConduit::new, Sets.newHashSet(BLOCK_MATTER_CONDUITS.getObjectsAsArray(new Block[0])), null));
-	public static final RegistryObject<BlockEntityType<TileTransporter>> TILE_TRANSPORTER = TILES.register(TypeMachine.TRANSPORTER.id(), 
+	public static final RegistryObject<BlockEntityType<TileMatterConduit>> TILE_MATTER_CONDUIT = TILES
+			.register("matter_conduit", () -> new BlockEntityType<>(TileMatterConduit::new,
+					Sets.newHashSet(BLOCK_MATTER_CONDUITS.getObjectsAsArray(new Block[0])), null));
+	public static final RegistryObject<BlockEntityType<TileTransporter>> TILE_TRANSPORTER = TILES.register(
+			TypeMachine.TRANSPORTER.id(),
 			() -> new BlockEntityType<>(TileTransporter::new, Sets.newHashSet(BLOCK_TRANSPORTER.get()), null));
 
 	/* MENUS */
@@ -220,10 +226,10 @@ public class DeferredRegisters {
 			.register(TypeMachine.TRANSPORTER.id(), () -> new MenuType<>(InventoryTransporter::new));
 
 	/* Particles */
-	
-	public static final RegistryObject<ParticleType<SimpleParticleType>> PARTICLE_REPLICATOR = PARTICLES.register("replicator", 
-			() -> new SimpleParticleType(false));
-	
+
+	public static final RegistryObject<ParticleOptionReplicator> PARTICLE_REPLICATOR = PARTICLES.register("replicator",
+			() -> new ParticleOptionReplicator());
+
 	// Functional Methods
 
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {

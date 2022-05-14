@@ -87,12 +87,14 @@ public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMa
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstanceConductor(Set<IMatterConduit> conductors) {
+	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstanceConductor(
+			Set<IMatterConduit> conductors) {
 		return new MatterConduitNetwork(conductors);
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstance(Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double>> networks) {
+	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstance(
+			Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double>> networks) {
 		return new MatterConduitNetwork(networks);
 
 	}

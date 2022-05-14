@@ -33,7 +33,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	public MatterConduitNetwork conduitNetwork;
 	private ArrayList<ICapabilityMatterStorage> handler = new ArrayList<>();
 	public TypeMatterConduit pipe = null;
-	
+
 	public TileMatterConduit(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_CONDUIT.get(), pos, state);
 		for (Direction dir : Direction.values()) {
@@ -41,7 +41,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 
 				@Override
 				public double receiveMatter(double maxReceive, boolean simulate) {
-					if(simulate || getNetwork() == null) {
+					if (simulate || getNetwork() == null) {
 						return 0;
 					}
 					ArrayList<BlockEntity> ignored = new ArrayList<>();
@@ -74,7 +74,6 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 					return true;
 				}
 
-				
 			});
 		}
 	}
@@ -243,7 +242,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 		super.load(compound);
 		pipe = TypeMatterConduit.values()[compound.getInt("ord")];
 	}
-	
+
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag superTag = super.getUpdateTag();

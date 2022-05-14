@@ -26,7 +26,9 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 
 	/*
-	 * Need to know: > does it have fluid and item biproducts ; store as booleans > the number of fluid and item biproducts ; store as ints > the arrangement of the items in the machine's inventory ; store as int list
+	 * Need to know: > does it have fluid and item biproducts ; store as booleans >
+	 * the number of fluid and item biproducts ; store as ints > the arrangement of
+	 * the items in the machine's inventory ; store as int list
 	 * 
 	 * store item and fluid biproducts here as well
 	 */
@@ -73,7 +75,8 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 		xp = experience;
 	}
 
-	protected AbstractOverdriveRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, ProbableFluid[] fluidBiproducts, double experience) {
+	protected AbstractOverdriveRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts,
+			ProbableFluid[] fluidBiproducts, double experience) {
 		id = recipeID;
 		hasItemBi = true;
 		itemBiProducts = itemBiproducts;
@@ -180,12 +183,15 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 		return xp;
 	}
 
-	public static List<AbstractOverdriveRecipe> findRecipesbyType(RecipeType<? extends AbstractOverdriveRecipe> typeIn, Level world) {
-		return world != null ? world.getRecipeManager().getAllRecipesFor((RecipeType<AbstractOverdriveRecipe>) typeIn) : Collections.emptyList();
+	public static List<AbstractOverdriveRecipe> findRecipesbyType(RecipeType<? extends AbstractOverdriveRecipe> typeIn,
+			Level world) {
+		return world != null ? world.getRecipeManager().getAllRecipesFor((RecipeType<AbstractOverdriveRecipe>) typeIn)
+				: Collections.emptyList();
 	}
 
 	@Nullable
-	public static AbstractOverdriveRecipe getRecipe(CapabilityInventory inv, List<AbstractOverdriveRecipe> recipes, int procNum) {
+	public static AbstractOverdriveRecipe getRecipe(CapabilityInventory inv, List<AbstractOverdriveRecipe> recipes,
+			int procNum) {
 		for (AbstractOverdriveRecipe recipe : recipes) {
 			if (recipe.matchesRecipe(inv, procNum)) {
 				return recipe;
@@ -194,7 +200,8 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 		return null;
 	}
 
-	public static Pair<List<Integer>, Boolean> areItemsValid(List<CountableIngredient> ingredients, List<ItemStack> stacks) {
+	public static Pair<List<Integer>, Boolean> areItemsValid(List<CountableIngredient> ingredients,
+			List<ItemStack> stacks) {
 		Boolean valid = true;
 		List<Integer> slotOreintation = new ArrayList<>();
 		for (int i = 0; i < ingredients.size(); i++) {
@@ -216,7 +223,8 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 		return Pair.of(slotOreintation, valid);
 	}
 
-	public static Pair<List<Integer>, Boolean> areFluidsValid(List<FluidIngredient> ingredients, FluidTank[] fluidTanks) {
+	public static Pair<List<Integer>, Boolean> areFluidsValid(List<FluidIngredient> ingredients,
+			FluidTank[] fluidTanks) {
 		Boolean valid = true;
 		List<Integer> tankOrientation = new ArrayList<>();
 		for (int i = 0; i < ingredients.size(); i++) {

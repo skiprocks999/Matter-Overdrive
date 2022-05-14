@@ -56,7 +56,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 
 	public static final int BETWEEN_MENUS = 26;
 	public static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenInscriber(InventoryInscriber menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentProgress(() -> {

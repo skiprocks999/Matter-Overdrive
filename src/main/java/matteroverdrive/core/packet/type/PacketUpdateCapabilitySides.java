@@ -97,7 +97,7 @@ public class PacketUpdateCapabilitySides {
 		buf.writeBoolean(pkt.input);
 		if (pkt.input) {
 			buf.writeInt(pkt.inDirs.size());
-			for (Direction dir : pkt.inDirs) {	
+			for (Direction dir : pkt.inDirs) {
 				buf.writeEnum(dir);
 			}
 		}

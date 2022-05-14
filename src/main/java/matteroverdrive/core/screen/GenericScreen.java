@@ -30,9 +30,9 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 			References.ID + ":textures/gui/base/base_gui.png");
 	protected List<IGuiComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
-	
+
 	private static final int OFFSET = 37;
-	
+
 	public static final int GUI_WIDTH = 224;
 	public static final int GUI_HEIGHT = 176;
 
@@ -210,22 +210,22 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 			}
 		}
 	}
-	
+
 	public void setScreenParams() {
 		leftPos -= OFFSET;
 		imageWidth = GUI_WIDTH;
 		imageHeight = GUI_HEIGHT;
 		titleLabelX += OFFSET;
 	}
-	
+
 	public int getGuiRight() {
 		return getGuiLeft() + getXSize();
 	}
-	
+
 	public int getGuiBottom() {
 		return getGuiTop() + getYSize();
 	}
-	
+
 	public abstract int getScreenNumber();
 
 }

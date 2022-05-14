@@ -14,26 +14,27 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.world.item.ItemStack;
 
 public class RendererInscriber extends AbstractTileRenderer<TileInscriber> {
-	
+
 	public RendererInscriber(Context context) {
 		super(context);
 	}
 
 	@Override
-	public void render(TileInscriber inscriber, float tick, PoseStack pose, MultiBufferSource source, int light, int overlay) {
-		if(inscriber.clientInventory != null) {
+	public void render(TileInscriber inscriber, float tick, PoseStack pose, MultiBufferSource source, int light,
+			int overlay) {
+		if (inscriber.clientInventory != null) {
 			ItemStack stack = null;
 			List<ItemStack> items = inscriber.clientInventory.getItems();
-			if(!items.get(0).isEmpty()) {
+			if (!items.get(0).isEmpty()) {
 				stack = items.get(0);
 			} else if (!items.get(2).isEmpty()) {
 				stack = items.get(2);
 			}
-			if(stack != null) {
+			if (stack != null) {
 				pose.pushPose();
 				pose.translate(0.5f, 0.68f, 0.5f);
 				pose.scale(0.45f, 0.45f, 0.45f);
-				switch(inscriber.getFacing()) {
+				switch (inscriber.getFacing()) {
 				case NORTH, SOUTH:
 					pose.mulPose(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), -90.0F, true));
 					pose.mulPose(new Quaternion(new Vector3f(0.0F, 0.0F, 1.0F), 90.0F, true));
@@ -44,7 +45,7 @@ public class RendererInscriber extends AbstractTileRenderer<TileInscriber> {
 				default:
 					break;
 				}
-				
+
 				UtilsRendering.renderItem(stack, light, overlay, pose, source);
 				pose.popPose();
 			}

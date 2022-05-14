@@ -16,7 +16,7 @@ public interface IMatterConduit extends IAbstractCable {
 	void refreshNetworkIfChange();
 
 	TypeMatterConduit getMatterConduitType();
-	
+
 	@Override
 	void setNetwork(AbstractNetwork<?, ?, ?, ?> aValueNetwork);
 
@@ -29,5 +29,5 @@ public interface IMatterConduit extends IAbstractCable {
 	default double getMaxTransfer() {
 		return getMatterConduitType().capacity;
 	}
-	
+
 }

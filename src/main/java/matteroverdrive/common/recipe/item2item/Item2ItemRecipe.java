@@ -21,25 +21,29 @@ public abstract class Item2ItemRecipe extends AbstractOverdriveRecipe {
 	private CountableIngredient[] ITEM_INPUTS;
 	private ItemStack OUTPUT;
 
-	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output, double experience) {
+	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output,
+			double experience) {
 		super(recipeID, experience);
 		ITEM_INPUTS = inputs;
 		OUTPUT = output;
 	}
 
-	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output, ProbableItem[] itemBiproducts, double experience) {
+	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output,
+			ProbableItem[] itemBiproducts, double experience) {
 		super(recipeID, itemBiproducts, experience);
 		ITEM_INPUTS = inputs;
 		OUTPUT = output;
 	}
 
-	public Item2ItemRecipe(CountableIngredient[] inputs, ItemStack output, ProbableFluid[] fluidBiproducts, ResourceLocation recipeID, double experience) {
+	public Item2ItemRecipe(CountableIngredient[] inputs, ItemStack output, ProbableFluid[] fluidBiproducts,
+			ResourceLocation recipeID, double experience) {
 		super(fluidBiproducts, recipeID, experience);
 		ITEM_INPUTS = inputs;
 		OUTPUT = output;
 	}
 
-	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output, ProbableItem[] itemBiproducts, ProbableFluid[] fluidBiproducts, double experience) {
+	public Item2ItemRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output,
+			ProbableItem[] itemBiproducts, ProbableFluid[] fluidBiproducts, double experience) {
 		super(recipeID, itemBiproducts, fluidBiproducts, experience);
 		ITEM_INPUTS = inputs;
 		OUTPUT = output;

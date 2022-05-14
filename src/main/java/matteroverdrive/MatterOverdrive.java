@@ -49,13 +49,13 @@ public class MatterOverdrive {
 		DeferredRegisters.PARTICLES.register(bus);
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
-		
+
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
 				"matteroverdrive/matteroverdrive.common.toml");
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();
-		
+
 	}
 
 	@SubscribeEvent

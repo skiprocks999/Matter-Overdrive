@@ -42,12 +42,15 @@ public abstract class AbstractNetwork<C extends IAbstractCable, T, A, P> impleme
 		for (C conductor : conductorSet) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
-				BlockEntity acceptor = tileEntity.getLevel().getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
+				BlockEntity acceptor = tileEntity.getLevel()
+						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
 				if (acceptor != null && !isConductor(acceptor)) {
 					if (isAcceptor(acceptor, direction)) {
 						if (canConnect(acceptor, direction)) {
 							acceptorSet.add((A) acceptor);
-							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor) ? acceptorInputMap.get(acceptor) : new HashSet<>();
+							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor)
+									? acceptorInputMap.get(acceptor)
+									: new HashSet<>();
 							directions.add(direction.getOpposite());
 							acceptorInputMap.put((A) acceptor, directions);
 						}
@@ -69,7 +72,8 @@ public abstract class AbstractNetwork<C extends IAbstractCable, T, A, P> impleme
 		}
 		for (C wire : conductorSet) {
 			conductorTypeMap.get(wire.getConductorType()).add(wire);
-			networkMaxTransfer = networkMaxTransfer == 0 ? wire.getMaxTransfer() : Math.min(networkMaxTransfer, wire.getMaxTransfer());
+			networkMaxTransfer = networkMaxTransfer == 0 ? wire.getMaxTransfer()
+					: Math.min(networkMaxTransfer, wire.getMaxTransfer());
 			updateStatistics(wire);
 		}
 	}
@@ -101,11 +105,13 @@ public abstract class AbstractNetwork<C extends IAbstractCable, T, A, P> impleme
 				BlockEntity connectedBlockA = connectedTiles[countOne];
 				if (connectedBlockA != null) {
 					if (isConductor(connectedBlockA) && !dealtWith[countOne]) {
-						AbstractCableNetworkFinder finder = new AbstractCableNetworkFinder(blockentity.getLevel(), connectedBlockA.getBlockPos(), this, blockentity.getBlockPos());
+						AbstractCableNetworkFinder finder = new AbstractCableNetworkFinder(blockentity.getLevel(),
+								connectedBlockA.getBlockPos(), this, blockentity.getBlockPos());
 						List<BlockEntity> partNetwork = finder.exploreNetwork();
 						for (int countTwo = countOne + 1; countTwo < connectedTiles.length; countTwo++) {
 							BlockEntity connectedBlockB = connectedTiles[countTwo];
-							if (isConductor(connectedBlockB) && !dealtWith[countTwo] && partNetwork.contains(connectedBlockB)) {
+							if (isConductor(connectedBlockB) && !dealtWith[countTwo]
+									&& partNetwork.contains(connectedBlockB)) {
 								dealtWith[countTwo] = true;
 							}
 						}

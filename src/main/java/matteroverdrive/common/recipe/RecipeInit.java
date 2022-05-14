@@ -14,17 +14,21 @@ import net.minecraftforge.registries.RegistryObject;
 public class RecipeInit {
 
 	// Deferred Register
-	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, References.ID);
-	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE.key(), References.ID);
+	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister
+			.create(ForgeRegistries.RECIPE_SERIALIZERS, References.ID);
+	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister
+			.create(Registry.RECIPE_TYPE.key(), References.ID);
 	/* RECIPE TYPES */
 
 	// Item2Item
-	public static final RegistryObject<RecipeType<InscriberRecipe>> INSCRIBER_TYPE = RECIPE_TYPES.register(InscriberRecipe.RECIPE_GROUP, CustomRecipeType::new);
+	public static final RegistryObject<RecipeType<InscriberRecipe>> INSCRIBER_TYPE = RECIPE_TYPES
+			.register(InscriberRecipe.RECIPE_GROUP, CustomRecipeType::new);
 
 	/* SERIALIZERS */
 
 	// Item2Item
-	public static final RegistryObject<RecipeSerializer<?>> INSCRIBER_SERIALIZER = RECIPE_SERIALIZER.register(InscriberRecipe.RECIPE_GROUP, () -> Item2ItemRecipeTypes.INSCRIBER_JSON_SERIALIZER);
+	public static final RegistryObject<RecipeSerializer<?>> INSCRIBER_SERIALIZER = RECIPE_SERIALIZER
+			.register(InscriberRecipe.RECIPE_GROUP, () -> Item2ItemRecipeTypes.INSCRIBER_JSON_SERIALIZER);
 
 	/* Functional Methods */
 

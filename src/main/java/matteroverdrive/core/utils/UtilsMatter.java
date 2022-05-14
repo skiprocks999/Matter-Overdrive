@@ -67,7 +67,7 @@ public class UtilsMatter {
 	public static boolean isRawDust(ItemStack item) {
 		return UtilsItem.compareItems(item.getItem(), DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 	}
-	
+
 	public static boolean isMatterReceiver(BlockEntity acceptor) {
 		for (Direction dir : Direction.values()) {
 			boolean is = isMatterReceiver(acceptor, dir);
@@ -86,10 +86,11 @@ public class UtilsMatter {
 		}
 		return false;
 	}
-	
+
 	public static double receiveMatter(BlockEntity acceptor, Direction direction, double perReceiver, boolean debug) {
 		if (isMatterReceiver(acceptor, direction)) {
-			LazyOptional<ICapabilityMatterStorage> cap = acceptor.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, direction);
+			LazyOptional<ICapabilityMatterStorage> cap = acceptor
+					.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, direction);
 			if (cap.isPresent()) {
 				ICapabilityMatterStorage handler = cap.resolve().get();
 				if (handler.canReceive()) {
@@ -99,31 +100,34 @@ public class UtilsMatter {
 		}
 		return 0;
 	}
-	
+
 	public static void updateAdjacentMatterCables(GenericTile tile) {
 		BlockPos pos = tile.getBlockPos();
 		Level world = tile.getLevel();
 		BlockPos offset;
-		for(Direction dir : Direction.values()) {
+		for (Direction dir : Direction.values()) {
 			offset = new BlockPos(pos.getX(), pos.getY(), pos.getZ()).relative(dir);
 			BlockEntity entity = world.getBlockEntity(offset);
-			if(entity != null && entity instanceof TileMatterConduit conduit) {
+			if (entity != null && entity instanceof TileMatterConduit conduit) {
 				updateMatterCable(offset, world, conduit, dir, tile);
 			}
 		}
 	}
-	
-	private static void updateMatterCable(BlockPos offset, Level world, TileMatterConduit conduit, Direction dir, GenericTile tile) {
+
+	private static void updateMatterCable(BlockPos offset, Level world, TileMatterConduit conduit, Direction dir,
+			GenericTile tile) {
 		Scheduler.schedule(1, () -> {
 			conduit.refreshNetworkIfChange();
 			BlockState state = world.getBlockState(offset);
 			if (UtilsMatter.isMatterReceiver(tile, dir)) {
-				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()), EnumConnectType.INVENTORY);
+				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()),
+						EnumConnectType.INVENTORY);
 			} else {
-				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()), EnumConnectType.NONE);
-			}			
+				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()),
+						EnumConnectType.NONE);
+			}
 			world.setBlockAndUpdate(offset, state);
-			});
+		});
 	}
 
 }

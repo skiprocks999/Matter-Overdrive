@@ -57,7 +57,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenTransporter(InventoryTransporter menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		components.add(new ScreenComponentCharge(() -> {

@@ -19,19 +19,19 @@ public class InventoryInscriber extends GenericInventoryTile<TileInscriber> {
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MUFFLER };
-	
-	public InventoryInscriber(int id, Inventory playerinv, CapabilityInventory invcap,
-			ContainerData tilecoords) {
+
+	public InventoryInscriber(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_INSCRIBER.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryInscriber(int id, Inventory playerinv) {
 		this(id, playerinv, new CapabilityInventory(TileInscriber.SLOT_COUNT, true, true), new SimpleContainerData(3));
 	}
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, null, DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.getObjectsAsArray(new Item[0])));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, null,
+				DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.getObjectsAsArray(new Item[0])));
 		addSlot(new SlotGeneric(invcap, nextIndex(), 8, 75, new int[] { 0 }, SlotType.BIG, null));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, null));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 102, new int[] { 0 }));

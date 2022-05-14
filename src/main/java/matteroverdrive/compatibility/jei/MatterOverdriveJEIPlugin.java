@@ -22,12 +22,12 @@ import net.minecraft.resources.ResourceLocation;
 public class MatterOverdriveJEIPlugin implements IModPlugin {
 
 	private static final ResourceLocation ID = new ResourceLocation(References.ID, "jei");
-	
+
 	@Override
 	public ResourceLocation getPluginUid() {
 		return ID;
 	}
-	
+
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		registry.addGuiContainerHandler(ScreenCharger.class, new ScreenHandlerCharger());

@@ -29,14 +29,17 @@ public class Item2ItemRecipeSerializer<T extends Item2ItemRecipe> extends Abstra
 			if (recipeJson.has(FLUID_BIPRODUCTS)) {
 				ProbableFluid[] fluidBi = getFluidBiproducts(recipeJson);
 				try {
-					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, ProbableItem[].class, ProbableFluid[].class, double.class);
+					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+							CountableIngredient[].class, ItemStack.class, ProbableItem[].class, ProbableFluid[].class,
+							double.class);
 					return recipeConstructor.newInstance(recipeId, inputs, output, itemBi, fluidBi, experience);
 				} catch (Exception e) {
 					MatterOverdrive.LOGGER.info(e.getMessage());
 				}
 			} else {
 				try {
-					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, ProbableItem[].class, double.class);
+					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+							CountableIngredient[].class, ItemStack.class, ProbableItem[].class, double.class);
 					return recipeConstructor.newInstance(recipeId, inputs, output, itemBi, experience);
 				} catch (Exception e) {
 					MatterOverdrive.LOGGER.info(e.getMessage());
@@ -45,14 +48,16 @@ public class Item2ItemRecipeSerializer<T extends Item2ItemRecipe> extends Abstra
 		} else if (recipeJson.has(FLUID_BIPRODUCTS)) {
 			ProbableFluid[] fluidBi = getFluidBiproducts(recipeJson);
 			try {
-				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(CountableIngredient[].class, ItemStack.class, ProbableFluid[].class, ResourceLocation.class, double.class);
+				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(CountableIngredient[].class,
+						ItemStack.class, ProbableFluid[].class, ResourceLocation.class, double.class);
 				return recipeConstructor.newInstance(inputs, output, fluidBi, recipeId, experience);
 			} catch (Exception e) {
 				MatterOverdrive.LOGGER.info(e.getMessage());
 			}
 		} else {
 			try {
-				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, double.class);
+				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+						CountableIngredient[].class, ItemStack.class, double.class);
 				return recipeConstructor.newInstance(recipeId, inputs, output, experience);
 			} catch (Exception e) {
 				MatterOverdrive.LOGGER.info(e.getMessage());
@@ -74,14 +79,17 @@ public class Item2ItemRecipeSerializer<T extends Item2ItemRecipe> extends Abstra
 			if (hasFluidBi) {
 				ProbableFluid[] fluidBi = ProbableFluid.readList(buffer);
 				try {
-					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, ProbableItem[].class, ProbableFluid[].class, double.class);
+					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+							CountableIngredient[].class, ItemStack.class, ProbableItem[].class, ProbableFluid[].class,
+							double.class);
 					return recipeConstructor.newInstance(recipeId, inputs, output, itemBi, fluidBi, experience);
 				} catch (Exception e) {
 					MatterOverdrive.LOGGER.info(e.getMessage());
 				}
 			} else {
 				try {
-					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, ProbableItem[].class, double.class);
+					Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+							CountableIngredient[].class, ItemStack.class, ProbableItem[].class, double.class);
 					return recipeConstructor.newInstance(recipeId, inputs, output, itemBi, experience);
 				} catch (Exception e) {
 					MatterOverdrive.LOGGER.info(e.getMessage());
@@ -90,14 +98,16 @@ public class Item2ItemRecipeSerializer<T extends Item2ItemRecipe> extends Abstra
 		} else if (hasFluidBi) {
 			ProbableFluid[] fluidBi = ProbableFluid.readList(buffer);
 			try {
-				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(CountableIngredient[].class, ItemStack.class, ProbableFluid[].class, ResourceLocation.class, double.class);
+				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(CountableIngredient[].class,
+						ItemStack.class, ProbableFluid[].class, ResourceLocation.class, double.class);
 				return recipeConstructor.newInstance(inputs, output, fluidBi, recipeId, experience);
 			} catch (Exception e) {
 				MatterOverdrive.LOGGER.info(e.getMessage());
 			}
 		} else {
 			try {
-				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class, CountableIngredient[].class, ItemStack.class, double.class);
+				Constructor<T> recipeConstructor = getRecipeClass().getDeclaredConstructor(ResourceLocation.class,
+						CountableIngredient[].class, ItemStack.class, double.class);
 				return recipeConstructor.newInstance(recipeId, inputs, output, experience);
 			} catch (Exception e) {
 				MatterOverdrive.LOGGER.info(e.getMessage());

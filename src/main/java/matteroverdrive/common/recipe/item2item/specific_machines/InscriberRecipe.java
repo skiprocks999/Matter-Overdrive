@@ -14,11 +14,11 @@ public class InscriberRecipe extends Item2ItemRecipe {
 	public static final String RECIPE_GROUP = "inscriber_recipe";
 	public static final String MOD_ID = References.ID;
 	public static final ResourceLocation RECIPE_ID = new ResourceLocation(MOD_ID, RECIPE_GROUP);
-	
+
 	public InscriberRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output,
 			double experience) {
 		super(recipeID, inputs, output, experience);
-		
+
 	}
 
 	@Override

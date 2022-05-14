@@ -18,21 +18,22 @@ import net.minecraft.world.inventory.SimpleContainerData;
 public class InventoryTransporter extends GenericInventoryTile<TileTransporter> {
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
-			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MATTER_STORAGE, UpgradeType.MUFFLER };
-	
-	public InventoryTransporter(int id, Inventory playerinv, CapabilityInventory invcap,
-			ContainerData tilecoords) {
+			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MATTER_STORAGE, UpgradeType.MUFFLER,
+			UpgradeType.RANGE };
+
+	public InventoryTransporter(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_TRANSPORTER.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryTransporter(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileTransporter.SLOT_COUNT, false, false), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileTransporter.SLOT_COUNT, false, false),
+				new SimpleContainerData(3));
 	}
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 4 }, SlotType.BIG,
-				IconType.FLASHDRIVE_DARK, DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get()));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 4 }, SlotType.BIG, IconType.FLASHDRIVE_DARK,
+				DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get()));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 48, new int[] { 0 }));
 		addSlot(new SlotMatterCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 70, 55, new int[] { 2 }, UPGRADES));
@@ -44,7 +45,7 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 
 	@Override
 	public int[] getHotbarNumbers() {
-		return new int[] {0, 1, 2};
+		return new int[] { 0, 1, 2 };
 	}
 
 	@Override

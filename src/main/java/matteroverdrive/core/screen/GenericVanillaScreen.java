@@ -44,7 +44,7 @@ public abstract class GenericVanillaScreen<T extends GenericInventory> extends G
 			component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
 		}
 	}
-	
+
 	@Override
 	public void setScreenParams() {
 		imageHeight += playerInvOffset;

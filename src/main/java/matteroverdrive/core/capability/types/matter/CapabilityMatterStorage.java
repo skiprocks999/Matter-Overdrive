@@ -335,7 +335,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			relativeOutputDirs.add(dir);
 		}
 	}
-	
+
 	public boolean isSided() {
 		return isSided;
 	}

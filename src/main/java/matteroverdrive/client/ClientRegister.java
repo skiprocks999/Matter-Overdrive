@@ -3,7 +3,7 @@ package matteroverdrive.client;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
-import matteroverdrive.client.particle.ParticleReplicator;
+import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.renderer.tile.RendererCharger;
 import matteroverdrive.client.renderer.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
@@ -115,12 +115,13 @@ public class ClientRegister {
 				return 0;
 			}).orElse(0);
 		});
-		ItemProperties.register(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE, (stack, world, entity, call) -> {
-			if(stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
-				return 1;
-			}
-			return 0;
-		});
+		ItemProperties.register(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE,
+				(stack, world, entity, call) -> {
+					if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
+						return 1;
+					}
+					return 0;
+				});
 
 	}
 
@@ -136,7 +137,7 @@ public class ClientRegister {
 	public static void onModelEvent(ModelRegistryEvent event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
 	}
-	
+
 	@SubscribeEvent
 	public static void registerParticles(ParticleFactoryRegisterEvent event) {
 		MatterOverdrive.LOGGER.info("fired");
@@ -147,7 +148,5 @@ public class ClientRegister {
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
-	
-
 
 }

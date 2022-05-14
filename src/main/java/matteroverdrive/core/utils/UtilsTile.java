@@ -88,14 +88,14 @@ public class UtilsTile {
 			}
 		}
 	}
-	
+
 	public static void outputMatter(GenericTile tile) {
-		if(tile.hasCapability(CapabilityType.Matter)) {
+		if (tile.hasCapability(CapabilityType.Matter)) {
 			CapabilityMatterStorage matter = tile.exposeCapability(CapabilityType.Matter);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
-			if(matter.canExtract()) {
-				if(matter.isSided()) {
+			if (matter.canExtract()) {
+				if (matter.isSided()) {
 					Direction facing = tile.getFacing();
 					HashSet<Direction> directions = matter.getOutputDirections();
 					if (directions != null) {
@@ -103,12 +103,13 @@ public class UtilsTile {
 							Direction relative = UtilsDirection.getRelativeSide(facing, direction);
 							BlockEntity entity = world.getBlockEntity(pos.relative(relative));
 							if (entity != null && matter.getMatterStored() > 0) {
-								LazyOptional<ICapabilityMatterStorage> lazy = entity.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE,
-										relative.getOpposite());
+								LazyOptional<ICapabilityMatterStorage> lazy = entity.getCapability(
+										MatterOverdriveCapabilities.MATTER_STORAGE, relative.getOpposite());
 								if (lazy.isPresent()) {
 									ICapabilityMatterStorage storage = lazy.resolve().get();
 									if (storage.canReceive()) {
-										matter.extractMatter(storage.receiveMatter(matter.getMatterStored(), false), false);
+										matter.extractMatter(storage.receiveMatter(matter.getMatterStored(), false),
+												false);
 									}
 								}
 							}
@@ -118,8 +119,8 @@ public class UtilsTile {
 					for (Direction dir : Direction.values()) {
 						BlockEntity entity = world.getBlockEntity(pos.relative(dir));
 						if (entity != null && matter.getMatterStored() > 0) {
-							LazyOptional<ICapabilityMatterStorage> lazy = entity.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE,
-									dir.getOpposite());
+							LazyOptional<ICapabilityMatterStorage> lazy = entity
+									.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, dir.getOpposite());
 							if (lazy.isPresent()) {
 								ICapabilityMatterStorage storage = lazy.resolve().get();
 								if (storage.canReceive()) {

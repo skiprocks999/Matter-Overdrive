@@ -12,9 +12,9 @@ public class ScreenHandlerMatterRecycler extends AbstractScreenHandler<ScreenMat
 	public List<Rect2i> getGuiExtraAreas(ScreenMatterRecycler screen) {
 		List<Rect2i> rectangles = super.getGuiExtraAreas(screen);
 		if (screen.menu.isExtended) {
-			rectangles.add(new Rect2i(screen.getGuiRight() , screen.getGuiTop() + 33, 37, 143));
+			rectangles.add(new Rect2i(screen.getGuiRight(), screen.getGuiTop() + 33, 37, 143));
 		}
 		return rectangles;
 	}
-	
+
 }

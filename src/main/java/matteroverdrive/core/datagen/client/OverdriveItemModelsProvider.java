@@ -45,9 +45,10 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 					"item/upgrade/upgrade_" + type.toString().toLowerCase());
 		}
 		for (TypeIsolinearCircuit circuit : TypeIsolinearCircuit.values()) {
-			simpleItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(circuit),"item/isolinear_circuit/" + circuit.id());
+			simpleItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(circuit),
+					"item/isolinear_circuit/" + circuit.id());
 		}
-	
+
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

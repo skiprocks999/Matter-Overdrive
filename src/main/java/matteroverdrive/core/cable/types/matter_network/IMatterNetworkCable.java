@@ -15,10 +15,10 @@ public interface IMatterNetworkCable extends IAbstractCable {
 	void refreshNetworkIfChange();
 
 	void setNetwork(AbstractNetwork<?, ?, ?, ?> aValueNetwork);
-	
+
 	@Override
 	default double getMaxTransfer() {
 		return -1;
 	}
-	
+
 }

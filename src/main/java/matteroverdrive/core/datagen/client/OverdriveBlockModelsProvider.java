@@ -17,13 +17,13 @@ public class OverdriveBlockModelsProvider extends BlockModelProvider {
 
 	@Override
 	protected void registerModels() {
-		blockTopBottom(DeferredRegisters.BLOCK_TRANSPORTER, "block/transporter/transporter_top", "block/transporter/transporter_bottom", "block/transporter/transporter_side");
+		blockTopBottom(DeferredRegisters.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
+				"block/transporter/transporter_bottom", "block/transporter/transporter_side");
 	}
-	
-	private void blockTopBottom(RegistryObject<Block> block, String top, String bottom, String side) {
-		cubeBottomTop(block.get().getRegistryName().getPath(), new ResourceLocation(References.ID, side), new ResourceLocation(References.ID, bottom), new ResourceLocation(References.ID, top));
-	}
-	
 
+	private void blockTopBottom(RegistryObject<Block> block, String top, String bottom, String side) {
+		cubeBottomTop(block.get().getRegistryName().getPath(), new ResourceLocation(References.ID, side),
+				new ResourceLocation(References.ID, bottom), new ResourceLocation(References.ID, top));
+	}
 
 }

@@ -25,7 +25,8 @@ public abstract class AbstractFluidRecipe extends AbstractOverdriveRecipe {
 		super(fluidBiproducts, recipeID, experience);
 	}
 
-	protected AbstractFluidRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, ProbableFluid[] fluidBiproducts, double experience) {
+	protected AbstractFluidRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts,
+			ProbableFluid[] fluidBiproducts, double experience) {
 		super(recipeID, itemBiproducts, fluidBiproducts, experience);
 	}
 

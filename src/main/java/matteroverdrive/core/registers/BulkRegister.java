@@ -12,8 +12,7 @@ public class BulkRegister<T extends IForgeRegistryEntry<T>> {
 
 	private final HashMap<IBulkRegistryObject, RegistryObject<T>> objects = new HashMap<>();
 
-	public BulkRegister(Function<IBulkRegistryObject, RegistryObject<T>> factory,
-			IBulkRegistryObject[] bulkValues) {
+	public BulkRegister(Function<IBulkRegistryObject, RegistryObject<T>> factory, IBulkRegistryObject[] bulkValues) {
 		for (IBulkRegistryObject val : bulkValues) {
 			objects.put(val, factory.apply(val));
 		}

@@ -14,5 +14,5 @@ public class AbstractScreenHandler<T extends GenericScreen> implements IGuiConta
 	public List<Rect2i> getGuiExtraAreas(T screen) {
 		return Lists.newArrayList();
 	}
-	
+
 }

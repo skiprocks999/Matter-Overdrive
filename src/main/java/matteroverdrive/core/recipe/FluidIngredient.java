@@ -41,7 +41,8 @@ public class FluidIngredient extends Ingredient {
 	}
 
 	/**
-	 * Call this one if you're trying to get a Tag once loaded on the server or are trying to get a specific fluid
+	 * Call this one if you're trying to get a Tag once loaded on the server or are
+	 * trying to get a specific fluid
 	 * 
 	 * DO NOT call this one if trying to load a fluid from a JSON file!
 	 * 
@@ -52,8 +53,10 @@ public class FluidIngredient extends Ingredient {
 	public FluidIngredient(ResourceLocation resourceLocation, int amount, boolean isTag) {
 		super(Stream.empty());
 		if (isTag) {
-			// Don't know ifi can use FluidTags.create(resourceLocation) all the time but we shall see.
-			List<Fluid> fluids = ForgeRegistries.FLUIDS.tags().getTag(FluidTags.create(resourceLocation)).stream().toList();
+			// Don't know ifi can use FluidTags.create(resourceLocation) all the time but we
+			// shall see.
+			List<Fluid> fluids = ForgeRegistries.FLUIDS.tags().getTag(FluidTags.create(resourceLocation)).stream()
+					.toList();
 			fluidStacks = new ArrayList<>();
 			for (Fluid fluid : fluids) {
 				fluidStacks.add(new FluidStack(fluid, amount));

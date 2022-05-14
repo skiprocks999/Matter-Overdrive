@@ -12,7 +12,7 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.client.particle.ParticleReplicator;
+import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -27,7 +27,6 @@ import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -125,7 +124,7 @@ public class TileTransporter extends GenericSoundTile {
 							if (currProgress >= BUILD_UP_TIME) {
 								cooldownTimer = 0;
 								matter.removeMatter(matterUsage);
-								
+
 								double x = curLoc.getDestination().getX() + 0.5;
 								double y = curLoc.getDestination().getY() + 0.01;
 								double z = curLoc.getDestination().getZ() + 0.5;
@@ -161,9 +160,12 @@ public class TileTransporter extends GenericSoundTile {
 			Minecraft.getInstance().getSoundManager()
 					.play(new TickableSoundTile(SoundRegister.SOUND_TRANSPORTER.get(), this));
 		}
-		if(clientProgress > 0 && clientEntityData != null && clientRunning) {
-			for(EntityDataWrapper entityData : clientEntityData) {
-				handleParticles(entityData, new Vector3f((float) entityData.xPos(), (float) getBlockPos().getY(), (float) entityData.zPos()));
+		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
+			for (int i = 0; i < 3; i++) {
+				for (EntityDataWrapper entityData : clientEntityData) {
+					handleParticles(entityData, new Vector3f((float) entityData.xPos(), (float) getBlockPos().getY(),
+							(float) entityData.zPos()));
+				}
 			}
 		}
 	}
@@ -216,9 +218,10 @@ public class TileTransporter extends GenericSoundTile {
 		tag.putBoolean("muffled", isMuffled);
 		tag.putDouble("progress", currProgress);
 		tag.putInt("entities", currEntities.size());
-		for(int i = 0; i < currEntities.size(); i++) {
+		for (int i = 0; i < currEntities.size(); i++) {
 			Entity entity = currEntities.get(i);
-			EntityDataWrapper wrapper = new EntityDataWrapper(entity.getBbHeight(), entity.getBbWidth(), entity.getX(), entity.getZ());
+			EntityDataWrapper wrapper = new EntityDataWrapper(entity.getBbHeight(), entity.getBbWidth(), entity.getX(),
+					entity.getZ());
 			wrapper.serializeNbt(tag, "entity" + i);
 		}
 	}
@@ -229,7 +232,7 @@ public class TileTransporter extends GenericSoundTile {
 		clientProgress = tag.getDouble("progress");
 		clientEntityData = new ArrayList<>();
 		int size = tag.getInt("entities");
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			clientEntityData.add(EntityDataWrapper.fromNbt(tag.getCompound("entity" + i)));
 		}
 	}
@@ -413,20 +416,10 @@ public class TileTransporter extends GenericSoundTile {
 			Vector3f pos = UtilsMath.randomSpherePoint(origin.x(), origin.y(), origin.z(),
 					new Vector3d(radiusX, 0, radiusZ), random);
 			origin.sub(pos);
-			//origin.cross(new Vector3f(0, 0, 0));
-			
-			//Vector3f dir = Vector3f.cross(Vector3f.sub(origin, pos, null), new Vector3f(0, 0, 0), null);
 			origin.mul(speed);
-			// dir.scale(speed);
-			ParticleReplicator replicatorParticle = new ParticleReplicator((ClientLevel) this.level, pos.x(), pos.y(), pos.z(),
-					origin.x(), origin.y(), origin.z());
-			replicatorParticle.setCenter(origin.x(), origin.y(), origin.z());
 
-			replicatorParticle.setParticleMaxAge(age);
-			replicatorParticle.setGravity(gravity);
-
-			Minecraft.getInstance().particleEngine.add(replicatorParticle);
-			//Minecraft.getInstance().effectRenderer.addEffect(replicatorParticle);
+			getLevel().addParticle(new ParticleOptionReplicator().setCenter(origin.x(), origin.y(), origin.z())
+					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), origin.x(), origin.y(), origin.z());
 		}
 
 	}

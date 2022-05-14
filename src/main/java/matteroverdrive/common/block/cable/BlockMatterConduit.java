@@ -39,14 +39,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockMatterConduit extends WaterloggableEntityBlock {
 
-	public static final Map<Direction, EnumProperty<EnumConnectType>> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), p -> {
-		p.put(Direction.NORTH, EnumConnectType.NORTH);
-		p.put(Direction.EAST, EnumConnectType.EAST);
-		p.put(Direction.SOUTH, EnumConnectType.SOUTH);
-		p.put(Direction.WEST, EnumConnectType.WEST);
-		p.put(Direction.UP, EnumConnectType.UP);
-		p.put(Direction.DOWN, EnumConnectType.DOWN);
-	});
+	public static final Map<Direction, EnumProperty<EnumConnectType>> FACING_TO_PROPERTY_MAP = Util
+			.make(Maps.newEnumMap(Direction.class), p -> {
+				p.put(Direction.NORTH, EnumConnectType.NORTH);
+				p.put(Direction.EAST, EnumConnectType.EAST);
+				p.put(Direction.SOUTH, EnumConnectType.SOUTH);
+				p.put(Direction.WEST, EnumConnectType.WEST);
+				p.put(Direction.UP, EnumConnectType.UP);
+				p.put(Direction.DOWN, EnumConnectType.DOWN);
+			});
 
 	public static final HashSet<Block> PIPESET = new HashSet<>();
 
@@ -82,7 +83,8 @@ public class BlockMatterConduit extends WaterloggableEntityBlock {
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(EnumConnectType.UP, EnumConnectType.DOWN, EnumConnectType.NORTH, EnumConnectType.EAST, EnumConnectType.SOUTH, EnumConnectType.WEST);
+		builder.add(EnumConnectType.UP, EnumConnectType.DOWN, EnumConnectType.NORTH, EnumConnectType.EAST,
+				EnumConnectType.SOUTH, EnumConnectType.WEST);
 	}
 
 	@Override
@@ -144,10 +146,10 @@ public class BlockMatterConduit extends WaterloggableEntityBlock {
 		}
 		// I figured out why this happens
 		/*
-		while (locked) {
-			System.out.println("Wire bounding boxes locked. This should never happen but still does for some reason!");
-		}
-		*/
+		 * while (locked) { System.out.
+		 * println("Wire bounding boxes locked. This should never happen but still does for some reason!"
+		 * ); }
+		 */
 		shapestates.put(checked, shape);
 		if (shape == null) {
 			return Shapes.empty();
@@ -156,7 +158,8 @@ public class BlockMatterConduit extends WaterloggableEntityBlock {
 	}
 
 	@Override
-	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer,
+			ItemStack stack) {
 		BlockState acc = stateIn;
 		for (Direction d : Direction.values()) {
 			BlockEntity facingTile = worldIn.getBlockEntity(pos.relative(d));
@@ -187,12 +190,13 @@ public class BlockMatterConduit extends WaterloggableEntityBlock {
 			BlockEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof IMatterConduit p) {
 				p.refreshNetworkIfChange();
-			} 
+			}
 		}
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world,
+			BlockPos currentPos, BlockPos facingPos) {
 		if (stateIn.getValue(BlockStateProperties.WATERLOGGED) == Boolean.TRUE) {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}

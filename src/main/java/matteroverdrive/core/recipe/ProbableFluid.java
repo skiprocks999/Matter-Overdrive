@@ -54,7 +54,8 @@ public class ProbableFluid {
 
 	public static ProbableFluid deserialize(JsonObject json) {
 		ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
-		FluidStack fluid = new FluidStack(ForgeRegistries.FLUIDS.getValue(resourceLocation), GsonHelper.getAsInt(json, "amount"));
+		FluidStack fluid = new FluidStack(ForgeRegistries.FLUIDS.getValue(resourceLocation),
+				GsonHelper.getAsInt(json, "amount"));
 		double chance = json.get("chance").getAsDouble();
 		return new ProbableFluid(fluid, chance);
 	}
