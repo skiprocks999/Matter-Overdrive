@@ -8,7 +8,6 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
-import matteroverdrive.core.screen.component.IOConfigWrapper;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -24,6 +23,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
+import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -50,9 +50,9 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 	private ButtonIOConfig energy;
 	private ButtonIOConfig matter;
 
-	private IOConfigWrapper itemWrapper;
-	private IOConfigWrapper energyWrapper;
-	private IOConfigWrapper matterWrapper;
+	private WrapperIOConfig itemWrapper;
+	private WrapperIOConfig energyWrapper;
+	private WrapperIOConfig matterWrapper;
 
 	private int screenNumber = 0;
 
@@ -248,7 +248,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			matterWrapper.showButtons();
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
+		itemWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientInventory.getInputDirections();
@@ -279,7 +279,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
+		energyWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientEnergy.getInputDirections();
@@ -310,7 +310,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
-		matterWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
+		matterWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientMatter.getInputDirections();

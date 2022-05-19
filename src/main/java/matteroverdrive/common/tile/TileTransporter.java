@@ -1,7 +1,6 @@
 package matteroverdrive.common.tile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +24,7 @@ import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsMath;
+import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -60,7 +60,7 @@ public class TileTransporter extends GenericSoundTile {
 	private int cooldownTimer = 0;
 	private double matterUsage = MATTER_USAGE;
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
-	private int currDestination = 0;
+	private int currDestination = -1;
 	private List<LivingEntity> currEntities = new ArrayList<>();
 
 	public int clientEnergyUsage;
@@ -73,7 +73,7 @@ public class TileTransporter extends GenericSoundTile {
 	private boolean clientSoundPlaying = false;
 	public int clientCooldown;
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
-	public int clientDestination;
+	public int clientDestination = -1;
 	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
 
 	public CapabilityInventory clientInventory;
@@ -99,11 +99,13 @@ public class TileTransporter extends GenericSoundTile {
 		setRenderPacketHandler(
 				new PacketHandler(this, false).packetReader(this::clientTileLoad).packetWriter(this::clientTileSave));
 		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
-		Arrays.fill(LOCATIONS, new TransporterLocationWrapper());
+		fillLocations(LOCATIONS);
 	}
 
 	private void tickServer(Ticker ticker) {
 		if (canRun()) {
+			UtilsTile.drainElectricSlot(this);
+			UtilsTile.drainMatterSlot(this);
 			if (cooldownTimer >= COOLDOWN) {
 				List<LivingEntity> entitiesAbove = level.getEntitiesOfClass(LivingEntity.class,
 						new AABB(getBlockPos().above()));
@@ -130,6 +132,7 @@ public class TileTransporter extends GenericSoundTile {
 								double z = curLoc.getDestination().getZ() + 0.5;
 								for (LivingEntity entity : currEntities) {
 									entity.teleportToWithTicket(x, y, z);
+									entity.playSound(SoundRegister.SOUND_TRANSPORTER.get(), 1.0F, 1.0F);
 								}
 							}
 						} else {
@@ -161,7 +164,8 @@ public class TileTransporter extends GenericSoundTile {
 					.play(new TickableSoundTile(SoundRegister.SOUND_TRANSPORTER.get(), this));
 		}
 		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
-			for (int i = 0; i < 3; i++) {
+			int particlesPerTick = (int) ((clientProgress / (double) BUILD_UP_TIME) * 20);
+			for (int i = 0; i < particlesPerTick; i++) {
 				for (EntityDataWrapper entityData : clientEntityData) {
 					handleParticles(entityData, new Vector3f((float) entityData.xPos(), (float) getBlockPos().getY(),
 							(float) entityData.zPos()));
@@ -207,7 +211,7 @@ public class TileTransporter extends GenericSoundTile {
 		clientMatterUsage = tag.getDouble("matusage");
 		clientDestination = tag.getInt("dest");
 
-		Arrays.fill(CLIENT_LOCATIONS, new TransporterLocationWrapper());
+		fillLocations(CLIENT_LOCATIONS);
 		for (int i = 0; i < CLIENT_LOCATIONS.length; i++) {
 			CLIENT_LOCATIONS[i].deserializeNbt(tag.getCompound("destination" + i));
 		}
@@ -384,7 +388,7 @@ public class TileTransporter extends GenericSoundTile {
 		return BUILD_UP_TIME;
 	}
 
-	private Pair<Boolean, Integer> validDestination(TransporterLocationWrapper loc) {
+	public Pair<Boolean, Integer> validDestination(TransporterLocationWrapper loc) {
 		int distance = UtilsMath.getDistanceBetween(loc.getDestination(), worldPosition);
 		if (distance <= radius) {
 			return Pair.of(true, distance);
@@ -422,6 +426,24 @@ public class TileTransporter extends GenericSoundTile {
 					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), origin.x(), origin.y(), origin.z());
 		}
 
+	}
+
+	public void setDestination(int index) {
+		currDestination = index;
+	}
+
+	public int getServerDestination() {
+		return currDestination;
+	}
+
+	public TransporterLocationWrapper[] getServerLocations() {
+		return LOCATIONS;
+	}
+	
+	private void fillLocations(TransporterLocationWrapper[] holder) {
+		for(int i = 0; i < holder.length; i++) {
+			holder[i] = new TransporterLocationWrapper();
+		}
 	}
 
 }

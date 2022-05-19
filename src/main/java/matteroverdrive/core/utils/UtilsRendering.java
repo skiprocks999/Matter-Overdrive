@@ -18,6 +18,9 @@ public class UtilsRendering {
 
 	public static final int TEXT_BLUE = getRGBA(1, 169, 226, 251);
 	public static final int TITLE_BLUE = getRGBA(1, 191, 228, 230);
+	public static final int RED = getRGBA(1, 255, 0, 0);
+	public static final int GREEN = getRGBA(1, 0, 255, 0);
+	public static final int WHITE = getRGBA(1, 255, 255, 255);
 
 	public static void bindTexture(ResourceLocation resource) {
 		RenderSystem.setShaderTexture(0, resource);

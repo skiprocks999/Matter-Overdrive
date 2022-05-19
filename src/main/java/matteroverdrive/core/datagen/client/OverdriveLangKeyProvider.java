@@ -127,6 +127,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("powusebonus", "Power Usage: %s");
 			addTooltip("rangebonus", "Range: %s");
 			addTooltip("mufflerupgrade", "Mutes machine sound");
+			addTooltip("invaliddest", "Invalid Destination");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -142,6 +143,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("storage", "Storage: %s");
 			addGuiLabel("soundmuted", "Sound Muffled");
 			addGuiLabel("unknown", "Unknown");
+			addGuiLabel("xlabel", "X");
+			addGuiLabel("ylabel", "Y");
+			addGuiLabel("zlabel", "Z");
+			addGuiLabel("importpos", "Import");
+			addGuiLabel("resetpos", "Reset");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");
@@ -165,6 +171,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("button_generic", "Button is pressed");
 			addSubtitle("matter_decomposer", "Matter Decomposer running");
 			addSubtitle("generic_machine", "Machine runs");
+			addSubtitle("transporter", "Transporter Build-up");
+			addSubtitle("transporter_arrive", "Transported Entity Appears");
 		}
 	}
 

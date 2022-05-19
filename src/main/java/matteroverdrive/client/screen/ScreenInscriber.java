@@ -8,7 +8,6 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
-import matteroverdrive.core.screen.component.IOConfigWrapper;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -24,6 +23,7 @@ import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
+import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -49,8 +49,8 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 	private ButtonIOConfig items;
 	private ButtonIOConfig energy;
 
-	private IOConfigWrapper itemWrapper;
-	private IOConfigWrapper energyWrapper;
+	private WrapperIOConfig itemWrapper;
+	private WrapperIOConfig energyWrapper;
 
 	private int screenNumber = 0;
 
@@ -198,7 +198,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
+		itemWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
 				return inscriber.clientInventory.getInputDirections();
@@ -229,7 +229,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new IOConfigWrapper(this, guiWidth + 137, guiHeight + 59, () -> {
+		energyWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
 				return inscriber.clientEnergy.getInputDirections();

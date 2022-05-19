@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import matteroverdrive.References;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
+import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.PacketUpdateCapabilitySides;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.PacketUpdateTile;
@@ -32,6 +33,9 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketUpdateCapabilitySides.class, PacketUpdateCapabilitySides::encode,
 				PacketUpdateCapabilitySides::decode, PacketUpdateCapabilitySides::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, PacketUpdateTransporterLocationInfo.class,
+				PacketUpdateTransporterLocationInfo::encode, PacketUpdateTransporterLocationInfo::decode,
+				PacketUpdateTransporterLocationInfo::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 	}
 
 }

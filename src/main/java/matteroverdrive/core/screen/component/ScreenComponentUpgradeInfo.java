@@ -16,9 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
-	private static final int RED = UtilsRendering.getRGBA(1, 255, 0, 0);
-	private static final int GREEN = UtilsRendering.getRGBA(1, 0, 255, 0);
-
 	private final Supplier<IUpgradableTile> tile;
 
 	public ScreenComponentUpgradeInfo(IScreenWrapper gui, int x, int y, int[] screenNumbers,
@@ -45,7 +42,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double operatingTime = owner.getProcessingTime();
 			if (currSpeed > 0 && owner.getDefaultSpeed() > 0) {
 				component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
-				color = currSpeed >= owner.getDefaultSpeed() ? GREEN : RED;
+				color = currSpeed >= owner.getDefaultSpeed() ? UtilsRendering.GREEN : UtilsRendering.RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -53,7 +50,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currPowerUsage = owner.getCurrentPowerUsage(true);
 			if (currPowerUsage > 0 && owner.getDefaultPowerUsage() > 0) {
 				component = UtilsText.gui("usage", UtilsText.formatPowerValue(currPowerUsage));
-				color = currPowerUsage > owner.getDefaultPowerUsage() ? RED : GREEN;
+				color = currPowerUsage > owner.getDefaultPowerUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -61,7 +58,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currMatterUsage = owner.getCurrentMatterUsage(true);
 			if (currMatterUsage > 0 && owner.getDefaultMatterUsage() > 0) {
 				component = UtilsText.gui("usage", UtilsText.formatMatterValue(currMatterUsage));
-				color = currMatterUsage > owner.getDefaultMatterUsage() ? RED : GREEN;
+				color = currMatterUsage > owner.getDefaultMatterUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -69,7 +66,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			float failureChance = owner.getCurrentFailure(true);
 			if (owner.getDefaultFailure() > 0) {
 				component = UtilsText.gui("failure", UtilsText.formatPercentage(failureChance * 100));
-				color = failureChance > owner.getDefaultFailure() ? RED : GREEN;
+				color = failureChance > owner.getDefaultFailure() ? UtilsRendering.RED : UtilsRendering.GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -77,7 +74,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			int range = (int) owner.getCurrentRange(true);
 			if (owner.getDefaultRange() > 0) {
 				component = UtilsText.gui("range", range);
-				color = range >= owner.getDefaultRange() ? GREEN : RED;
+				color = range >= owner.getDefaultRange() ? UtilsRendering.GREEN : UtilsRendering.RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -85,7 +82,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currPowerStorage = owner.getCurrentPowerStorage(true);
 			if (currPowerStorage > 0 && owner.getDefaultPowerStorage() > 0) {
 				component = UtilsText.gui("storage", UtilsText.formatPowerValue(currPowerStorage));
-				color = currPowerStorage >= owner.getDefaultPowerStorage() ? GREEN : RED;
+				color = currPowerStorage >= owner.getDefaultPowerStorage() ? UtilsRendering.GREEN : UtilsRendering.RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
@@ -93,13 +90,14 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currMatterStorage = owner.getCurrentMatterStorage(true);
 			if (currMatterStorage > 0 && owner.getDefaultMatterStorage() > 0) {
 				component = UtilsText.gui("storage", UtilsText.formatMatterValue(currMatterStorage));
-				color = currMatterStorage >= owner.getDefaultMatterStorage() ? GREEN : RED;
+				color = currMatterStorage >= owner.getDefaultMatterStorage() ? UtilsRendering.GREEN
+						: UtilsRendering.RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
 			}
 			if (owner.isMuffled(true)) {
 				font.draw(stack, UtilsText.gui("soundmuted"), guiWidth + this.xLocation,
-						guiHeight + this.yLocation + offset, GREEN);
+						guiHeight + this.yLocation + offset, UtilsRendering.GREEN);
 			}
 
 		}

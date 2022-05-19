@@ -10,12 +10,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 public class TransporterLocationWrapper {
 
-	private static final TranslatableComponent DEFUALT_NAME = UtilsText.gui("unknown");
+	public static final TranslatableComponent DEFAULT_NAME = UtilsText.gui("unknown");
 
 	private TextComponent customName;
 	private boolean hasCustomName;
 
-	private BlockPos destination = new BlockPos(0, -60, 0);
+	private BlockPos destination = new BlockPos(0, -1000, 0);
 
 	public TransporterLocationWrapper() {
 
@@ -25,11 +25,15 @@ public class TransporterLocationWrapper {
 		if (hasCustomName) {
 			return customName;
 		}
-		return DEFUALT_NAME;
+		return DEFAULT_NAME;
 	}
 
 	public BlockPos getDestination() {
 		return destination;
+	}
+	
+	public void setDestination(BlockPos pos) {
+		destination = pos;
 	}
 
 	public void setName(String name) {

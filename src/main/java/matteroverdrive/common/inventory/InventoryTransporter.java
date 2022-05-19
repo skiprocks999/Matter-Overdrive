@@ -32,10 +32,10 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 4 }, SlotType.BIG, IconType.FLASHDRIVE_DARK,
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 78, new int[] { 4 }, SlotType.BIG, IconType.FLASHDRIVE_DARK,
 				DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get()));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 48, new int[] { 0 }));
-		addSlot(new SlotMatterCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));
+		addSlot(new SlotMatterCharging(invcap, nextIndex(), 8, 107, new int[] { 0 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 70, 55, new int[] { 2 }, UPGRADES));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 94, 55, new int[] { 2 }, UPGRADES));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 118, 55, new int[] { 2 }, UPGRADES));
@@ -45,7 +45,7 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 
 	@Override
 	public int[] getHotbarNumbers() {
-		return new int[] { 0, 1, 2 };
+		return new int[] { 0, 1, 2, 3, 4 };
 	}
 
 	@Override

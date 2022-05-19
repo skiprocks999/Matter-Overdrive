@@ -48,7 +48,7 @@ public class ScreenComponentIcon extends ScreenComponent {
 
 		UPGRADE_DARK("upgrade"), MATTER_DARK("matter"), MATTER_LIGHT("matter_white"), MATTER_DUST_DARK("matter_dust"),
 		ENERGY_DARK("energy"), ENERGY_LIGHT("energy_white"), BLOCK_DARK("decompose"), BLOCK_LIGHT("decompose_white"),
-		FLASHDRIVE_DARK("flash_drive");
+		FLASHDRIVE_DARK("flash_drive"), PENCIL_DARK("pencil");
 
 		private final int width;
 		private final int height;

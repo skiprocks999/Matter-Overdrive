@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -54,5 +55,10 @@ public class ClientEventHandler {
 		}
 
 	}
+
+	/*
+	 * @SubscribeEvent public static void
+	 * handleTransporterFade(RenderLivingEvent.Pre event) { event.getRenderer(). }
+	 */
 
 }

@@ -1,4 +1,4 @@
-package matteroverdrive.core.screen.component;
+package matteroverdrive.core.screen.component.wrappers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 
-public class IOConfigWrapper {
+public class WrapperIOConfig {
 
 	private Supplier<HashSet<Direction>> inputDirs;
 	private Supplier<HashSet<Direction>> outputDirs;
@@ -32,7 +32,7 @@ public class IOConfigWrapper {
 	private int guiWidth;
 	private int guiHeight;
 
-	public IOConfigWrapper(IScreenWrapper gui, int guiWidth, int guiHeight, Supplier<HashSet<Direction>> inputDirs,
+	public WrapperIOConfig(IScreenWrapper gui, int guiWidth, int guiHeight, Supplier<HashSet<Direction>> inputDirs,
 			Supplier<HashSet<Direction>> outputDirs, Supplier<Boolean> input, Supplier<Boolean> output,
 			Supplier<BlockPos> pos, CapabilityType type) {
 		this.gui = gui;

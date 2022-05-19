@@ -1,5 +1,6 @@
 package matteroverdrive.core.utils;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 public class UtilsNbt {
@@ -27,6 +28,22 @@ public class UtilsNbt {
 
 	private static boolean validateMatterTag(ItemStack item) {
 		return item.hasTag() && item.getTag().contains(STORED_MATTER_VAL);
+	}
+
+	public static void writeStringToBuffer(FriendlyByteBuf buf, String message) {
+		buf.writeInt(message.length());
+		for (char character : message.toCharArray()) {
+			buf.writeChar(character);
+		}
+	}
+
+	public static String readStringFromBuffer(FriendlyByteBuf buf) {
+		String text = "";
+		int size = buf.readInt();
+		for (int i = 0; i < size; i++) {
+			text += buf.readChar();
+		}
+		return text;
 	}
 
 }

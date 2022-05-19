@@ -61,10 +61,6 @@ public class ParticleReplicator extends TextureSheetParticle {
 		this.y = this.getBoundingBox().minY - (double) this.bbHeight;
 		this.z = (this.getBoundingBox().minZ + this.getBoundingBox().maxZ) / 2.0D;
 
-		double speedOverTime = 1D;
-		this.xd *= speedOverTime;
-		this.yd *= speedOverTime;
-		this.zd *= speedOverTime;
 		move(this.zd, this.yd, this.zd);
 		prevXMove *= -1;
 		prevZMove *= -1;
@@ -105,17 +101,10 @@ public class ParticleReplicator extends TextureSheetParticle {
 	}
 
 	public int getBrightness(float light) {
-		float f1 = ((float) this.age + light) / (float) this.lifetime;
 
-		if (f1 < 0.0F) {
-			f1 = 0.0F;
-		}
-
-		if (f1 > 1.0F) {
-			f1 = 1.0F;
-		}
-
+		float f1 = Mth.clamp(((float) this.age + light) / (float) this.lifetime, 0.0F, 1.0F);
 		int f2 = super.getLightColor(light);
+
 		return (int) (f2 * f1 + (1.0F - f1));
 	}
 

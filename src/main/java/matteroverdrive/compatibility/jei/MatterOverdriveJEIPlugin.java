@@ -7,12 +7,14 @@ import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenSolarPanel;
+import matteroverdrive.client.screen.ScreenTransporter;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerCharger;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerInscriber;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterDecomposer;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterRecycler;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMicrowave;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerSolarPanel;
+import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerTransporter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -36,6 +38,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registry.addGuiContainerHandler(ScreenMatterRecycler.class, new ScreenHandlerMatterRecycler());
 		registry.addGuiContainerHandler(ScreenMicrowave.class, new ScreenHandlerMicrowave());
 		registry.addGuiContainerHandler(ScreenSolarPanel.class, new ScreenHandlerSolarPanel());
+		registry.addGuiContainerHandler(ScreenTransporter.class, new ScreenHandlerTransporter());
 	}
 
 }

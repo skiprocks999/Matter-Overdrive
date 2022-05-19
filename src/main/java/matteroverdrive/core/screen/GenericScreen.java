@@ -15,6 +15,7 @@ import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.IGuiComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -227,5 +228,9 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	public abstract int getScreenNumber();
+	
+	public void addExternalWidget(AbstractWidget widget) {
+		addRenderableWidget(widget);
+	}
 
 }

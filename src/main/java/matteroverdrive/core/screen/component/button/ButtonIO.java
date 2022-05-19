@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.core.screen.component.IOConfigWrapper;
+import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.gui.components.Button;
@@ -24,8 +24,8 @@ public class ButtonIO extends Button {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(
 			References.ID + ":textures/gui/button/buttons.png");
 
-	private static final int X_START = 58;
-	private static final int Y_START = 0;
+	private static final int X_START = 0;
+	private static final int Y_START = 9;
 
 	private static final int WIDTH = 16;
 	private static final int HEIGHT = 16;
@@ -39,11 +39,11 @@ public class ButtonIO extends Button {
 	private Boolean hasOutput;
 
 	private boolean isActivated = false;
-	private IOConfigWrapper owner;
+	private WrapperIOConfig owner;
 
 	private int mouseButton = 0;
 
-	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, IOConfigWrapper owner,
+	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, WrapperIOConfig owner,
 			Supplier<Boolean> canInput, Supplier<Boolean> canOutput) {
 		super(x, Y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {
 		}, (button, stack, mouseX, mouseY) -> {
