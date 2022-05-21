@@ -63,7 +63,7 @@ public class ClientEventHandler {
 		Entity entity = event.getEntity();
 		entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
 			if(h.getTransporterTimer() > 0) {
-				event.setCanceled(true);
+				//event.setCanceled(true);
 			}
 		});
 	}

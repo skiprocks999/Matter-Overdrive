@@ -140,7 +140,6 @@ public class ClientRegister {
 
 	@SubscribeEvent
 	public static void registerParticles(ParticleFactoryRegisterEvent event) {
-		MatterOverdrive.LOGGER.info("fired");
 		ParticleEngine engine = Minecraft.getInstance().particleEngine;
 		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
 	}
