@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.tile.TileTransporter;
+import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo.PacketType;

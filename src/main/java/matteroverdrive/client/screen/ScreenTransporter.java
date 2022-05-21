@@ -5,7 +5,7 @@ import java.util.HashSet;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.common.inventory.InventoryTransporter;
-import matteroverdrive.common.tile.TileTransporter;
+import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;

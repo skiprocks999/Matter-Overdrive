@@ -3,8 +3,8 @@ package matteroverdrive.core.packet.type;
 import java.util.function.Supplier;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.common.tile.TileTransporter;
-import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
+import matteroverdrive.common.tile.transporter.TileTransporter;
+import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

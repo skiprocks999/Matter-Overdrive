@@ -1,4 +1,4 @@
-package matteroverdrive.core.tile.utils;
+package matteroverdrive.common.tile.transporter;
 
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;

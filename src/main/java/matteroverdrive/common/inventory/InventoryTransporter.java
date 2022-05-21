@@ -2,7 +2,7 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
-import matteroverdrive.common.tile.TileTransporter;
+import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;

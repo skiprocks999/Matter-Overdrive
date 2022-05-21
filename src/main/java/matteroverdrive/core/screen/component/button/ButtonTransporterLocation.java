@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.tile.TileTransporter;
+import matteroverdrive.common.tile.transporter.TileTransporter;
+import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
 import matteroverdrive.core.screen.IScreenWrapper;
 import matteroverdrive.core.screen.component.utils.ButtonHoldPress;
-import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

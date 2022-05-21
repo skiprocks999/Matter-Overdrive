@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile;
+package matteroverdrive.common.tile.transporter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import matteroverdrive.SoundRegister;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryTransporter;
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -22,17 +23,17 @@ import matteroverdrive.core.sound.TickableSoundTile;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.tile.utils.PacketHandler;
 import matteroverdrive.core.tile.utils.Ticker;
-import matteroverdrive.core.tile.utils.TransporterLocationWrapper;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
+import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -61,7 +62,7 @@ public class TileTransporter extends GenericSoundTile {
 	private double matterUsage = MATTER_USAGE;
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private int currDestination = -1;
-	private List<LivingEntity> currEntities = new ArrayList<>();
+	private List<Entity> currEntities = new ArrayList<>();
 
 	public int clientEnergyUsage;
 	public double clientMatterUsage;
@@ -107,7 +108,7 @@ public class TileTransporter extends GenericSoundTile {
 			UtilsTile.drainElectricSlot(this);
 			UtilsTile.drainMatterSlot(this);
 			if (cooldownTimer >= COOLDOWN) {
-				List<LivingEntity> entitiesAbove = level.getEntitiesOfClass(LivingEntity.class,
+				List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class,
 						new AABB(getBlockPos().above()));
 				if (entitiesAbove.size() > 0 && currDestination >= 0) {
 					TransporterLocationWrapper curLoc = LOCATIONS[currDestination];
@@ -126,34 +127,48 @@ public class TileTransporter extends GenericSoundTile {
 							if (currProgress >= BUILD_UP_TIME) {
 								cooldownTimer = 0;
 								matter.removeMatter(matterUsage);
-
+								currProgress = 0;
 								double x = curLoc.getDestination().getX() + 0.5;
-								double y = curLoc.getDestination().getY() + 0.01;
+								double y = curLoc.getDestination().getY();
 								double z = curLoc.getDestination().getZ() + 0.5;
-								for (LivingEntity entity : currEntities) {
+								for (Entity entity : currEntities) {
 									entity.teleportToWithTicket(x, y, z);
-									entity.playSound(SoundRegister.SOUND_TRANSPORTER.get(), 1.0F, 1.0F);
+									entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
+										h.setTransporterTimer(80);
+									});
+									level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
+										h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 80));
+									});
+									Scheduler.schedule(1, () -> {
+										level.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+									});
 								}
 							}
+							setChanged();
 						} else {
 							running = false;
+							currEntities.clear();
 						}
 					} else {
 						running = false;
 						currProgress = 0;
+						currEntities.clear();
 					}
 				} else {
 					running = false;
 					currProgress = 0;
+					currEntities.clear();
 				}
 			} else {
 				cooldownTimer++;
 				running = false;
 				currProgress = 0;
+				currEntities.clear();
 			}
 		} else {
 			running = false;
 			currProgress = 0;
+			currEntities.clear();
 		}
 	}
 
@@ -397,8 +412,8 @@ public class TileTransporter extends GenericSoundTile {
 	}
 
 	private int getProgress(double distance) {
-		int val = (int) (currSpeed / (distance / 4.0));
-		return val < 1 ? 1 : val;
+		//int val = (int) (currSpeed / (distance / 4.0));
+		return 1;//val < 1 ? 1 : val;
 	}
 
 	private void handleParticles(EntityDataWrapper entityData, Vector3f vec) {
@@ -413,7 +428,7 @@ public class TileTransporter extends GenericSoundTile {
 		int count = (int) Math.round(UtilsMath.easeIn(time, 2, entityArea * 15, 1));
 
 		for (int i = 0; i < count; i++) {
-			float speed = random.nextFloat() * 0.05f + 0.15f;
+			float speed = 0.5F;//random.nextFloat() * 0.05f + 0.15f * 4.0F;
 			float height = vec.y() + random.nextFloat() * entityData.bbHeight();
 
 			Vector3f origin = new Vector3f(vec.x(), height, vec.z());
@@ -423,7 +438,7 @@ public class TileTransporter extends GenericSoundTile {
 			origin.mul(speed);
 
 			getLevel().addParticle(new ParticleOptionReplicator().setCenter(origin.x(), origin.y(), origin.z())
-					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), origin.x(), origin.y(), origin.z());
+					.setGravity(gravity).setAge(age), origin.x(), origin.y(), origin.z(), speed, speed, speed);
 		}
 
 	}
