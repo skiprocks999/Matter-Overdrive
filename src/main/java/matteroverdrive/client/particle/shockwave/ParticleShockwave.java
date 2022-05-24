@@ -3,12 +3,9 @@ package matteroverdrive.client.particle.shockwave;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.animation.AnimationUtils;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -50,8 +47,6 @@ public class ParticleShockwave extends TextureSheetParticle {
 
 	@Override
 	public void render(VertexConsumer builder, Camera camera, float partialTicks) {
-		float particleScale = this.quadSize;
-
 		float particleAge = 1f - (float) this.age / (float) this.lifetime;
 		float r = this.rCol * particleAge;
 		float g = this.gCol * particleAge;
@@ -60,9 +55,6 @@ public class ParticleShockwave extends TextureSheetParticle {
 		int i = this.getLightColor(partialTicks);
 		int j = i >> 16 & 65535;
 		int k = i & 65535;
-		
-		Matrix4f matrix4f = stack.last().pose();
-		Matrix3f matrix3f = stack.last().normal();
 		
 		float vMin = getV0();
 		float vMax = getV1();
@@ -77,18 +69,21 @@ public class ParticleShockwave extends TextureSheetParticle {
 		float maxX = (float) box.maxX;
 		float maxY = (float) box.maxY;
 		float maxZ = (float) box.maxZ;
+		
+		int u = sprite.getX();
+		int v = sprite.getY();
 
 		// bottom
-		builder.vertex(matrix4f, minX, minY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(matrix3f, 0, -1, 0).endVertex();
-		builder.vertex(matrix4f, maxX, minY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(matrix3f, 0, -1, 0).endVertex();
-		builder.vertex(matrix4f, maxX, minY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(matrix3f, 0, -1, 0).endVertex();
-		builder.vertex(matrix4f, minX, minY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(matrix3f, 0, -1, 0).endVertex();
+		builder.vertex(minX, minY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, minY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, minY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, minY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
 
 		// top
-		builder.vertex(matrix4f, maxX, maxY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(matrix3f, 0, 1, 0).endVertex();
-		builder.vertex(matrix4f, minX, maxY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(matrix3f, 0, 1, 0).endVertex();
-		builder.vertex(matrix4f, minX, maxY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(matrix3f, 0, 1, 0).endVertex();
-		builder.vertex(matrix4f, maxX, maxY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(matrix3f, 0, 1, 0).endVertex();
+		builder.vertex(maxX, maxY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, maxY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, maxY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, maxY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
 
 	}
 
