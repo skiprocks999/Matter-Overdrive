@@ -48,10 +48,10 @@ public class ParticleShockwave extends TextureSheetParticle {
 	@Override
 	public void render(VertexConsumer builder, Camera camera, float partialTicks) {
 		float particleAge = 1f - (float) this.age / (float) this.lifetime;
-		float r = this.rCol * particleAge;
-		float g = this.gCol * particleAge;
-		float b = this.bCol * particleAge;
-		float a = this.alpha * particleAge;
+		int r = (int) (this.rCol * particleAge);
+		int g = (int) (this.gCol * particleAge);
+		int b = (int) (this.bCol * particleAge);
+		int a = (int) (this.alpha * particleAge);
 		int i = this.getLightColor(partialTicks);
 		int j = i >> 16 & 65535;
 		int k = i & 65535;
@@ -74,16 +74,16 @@ public class ParticleShockwave extends TextureSheetParticle {
 		int v = sprite.getY();
 
 		// bottom
-		builder.vertex(minX, minY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, minY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, minY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, minY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(0, -1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, minY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, minY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, minY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, minY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
 
 		// top
-		builder.vertex(maxX, maxY, minZ).color(r, g, b, a).uv(uMin, vMin).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, maxY, minZ).color(r, g, b, a).uv(uMax, vMin).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, maxY, maxZ).color(r, g, b, a).uv(uMax, vMax).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, maxY, maxZ).color(r, g, b, a).uv(uMin, vMax).uv2(j, k).normal(0, 1, 0).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, maxY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, maxY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, maxY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, maxY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
 
 	}
 
@@ -101,7 +101,7 @@ public class ParticleShockwave extends TextureSheetParticle {
 	}
 
 	public void updateBoundingBox() {
-		this.setBoundingBox(new AABB(x - quadSize, y - 0.5, z - quadSize, x + quadSize, y + 0.5, z + quadSize));
+		this.setBoundingBox(new AABB(x - quadSize, y, z - quadSize, x + quadSize, y, z + quadSize));
 	}
 
 	public static class Factory implements ParticleProvider<ParticleOptionShockwave> {

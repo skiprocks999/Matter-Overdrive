@@ -101,7 +101,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		if(clientRunning && ticker.getTicks() % 10 == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
 			shockwave.setMaxScale((float) getCurrentRange(true));
-			shockwave.setColor(51, 78, 120, 1);
+			shockwave.setColor(51, 78, 120, 255);
 			BlockPos pos = getBlockPos();
 			getLevel().addParticle(shockwave, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0, 0);
 		}
