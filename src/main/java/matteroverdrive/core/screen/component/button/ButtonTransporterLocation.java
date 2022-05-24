@@ -31,9 +31,9 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 			TileTransporter transport = loc.transporter.get();
 			TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[loc.index];
 			if (transport.validDestination(wrapper).getFirst()) {
-				loc.gui.displayTooltip(stack, UtilsText.tooltip("invaliddest"), pX, pY);
-			} else {
 				loc.gui.displayTooltip(stack, new TextComponent(wrapper.getDestination().toShortString()), pX, pY);
+			} else {
+				loc.gui.displayTooltip(stack, UtilsText.tooltip("invaliddest"), pX, pY);
 			}
 
 		});

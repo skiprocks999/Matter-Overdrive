@@ -54,7 +54,7 @@ public class ScreenCharger extends GenericScreen<InventoryCharger> {
 		}, () -> {
 			TileCharger charger = menu.getTile();
 			if (charger != null && charger.clientRunning) {
-				return charger.clientEnergyUsage;
+				return charger.getCurrentPowerUsage(true);
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

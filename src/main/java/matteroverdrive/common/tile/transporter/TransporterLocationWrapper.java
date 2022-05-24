@@ -1,5 +1,6 @@
 package matteroverdrive.common.tile.transporter;
 
+import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -7,6 +8,8 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 public class TransporterLocationWrapper {
 
@@ -16,6 +19,8 @@ public class TransporterLocationWrapper {
 	private boolean hasCustomName;
 
 	private BlockPos destination = new BlockPos(0, -1000, 0);
+	
+	private ResourceKey<Level> dimension;
 
 	public TransporterLocationWrapper() {
 
@@ -43,6 +48,14 @@ public class TransporterLocationWrapper {
 		hasCustomName = true;
 		customName = new TextComponent(name);
 	}
+	
+	public ResourceKey<Level> getDimension() {
+		return dimension;
+	}
+	
+	public void setDimension(ResourceKey<Level> dimension) {
+		this.dimension = dimension;
+	}
 
 	public void serializeNbt(CompoundTag parent, String key) {
 		CompoundTag tag = new CompoundTag();
@@ -50,6 +63,9 @@ public class TransporterLocationWrapper {
 		tag.putBoolean("hasCustom", hasCustomName);
 		if (hasCustomName) {
 			tag.putString("custom", customName.getContents());
+		}
+		if(dimension != null) {
+			tag.put(UtilsNbt.DIMENSION, UtilsNbt.writeDimensionToTag(dimension));
 		}
 		parent.put(key, tag);
 	}
@@ -59,6 +75,9 @@ public class TransporterLocationWrapper {
 		hasCustomName = data.getBoolean("hasCustom");
 		if (hasCustomName) {
 			customName = new TextComponent(data.getString("custom"));
+		}
+		if(data.contains("ownerid")) {
+			dimension = UtilsNbt.readDimensionFromTag(data.getCompound(UtilsNbt.DIMENSION));
 		}
 	}
 

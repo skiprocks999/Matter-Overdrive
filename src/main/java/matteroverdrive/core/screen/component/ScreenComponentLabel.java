@@ -1,6 +1,7 @@
 package matteroverdrive.core.screen.component;
 
 import java.awt.Rectangle;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -12,11 +13,16 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentLabel extends ScreenComponent {
 
-	private final Component component;
+	private final Supplier<Component> component;
 	private final int fontColor;
 
 	public ScreenComponentLabel(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers,
 			final Component component, final int color) {
+		this(gui, x, y, screenNumbers, () -> component, color);
+	}
+	
+	public ScreenComponentLabel(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers,
+			final Supplier<Component> component, final int color) {
 		super(new ResourceLocation(""), gui, x, y, screenNumbers);
 		this.component = component;
 		fontColor = color;
@@ -30,7 +36,7 @@ public class ScreenComponentLabel extends ScreenComponent {
 	@Override
 	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
 		Font font = gui.getFontRenderer();
-		font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation, fontColor);
+		font.draw(stack, component.get(), guiWidth + this.xLocation, guiHeight + this.yLocation, fontColor);
 
 	}
 

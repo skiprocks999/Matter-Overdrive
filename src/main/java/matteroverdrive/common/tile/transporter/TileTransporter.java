@@ -31,11 +31,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class TileTransporter extends GenericSoundTile {
 
@@ -63,6 +67,8 @@ public class TileTransporter extends GenericSoundTile {
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private int currDestination = -1;
 	private List<Entity> currEntities = new ArrayList<>();
+	
+	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
 	public int clientEnergyUsage;
 	public double clientMatterUsage;
@@ -116,31 +122,32 @@ public class TileTransporter extends GenericSoundTile {
 					if (validData.getFirst()) {
 						CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 						CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
-						if (energy.getEnergyStored() >= energyUsage && matter.getMatterStored() >= matterUsage) {
+						if (energy.getEnergyStored() >= getCurrentPowerUsage(false) && matter.getMatterStored() >= getCurrentMatterUsage(false)) {
 							int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
 									: entitiesAbove.size();
-							energy.removeEnergy(energyUsage);
+							energy.removeEnergy((int) getCurrentPowerUsage(false));
 							running = true;
-							currProgress += getProgress(validData.getSecond());
+							currProgress += getCurrentSpeed(false);
 							currEntities.clear();
 							currEntities.addAll(entitiesAbove.subList(0, size));
 							if (currProgress >= BUILD_UP_TIME) {
 								cooldownTimer = 0;
-								matter.removeMatter(matterUsage);
+								matter.removeMatter(getCurrentMatterUsage(false));
 								currProgress = 0;
 								double x = curLoc.getDestination().getX() + 0.5;
 								double y = curLoc.getDestination().getY();
 								double z = curLoc.getDestination().getZ() + 0.5;
 								for (Entity entity : currEntities) {
+									ServerLevel dim = handleDimensionChange(entity);
 									entity.teleportToWithTicket(x, y, z);
 									entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
-										h.setTransporterTimer(80);
+										h.setTransporterTimer(70);
 									});
 									level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
-										h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 80));
+										h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 									});
 									Scheduler.schedule(1, () -> {
-										level.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+										dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
 									});
 								}
 							}
@@ -237,6 +244,7 @@ public class TileTransporter extends GenericSoundTile {
 		tag.putBoolean("muffled", isMuffled);
 		tag.putDouble("progress", currProgress);
 		tag.putInt("entities", currEntities.size());
+		tag.putDouble("sabonus", saMultiplier);
 		for (int i = 0; i < currEntities.size(); i++) {
 			Entity entity = currEntities.get(i);
 			EntityDataWrapper wrapper = new EntityDataWrapper(entity.getBbHeight(), entity.getBbWidth(), entity.getX(),
@@ -249,6 +257,7 @@ public class TileTransporter extends GenericSoundTile {
 		clientRunning = tag.getBoolean("running");
 		clientMuffled = tag.getBoolean("muffled");
 		clientProgress = tag.getDouble("progress");
+		clientSAMultipler = tag.getDouble("sabonus");
 		clientEntityData = new ArrayList<>();
 		int size = tag.getInt("entities");
 		for (int i = 0; i < size; i++) {
@@ -333,6 +342,10 @@ public class TileTransporter extends GenericSoundTile {
 	public double getDefaultPowerUsage() {
 		return USAGE_PER_TICK;
 	}
+	
+	public static int getDefaultRaduis() {
+		return DEFAULT_RADUIS;
+	}
 
 	@Override
 	public boolean isMuffled(boolean clientSide) {
@@ -341,7 +354,7 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public double getCurrentSpeed(boolean clientSide) {
-		return clientSide ? clientSpeed : currSpeed;
+		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
 	}
 
 	@Override
@@ -358,12 +371,17 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage : energyUsage;
+		return clientSide ? clientEnergyUsage * clientSAMultipler : energyUsage * saMultiplier;
 	}
 
 	@Override
 	public double getCurrentMatterUsage(boolean clientSide) {
-		return clientSide ? clientMatterUsage : matterUsage;
+		return clientSide ? clientMatterUsage * clientSAMultipler : matterUsage * saMultiplier;
+	}
+	
+	@Override
+	public double getCurrentRange(boolean clientSide) {
+		return clientSide ? clientRadius : radius;
 	}
 
 	@Override
@@ -397,10 +415,19 @@ public class TileTransporter extends GenericSoundTile {
 	public void setMuffled(boolean muffled) {
 		isMuffled = muffled;
 	}
+	
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
 
 	@Override
 	public int getProcessingTime() {
 		return BUILD_UP_TIME;
+	}
+	
+	@Override
+	public void setAcceleratorMultiplier(double multiplier) {
+		saMultiplier = multiplier;
 	}
 
 	public Pair<Boolean, Integer> validDestination(TransporterLocationWrapper loc) {
@@ -411,24 +438,19 @@ public class TileTransporter extends GenericSoundTile {
 		return Pair.of(false, 0);
 	}
 
-	private int getProgress(double distance) {
-		//int val = (int) (currSpeed / (distance / 4.0));
-		return 1;//val < 1 ? 1 : val;
-	}
-
 	private void handleParticles(EntityDataWrapper entityData, Vector3f vec) {
 		double entityRadius = entityData.bbWidth();
 		double entityArea = Math.max(entityRadius * entityData.bbHeight(), 0.3);
 		Random random = MatterOverdrive.RANDOM;
-		double radiusX = entityRadius + random.nextDouble() * 0.2f;
-		double radiusZ = entityRadius + random.nextDouble() * 0.2f;
+		double radiusX = entityRadius;
+		double radiusZ = entityRadius;
 		double time = Math.min((double) currProgress / (double) (BUILD_UP_TIME), 1);
 		float gravity = 0.015f;
 		int age = (int) Math.round(UtilsMath.easeIn(time, 5, 15, 1));
 		int count = (int) Math.round(UtilsMath.easeIn(time, 2, entityArea * 15, 1));
 
 		for (int i = 0; i < count; i++) {
-			float speed = 0.5F;//random.nextFloat() * 0.05f + 0.15f * 4.0F;
+			float speed = 0.5F;
 			float height = vec.y() + random.nextFloat() * entityData.bbHeight();
 
 			Vector3f origin = new Vector3f(vec.x(), height, vec.z());
@@ -438,7 +460,7 @@ public class TileTransporter extends GenericSoundTile {
 			origin.mul(speed);
 
 			getLevel().addParticle(new ParticleOptionReplicator().setCenter(origin.x(), origin.y(), origin.z())
-					.setGravity(gravity).setAge(age), origin.x(), origin.y(), origin.z(), speed, speed, speed);
+					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), 0, speed, 0);
 		}
 
 	}
@@ -459,6 +481,16 @@ public class TileTransporter extends GenericSoundTile {
 		for(int i = 0; i < holder.length; i++) {
 			holder[i] = new TransporterLocationWrapper();
 		}
+	}
+	
+	private ServerLevel handleDimensionChange(Entity entity) {
+		ResourceKey<Level> dim = LOCATIONS[currDestination].getDimension();
+		if(dim != null) {
+			ServerLevel level = ServerLifecycleHooks.getCurrentServer().getLevel(dim);
+			entity.changeDimension(level, MANAGER);
+			return level;
+		}
+		return (ServerLevel) getLevel();
 	}
 
 }

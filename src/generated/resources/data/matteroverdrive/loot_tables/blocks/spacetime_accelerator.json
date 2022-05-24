@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "spacetime_accelerator",
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "inventory",
+                  "target": "BlockEntityTag.inventory",
+                  "op": "replace"
+                },
+                {
+                  "source": "energy",
+                  "target": "BlockEntityTag.energy",
+                  "op": "replace"
+                },
+                {
+                  "source": "matter",
+                  "target": "BlockEntityTag.matter",
+                  "op": "replace"
+                },
+                {
+                  "source": "additional",
+                  "target": "BlockEntityTag.additional",
+                  "op": "replace"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_contents",
+              "type": "matteroverdrive:spacetime_accelerator",
+              "entries": [
+                {
+                  "type": "minecraft:dynamic",
+                  "name": "minecraft:contents"
+                }
+              ]
+            }
+          ],
+          "name": "matteroverdrive:spacetime_accelerator"
+        }
+      ]
+    }
+  ]
+}

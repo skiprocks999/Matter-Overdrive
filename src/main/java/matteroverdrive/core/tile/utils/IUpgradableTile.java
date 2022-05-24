@@ -94,7 +94,7 @@ public interface IUpgradableTile {
 
 	// MISC
 
-	default void setAcceleratorMultiplier(int multiplier) {
+	default void setAcceleratorMultiplier(double multiplier) {
 	}
 
 	default int getProcessingTime() {

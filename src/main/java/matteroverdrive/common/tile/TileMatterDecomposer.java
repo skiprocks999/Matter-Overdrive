@@ -94,7 +94,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 						: MatterRegister.INSTANCE.getServerMatterValue(input);
 				if (matterVal != null || (UtilsMatter.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
 					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					if (energy.getEnergyStored() >= usage) {
+					if (energy.getEnergyStored() >= getCurrentPowerUsage(false)) {
 						currRecipeValue = matterVal.doubleValue();
 						currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
 								.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
@@ -105,13 +105,10 @@ public class TileMatterDecomposer extends GenericSoundTile {
 								&& (output.getCount() + 1 <= output.getMaxStackSize()));
 						if (room && outputRoom) {
 							running = true;
-							currProgress += currSpeed;
-							energy.removeEnergy(usage);
+							currProgress += getCurrentSpeed(false);
+							energy.removeEnergy((int) getCurrentPowerUsage(false));
 							if (currProgress >= OPERATING_TIME) {
-								if (roll() > currFailureChance) {
-									storage.giveMatter(currRecipeValue);
-									input.shrink(1);
-								} else {
+								if (roll() < getCurrentFailure(false)) {
 									if (output.isEmpty()) {
 										ItemStack dust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 										UtilsNbt.writeMatterVal(dust, currRecipeValue);
@@ -119,6 +116,9 @@ public class TileMatterDecomposer extends GenericSoundTile {
 									} else {
 										output.grow(1);
 									}
+									input.shrink(1);
+								} else {
+									storage.giveMatter(currRecipeValue);
 									input.shrink(1);
 								}
 								currProgress = 0;
@@ -197,11 +197,13 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	private void clientTileSave(CompoundTag tag) {
 		tag.putBoolean("running", running);
 		tag.putBoolean("muffled", isMuffled);
+		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	private void clientTileLoad(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
 		clientMuffled = tag.getBoolean("muffled");
+		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -277,12 +279,12 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public double getCurrentSpeed(boolean clientSide) {
-		return clientSide ? clientSpeed : currSpeed;
+		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
 	}
 
 	@Override
 	public float getCurrentFailure(boolean clientSide) {
-		return clientSide ? clientFailure : currFailureChance;
+		return clientSide ? clientFailure * (float) clientSAMultipler : currFailureChance * (float) saMultiplier;
 	}
 
 	@Override
@@ -299,7 +301,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage : usage;
+		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
 	}
 
 	@Override

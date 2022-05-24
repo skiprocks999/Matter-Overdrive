@@ -5,10 +5,12 @@ import java.util.List;
 import matteroverdrive.References;
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.utils.UtilsNbt;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
@@ -41,7 +43,9 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 					BlockPos pos = blockTrace.getBlockPos();
 					CompoundTag tag = stack.getOrCreateTag();
 					tag.remove(UtilsNbt.BLOCK_POS);
+					tag.remove(UtilsNbt.DIMENSION);
 					tag.put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(pos));
+					tag.put(UtilsNbt.DIMENSION, UtilsNbt.writeDimensionToTag(world.dimension()));
 					return InteractionResultHolder.success(player.getItemInHand(hand));
 				}
 			}
@@ -53,7 +57,16 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, world, tooltips, advanced);
 		if(stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
-			tooltips.add(new TextComponent(NbtUtils.readBlockPos(stack.getTag().getCompound(UtilsNbt.BLOCK_POS)).toShortString()).withStyle(ChatFormatting.GRAY));
+			CompoundTag tag = stack.getTag();
+			tooltips.add(new TextComponent(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString()).withStyle(ChatFormatting.GRAY));
+			BaseComponent name;
+			String key = UtilsNbt.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION)).location().getPath();
+			if(UtilsText.dimensionExists(key)) {
+				name = UtilsText.dimension(key);
+			} else {
+				name = new TextComponent(key);
+			}
+			tooltips.add(name.withStyle(ChatFormatting.GRAY));
 		}
 	}
 

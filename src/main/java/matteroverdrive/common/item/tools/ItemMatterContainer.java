@@ -6,8 +6,10 @@ import java.util.List;
 import matteroverdrive.References;
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.capability.types.matter.CapabilityCreativeMatterStorage;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
+import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
@@ -29,9 +31,11 @@ import net.minecraftforge.fml.common.Mod;
 public class ItemMatterContainer extends OverdriveItem {
 
 	private static final List<ItemMatterContainer> CONTAINERS = new ArrayList<>();
-
-	public ItemMatterContainer() {
+	private ContainerType container;
+	
+	public ItemMatterContainer(ContainerType type) {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
+		container = type;
 		CONTAINERS.add(this);
 	}
 
@@ -39,21 +43,31 @@ public class ItemMatterContainer extends OverdriveItem {
 	public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
 		if (allowdedIn(category)) {
 			items.add(new ItemStack(this));
-			ItemStack filled = new ItemStack(this);
-			filled.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(h -> {
-				h.receiveMatter(h.getMaxMatterStored(), false);
-			});
-			items.add(filled);
+			if(container != ContainerType.CREATIVE) {
+				ItemStack filled = new ItemStack(this);
+				filled.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(h -> {
+					h.receiveMatter(h.getMaxMatterStored(), false);
+				});
+				items.add(filled);
+			}
 		}
 	}
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
-		return new CapabilityMatterStorage(1000, true, true);
+		if(container == ContainerType.CREATIVE) {
+			return new CapabilityCreativeMatterStorage(Double.MAX_VALUE, true, true);
+		} else {
+			return new CapabilityMatterStorage(container.capacity, true, true);
+		}
+		
 	}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
+		if(container == ContainerType.CREATIVE) {
+			return false;
+		}
 		if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
 			CapabilityMatterStorage cap = (CapabilityMatterStorage) stack
 					.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
@@ -109,26 +123,50 @@ public class ItemMatterContainer extends OverdriveItem {
 	}
 
 	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(h -> {
-			double max = h.getMaxMatterStored();
-			int base = UtilsText.getBigBase(max);
-			String stored = UtilsText.getFormattedBig(h.getMatterStored(), base);
-			String maxE = UtilsText.getFormattedBig(max, base);
-			tooltips.add(UtilsText.tooltip("matterstored", stored, maxE, UtilsText.getPrefixForBase(base))
-					.withStyle(ChatFormatting.AQUA));
-		});
+		if(container == ContainerType.CREATIVE) {
+			tooltips.add(UtilsText.tooltip("creativeenergystored").withStyle(ChatFormatting.AQUA));
+		} else {
+			stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(h -> {
+				double max = h.getMaxMatterStored();
+				int base = UtilsText.getBigBase(max);
+				String stored = UtilsText.getFormattedBig(h.getMatterStored(), base);
+				String maxE = UtilsText.getFormattedBig(max, base);
+				tooltips.add(UtilsText.tooltip("matterstored", stored, maxE, UtilsText.getPrefixForBase(base))
+						.withStyle(ChatFormatting.AQUA));
+			});
+		}
+	}
+	
+	public enum ContainerType implements IBulkRegistryObject {
+		REGULAR(1000, UtilsRendering.getRGBA(1, 254, 203, 4)), CREATIVE(0, UtilsRendering.getRGBA(1, 255, 132, 0));
+
+		public final int bandColor;
+		public final double capacity;
+		
+		private ContainerType(double capacity, int bandColor) {
+			this.capacity = capacity;
+			this.bandColor = bandColor;
+		}
+		
+		@Override
+		public String id() {
+			return "matter_container_" + this.toString().toLowerCase();
+		}
+		
 	}
 
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	private static class ColorHandler {
 
+		private static final int BAR_COLOR = UtilsRendering.getRGBA(1, 191, 228, 230);
+		
 		@SubscribeEvent
 		public static void registerColoredBlocks(ColorHandlerEvent.Item event) {
 			CONTAINERS.forEach(item -> event.getItemColors().register((stack, index) -> {
 				if (index == 2) {
-					return UtilsRendering.getRGBA(1, 191, 228, 230);
+					return BAR_COLOR;
 				} else if (index == 1) {
-					return UtilsRendering.getRGBA(1, 254, 203, 4);
+					return item.container.bandColor;
 				} else {
 					return 0xFFFFFF;
 				}

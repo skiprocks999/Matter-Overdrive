@@ -70,6 +70,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		tag.putInt("usage", usage);
 		tag.putInt("radius", radius);
 		tag.putBoolean("running", running);
+		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	private void clientMenuLoad(CompoundTag tag) {
@@ -82,6 +83,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		clientEnergyUsage = tag.getInt("usage");
 		clientRadius = tag.getInt("radius");
 		clientRunning = tag.getBoolean("running");
+		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -144,7 +146,7 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 
 	@Override
 	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage : usage;
+		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
 	}
 
 	@Override

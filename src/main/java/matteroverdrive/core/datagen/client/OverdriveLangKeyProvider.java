@@ -6,6 +6,7 @@ import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileTritaniumCrate;
@@ -56,7 +57,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "High-Capacity Battery");
 			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
 
-			addItem(DeferredRegisters.ITEM_MATTER_CONTAINER, "Matter Container");
+			addItem(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Matter Container");
+			addItem(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.CREATIVE), "Creative Matter Container");
 
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER1), "Isolinear Circuit Mk1");
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Isolinear Circuit Mk2");
@@ -89,6 +91,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
 			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
+			addBlock(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
 
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
@@ -104,8 +107,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("menusettings", "Settings");
 			addTooltip("menuupgrades", "Upgrades");
 			addTooltip("matterstored", "%1$s / %2$s %3$skM");
-			addTooltip("energyusage", "%s FE/t");
-			addTooltip("matterusage", "%s kM");
+			addTooltip("usage", "%s");
+			addTooltip("usagetick", "%s/t");
 			addTooltip("menuio", "I/O");
 			addTooltip("ioinput", "Input");
 			addTooltip("iooutput", "Output");
@@ -138,6 +141,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("iomatter", "Matter");
 			addGuiLabel("time", "Time: %s");
 			addGuiLabel("usage", "Usage: %s");
+			addGuiLabel("usagetick", "Usage: %s/t");
 			addGuiLabel("failure", "Failure: %s");
 			addGuiLabel("range", "Range: %s Blocks");
 			addGuiLabel("storage", "Storage: %s");
@@ -148,6 +152,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("zlabel", "Z");
 			addGuiLabel("importpos", "Import");
 			addGuiLabel("resetpos", "Reset");
+			addGuiLabel("dimensionname", "DIM: %s");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");
@@ -157,6 +162,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.MICROWAVE.id(), "Microwave");
 			addContainer(TypeMachine.INSCRIBER.id(), "Inscriber");
 			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
+			addContainer(TypeMachine.SPACETIME_ACCELERATOR.id(), "Spacetime Accelerator");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
@@ -173,6 +179,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("generic_machine", "Machine runs");
 			addSubtitle("transporter", "Transporter Build-up");
 			addSubtitle("transporter_arrive", "Transported Entity Appears");
+			
+			addDimension("overworld", "Overworld");
+			addDimension("the_nether", "Nether");
+			addDimension("the_end", "End");
 		}
 	}
 
@@ -202,6 +212,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 	private void addGuiLabel(String key, String translation) {
 		add("gui." + References.ID + "." + key, translation);
+	}
+	
+	private void addDimension(String key, String translation) {
+		add("dimension." + References.ID + "." + key, translation);
 	}
 
 	private static String getNameFromEnum(String baseString) {

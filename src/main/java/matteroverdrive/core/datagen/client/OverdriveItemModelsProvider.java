@@ -36,6 +36,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
 		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "block/multisubnode");
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_TRANSPORTER), modLoc("block/transporter"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");

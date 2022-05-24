@@ -81,7 +81,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 		}, () -> {
 			TileMicrowave microwave = menu.getTile();
 			if (microwave != null && microwave.clientRunning) {
-				return microwave.clientEnergyUsage;
+				return microwave.getCurrentPowerUsage(false);
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

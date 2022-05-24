@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.TileTransporter;
+import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
@@ -35,6 +36,7 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
@@ -87,7 +89,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 		}, () -> {
 			TileTransporter transporter = menu.getTile();
 			if (transporter != null && transporter.clientRunning) {
-				return transporter.clientEnergyUsage;
+				return transporter.getCurrentPowerUsage(true);
 			}
 			return 0;
 		}, this, 48, 35, new int[] { 0 }));
@@ -106,7 +108,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 		}, () -> {
 			TileTransporter transporter = menu.getTile();
 			if (transporter != null && transporter.clientRunning) {
-				return transporter.clientMatterUsage;
+				return transporter.getCurrentMatterUsage(true);
 			}
 			return 0;
 		}, this, 48, 94, new int[] { 0 }).setMatter());
@@ -127,12 +129,32 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				UtilsRendering.TEXT_BLUE));
 		components.add(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 70, 59, new int[] { 4 }, UtilsText.gui("xlabel"),
+		components.add(new ScreenComponentLabel(this, 70, 54, new int[] { 4 }, UtilsText.gui("xlabel"),
 				UtilsRendering.WHITE));
-		components.add(new ScreenComponentLabel(this, 70, 79, new int[] { 4 }, UtilsText.gui("ylabel"),
+		components.add(new ScreenComponentLabel(this, 70, 74, new int[] { 4 }, UtilsText.gui("ylabel"),
 				UtilsRendering.WHITE));
-		components.add(new ScreenComponentLabel(this, 70, 99, new int[] { 4 }, UtilsText.gui("zlabel"),
+		components.add(new ScreenComponentLabel(this, 70, 94, new int[] { 4 }, UtilsText.gui("zlabel"),
 				UtilsRendering.WHITE));
+		components.add(new ScreenComponentLabel(this, 70, 111, new int[] { 4 }, () -> {
+			TileTransporter transporter = menu.getTile();
+			Component extraComponent = TextComponent.EMPTY;
+			if(transporter != null) {
+				TransporterLocationWrapper wrapper = transporter.CLIENT_LOCATIONS[editor.getCurrIndex()];
+				String key = "";
+				if(wrapper.getDimension() == null) {
+					key = transporter.getLevel().dimension().location().getPath();
+				} else {
+					key = wrapper.getDimension().location().getPath();
+				}
+				if(UtilsText.dimensionExists(key)) {
+					extraComponent = UtilsText.dimension(key);
+				} else {
+					extraComponent = new TextComponent(key);
+				}
+				
+			}
+			return UtilsText.gui("dimensionname", extraComponent);
+		}, UtilsRendering.WHITE));
 	}
 
 	@Override

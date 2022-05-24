@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
+import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
@@ -24,11 +25,13 @@ import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.common.inventory.InventorySolarPanel;
+import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
+import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.ItemTransporterFlashdrive;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
@@ -41,6 +44,7 @@ import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.common.tile.generic.TileMultiSubnode;
@@ -134,6 +138,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
 			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER,
 					DeferredRegisters.TILE_TRANSPORTER));
+	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(TypeMachine.SPACETIME_ACCELERATOR.id(),
+			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 
 	/* ITEMS */
 
@@ -164,8 +170,8 @@ public class DeferredRegisters {
 	public static final BulkRegister<Item> ITEM_BATTERIES = bulkItem(
 			battery -> ITEMS.register(((BatteryType) battery).id(), () -> new ItemBattery((BatteryType) battery)),
 			BatteryType.values());
-	public static final RegistryObject<Item> ITEM_MATTER_CONTAINER = ITEMS.register("matter_container",
-			() -> new ItemMatterContainer());
+	public static final BulkRegister<Item> ITEM_MATTER_CONTAINERS = bulkItem(
+			container -> ITEMS.register(container.id(), () -> new ItemMatterContainer((ContainerType)container)), ContainerType.values());
 	public static final BulkRegister<Item> ITEM_ISOLINEAR_CIRCUITS = bulkItem(
 			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
 					() -> new Item(new Item.Properties().tab(References.MAIN))),
@@ -205,6 +211,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileTransporter>> TILE_TRANSPORTER = TILES.register(
 			TypeMachine.TRANSPORTER.id(),
 			() -> new BlockEntityType<>(TileTransporter::new, Sets.newHashSet(BLOCK_TRANSPORTER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileSpacetimeAccelerator>> TILE_SPACETIME_ACCELERATOR = TILES
+			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new BlockEntityType<>(TileSpacetimeAccelerator::new,
+					Sets.newHashSet(BLOCK_SPACETIME_ACCELERATOR.get()), null));
 
 	/* MENUS */
 
@@ -224,11 +233,15 @@ public class DeferredRegisters {
 			.register(TypeMachine.INSCRIBER.id(), () -> new MenuType<>(InventoryInscriber::new));
 	public static final RegistryObject<MenuType<InventoryTransporter>> MENU_TRANSPORTER = CONTAINERS
 			.register(TypeMachine.TRANSPORTER.id(), () -> new MenuType<>(InventoryTransporter::new));
+	public static final RegistryObject<MenuType<InventorySpacetimeAccelerator>> MENU_SPACETIME_ACCELERATOR = CONTAINERS
+			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new MenuType<>(InventorySpacetimeAccelerator::new));
 
 	/* Particles */
 
 	public static final RegistryObject<ParticleOptionReplicator> PARTICLE_REPLICATOR = PARTICLES.register("replicator",
 			() -> new ParticleOptionReplicator());
+	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave", 
+			() -> new ParticleOptionShockwave());
 
 	// Functional Methods
 

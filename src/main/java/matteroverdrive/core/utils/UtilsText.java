@@ -3,11 +3,17 @@ package matteroverdrive.core.utils;
 import java.text.DecimalFormat;
 
 import matteroverdrive.References;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class UtilsText {
 
-	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
+	public static final DecimalFormat FORMAT = new DecimalFormat("0.00");
+	public static final DecimalFormat MIN_FORMAT = new DecimalFormat("0.#");
+	
+	public static final String GUI_BASE =  "gui";
+	public static final String TOOLTIP_BASE = "tooltip";
+	public static final String DIMENSION_BASE = "dimension";
 
 	public static String formatMatterValue(double matterValue) {
 		if (matterValue < 1000) {
@@ -79,15 +85,35 @@ public class UtilsText {
 	}
 
 	public static TranslatableComponent tooltip(String key, Object... additional) {
-		return translated("tooltip", key, additional);
+		return translated(TOOLTIP_BASE, key, additional);
 	}
 
 	public static TranslatableComponent gui(String key, Object... additional) {
-		return translated("gui", key, additional);
+		return translated(GUI_BASE, key, additional);
+	}
+	
+	public static TranslatableComponent dimension(String key, Object... additional) {
+		return translated(DIMENSION_BASE, key, additional);
 	}
 
 	public static TranslatableComponent translated(String base, String key, Object... additional) {
 		return new TranslatableComponent(base + "." + References.ID + "." + key, additional);
+	}
+	
+	public static boolean guiExists(String key) {
+		return translationExists(GUI_BASE, key);
+	}
+	
+	public static boolean tooltipExists(String key) {
+		return translationExists(TOOLTIP_BASE, key);
+	}
+	
+	public static boolean dimensionExists(String key) {
+		return translationExists(DIMENSION_BASE, key);
+	}
+	
+	public static boolean translationExists(String base, String key) {
+		return I18n.exists(base + "." + References.ID + "." + key);
 	}
 
 }

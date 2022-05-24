@@ -81,7 +81,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 		}, () -> {
 			TileInscriber inscriber = menu.getTile();
 			if (inscriber != null && inscriber.clientRunning) {
-				return inscriber.clientEnergyUsage;
+				return inscriber.getCurrentPowerUsage(true);
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

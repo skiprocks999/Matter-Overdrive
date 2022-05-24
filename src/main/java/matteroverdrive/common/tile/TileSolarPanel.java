@@ -25,10 +25,8 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	private static final int ENERGY_STORAGE = 64000;
 
 	private boolean generating = false;
-	private int generatingBonus = 1;
 
 	public boolean clientGenerating;
-	public int clientGeneratingBonus;
 	public CapabilityEnergyStorage clientEnergy;
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
@@ -54,7 +52,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 			}
 			if (generating) {
 				CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-				energy.giveEnergy(GENERATION * generatingBonus);
+				energy.giveEnergy((int) (GENERATION * saMultiplier));
 			}
 			UtilsTile.outputEnergy(this);
 		} else {
@@ -68,7 +66,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 		tag.putInt("redstone", currRedstoneMode);
 		tag.putBoolean("generating", generating);
-		tag.putInt("bonus", generatingBonus);
+		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	private void clientLoad(CompoundTag tag) {
@@ -77,7 +75,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 		clientRedstoneMode = tag.getInt("redstone");
 		clientGenerating = tag.getBoolean("generating");
-		clientGeneratingBonus = tag.getInt("bonus");
+		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override

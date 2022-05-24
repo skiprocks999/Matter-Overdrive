@@ -17,6 +17,10 @@ import net.minecraft.resources.ResourceLocation;
 public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 	private final Supplier<IUpgradableTile> tile;
+	private boolean matterPerTick = false;
+	private boolean powerNonTick = false;
+	private boolean customTime = false;
+	private String customTimeKey = null;
 
 	public ScreenComponentUpgradeInfo(IScreenWrapper gui, int x, int y, int[] screenNumbers,
 			Supplier<IUpgradableTile> tile) {
@@ -28,7 +32,23 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 	public Rectangle getBounds(int guiWidth, int guiHeight) {
 		return new Rectangle(0, 0, 0, 0);
 	}
-
+	
+	public ScreenComponentUpgradeInfo setMatterPerTick() {
+		matterPerTick = true;
+		return this;
+	}
+	
+	public ScreenComponentUpgradeInfo setPowerNonTick() {
+		powerNonTick = true;
+		return this;
+	}
+	
+	public ScreenComponentUpgradeInfo setCustomTimeKey(String key) {
+		customTime = true;
+		customTimeKey = key;
+		return this;
+	}
+	
 	@Override
 	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
 		IUpgradableTile owner = tile.get();
@@ -41,7 +61,11 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			double currSpeed = owner.getCurrentSpeed(true);
 			double operatingTime = owner.getProcessingTime();
 			if (currSpeed > 0 && owner.getDefaultSpeed() > 0) {
-				component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
+				if(customTime) {
+					component = UtilsText.gui(customTimeKey, currSpeed);
+				} else {
+					component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
+				}
 				color = currSpeed >= owner.getDefaultSpeed() ? UtilsRendering.GREEN : UtilsRendering.RED;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -49,7 +73,8 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currPowerUsage = owner.getCurrentPowerUsage(true);
 			if (currPowerUsage > 0 && owner.getDefaultPowerUsage() > 0) {
-				component = UtilsText.gui("usage", UtilsText.formatPowerValue(currPowerUsage));
+				String formatted = UtilsText.formatPowerValue(currPowerUsage);
+				component = powerNonTick ? UtilsText.gui("usage", formatted) : UtilsText.gui("usagetick", formatted);
 				color = currPowerUsage > owner.getDefaultPowerUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;
@@ -57,7 +82,8 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 
 			double currMatterUsage = owner.getCurrentMatterUsage(true);
 			if (currMatterUsage > 0 && owner.getDefaultMatterUsage() > 0) {
-				component = UtilsText.gui("usage", UtilsText.formatMatterValue(currMatterUsage));
+				String formatted = UtilsText.formatMatterValue(currMatterUsage);
+				component = matterPerTick ? UtilsText.gui("usagetick", formatted) : UtilsText.gui("usage", formatted);
 				color = currMatterUsage > owner.getDefaultMatterUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
 				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
 				offset += 10;

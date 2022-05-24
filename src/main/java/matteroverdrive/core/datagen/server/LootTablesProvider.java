@@ -6,6 +6,7 @@ import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.datagen.utils.AbstractLootTableProvider;
@@ -35,6 +36,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 		this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.TILE_CHARGER);
 		this.<TileMicrowave>addIETable(DeferredRegisters.BLOCK_MICROWAVE, DeferredRegisters.TILE_MICROWAVE);
 		this.<TileTransporter>addIETable(DeferredRegisters.BLOCK_TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER);
+		this.<TileSpacetimeAccelerator>addIEMTable(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR);
 
 	}
 

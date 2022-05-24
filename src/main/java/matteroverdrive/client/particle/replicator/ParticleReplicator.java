@@ -3,9 +3,7 @@ package matteroverdrive.client.particle.replicator;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3d;
 
-import matteroverdrive.MatterOverdrive;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -18,16 +16,11 @@ import net.minecraft.util.Mth;
 public class ParticleReplicator extends TextureSheetParticle {
 
 	private float initialScale;
-	private double centerX, centerY, centerZ;
-	private int prevXMove = 1;
-	private int prevZMove = -1;
-
 	public ParticleReplicator(ClientLevel world, double posX, double posY, double posZ, double xSpeed, double ySpeed,
 			double zSpeed) {
 		super(world, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
-		//this.xd = this.xd * 0.009999999776482582D + xSpeed;
-		//this.yd = this.yd * 0.009999999776482582D + ySpeed;
-		//this.zd = this.zd * 0.009999999776482582D + zSpeed;
+		this.xd = 0;
+		this.zd = 0;
 		this.gravity = 1.0F;
 		this.quadSize = 0.1F;
 		this.initialScale = quadSize;
@@ -37,7 +30,6 @@ public class ParticleReplicator extends TextureSheetParticle {
 
 	@Override
 	public void tick() {
-		MatterOverdrive.LOGGER.info(toString());
 		this.xo = this.x;
 		this.yo = this.y;
 		this.zo = this.z;
@@ -46,21 +38,7 @@ public class ParticleReplicator extends TextureSheetParticle {
 			this.remove();
 		}
 
-		//Vector3d motion = new Vector3d(this.xd, this.yd, this.zd);
-		//Vector3d center = new Vector3d(this.centerX, this.centerY, this.centerZ);
-		//Vector3d position = new Vector3d(this.x, this.y, this.z);
-		//position.scale(-1);
-		//center.add(position);
-		//center.scale(gravity);
-		//center.add(motion);
-
-		//this.xd = center.x * prevXMove;
-		//this.yd = center.y / 4.0D;
-		//this.zd = center.z * prevZMove;
-
 		move(this.zd, this.yd, this.zd);
-		prevXMove *= -1;
-		prevZMove *= -1;
 	}
 
 	@Override
@@ -106,9 +84,7 @@ public class ParticleReplicator extends TextureSheetParticle {
 	}
 
 	public void setCenter(double x, double y, double z) {
-		this.centerX = x;
-		this.centerY = y;
-		this.centerZ = z;
+
 	}
 
 	public void setParticleMaxAge(int age) {

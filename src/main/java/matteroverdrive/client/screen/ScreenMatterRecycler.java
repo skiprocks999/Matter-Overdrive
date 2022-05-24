@@ -81,7 +81,7 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 		}, () -> {
 			TileMatterRecycler matter = menu.getTile();
 			if (matter != null && matter.clientRunning) {
-				return matter.clientEnergyUsage;
+				return matter.getCurrentPowerUsage(true);
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

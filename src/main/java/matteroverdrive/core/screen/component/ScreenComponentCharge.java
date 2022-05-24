@@ -20,6 +20,9 @@ public class ScreenComponentCharge extends ScreenComponent {
 
 	private boolean isMatter = false;
 	private boolean isGenerator = false;
+	
+	private boolean powerNonTick = false;
+	private boolean matterPerTick = false;
 
 	private final int matterHeight = 42;
 	private final int matterWidth = 14;
@@ -48,6 +51,16 @@ public class ScreenComponentCharge extends ScreenComponent {
 		isGenerator = true;
 		return this;
 	}
+	
+	public ScreenComponentCharge setPowerNonTick() {
+		powerNonTick = true;
+		return this;
+	}
+	
+	public ScreenComponentCharge setMatterPerTick() {
+		matterPerTick = true;
+		return this;
+	}
 
 	@Override
 	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
@@ -55,18 +68,31 @@ public class ScreenComponentCharge extends ScreenComponent {
 				isMatter ? matterHeight : energyHeight)) {
 			List<FormattedCharSequence> components = new ArrayList<>();
 			String storeLoc = isMatter ? "matterstored" : "energystored";
-			components.add(UtilsText.tooltip(storeLoc, currStorage.getAsDouble(), maxStorage.getAsDouble())
+			components.add(UtilsText.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
 					.getVisualOrderText());
 
 			double use = usage.getAsDouble();
 			if (use > 0) {
-				String usageLoc = isMatter ? "matterusage" : "energyusage";
-				if (isGenerator) {
-					components.add(UtilsText.tooltip(usageLoc, "+" + use).withStyle(ChatFormatting.GREEN)
-							.getVisualOrderText());
+				if(isMatter) {
+					String usageLoc = matterPerTick ? "usagetick" : "usage";
+					String formatted = UtilsText.formatMatterValue(use);
+					if (isGenerator) {
+						components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
+								.getVisualOrderText());
+					} else {
+						components.add(
+								UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
+					}
 				} else {
-					components.add(
-							UtilsText.tooltip(usageLoc, "-" + use).withStyle(ChatFormatting.RED).getVisualOrderText());
+					String usageLoc = powerNonTick ? "usage" : "usagetick";
+					String formatted = UtilsText.formatPowerValue(use);
+					if (isGenerator) {
+						components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
+								.getVisualOrderText());
+					} else {
+						components.add(
+								UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
+					}
 				}
 			}
 			gui.displayTooltips(stack, components, xAxis, yAxis);

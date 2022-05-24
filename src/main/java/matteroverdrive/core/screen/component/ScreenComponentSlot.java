@@ -75,7 +75,7 @@ public class ScreenComponentSlot extends ScreenComponent {
 	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
 		if (isPointInRegion(xLocation + type.getXOffset(), yLocation + type.getYOffset(), xAxis, yAxis, type.getWidth(),
 				type.getHeight())) {
-			if (upgradeSlotTypes != null && Screen.hasShiftDown()) {
+			if (upgradeSlotTypes != null && Screen.hasControlDown()) {
 				List<FormattedCharSequence> components = new ArrayList<>();
 				for (UpgradeType upgrade : upgradeSlotTypes) {
 					components.add(new TranslatableComponent(

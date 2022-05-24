@@ -83,7 +83,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		}, () -> {
 			TileMatterDecomposer matter = menu.getTile();
 			if (matter != null && matter.clientRunning) {
-				return matter.clientEnergyUsage;
+				return matter.getCurrentPowerUsage(true);
 			}
 			return 0;
 		}, this, 167, 35, new int[] { 0 }));

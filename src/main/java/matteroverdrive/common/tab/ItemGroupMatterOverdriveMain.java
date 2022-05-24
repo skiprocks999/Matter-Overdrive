@@ -1,8 +1,8 @@
 package matteroverdrive.common.tab;
 
+import matteroverdrive.DeferredRegisters;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 
 public class ItemGroupMatterOverdriveMain extends CreativeModeTab {
 
@@ -12,7 +12,7 @@ public class ItemGroupMatterOverdriveMain extends CreativeModeTab {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(Blocks.ACACIA_BUTTON);
+		return new ItemStack(DeferredRegisters.BLOCK_TRANSPORTER.get());
 	}
 
 }

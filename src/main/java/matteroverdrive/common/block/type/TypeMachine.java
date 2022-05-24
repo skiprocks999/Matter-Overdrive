@@ -19,7 +19,8 @@ public enum TypeMachine {
 			Shapes.box(0.0625D, 0.0D, 0.125D, 0.9375D, 0.625D, 0.875D),
 			Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D),
 			Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D) }, true),
-	INSCRIBER(Shapes.box(0.015625D, 0.0D, 0.015625D, 0.984375D, 0.96875D, 0.984375D), true), TRANSPORTER(true);
+	INSCRIBER(Shapes.box(0.015625D, 0.0D, 0.015625D, 0.984375D, 0.96875D, 0.984375D), true), TRANSPORTER(true),
+	SPACETIME_ACCELERATOR(Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), true);
 
 	// DUNSEW
 	public VoxelShape[] shapes = new VoxelShape[6];

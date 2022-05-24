@@ -50,8 +50,10 @@ public class MatterOverdrive {
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
 
-		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON,
+		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON_CONFIG,
 				"matteroverdrive/matteroverdrive.common.toml");
+		ModLoadingContext.get().registerConfig(Type.CLIENT, MatterOverdriveConfig.CLIENT_CONFIG,
+				"matteroverdrive/matteroverdrive.client.toml");
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();

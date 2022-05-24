@@ -54,7 +54,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		}, () -> {
 			TileSolarPanel solar = menu.getTile();
 			if (solar != null && solar.clientGenerating) {
-				return solar.clientGeneratingBonus * TileSolarPanel.GENERATION;
+				return solar.clientSAMultipler * TileSolarPanel.GENERATION;
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }).setGenerator());

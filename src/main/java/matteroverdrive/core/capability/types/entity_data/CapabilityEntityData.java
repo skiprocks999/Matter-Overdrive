@@ -3,6 +3,7 @@ package matteroverdrive.core.capability.types.entity_data;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -33,6 +34,18 @@ public class CapabilityEntityData implements ICapabilityEntityData, ICapabilityS
 		transporterTimer = nbt.getInt("timer");
 	}
 
+	public void writeToByteBuffer(FriendlyByteBuf buf) {
+		buf.writeInt(transporterTimer);
+	}
+	
+	public void readFromByteBuffer(FriendlyByteBuf buf) {
+		transporterTimer = buf.readInt();
+	}
+	
+	public void copyFromOther(ICapabilityEntityData other) {
+		transporterTimer = other.getTransporterTimer();
+	}
+
 	@Override
 	public int getTransporterTimer() {
 		return transporterTimer;
@@ -42,6 +55,5 @@ public class CapabilityEntityData implements ICapabilityEntityData, ICapabilityS
 	public void setTransporterTimer(int time) {
 		transporterTimer = time;
 	}
-	
 
 }

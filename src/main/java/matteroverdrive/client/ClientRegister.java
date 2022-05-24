@@ -1,9 +1,9 @@
 package matteroverdrive.client;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
+import matteroverdrive.client.particle.shockwave.ParticleShockwave;
 import matteroverdrive.client.renderer.tile.RendererCharger;
 import matteroverdrive.client.renderer.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
@@ -12,8 +12,10 @@ import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenSolarPanel;
+import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
 import matteroverdrive.client.screen.ScreenTritaniumCrate;
+import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.utils.UtilsNbt;
@@ -51,6 +53,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
+		MenuScreens.register(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -92,7 +95,7 @@ public class ClientRegister {
 						return 0;
 					}).orElse(0);
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_MATTER_CONTAINER.get(), CHARGE, (stack, world, entity, call) -> {
+		ItemProperties.register(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR).get(), CHARGE, (stack, world, entity, call) -> {
 			return stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).map(m -> {
 				double chargeRatio = m.getMaxMatterStored() > 0 ? m.getMatterStored() / m.getMaxMatterStored() : 0.0;
 				if (chargeRatio >= 0.875) {
@@ -142,6 +145,7 @@ public class ClientRegister {
 	public static void registerParticles(ParticleFactoryRegisterEvent event) {
 		ParticleEngine engine = Minecraft.getInstance().particleEngine;
 		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
+		engine.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
 	}
 
 	private static ResourceLocation blockModel(String path) {

@@ -20,9 +20,12 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class WrapperTransporterLocationEditer {
 
@@ -54,6 +57,10 @@ public class WrapperTransporterLocationEditer {
 	public void setCurrIndex(int index) {
 		currIndex = index;
 	}
+	
+	public int getCurrIndex() {
+		return currIndex;
+	}
 
 	public void initButtons() {
 		nameBox = new EditBoxSuppliableName(xLoc + 65, yLoc + 30, 120, 15, gui, () -> {
@@ -70,7 +77,7 @@ public class WrapperTransporterLocationEditer {
 			sendNameChange(string);
 		});
 		
-		xCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 55, 70, 15, gui, () -> {
+		xCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 50, 70, 15, gui, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getX() + "";
 		});
 		xCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -86,7 +93,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 0, currIndex, getCurrentPos());
 		});
 		
-		yCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 75, 70, 15, gui, () -> {
+		yCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 70, 70, 15, gui, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getY() + "";
 		});
 		yCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -101,7 +108,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 1, currIndex, getCurrentPos());
 		});
 		
-		zCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 95, 70, 15, gui, () -> {
+		zCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 90, 70, 15, gui, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getZ() + "";
 		});
 		zCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -118,17 +125,17 @@ public class WrapperTransporterLocationEditer {
 		
 		for(int i = 0; i < incButtons.length; i++) {
 			final int ref = i;
-			incButtons[i] = new OverdriveTextureButton(xLoc + 79, yLoc + 55 + 20 * i, 15, 15, PLUS, button -> {
+			incButtons[i] = new OverdriveTextureButton(xLoc + 79, yLoc + 50 + 20 * i, 15, 15, PLUS, button -> {
 				handleIncDec(ref, 1);
 			}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
 		}
 		for(int i = 0; i < decButtons.length; i++) {
 			final int ref = i;
-			decButtons[i] = new OverdriveTextureButton(xLoc + 164, yLoc + 55 + 20 * i, 15, 15, MINUS, button -> {
+			decButtons[i] = new OverdriveTextureButton(xLoc + 164, yLoc + 50 + 20 * i, 15, 15, MINUS, button -> {
 				handleIncDec(ref, -1);
 			}).setRight().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
 		}
-		resetLocation = new OverdriveTextureButton(xLoc + 133, yLoc + 120, 60, 20, UtilsText.gui("resetpos"), button -> {
+		resetLocation = new OverdriveTextureButton(xLoc + 133, yLoc + 125, 60, 20, UtilsText.gui("resetpos"), button -> {
 			nameBox.setValue("");
 			xCoordinateBox.setValue("0");
 			yCoordinateBox.setValue("-1000");
@@ -137,16 +144,18 @@ public class WrapperTransporterLocationEditer {
 					new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.RESET_DESTINATION));
 		}).setSound(getDefaultSound());
 		
-		importFlashdriveData = new OverdriveTextureButton(xLoc + 57, yLoc + 120, 60, 20, UtilsText.gui("importpos"), button -> {
+		importFlashdriveData = new OverdriveTextureButton(xLoc + 57, yLoc + 125, 60, 20, UtilsText.gui("importpos"), button -> {
 			TileTransporter transporter = transporterSupplier.get();
 			ItemStack flashdrive = transporter.clientInventory.getStackInSlot(0);
 			if(!flashdrive.isEmpty() && flashdrive.hasTag() && flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
-				BlockPos pos = NbtUtils.readBlockPos(flashdrive.getTag().getCompound(UtilsNbt.BLOCK_POS));
+				CompoundTag tag = flashdrive.getTag();
+				BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS));
+				ResourceKey<Level> dimension = UtilsNbt.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION));
 				xCoordinateBox.setValue(pos.getX() + "");
 				yCoordinateBox.setValue(pos.getY() + "");
 				zCoordinateBox.setValue(pos.getZ() + "");
 				NetworkHandler.CHANNEL.sendToServer(
-						new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_DESTINATION, pos));
+						new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_DESTINATION, pos, dimension));
 			}
 		}).setSound(getDefaultSound());
 	}
