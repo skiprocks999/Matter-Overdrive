@@ -8,7 +8,7 @@ import matteroverdrive.core.screen.GenericScreen;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.minecraft.client.renderer.Rect2i;
 
-public class AbstractScreenHandler<T extends GenericScreen> implements IGuiContainerHandler<T> {
+public class AbstractScreenHandler<T extends GenericScreen<?>> implements IGuiContainerHandler<T> {
 
 	@Override
 	public List<Rect2i> getGuiExtraAreas(T screen) {
