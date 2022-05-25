@@ -1,4 +1,4 @@
-package electrodynamics.common.network;
+package matteroverdrive.common.cable_network;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,17 +7,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import electrodynamics.api.capability.types.electrodynamic.ICapabilityElectrodynamic;
-import electrodynamics.api.network.conductor.IConductor;
-import electrodynamics.common.block.subtype.SubtypeWire;
-import electrodynamics.prefab.network.AbstractNetwork;
-import electrodynamics.prefab.utilities.ElectricityUtils;
-import electrodynamics.prefab.utilities.Scheduler;
-import electrodynamics.prefab.utilities.object.TransferPack;
+import matteroverdrive.core.cable.AbstractNetwork;
+import matteroverdrive.core.cable.CableNetworkRegistry;
+import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack> implements ICapabilityElectrodynamic {
+public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> {
 	private double resistance;
 	private double energyLoss;
 	private double voltage = 0.0;
@@ -31,11 +27,6 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 		return lastEnergyLoss;
 	}
 
-	@Override
-	public double getVoltage() {
-		return -1;
-	}
-
 	public double getActiveVoltage() {
 		return lastVoltage;
 	}
@@ -44,17 +35,17 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 		return resistance;
 	}
 
-	public ElectricNetwork() {
-		this(new HashSet<IConductor>());
+	public MatterNetwork() {
+		this(new HashSet<IMatterNetworkCable>());
 	}
 
-	public ElectricNetwork(Collection<? extends IConductor> varCables) {
+	public MatterNetwork(Collection<? extends IMatterNetworkCable> varCables) {
 		conductorSet.addAll(varCables);
-		NetworkRegistry.register(this);
+		CableNetworkRegistry.register(this);
 	}
 
-	public ElectricNetwork(Set<AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack>> networks) {
-		for (AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack> net : networks) {
+	public MatterNetwork(Set<AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack>> networks) {
+		for (AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> net : networks) {
 			if (net != null) {
 				conductorSet.addAll(net.conductorSet);
 				net.deregister();
@@ -64,8 +55,8 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 		NetworkRegistry.register(this);
 	}
 
-	public ElectricNetwork(Set<ElectricNetwork> networks, boolean special) {
-		for (ElectricNetwork net : networks) {
+	public MatterNetwork(Set<MatterNetwork> networks, boolean special) {
+		for (MatterNetwork net : networks) {
 			if (net != null) {
 				conductorSet.addAll(net.conductorSet);
 				net.deregister();
@@ -136,7 +127,7 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 				}
 			}
 			for (SubtypeWire index : checkList) {
-				for (IConductor conductor : conductorTypeMap.get(index)) {
+				for (IMatterNetworkCable conductor : conductorTypeMap.get(index)) {
 					Scheduler.schedule(1, conductor::destroyViolently);
 				}
 			}
@@ -146,7 +137,7 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 	}
 
 	@Override
-	public void updateStatistics(IConductor cable) {
+	public void updateStatistics(IMatterNetworkCable cable) {
 		super.updateStatistics(cable);
 		resistance += cable.getWireType().resistance;
 	}
@@ -203,10 +194,10 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 				}
 			}
 		}
-		Iterator<IConductor> it = conductorSet.iterator();
+		Iterator<IMatterNetworkCable> it = conductorSet.iterator();
 		boolean broken = false;
 		while (it.hasNext()) {
-			IConductor conductor = it.next();
+			IMatterNetworkCable conductor = it.next();
 			if (conductor instanceof BlockEntity entity && entity.isRemoved() || conductor.getNetwork() != this) {
 				broken = true;
 				break;
@@ -231,18 +222,18 @@ public class ElectricNetwork extends AbstractNetwork<IConductor, SubtypeWire, Bl
 	}
 
 	@Override
-	public AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack> createInstance() {
-		return new ElectricNetwork();
+	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstance() {
+		return new MatterNetwork();
 	}
 
 	@Override
-	public AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack> createInstanceConductor(Set<IConductor> conductors) {
-		return new ElectricNetwork(conductors);
+	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstanceConductor(Set<IMatterNetworkCable> conductors) {
+		return new MatterNetwork(conductors);
 	}
 
 	@Override
-	public AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack> createInstance(Set<AbstractNetwork<IConductor, SubtypeWire, BlockEntity, TransferPack>> networks) {
-		return new ElectricNetwork(networks);
+	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstance(Set<AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack>> networks) {
+		return new MatterNetwork(networks);
 
 	}
 

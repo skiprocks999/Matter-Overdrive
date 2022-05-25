@@ -18,7 +18,7 @@ import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
-import matteroverdrive.common.blockitem.BlockItemColored;
+import matteroverdrive.common.block_item.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;

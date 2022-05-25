@@ -40,7 +40,6 @@ classes/
 *.project
 .settings/
 build/
-config/
 mods/
 logs/
 resourcepacks/
