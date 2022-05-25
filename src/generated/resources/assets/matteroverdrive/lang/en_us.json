@@ -100,6 +100,7 @@
   "gui.matteroverdrive.ioenergy": "Energy",
   "gui.matteroverdrive.ioitems": "Items",
   "gui.matteroverdrive.iomatter": "Matter",
+  "gui.matteroverdrive.multiplier": "Multiplier: %s",
   "gui.matteroverdrive.range": "Range: %s Blocks",
   "gui.matteroverdrive.redstone": "Redstone",
   "gui.matteroverdrive.redstonehigh": "High",

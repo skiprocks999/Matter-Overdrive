@@ -91,7 +91,8 @@ public class ScreenSpacetimeAccelerator extends GenericScreen<InventorySpacetime
 		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
+		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile())
+				.setCustomTimeKey("multiplier").setMatterPerTick());
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class ParticleShockwave extends TextureSheetParticle {
 
@@ -62,28 +63,26 @@ public class ParticleShockwave extends TextureSheetParticle {
 		float uMax = getU1();
 
 		AABB box = getBoundingBox();
+		Vec3 cameraPos = camera.getPosition();
 		
-		float minX = (float) box.minX;
-		float minY = (float) box.minY;
-		float minZ = (float) box.minZ;
-		float maxX = (float) box.maxX;
-		float maxY = (float) box.maxY;
-		float maxZ = (float) box.maxZ;
-		
-		int u = sprite.getX();
-		int v = sprite.getY();
+		float minX = (float) (box.minX - cameraPos.x);
+		float minY = (float) (box.minY - cameraPos.y);
+		float minZ = (float) (box.minZ - cameraPos.z);
+		float maxX = (float) (box.maxX - cameraPos.x);
+		float maxY = (float) (box.maxY - cameraPos.y);
+		float maxZ = (float) (box.maxZ - cameraPos.z);
 
 		// bottom
-		builder.vertex(minX, minY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, minY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, minY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, minY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(minX, minY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(maxX, minY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(maxX, minY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(minX, minY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).endVertex();
 
 		// top
-		builder.vertex(maxX, maxY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, maxY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(minX, maxY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
-		builder.vertex(maxX, maxY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).overlayCoords(u, v).endVertex();
+		builder.vertex(maxX, maxY, minZ).uv(uMin, vMin).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(minX, maxY, minZ).uv(uMax, vMin).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(minX, maxY, maxZ).uv(uMax, vMax).color(r, g, b, a).uv2(j, k).endVertex();
+		builder.vertex(maxX, maxY, maxZ).uv(uMin, vMax).color(r, g, b, a).uv2(j, k).endVertex();
 
 	}
 

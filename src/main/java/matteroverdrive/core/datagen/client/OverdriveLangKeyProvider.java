@@ -153,6 +153,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("importpos", "Import");
 			addGuiLabel("resetpos", "Reset");
 			addGuiLabel("dimensionname", "DIM: %s");
+			addGuiLabel("multiplier", "Multiplier: %s");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");

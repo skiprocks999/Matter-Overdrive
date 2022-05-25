@@ -98,10 +98,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	}
 	
 	private void tickClient(Ticker ticker) {
-		if(clientRunning && ticker.getTicks() % 10 == 0) {
+		if(clientRunning && ticker.getTicks() % (getCurrentRange(true) * 5) == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
 			shockwave.setMaxScale((float) getCurrentRange(true));
-			shockwave.setColor(51, 78, 120, 255);
+			shockwave.setColor(191, 228, 230, 255);
 			BlockPos pos = getBlockPos();
 			getLevel().addParticle(shockwave, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0, 0);
 		}
@@ -144,7 +144,31 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		clientRunning = tag.getBoolean("running");
 		clientRadius = tag.getInt("radius");
 	}
+	
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
 
+		CompoundTag additional = new CompoundTag();
+		additional.putDouble("speed", currSpeed);
+		additional.putInt("usage", energyUsage);
+		additional.putInt("radius", radius);
+		additional.putDouble("matusage", matterUsage);
+
+		tag.put("additional", additional);
+	}
+
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+
+		CompoundTag additional = tag.getCompound("additional");
+		currSpeed = additional.getDouble("speed");
+		energyUsage = additional.getInt("usage");
+		matterUsage = additional.getDouble("matusage");
+		radius = additional.getInt("radius");
+		
+	}
 	@Override
 	public int getMaxMode() {
 		return 2;
@@ -172,7 +196,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	@Override
 	public double getDefaultPowerUsage() {
-		return MATTER_USAGE_PER_TICK;
+		return ENERGY_USAGE_PER_TICK;
 	}
 	
 	@Override
@@ -232,6 +256,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	@Override
 	public void setPowerUsage(int usage) {
 		this.energyUsage = usage;
+	}
+	
+	public void setRange(int range) {
+		this.radius = Math.min(range, 8);
 	}
 
 	@Override
