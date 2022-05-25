@@ -2,6 +2,11 @@ package matteroverdrive;
 
 import java.util.Random;
 
+import matteroverdrive.common.block.BlockCustomGlass;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -77,6 +82,13 @@ public class MatterOverdrive {
 
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
+
+		for (RegistryObject<Block> block : DeferredRegisters.BLOCKS.getEntries()) {
+			if (block.get() instanceof BlockCustomGlass) {
+				ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout());
+			}
+		}
+
 		ClientRegister.init();
 	}
 }

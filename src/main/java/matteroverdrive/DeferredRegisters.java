@@ -3,18 +3,13 @@ package matteroverdrive;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import matteroverdrive.common.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
-import matteroverdrive.common.block.BlockColored;
-import matteroverdrive.common.block.BlockLightableMachine;
-import matteroverdrive.common.block.BlockMachine;
-import matteroverdrive.common.block.BlockMultiSubnode;
-import matteroverdrive.common.block.BlockOverdrive;
-import matteroverdrive.common.block.BlockTritaniumCrate;
 import matteroverdrive.common.block.cable.BlockMatterConduit;
-import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
@@ -140,6 +135,8 @@ public class DeferredRegisters {
 					DeferredRegisters.TILE_TRANSPORTER));
 	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(TypeMachine.SPACETIME_ACCELERATOR.id(),
 			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
+			() -> new BlockCustomGlass(0.3F, 0.3F));
 
 	/* ITEMS */
 
