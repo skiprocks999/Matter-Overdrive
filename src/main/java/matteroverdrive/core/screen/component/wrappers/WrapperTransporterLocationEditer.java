@@ -10,10 +10,9 @@ import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo.PacketType;
 import matteroverdrive.core.screen.GenericScreen;
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSuppliableName;
-import matteroverdrive.core.screen.component.utils.OverdriveTextureButton;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
@@ -33,24 +32,23 @@ public class WrapperTransporterLocationEditer {
 	private EditBoxOverdrive xCoordinateBox;
 	private EditBoxOverdrive yCoordinateBox;
 	private EditBoxOverdrive zCoordinateBox;
-	private OverdriveTextureButton[] incButtons = new OverdriveTextureButton[3];
-	private OverdriveTextureButton[] decButtons = new OverdriveTextureButton[3];
-	private OverdriveTextureButton resetLocation;
-	private OverdriveTextureButton importFlashdriveData;
+	private ButtonOverdrive[] incButtons = new ButtonOverdrive[3];
+	private ButtonOverdrive[] decButtons = new ButtonOverdrive[3];
+	private ButtonOverdrive resetLocation;
+	private ButtonOverdrive importFlashdriveData;
 
-	private int xLoc;
-	private int yLoc;
-	private IScreenWrapper gui;
+	private GenericScreen<?> gui;
 	private Supplier<TileTransporter> transporterSupplier;
 	private int currIndex;
+	
+	private int xOffset;
+	private int yOffset;
 	
 	private static final TextComponent PLUS = new TextComponent("+");
 	private static final TextComponent MINUS = new TextComponent("-");
 
-	public WrapperTransporterLocationEditer(IScreenWrapper gui, int xLoc, int yLoc, Supplier<TileTransporter> transporterSupplier) {
+	public WrapperTransporterLocationEditer(GenericScreen<?> gui, int xOffset, int yOffset, Supplier<TileTransporter> transporterSupplier) {
 		this.gui = gui;
-		this.xLoc = xLoc;
-		this.yLoc = yLoc;
 		this.transporterSupplier = transporterSupplier;
 	}
 	
@@ -63,7 +61,10 @@ public class WrapperTransporterLocationEditer {
 	}
 
 	public void initButtons() {
-		nameBox = new EditBoxSuppliableName(xLoc + 65, yLoc + 30, 120, 15, gui, () -> {
+		int guiWidth = gui.getXPos();
+		int guiHeight = gui.getYPos();
+
+		nameBox = new EditBoxSuppliableName(gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getName().getContents();
 		});
 		nameBox.setTextColor(UtilsRendering.WHITE);
@@ -77,7 +78,7 @@ public class WrapperTransporterLocationEditer {
 			sendNameChange(string);
 		});
 		
-		xCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 50, 70, 15, gui, () -> {
+		xCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 50 + yOffset, 70, 15, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getX() + "";
 		});
 		xCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -93,7 +94,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 0, currIndex, getCurrentPos());
 		});
 		
-		yCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 70, 70, 15, gui, () -> {
+		yCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 70 + yOffset, 70, 15, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getY() + "";
 		});
 		yCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -108,7 +109,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 1, currIndex, getCurrentPos());
 		});
 		
-		zCoordinateBox = new EditBoxSuppliableName(xLoc + 94, yLoc + 90, 70, 15, gui, () -> {
+		zCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 90 + yOffset, 70, 15, () -> {
 			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getZ() + "";
 		});
 		zCoordinateBox.setTextColor(UtilsRendering.WHITE);
@@ -125,17 +126,17 @@ public class WrapperTransporterLocationEditer {
 		
 		for(int i = 0; i < incButtons.length; i++) {
 			final int ref = i;
-			incButtons[i] = new OverdriveTextureButton(xLoc + 79, yLoc + 50 + 20 * i, 15, 15, PLUS, button -> {
+			incButtons[i] = new ButtonOverdrive(gui, 79 + xOffset, 50 + 20 * i + yOffset, 15, 15, PLUS, button -> {
 				handleIncDec(ref, 1);
 			}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
 		}
 		for(int i = 0; i < decButtons.length; i++) {
 			final int ref = i;
-			decButtons[i] = new OverdriveTextureButton(xLoc + 164, yLoc + 50 + 20 * i, 15, 15, MINUS, button -> {
+			decButtons[i] = new ButtonOverdrive(gui, 164 + xOffset, 50 + 20 * i + yOffset, 15, 15, MINUS, button -> {
 				handleIncDec(ref, -1);
 			}).setRight().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
 		}
-		resetLocation = new OverdriveTextureButton(xLoc + 133, yLoc + 125, 60, 20, UtilsText.gui("resetpos"), button -> {
+		resetLocation = new ButtonOverdrive(gui, 133 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("resetpos"), button -> {
 			nameBox.setValue("");
 			xCoordinateBox.setValue("0");
 			yCoordinateBox.setValue("-1000");
@@ -144,7 +145,7 @@ public class WrapperTransporterLocationEditer {
 					new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.RESET_DESTINATION));
 		}).setSound(getDefaultSound());
 		
-		importFlashdriveData = new OverdriveTextureButton(xLoc + 57, yLoc + 125, 60, 20, UtilsText.gui("importpos"), button -> {
+		importFlashdriveData = new ButtonOverdrive(gui, 57 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("importpos"), button -> {
 			TileTransporter transporter = transporterSupplier.get();
 			ItemStack flashdrive = transporter.clientInventory.getStackInSlot(0);
 			if(!flashdrive.isEmpty() && flashdrive.hasTag() && flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
@@ -181,16 +182,16 @@ public class WrapperTransporterLocationEditer {
 	}
 	
 	public void addRenderingData(GenericScreen<?> screen) {
-		screen.addExternalWidget(nameBox);
-		screen.addExternalWidget(xCoordinateBox);
-		screen.addExternalWidget(yCoordinateBox);
-		screen.addExternalWidget(zCoordinateBox);
+		screen.addEditBox(nameBox);
+		screen.addEditBox(xCoordinateBox);
+		screen.addEditBox(yCoordinateBox);
+		screen.addEditBox(zCoordinateBox);
 		for(int i = 0; i < incButtons.length; i++) {
-			screen.addExternalWidget(incButtons[i]);
-			screen.addExternalWidget(decButtons[i]);
+			screen.addButton(incButtons[i]);
+			screen.addButton(decButtons[i]);
 		}
-		screen.addExternalWidget(resetLocation);
-		screen.addExternalWidget(importFlashdriveData);
+		screen.addButton(resetLocation);
+		screen.addButton(importFlashdriveData);
 	}
 	
 	private void sendNameChange(String name) {

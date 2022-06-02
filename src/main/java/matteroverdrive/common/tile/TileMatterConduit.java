@@ -29,7 +29,6 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class TileMatterConduit extends GenericTile implements IMatterConduit {
 
-	public double transmit = 0;
 	public MatterConduitNetwork conduitNetwork;
 	private ArrayList<ICapabilityMatterStorage> handler = new ArrayList<>();
 	public TypeMatterConduit pipe = null;
@@ -241,19 +240,6 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		pipe = TypeMatterConduit.values()[compound.getInt("ord")];
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag superTag = super.getUpdateTag();
-		superTag.putDouble("transmit", transmit);
-		return superTag;
-	}
-
-	@Override
-	public void handleUpdateTag(CompoundTag tag) {
-		super.handleUpdateTag(tag);
-		transmit = tag.getDouble("transmit");
 	}
 
 }

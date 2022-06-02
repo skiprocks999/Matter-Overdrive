@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> {
+	
 	public MatterConduitNetwork() {
 		this(new HashSet<IMatterConduit>());
 	}

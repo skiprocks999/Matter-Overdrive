@@ -1,17 +1,16 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
 import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.resources.ResourceLocation;
 
-public class ScreenComponentProgress extends ScreenComponent {
+public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	private final DoubleSupplier progress;
 
@@ -21,26 +20,20 @@ public class ScreenComponentProgress extends ScreenComponent {
 	private static final int BASE_X = 56;
 	private static final int BASE_Y = 0;
 
-	public ScreenComponentProgress(final DoubleSupplier progress, final IScreenWrapper gui, final int x, final int y,
+	public ScreenComponentProgress(final DoubleSupplier progress, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, WIDTH, HEIGHT, screenNumbers);
 		this.progress = progress;
 	}
 
 	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, WIDTH, HEIGHT);
-	}
-
-	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
-			final int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
 		double progress = Math.min(1.0, this.progress.getAsDouble());
 
-		int width = (int) (progress * WIDTH);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, BASE_X, BASE_Y, WIDTH, HEIGHT);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, BASE_X + WIDTH, BASE_Y, width, HEIGHT);
+		int width = (int) (progress * this.width);
+		blit(stack, this.x, this.y, BASE_X, BASE_Y, this.width, this.height);
+		blit(stack, this.x, this.y, BASE_X + this.width, BASE_Y, width, this.height);
 
 	}
 

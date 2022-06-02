@@ -1,10 +1,9 @@
-// Credit to AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.packet.type;
 
 import java.util.function.Supplier;
 
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
+import matteroverdrive.core.tile.utils.IUpdatableTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -15,20 +14,25 @@ import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketUpdateTile {
 
-	private final CompoundTag updateTag;
+	private final CompoundTag data;
 	private final BlockPos pos;
 	private final boolean isGui;
 
-	public PacketUpdateTile(PacketHandler component, BlockPos pos, CompoundTag base, boolean isGui) {
-		this(pos, base, isGui);
-		if (component.getPacketSupplier() != null) {
-			component.getPacketSupplier().accept(base);
+	public PacketUpdateTile(BlockPos pos, IUpdatableTile tile, boolean isGui) {
+		CompoundTag data = new CompoundTag();
+		if(isGui) {
+			tile.getMenuData(data);
+		} else {
+			tile.getRenderData(data);
 		}
+		this.pos = pos;
+		this.data = data;
+		this.isGui = isGui;
 	}
 
-	private PacketUpdateTile(BlockPos pos, CompoundTag updateTag, boolean isGui) {
+	private PacketUpdateTile(BlockPos pos, CompoundTag data, boolean isGui) {
 		this.pos = pos;
-		this.updateTag = updateTag;
+		this.data = data;
 		this.isGui = isGui;
 	}
 
@@ -39,16 +43,10 @@ public class PacketUpdateTile {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof GenericTile generic) {
-					if (generic.hasMenuPacketHandler && message.isGui) {
-						PacketHandler handler = generic.getMenuPacketHandler();
-						if (handler.getPacketConsumer() != null) {
-							handler.getPacketConsumer().accept(message.updateTag);
-						}
-					} else if (generic.hasRenderPacketHandler && !message.isGui) {
-						PacketHandler handler = generic.getRenderPacketHandler();
-						if (handler.getPacketConsumer() != null) {
-							handler.getPacketConsumer().accept(message.updateTag);
-						}
+					if (message.isGui && generic.hasMenuData) {
+						generic.readMenuData(message.data);
+					} else if(!message.isGui && generic.hasRenderData) {
+						generic.readRenderData(message.data);
 					}
 				}
 			}
@@ -58,7 +56,7 @@ public class PacketUpdateTile {
 
 	public static void encode(PacketUpdateTile pkt, FriendlyByteBuf buf) {
 		buf.writeBlockPos(pkt.pos);
-		buf.writeNbt(pkt.updateTag);
+		buf.writeNbt(pkt.data);
 		buf.writeBoolean(pkt.isGui);
 	}
 

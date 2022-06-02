@@ -1,6 +1,5 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,36 +8,53 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
-public class ScreenComponentSlot extends ScreenComponent {
+public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	private final SlotType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
-	private ScreenComponentIcon icon = null;
+	private IconType icon = null;
+	private ScreenComponentIcon iconComp = null;
 
 	private UpgradeType[] upgradeSlotTypes;
 
-	public ScreenComponentSlot(final SlotType type, final IScreenWrapper gui, final int x, final int y,
+	public ScreenComponentSlot(final SlotType type, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height, 
+				screenNumbers);
 		this.type = type;
 	}
 
-	public ScreenComponentSlot(final SlotType type, final IconType icon, final IScreenWrapper gui, final int x,
+	public ScreenComponentSlot(final SlotType type, final IconType icon, final GenericScreen<?> gui, final int x,
 			final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height, 
+				screenNumbers);
 		this.type = type;
+		this.icon = icon;
+	}
+	
+	@Override
+	public void initScreenSize() {
+		super.initScreenSize();
 		if (icon != null) {
-			this.icon = new ScreenComponentIcon(icon, gui, this.xLocation, this.yLocation, this.screenNumbers);
+			int widthOffset;
+			if(isMainSlot()) {
+				widthOffset = (int) ((22 - icon.getTextWidth()) / 2);
+			} else {
+				widthOffset = (int) ((type.getWidth() - icon.getTextWidth()) / 2);
+			}
+			int heightOffset = (int) ((type.getHeight() - icon.getTextHeight()) / 2);
+			this.iconComp = new ScreenComponentIcon(icon, gui, this.x + widthOffset + type.getXOffset(), 
+					this.y + heightOffset + type.getYOffset(), this.screenNumbers);
 		}
 	}
 
@@ -48,43 +64,33 @@ public class ScreenComponentSlot extends ScreenComponent {
 	}
 
 	@Override
-	public Rectangle getBounds(final int guiWidth, final int guiHeight) {
-		return new Rectangle(guiWidth + xLocation + type.getXOffset(), guiHeight + yLocation + type.getYOffset(),
-				type.getWidth(), type.getHeight());
-	}
-
-	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
-			final int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
-		gui.drawTexturedRect(stack, guiWidth + xLocation + type.getXOffset(), guiHeight + yLocation + type.getYOffset(),
+		blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(),
 				type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight(), type.getWidth(),
 				type.getHeight());
 		UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
-		if (icon != null) {
-			IconType iType = icon.getType();
-			int widthOffset = (int) ((type.getWidth() - iType.getTextWidth()) / 2);
-			int heightOffset = (int) ((type.getHeight() - iType.getTextHeight()) / 2);
-			icon.renderBackground(stack, xAxis, yAxis, guiWidth + widthOffset + type.getXOffset(),
-					guiHeight + heightOffset + type.getYOffset());
+		if (iconComp != null) {
+			iconComp.renderBackground(stack, mouseX, mouseY, partialTicks);
 		}
 	}
 
 	@Override
-	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
-		if (isPointInRegion(xLocation + type.getXOffset(), yLocation + type.getYOffset(), xAxis, yAxis, type.getWidth(),
-				type.getHeight())) {
-			if (upgradeSlotTypes != null && Screen.hasControlDown()) {
-				List<FormattedCharSequence> components = new ArrayList<>();
-				for (UpgradeType upgrade : upgradeSlotTypes) {
-					components.add(new TranslatableComponent(
-							DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
-									.getVisualOrderText());
-				}
-				gui.displayTooltips(stack, components, xAxis, yAxis);
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		if (upgradeSlotTypes != null && Screen.hasControlDown()) {
+			List<FormattedCharSequence> components = new ArrayList<>();
+			for (UpgradeType upgrade : upgradeSlotTypes) {
+				components.add(new TranslatableComponent(
+						DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
+								.getVisualOrderText());
 			}
+			gui.renderTooltip(stack, components, mouseX, mouseY);
 		}
+	}
+	
+	private boolean isMainSlot() {
+		return type == SlotType.MAIN || type == SlotType.MAIN_ACTIVE || type == SlotType.MAIN_DARK;
 	}
 
 	public enum SlotType {

@@ -3,8 +3,8 @@ package matteroverdrive.core.screen.component.button;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.SoundRegister;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
-import matteroverdrive.core.screen.component.utils.ButtonHoldPress;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -20,16 +20,15 @@ public class ButtonIOConfig extends ButtonHoldPress {
 	private static final int WIDTH = 28;
 	private static final int HEIGHT = 27;
 
-	public ButtonIOConfig(int x, int y, OnPress onPress, IOConfigButtonType type) {
-		super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, onPress);
+	public ButtonIOConfig(GenericScreen<?> gui, int x, int y, OnPress onPress, IOConfigButtonType type) {
+		super(gui, x, y, WIDTH, HEIGHT, TextComponent.EMPTY, onPress);
 		this.type = type;
 		iconDarkLoc = new ResourceLocation(type.iconDark.getTextureLoc());
 		iconLightLoc = new ResourceLocation(type.iconLight.getTextureLoc());
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-		super.renderButton(pPoseStack, pMouseX, pMouseY, pPartialTick);
+	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		IconType icon;
 		if (isActivated) {
 			icon = type.iconLight;
@@ -40,7 +39,7 @@ public class ButtonIOConfig extends ButtonHoldPress {
 		}
 		int widthOffset = (int) ((WIDTH - icon.getTextWidth()) / 2);
 		int heightOffset = (int) ((HEIGHT - icon.getTextHeight()) / 2);
-		blit(pPoseStack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
+		blit(stack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
 				icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
 	}
 

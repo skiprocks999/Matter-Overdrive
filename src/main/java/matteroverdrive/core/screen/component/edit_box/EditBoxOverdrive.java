@@ -6,8 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.OverdriveTextureButton;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class EditBoxOverdrive extends EditBox {
 
-	private IScreenWrapper gui;
+	private GenericScreen<?> gui;
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
 			"textures/gui/button/edit_box.png");
@@ -62,8 +62,8 @@ public class EditBoxOverdrive extends EditBox {
 		return false;
 	};
 	
-	public EditBoxOverdrive(int pX, int pY, int pWidth, int pHeight, IScreenWrapper gui) {
-		super(gui.getFontRenderer(), pX, pY, pWidth, pHeight, TextComponent.EMPTY);
+	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {
+		super(gui.getFontRenderer(), x, y, width, height, TextComponent.EMPTY);
 		this.gui = gui;
 
 	}
@@ -76,7 +76,7 @@ public class EditBoxOverdrive extends EditBox {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			UtilsRendering.bindTexture(TEXTURE);
-			OverdriveTextureButton.drawButton(stack, this.x, this.y, this.width, this.height);
+			ButtonOverdrive.drawButton(stack, this.x, this.y, this.width, this.height);
 
 			int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
 			int j = this.cursorPos - this.displayPos;

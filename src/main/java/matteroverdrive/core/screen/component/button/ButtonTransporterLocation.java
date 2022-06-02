@@ -7,8 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ButtonHoldPress;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -21,29 +20,27 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 	private static final int HEIGHT = 20;
 
 	public int index;
-	private IScreenWrapper gui;
 	private Supplier<TileTransporter> transporter;
 
-	public ButtonTransporterLocation(int pX, int pY, int index, OnPress pOnPress, IScreenWrapper owner,
+	public ButtonTransporterLocation(GenericScreen<?> gui, int x, int y, int index, OnPress onPress, 
 			Supplier<TileTransporter> transporter) {
-		super(pX, pY, WIDTH, HEIGHT, TextComponent.EMPTY, pOnPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, WIDTH, HEIGHT, TextComponent.EMPTY, onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonTransporterLocation loc = (ButtonTransporterLocation) button;
 			TileTransporter transport = loc.transporter.get();
 			TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[loc.index];
 			if (transport.validDestination(wrapper).getFirst()) {
-				loc.gui.displayTooltip(stack, new TextComponent(wrapper.getDestination().toShortString()), pX, pY);
+				loc.gui.renderTooltip(stack, new TextComponent(wrapper.getDestination().toShortString()), mouseX, mouseY);
 			} else {
-				loc.gui.displayTooltip(stack, UtilsText.tooltip("invaliddest"), pX, pY);
+				loc.gui.renderTooltip(stack, UtilsText.tooltip("invaliddest"), mouseX, mouseY);
 			}
 
 		});
 		this.index = index;
-		gui = owner;
 		this.transporter = transporter;
 	}
-
+	
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileTransporter transport = transporter.get();
 		int tIndex = transport.clientDestination;
 		if (tIndex == index) {
@@ -51,10 +48,15 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 		} else {
 			isActivated = false;
 		}
-		super.renderButton(pPoseStack, pMouseX, pMouseY, pPartialTick);
+		super.renderBackground(stack, mouseX, mouseY, partialTicks);
+	}
+
+	@Override
+	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		TileTransporter transport = transporter.get();
 		TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[index];
 		int color = transport.validDestination(wrapper).getFirst() ? UtilsRendering.TEXT_BLUE : UtilsRendering.RED;
-		drawCenteredString(pPoseStack, gui.getFontRenderer(), wrapper.getName(), this.x + this.width / 2,
+		drawCenteredString(stack, gui.getFontRenderer(), wrapper.getName(), this.x + this.width / 2,
 				this.y + (this.height - 8) / 2, color);
 	}
 	

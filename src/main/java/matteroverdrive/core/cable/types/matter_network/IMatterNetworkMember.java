@@ -1,8 +1,9 @@
-/**
- * Dummy interface for the matter network cable
- */
 package matteroverdrive.core.cable.types.matter_network;
 
+import net.minecraft.core.Direction;
+
 public interface IMatterNetworkMember {
+	
+	boolean canConnectToFace(Direction face);
 
 }

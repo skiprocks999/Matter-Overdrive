@@ -14,8 +14,6 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.recipe.CountableIngredient;
 import matteroverdrive.core.sound.TickableSoundTile;
 import matteroverdrive.core.tile.types.GenericSoundTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.client.Minecraft;
@@ -67,14 +65,13 @@ public class TileInscriber extends GenericSoundTile {
 				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
 				getContainerName(TypeMachine.INSCRIBER.id())));
-		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
-		setRenderPacketHandler(
-				new PacketHandler(this, false).packetReader(this::clientTileLoad).packetWriter(this::clientTileSave));
-		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
+		setHasMenuData();
+		setHasRenderData();
+		setTickable();
 	}
 
-	private void tickServer(Ticker ticker) {
+	@Override
+	public void tickServer() {
 		if (canRun()) {
 			UtilsTile.drainElectricSlot(this);
 			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
@@ -137,7 +134,8 @@ public class TileInscriber extends GenericSoundTile {
 		}
 	}
 
-	private void tickClient(Ticker ticker) {
+	@Override
+	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
 			Minecraft.getInstance().getSoundManager()
@@ -145,7 +143,8 @@ public class TileInscriber extends GenericSoundTile {
 		}
 	}
 
-	private void clientMenuSave(CompoundTag tag) {
+	@Override
+	public void getMenuData(CompoundTag tag) {
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
@@ -155,7 +154,8 @@ public class TileInscriber extends GenericSoundTile {
 		tag.putDouble("speed", currSpeed);
 	}
 
-	private void clientMenuLoad(CompoundTag tag) {
+	@Override
+	public void readMenuData(CompoundTag tag) {
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
 		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
 
@@ -165,7 +165,8 @@ public class TileInscriber extends GenericSoundTile {
 		clientSpeed = tag.getDouble("speed");
 	}
 
-	private void clientTileSave(CompoundTag tag) {
+	@Override
+	public void getRenderData(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 
@@ -174,7 +175,8 @@ public class TileInscriber extends GenericSoundTile {
 		tag.putDouble("sabonus", saMultiplier);
 	}
 
-	private void clientTileLoad(CompoundTag tag) {
+	@Override
+	public void readRenderData(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 

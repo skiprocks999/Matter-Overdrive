@@ -5,35 +5,40 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
+import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
+import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.TileMatterTank;
+import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
+import matteroverdrive.common.tile.matter_network.TilePatternDrive;
+import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.cable.AbstractNetwork;
 import matteroverdrive.core.cable.CableNetworkRegistry;
 import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
+import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
+import matteroverdrive.core.cable.types.matter_network.MatterNetworkEMPack;
+import matteroverdrive.core.cable.types.matter_network.MatterNetworkUtils;
+import matteroverdrive.core.utils.UtilsMatter;
+import matteroverdrive.core.utils.UtilsTile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> {
-	private double resistance;
-	private double energyLoss;
-	private double voltage = 0.0;
-	private double lastEnergyLoss;
-	private double lastVoltage = 0.0;
-	private ArrayList<BlockEntity> currentProducers = new ArrayList<>();
-	private double transferBuffer = 0;
-	private double maxTransferBuffer;
+public class MatterNetwork
+		extends AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> {
 
-	public double getLastEnergyLoss() {
-		return lastEnergyLoss;
-	}
+	private List<TileMatterAnalyzer> analyzers = new ArrayList<>();
+	private List<TileMatterReplicator> replicators = new ArrayList<>();
+	private List<TilePatternDrive> patternDrives = new ArrayList<>();
+	private List<TilePatternMonitor> patternMonitors = new ArrayList<>();
+	private List<TileMatterTank> matterTanks = new ArrayList<>();
+	private List<TileNetworkPowerSupply> powerSupplies = new ArrayList<>();
 
-	public double getActiveVoltage() {
-		return lastVoltage;
-	}
-
-	public double getResistance() {
-		return resistance;
-	}
+	private int feTransmittedThisTick = 0;
+	private int feTransmittedLastTick = 0;
 
 	public MatterNetwork() {
 		this(new HashSet<IMatterNetworkCable>());
@@ -44,15 +49,16 @@ public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeW
 		CableNetworkRegistry.register(this);
 	}
 
-	public MatterNetwork(Set<AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack>> networks) {
-		for (AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> net : networks) {
+	public MatterNetwork(
+			Set<AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack>> networks) {
+		for (AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> net : networks) {
 			if (net != null) {
 				conductorSet.addAll(net.conductorSet);
 				net.deregister();
 			}
 		}
 		refresh();
-		NetworkRegistry.register(this);
+		CableNetworkRegistry.register(this);
 	}
 
 	public MatterNetwork(Set<MatterNetwork> networks, boolean special) {
@@ -63,29 +69,37 @@ public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeW
 			}
 		}
 		refresh();
-		NetworkRegistry.register(this);
+		CableNetworkRegistry.register(this);
 	}
 
-	private TransferPack sendToReceivers(TransferPack maxTransfer, ArrayList<BlockEntity> ignored, boolean debug) {
-		if (maxTransfer.getJoules() > 0 && maxTransfer.getVoltage() > 0) {
-			Set<BlockEntity> availableAcceptors = getEnergyAcceptors();
-			double joulesSent = 0;
+	@Override
+	public MatterNetworkEMPack emit(MatterNetworkEMPack maxTransfer, ArrayList<BlockEntity> ignored,
+			boolean debug) {
+		if (maxTransfer.fe() > 0 || maxTransfer.matter() > 0) {
+			Set<BlockEntity> availableAcceptors = getNetworkAcceptors();
+			double matterSent = 0;
+			int feSent = 0;
 			availableAcceptors.removeAll(ignored);
 			if (!availableAcceptors.isEmpty()) {
 				Iterator<BlockEntity> it = availableAcceptors.iterator();
-				double totalUsage = 0;
-				HashMap<BlockEntity, Double> usage = new HashMap<>();
+				double totalMatterUsage = 0;
+				int totalFEUsage = 0;
+				HashMap<BlockEntity, MatterNetworkEMPack> usage = new HashMap<>();
 				while (it.hasNext()) {
 					BlockEntity receiver = it.next();
-					double localUsage = 0;
+					double localMatterUsage = 0;
+					int localFEUsage = 0;
 					if (acceptorInputMap.containsKey(receiver)) {
 						boolean shouldRemove = true;
 						for (Direction connection : acceptorInputMap.get(receiver)) {
-							TransferPack pack = ElectricityUtils.receivePower(receiver, connection, TransferPack.joulesVoltage(maxTransfer.getJoules(), maxTransfer.getVoltage()), true);
-							if (pack.getJoules() != 0) {
+							MatterNetworkEMPack pack = MatterNetworkUtils.recieveEM(receiver, connection, maxTransfer,
+									true);
+							if (pack.fe() > 0 || pack.matter() > 0) {
 								shouldRemove = false;
-								totalUsage += pack.getJoules();
-								localUsage += pack.getJoules();
+								totalMatterUsage += pack.matter();
+								totalFEUsage += pack.fe();
+								localMatterUsage += pack.matter();
+								localFEUsage += pack.fe();
 								break;
 							}
 						}
@@ -93,107 +107,50 @@ public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeW
 							it.remove();
 						}
 					}
-					usage.put(receiver, localUsage);
+					usage.put(receiver, new MatterNetworkEMPack(localFEUsage, localMatterUsage));
 				}
 				for (BlockEntity receiver : availableAcceptors) {
-					TransferPack dedicated = TransferPack.joulesVoltage(maxTransfer.getJoules() * (usage.get(receiver) / totalUsage), maxTransfer.getVoltage());
+					MatterNetworkEMPack recieved = usage.get(receiver);
+					int dedicatedFe = totalFEUsage > 0
+							? (int) (maxTransfer.fe() * ((double) recieved.fe() / (double) totalFEUsage))
+							: 0;
+					double dedicatedMatter = totalMatterUsage > 0
+							? maxTransfer.matter() * (recieved.matter() / totalMatterUsage)
+							: 0;
+					MatterNetworkEMPack dedicated = new MatterNetworkEMPack(dedicatedFe, dedicatedMatter);
 					if (acceptorInputMap.containsKey(receiver)) {
-						TransferPack perConnection = TransferPack.joulesVoltage(dedicated.getJoules() / acceptorInputMap.get(receiver).size(), maxTransfer.getVoltage());
+						double size = acceptorInputMap.get(receiver).size();
+						MatterNetworkEMPack perConnection = new MatterNetworkEMPack(
+								(int) ((double) dedicated.fe() / size), dedicated.matter() / size);
 						for (Direction connection : acceptorInputMap.get(receiver)) {
-							TransferPack pack = ElectricityUtils.receivePower(receiver, connection, perConnection, debug);
-							joulesSent += pack.getJoules();
+							MatterNetworkEMPack pack = MatterNetworkUtils.recieveEM(receiver, connection, perConnection,
+									debug);
+							matterSent += pack.matter();
+							feSent += pack.fe();
 							if (!debug) {
-								transmittedThisTick += pack.getJoules();
+								transmittedThisTick += pack.matter();
+								feTransmittedThisTick += pack.fe();
 							}
 						}
 					}
 				}
 			}
-			return TransferPack.joulesVoltage(Math.min(maxTransfer.getJoules(), joulesSent), maxTransfer.getVoltage());
+			return new MatterNetworkEMPack(Math.min(feSent, maxTransfer.fe()),
+					Math.min(matterSent, maxTransfer.matter()));
 		}
-		return TransferPack.EMPTY;
+		return MatterNetworkEMPack.EMPTY;
 	}
 
-	public Set<BlockEntity> getEnergyAcceptors() {
+	public Set<BlockEntity> getNetworkAcceptors() {
 		return new HashSet<>(acceptorSet);
-	}
-
-	private boolean checkForOverload() {
-		if (networkMaxTransfer * voltage - transmittedThisTick <= 0 && voltage > 0) {
-			HashSet<SubtypeWire> checkList = new HashSet<>();
-			for (SubtypeWire type : SubtypeWire.values()) {
-				if (type != SubtypeWire.superconductive && type != SubtypeWire.insulatedsuperconductive && type != SubtypeWire.logisticssuperconductive && type.capacity <= transmittedLastTick / voltage * 20 && type.capacity <= transmittedThisTick / voltage * 20) {
-					checkList.add(type);
-				}
-			}
-			for (SubtypeWire index : checkList) {
-				for (IMatterNetworkCable conductor : conductorTypeMap.get(index)) {
-					Scheduler.schedule(1, conductor::destroyViolently);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void updateStatistics(IMatterNetworkCable cable) {
-		super.updateStatistics(cable);
-		resistance += cable.getWireType().resistance;
-	}
-
-	@Override
-	public void updateStatistics() {
-		resistance = 0;
-		super.updateStatistics();
-	}
-
-	public void addProducer(BlockEntity tile, double d) {
-		if (!currentProducers.contains(tile)) {
-			currentProducers.add(tile);
-		}
-		voltage = Math.max(voltage, d);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (transferBuffer > 0) {
-			if ((int) voltage != 0 && voltage > 0) {
-				if (resistance > 0) {
-					double bufferAsWatts = transferBuffer * 20; // buffer as watts
-					double maxWatts = (-voltage * voltage + voltage * Math.sqrt(voltage * voltage + 4 * bufferAsWatts * resistance)) / (2 * resistance);
-					double maxPerTick = maxWatts / 20.0;
-					// above is power as watts when powerSend + powerLossToWires = m
-					TransferPack send = TransferPack.joulesVoltage(maxPerTick, voltage);
-					double sent = sendToReceivers(send, currentProducers, false).getJoules();
-					double lossPerTick = send.getAmps() * send.getAmps() * resistance / 20.0;
-					transferBuffer -= sent + lossPerTick;
-					energyLoss += lossPerTick;
-					transmittedThisTick += lossPerTick;
-					checkForOverload();
-				} else {
-					transferBuffer -= sendToReceivers(TransferPack.joulesVoltage(transferBuffer, voltage), currentProducers, false).getJoules();
-				}
-			}
-		}
-		lastVoltage = voltage;
-		voltage = 0;
-		lastEnergyLoss = energyLoss;
-		energyLoss = 0;
-		currentProducers.clear();
-		maxTransferBuffer = 0;
-		for (BlockEntity tile : acceptorSet) {
-			if (acceptorInputMap.containsKey(tile)) {
-				for (Direction connection : acceptorInputMap.get(tile)) {
-					TransferPack pack = ElectricityUtils.receivePower(tile, connection, TransferPack.joulesVoltage(Double.MAX_VALUE, voltage), true);
-					if (pack.getJoules() != 0) {
-						maxTransferBuffer += pack.getJoules();
-						break;
-					}
-				}
-			}
-		}
+		feTransmittedLastTick = feTransmittedThisTick;
+		feTransmittedThisTick = 0;
+
 		Iterator<IMatterNetworkCable> it = conductorSet.iterator();
 		boolean broken = false;
 		while (it.hasNext()) {
@@ -212,53 +169,131 @@ public class MatterNetwork extends AbstractNetwork<IMatterNetworkCable, SubtypeW
 	}
 
 	@Override
+	public void refresh() {
+		Iterator<IMatterNetworkCable> it = conductorSet.iterator();
+		acceptorSet.clear();
+		acceptorInputMap.clear();
+		while (it.hasNext()) {
+			IMatterNetworkCable conductor = it.next();
+			if (conductor == null || ((BlockEntity) conductor).isRemoved()) {
+				it.remove();
+			} else {
+				conductor.setNetwork(this);
+			}
+		}
+		for (IMatterNetworkCable conductor : conductorSet) {
+			BlockEntity tileEntity = (BlockEntity) conductor;
+			for (Direction direction : Direction.values()) {
+				BlockEntity acceptor = tileEntity.getLevel()
+						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
+				if (acceptor != null && !isConductor(acceptor)) {
+					if (isAcceptor(acceptor, direction)) {
+						if (canConnect(acceptor, direction)) {
+							BlockEntity casted = (BlockEntity) acceptor;
+							acceptorSet.add(casted);
+							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor)
+									? acceptorInputMap.get(acceptor)
+									: new HashSet<>();
+							directions.add(direction.getOpposite());
+							acceptorInputMap.put(casted, directions);
+							addTileToCategory(casted);
+						}
+					}
+				}
+			}
+		}
+		updateStatistics();
+	}
+
+	private void addTileToCategory(BlockEntity entity) {
+		if (entity instanceof TileMatterAnalyzer analyzer) {
+			analyzers.add(analyzer);
+		} else if (entity instanceof TileMatterReplicator replicator) {
+			replicators.add(replicator);
+		} else if (entity instanceof TilePatternMonitor monitor) {
+			patternMonitors.add(monitor);
+		} else if (entity instanceof TilePatternDrive drive) {
+			patternDrives.add(drive);
+		} else if (entity instanceof TileMatterTank tank) {
+			matterTanks.add(tank);
+		} else if (entity instanceof TileNetworkPowerSupply supply) {
+			powerSupplies.add(supply);
+		}
+	}
+
+	@Override
+	public void deregister() {
+		analyzers.clear();
+		replicators.clear();
+		patternMonitors.clear();
+		patternDrives.clear();
+		matterTanks.clear();
+		powerSupplies.clear();
+		super.deregister();
+
+	}
+
+	@Override
 	public boolean isConductor(BlockEntity tile) {
-		return ElectricityUtils.isConductor(tile);
+		return tile instanceof IMatterNetworkCable;
 	}
 
 	@Override
 	public boolean isAcceptor(BlockEntity acceptor, Direction orientation) {
-		return ElectricityUtils.isElectricReceiver(acceptor);
+		return acceptor instanceof IMatterNetworkMember member && member.canConnectToFace(orientation);
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstance() {
+	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstance() {
 		return new MatterNetwork();
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstanceConductor(Set<IMatterNetworkCable> conductors) {
+	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstanceConductor(
+			Set<IMatterNetworkCable> conductors) {
 		return new MatterNetwork(conductors);
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack> createInstance(Set<AbstractNetwork<IMatterNetworkCable, SubtypeWire, BlockEntity, TransferPack>> networks) {
+	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstance(
+			Set<AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack>> networks) {
 		return new MatterNetwork(networks);
 
 	}
 
 	@Override
-	public SubtypeWire[] getConductorTypes() {
-		return SubtypeWire.values();
+	public TypeMatterNetworkCable[] getConductorTypes() {
+		return TypeMatterNetworkCable.values();
 	}
 
 	@Override
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
-		return ElectricityUtils.canInputPower(acceptor, orientation.getOpposite());
+		Direction opposite = orientation.getOpposite();
+		return UtilsTile.isFEReciever(acceptor, opposite) || UtilsMatter.isMatterReceiver(acceptor, opposite);
 	}
 
-	@Override
-	public double getJoulesStored() {
-		return transferBuffer;
+	public List<TileMatterAnalyzer> getAnalyzers() {
+		return analyzers;
 	}
 
-	@Override
-	public void setJoulesStored(double joules) {
-		transferBuffer = joules;
+	public List<TileMatterReplicator> getReplicators() {
+		return replicators;
 	}
 
-	@Override
-	public double getMaxJoulesStored() {
-		return maxTransferBuffer;
+	public List<TilePatternDrive> getPatternDrives() {
+		return patternDrives;
 	}
+
+	public List<TilePatternMonitor> getPatternMonitors() {
+		return patternMonitors;
+	}
+
+	public List<TileMatterTank> getMatterTanks() {
+		return matterTanks;
+	}
+
+	public List<TileNetworkPowerSupply> getPowerSupplies() {
+		return powerSupplies;
+	}
+
 }

@@ -8,6 +8,7 @@ import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;
 import matteroverdrive.core.inventory.slot.SlotRestricted;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
+import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
@@ -29,7 +30,7 @@ public class InventoryMatterRecycler extends GenericInventoryTile<TileMatterRecy
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, null,
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, IconType.MATTER_DUST_DARK,
 				DeferredRegisters.ITEM_RAW_MATTER_DUST.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, null));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));

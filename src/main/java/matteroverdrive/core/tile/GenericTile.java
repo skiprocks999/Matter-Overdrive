@@ -9,8 +9,8 @@ import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
+import matteroverdrive.core.tile.utils.ITickableTile;
+import matteroverdrive.core.tile.utils.IUpdatableTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,21 +30,19 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
 
-public abstract class GenericTile extends BlockEntity implements Nameable {
+public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile {
 
 	private List<IOverdriveCapability> capabilities = new ArrayList<>();
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
 
-	public boolean hasTicker = false;
-	private Ticker ticker;
-
-	public boolean hasMenuPacketHandler = false;
-	private PacketHandler menuHandler;
-
-	public boolean hasRenderPacketHandler = false;
-	private PacketHandler renderHandler;
+	public boolean isTickable = false;
+	
+	public boolean hasMenuData = false;
+	public boolean hasRenderData = false;
+	
+	protected long ticks = 0;
 
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -59,31 +57,16 @@ public abstract class GenericTile extends BlockEntity implements Nameable {
 		return menu;
 	}
 
-	public void setTicker(Ticker ticker) {
-		hasTicker = true;
-		this.ticker = ticker;
+	public void setTickable() {
+		isTickable = true;
 	}
-
-	public Ticker getTicker() {
-		return ticker;
+	
+	public void setHasMenuData() {
+		hasMenuData = true;
 	}
-
-	public void setMenuPacketHandler(PacketHandler handler) {
-		hasMenuPacketHandler = true;
-		this.menuHandler = handler;
-	}
-
-	public PacketHandler getMenuPacketHandler() {
-		return menuHandler;
-	}
-
-	public void setRenderPacketHandler(PacketHandler handler) {
-		hasRenderPacketHandler = true;
-		this.renderHandler = handler;
-	}
-
-	public PacketHandler getRenderPacketHandler() {
-		return renderHandler;
+	
+	public void setHasRenderData() {
+		hasRenderData = true;
 	}
 
 	@Override
@@ -201,5 +184,14 @@ public abstract class GenericTile extends BlockEntity implements Nameable {
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
 	}
+	
+	@Override
+	public long getTicks() {
+		return ticks;
+	}
+	
+	public void incrementTicks() {
+		ticks++;
+	};
 
 }

@@ -1,38 +1,31 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.resources.ResourceLocation;
 
-public class ScreenComponentIcon extends ScreenComponent {
+public class ScreenComponentIcon extends OverdriveScreenComponent {
 
 	private IconType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/icon/";
 
-	public ScreenComponentIcon(final IconType type, final IScreenWrapper gui, final int x, final int y,
+	public ScreenComponentIcon(final IconType type, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, screenNumbers);
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height, screenNumbers);
 		this.type = type;
 	}
 
-	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, type.getTextWidth(), type.getTextHeight());
-	}
 
 	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
-			final int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, type.getTextureX(), type.getTextureY(),
+		blit(stack, this.x, this.y, type.getTextureX(), type.getTextureY(),
 				type.getTextWidth(), type.getTextHeight(), type.getTextWidth(), type.getTextHeight());
 		UtilsRendering.color(color);
 	}

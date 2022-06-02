@@ -5,6 +5,7 @@ import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
@@ -92,10 +93,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
 			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
 			addBlock(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
+			addBlock(DeferredRegisters.BLOCK_NETWORK_POWER_SUPPLY, "Network Power Supply");
 
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
-
+			addBlock(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
+			
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
 			addTooltip("matterval", "Matter: %s");
@@ -164,6 +167,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.INSCRIBER.id(), "Inscriber");
 			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
 			addContainer(TypeMachine.SPACETIME_ACCELERATOR.id(), "Spacetime Accelerator");
+			addContainer(TypeMachine.NETWORK_POWER_SUPPLY.id(), "Network Power Supply");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

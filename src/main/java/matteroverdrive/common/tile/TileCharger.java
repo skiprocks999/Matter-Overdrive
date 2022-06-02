@@ -1,19 +1,12 @@
 package matteroverdrive.common.tile;
 
-import java.util.HashSet;
-
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.BlockMachineMultiblock;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryCharger;
-import matteroverdrive.core.block.multiblock.IMultiblockTileNode;
-import matteroverdrive.core.block.multiblock.Subnode;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +14,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class TileCharger extends GenericUpgradableTile implements IMultiblockTileNode {
+public class TileCharger extends GenericUpgradableTile {
 
 	public static final int SLOT_COUNT = 2;
 
@@ -51,16 +44,17 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 						(id, inv, play) -> new InventoryCharger(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
 						getContainerName(TypeMachine.CHARGER.id())));
-		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
-		setTicker(new Ticker(this).tickServer(this::tickServer));
+		setHasMenuData();
+		setTickable();
 	}
 
-	private void tickServer(Ticker ticker) {
+	@Override
+	public void tickServer() {
 		// TODO implement
 	}
 
-	private void clientMenuSave(CompoundTag tag) {
+	@Override
+	public void getMenuData(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
@@ -73,7 +67,8 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 		tag.putDouble("sabonus", saMultiplier);
 	}
 
-	private void clientMenuLoad(CompoundTag tag) {
+	@Override
+	public void readMenuData(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
@@ -111,11 +106,6 @@ public class TileCharger extends GenericUpgradableTile implements IMultiblockTil
 	@Override
 	public AABB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().inflate(2);
-	}
-
-	@Override
-	public HashSet<Subnode> getSubNodes() {
-		return BlockMachineMultiblock.CHARGER_NODES;
 	}
 
 	@Override

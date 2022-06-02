@@ -7,10 +7,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -19,7 +19,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class ButtonIO extends Button {
+public class ButtonIO extends AbstractOverdriveButton {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(
 			References.ID + ":textures/gui/button/buttons.png");
@@ -45,7 +45,7 @@ public class ButtonIO extends Button {
 
 	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, WrapperIOConfig owner,
 			Supplier<Boolean> canInput, Supplier<Boolean> canOutput) {
-		super(x, Y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {
+		super(owner.gui, x, Y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {
 		}, (button, stack, mouseX, mouseY) -> {
 			ButtonIO io = (ButtonIO) button;
 			owner.displayTooltip(stack, UtilsText.tooltip("io", io.mode.name, io.side.name), mouseX, mouseY);
@@ -58,7 +58,7 @@ public class ButtonIO extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (mode == null) {
 			mode = startingMode.get();
 		}
@@ -101,10 +101,7 @@ public class ButtonIO extends Button {
 			y = Y_START;
 			break;
 		}
-		blit(pPoseStack, this.x, this.y, x, y, WIDTH, HEIGHT);
-		if (isHoveredOrFocused()) {
-			renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
+		blit(stack, this.x, this.y, x, y, WIDTH, HEIGHT);
 	}
 
 	@Override
@@ -121,9 +118,9 @@ public class ButtonIO extends Button {
 	}
 
 	@Override
-	protected boolean isValidClickButton(int pButton) {
-		mouseButton = pButton;
-		return pButton > -1 && pButton < 2;
+	protected boolean isValidClickButton(int button) {
+		mouseButton = button;
+		return button > -1 && button < 2;
 	}
 
 	private void validateNull() {
@@ -144,14 +141,14 @@ public class ButtonIO extends Button {
 	}
 
 	@Override
-	public void onRelease(double pMouseX, double pMouseY) {
-		super.onRelease(pMouseX, pMouseY);
+	public void onRelease(double mouseX, double mouseY) {
+		super.onRelease(mouseX, mouseY);
 		isActivated = false;
 	}
 
 	@Override
-	public void playDownSound(SoundManager pHandler) {
-		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
+	public void playDownSound(SoundManager handler) {
+		handler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
 
 	}
 

@@ -1,4 +1,4 @@
-package matteroverdrive.core.screen.component.utils;
+package matteroverdrive.core.screen.component.button;
 
 import java.util.function.Consumer;
 
@@ -6,16 +6,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class OverdriveTextureButton extends Button {
+public class ButtonOverdrive extends AbstractOverdriveButton {
 
 	private static final String BASE_TEXTURE_LOC = "textures/gui/button/";
 
@@ -49,47 +50,47 @@ public class OverdriveTextureButton extends Button {
 	protected int textColor = UtilsRendering.TEXT_BLUE;
 	protected Consumer<SoundManager> downSound = null;
 
-	public OverdriveTextureButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress,
-			OnTooltip pOnTooltip) {
-		super(pX, pY, pWidth, pHeight, pMessage, pOnPress, pOnTooltip);
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress,
+			OnTooltip onTooltip) {
+		super(gui, x, y, width, height, message, onPress, onTooltip);
 		defaultText = DEFAULT;
 		hoveredText = HOVERED;
 		pressedText = PRESSED;
 	}
 
-	public OverdriveTextureButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress) {
-		super(pX, pY, pWidth, pHeight, pMessage, pOnPress);
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress) {
+		super(gui, x, y, width, height, message, onPress);
 		defaultText = DEFAULT;
 		hoveredText = HOVERED;
 		pressedText = PRESSED;
 	}
 
-	public OverdriveTextureButton setLeft() {
+	public ButtonOverdrive setLeft() {
 		defaultText = DEFAULT_LEFT;
 		hoveredText = HOVERED_LEFT;
 		pressedText = PRESSED_LEFT;
 		return this;
 	}
 
-	public OverdriveTextureButton setRight() {
+	public ButtonOverdrive setRight() {
 		defaultText = DEFAULT_RIGHT;
 		hoveredText = HOVERED_RIGHT;
 		pressedText = PRESSED_RIGHT;
 		return this;
 	}
 	
-	public OverdriveTextureButton setColor(int color) {
+	public ButtonOverdrive setColor(int color) {
 		textColor = color;
 		return this;
 	}
 	
-	public OverdriveTextureButton setSound(Consumer<SoundManager> sound) {
+	public ButtonOverdrive setSound(Consumer<SoundManager> sound) {
 		downSound = sound;
 		return this;
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -102,27 +103,25 @@ public class OverdriveTextureButton extends Button {
 			UtilsRendering.bindTexture(defaultText);
 		}
 
-		drawButton(pPoseStack, this.x, this.y, this.width, this.height);
+		drawButton(stack, this.x, this.y, this.width, this.height);
 
-		if (this.isHoveredOrFocused()) {
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
-
+	}
+	
+	@Override
+	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		
 		Minecraft minecraft = Minecraft.getInstance();
 		Font font = minecraft.font;
-		drawCenteredString(pPoseStack, font, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2,
-				getTextColor());
-
+		drawCenteredString(stack, font, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, getTextColor());
+	
 	}
 
 	public static void drawButton(PoseStack stack, int x, int y, int butWidth, int butHeight) {
 		if (butWidth < 18) {
 			if (butHeight < 18) {
-				//draw(stack, x, y, 0, 0, 0, 0, butWidth, butHeight);
 				blit(stack, x , y, butWidth, butHeight, 0, 0, butWidth, butHeight, butWidth, butHeight);
 			} else {
 				blit(stack, x , y, butWidth, 7, 0, 0, butWidth, 7, butWidth, 18);
-				//draw(stack, x, y, 0, 0, 0, 0, butWidth, 7);
 
 				int sectionHeight = butHeight - 14;
 				int heightIterations = sectionHeight / 4;
@@ -131,18 +130,14 @@ public class OverdriveTextureButton extends Button {
 				int heightOffset = 7;
 				for (int i = 0; i < heightIterations; i++) {
 					blit(stack, x , y + heightOffset, butWidth, 4, 0, 7, butWidth, 4, butWidth, 18);
-					//draw(stack, x, y, 0, heightOffset, 0, 7, butWidth, 4);
 					heightOffset += 4;
 				}
 				blit(stack, x , y + heightOffset, butWidth, remainderHeight, 0, 7, butWidth, remainderHeight, butWidth, 18);
-				//draw(stack, x, y, 0, heightOffset, 0, 7, butWidth, remainderHeight);
 
 				blit(stack, x , y + butHeight -7, butWidth, 7, 0, 11, butWidth, 7, butWidth, 18);
-				//draw(stack, x, y, 0, butHeight - 7, 0, 11, butWidth, 7);
 			}
 		} else if (butHeight < 18) {
 			blit(stack, x , y, 7, butHeight, 0, 0, 7, butHeight, 18, butHeight);
-			//draw(stack, x, y, 0, 0, 0, 0, 7, butHeight);
 
 			int sectionWidth = butWidth - 14;
 			int widthIterations = sectionWidth / 4;
@@ -151,14 +146,11 @@ public class OverdriveTextureButton extends Button {
 			int widthOffset = 7;
 			for (int i = 0; i < widthIterations; i++) {
 				blit(stack, x + widthOffset, y, 4, butHeight, 7, 0, 4, butHeight, 18, butHeight);
-				//draw(stack, x, y, widthOffset, 0, 7, 0, 4, butHeight);
 				widthOffset += 4;
 			}
 			blit(stack, x + widthOffset, y, remainderWidth, butHeight, 7, 0, remainderWidth, butHeight, 18, butHeight);
-			//draw(stack, x, y, widthOffset, 0, 7, 0, remainderWidth, butHeight);
 
 			blit(stack, x + butWidth - 7 , y, 7, butHeight, 11, 0, 7, butHeight, 18, butHeight);
-			//draw(stack, x, y, butWidth - 7, 0, 11, 0, 7, butHeight);
 		} else {
 			// the button is >= 18x18 at this point
 
@@ -281,6 +273,11 @@ public class OverdriveTextureButton extends Button {
 
 	public int getTextColor() {
 		return textColor;
+	}
+	
+	@Override
+	public void updateVisiblity(int screenNumber) {
+
 	}
 
 }

@@ -10,20 +10,23 @@ import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
-import matteroverdrive.common.block.BlockMultiSubnode;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
 import matteroverdrive.common.block.cable.BlockMatterConduit;
-import matteroverdrive.common.block.BlockMachineMultiblock;
+import matteroverdrive.common.block.cable.BlockMatterNetworkCable;
+import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
+import matteroverdrive.common.block.charger.BlockAndroidChargerChild;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.block_item.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventoryMicrowave;
+import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.common.inventory.InventoryTransporter;
@@ -47,7 +50,8 @@ import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
-import matteroverdrive.common.tile.generic.TileMultiSubnode;
+import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
+import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
@@ -121,10 +125,10 @@ public class DeferredRegisters {
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
 	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
-			() -> new BlockMultiSubnode());
+			() -> new BlockAndroidChargerChild());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
-			() -> new BlockMachineMultiblock<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
-					DeferredRegisters.TILE_CHARGER, BlockMachineMultiblock.CHARGER_NODES));
+			() -> new BlockAndroidChargerParent<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
+					DeferredRegisters.TILE_CHARGER));
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
@@ -138,8 +142,17 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
 			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER,
 					DeferredRegisters.TILE_TRANSPORTER));
-	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(TypeMachine.SPACETIME_ACCELERATOR.id(),
-			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(
+			TypeMachine.SPACETIME_ACCELERATOR.id(),
+			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
+					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
+			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
+			TypeMatterNetworkCable.values());
+	public static final RegistryObject<Block> BLOCK_NETWORK_POWER_SUPPLY = registerBlock(
+			TypeMachine.NETWORK_POWER_SUPPLY.id(),
+			() -> new BlockMachine<TileNetworkPowerSupply>(TileNetworkPowerSupply::new,
+					TypeMachine.NETWORK_POWER_SUPPLY, DeferredRegisters.TILE_NETWORK_POWER_SUPPLY));
 
 	/* ITEMS */
 
@@ -171,7 +184,8 @@ public class DeferredRegisters {
 			battery -> ITEMS.register(((BatteryType) battery).id(), () -> new ItemBattery((BatteryType) battery)),
 			BatteryType.values());
 	public static final BulkRegister<Item> ITEM_MATTER_CONTAINERS = bulkItem(
-			container -> ITEMS.register(container.id(), () -> new ItemMatterContainer((ContainerType)container)), ContainerType.values());
+			container -> ITEMS.register(container.id(), () -> new ItemMatterContainer((ContainerType) container)),
+			ContainerType.values());
 	public static final BulkRegister<Item> ITEM_ISOLINEAR_CIRCUITS = bulkItem(
 			circuit -> ITEMS.register(((TypeIsolinearCircuit) circuit).id(),
 					() -> new Item(new Item.Properties().tab(References.MAIN))),
@@ -193,9 +207,6 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterRecycler>> TILE_MATTER_RECYCLER = TILES.register(
 			TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockEntityType<>(TileMatterRecycler::new, Sets.newHashSet(BLOCK_MATTER_RECYCLER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMultiSubnode>> TILE_MULTI_SUBNODE = TILES.register(
-			"multisubnode",
-			() -> new BlockEntityType<>(TileMultiSubnode::new, Sets.newHashSet(BLOCK_MULTI_SUBNODE.get()), null));
 	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(
 			TypeMachine.CHARGER.id(),
 			() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
@@ -214,6 +225,12 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileSpacetimeAccelerator>> TILE_SPACETIME_ACCELERATOR = TILES
 			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new BlockEntityType<>(TileSpacetimeAccelerator::new,
 					Sets.newHashSet(BLOCK_SPACETIME_ACCELERATOR.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterNetworkCable>> TILE_MATTER_NETWORK_CABLE = TILES
+			.register("network_cable", () -> new BlockEntityType<>(TileMatterNetworkCable::new,
+					Sets.newHashSet(BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0])), null));
+	public static final RegistryObject<BlockEntityType<TileNetworkPowerSupply>> TILE_NETWORK_POWER_SUPPLY = TILES
+			.register(TypeMachine.NETWORK_POWER_SUPPLY.id(),
+				() -> new BlockEntityType<>(TileNetworkPowerSupply::new, Sets.newHashSet(BLOCK_NETWORK_POWER_SUPPLY.get()), null));
 
 	/* MENUS */
 
@@ -235,12 +252,14 @@ public class DeferredRegisters {
 			.register(TypeMachine.TRANSPORTER.id(), () -> new MenuType<>(InventoryTransporter::new));
 	public static final RegistryObject<MenuType<InventorySpacetimeAccelerator>> MENU_SPACETIME_ACCELERATOR = CONTAINERS
 			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new MenuType<>(InventorySpacetimeAccelerator::new));
+	public static final RegistryObject<MenuType<InventoryNetworkPowerSupply>> MENU_NETWORK_POWER_SUPPLY = CONTAINERS
+			.register(TypeMachine.NETWORK_POWER_SUPPLY.id(), () -> new MenuType<>(InventoryNetworkPowerSupply::new));
 
 	/* Particles */
 
 	public static final RegistryObject<ParticleOptionReplicator> PARTICLE_REPLICATOR = PARTICLES.register("replicator",
 			() -> new ParticleOptionReplicator());
-	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave", 
+	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave",
 			() -> new ParticleOptionShockwave());
 
 	// Functional Methods

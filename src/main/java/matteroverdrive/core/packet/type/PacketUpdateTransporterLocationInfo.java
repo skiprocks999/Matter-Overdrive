@@ -55,23 +55,27 @@ public class PacketUpdateTransporterLocationInfo {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.transporterPos);
 				if (tile instanceof TileTransporter transporter) {
-					TransporterLocationWrapper wrapper = transporter.getServerLocations()[message.destinationIndex];
+					TransporterLocationWrapper wrapper; 
 					switch(message.packetType) {
 					case UPDATE_INDEX:
 						transporter.setDestination(message.destinationIndex);
 						break;
 					case RESET_DESTINATION:
+						wrapper = transporter.getServerLocations()[message.destinationIndex];
 						wrapper.setDestination(new BlockPos(0, -1000, 0));
 						wrapper.setName(TransporterLocationWrapper.DEFAULT_NAME.getContents());
 						wrapper.setDimension(null);
 						break;
 					case UPDATE_DESTINATION:
+						wrapper = transporter.getServerLocations()[message.destinationIndex];
 						wrapper.setDestination(message.newDestination);
 						break;
 					case UPDATE_NAME:
+						wrapper = transporter.getServerLocations()[message.destinationIndex];
 						wrapper.setName(message.newName);
 						break;
 					case UPDATE_DEST_AND_DIM:
+						wrapper = transporter.getServerLocations()[message.destinationIndex];
 						wrapper.setDestination(message.newDestination);
 						wrapper.setDimension(message.newDimension);
 						break;

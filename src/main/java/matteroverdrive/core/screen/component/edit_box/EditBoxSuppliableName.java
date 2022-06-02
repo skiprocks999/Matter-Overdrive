@@ -4,15 +4,15 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.GenericScreen;
 
 public class EditBoxSuppliableName extends EditBoxOverdrive {
 
 	private Supplier<String> suppliedText;
 	private boolean firstRender = true;
 
-	public EditBoxSuppliableName(int pX, int pY, int pWidth, int pHeight, IScreenWrapper gui, Supplier<String> text) {
-		super(pX, pY, pWidth, pHeight, gui);
+	public EditBoxSuppliableName(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<String> text) {
+		super(gui, x, y, width, height);
 		suppliedText = text;
 	}
 

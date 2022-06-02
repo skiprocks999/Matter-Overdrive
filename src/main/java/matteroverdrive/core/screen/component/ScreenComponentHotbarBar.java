@@ -1,33 +1,27 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.resources.ResourceLocation;
 
-public class ScreenComponentHotbarBar extends ScreenComponent {
+public class ScreenComponentHotbarBar extends OverdriveScreenComponent {
 
-	private final int height = 5;
-	private final int width = 169;
+	private static final int HEIGHT = 5;
+	private static final int WIDTH = 169;
 
-	public ScreenComponentHotbarBar(final IScreenWrapper gui, final int x, final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y, screenNumbers);
+	public ScreenComponentHotbarBar(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers) {
+		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y, 
+				WIDTH, HEIGHT, screenNumbers);
 	}
 
 	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, width, height);
-	}
-
-	@Override
-	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, 0, 0, width, height);
+		blit(stack, this.x, this.y, 0, 0, this.width, this.height);
 	}
 
 }

@@ -58,9 +58,9 @@ public class Ticker {
 		if (tickServer != null) {
 			tickServer.accept(this);
 		}
-		if (ticks % 2 == 0 && owner.hasRenderPacketHandler) {
-			owner.getRenderPacketHandler().sendCustomPacket(null);
-		}
+		//if (ticks % 2 == 0 && owner.hasRenderPacketHandler) {
+		//	owner.getRenderPacketHandler().sendCustomPacket(null);
+		//}
 	}
 
 	public void tickClient() {

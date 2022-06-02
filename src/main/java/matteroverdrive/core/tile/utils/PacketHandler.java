@@ -61,6 +61,7 @@ public class PacketHandler {
 	}
 
 	public void sendCustomPacket(@Nullable Player player) {
+		/*
 		PacketUpdateTile packet = new PacketUpdateTile(this, owner.getBlockPos(), new CompoundTag(), isGuiPacket);
 		if (player != null && player instanceof ServerPlayer server) {
 			NetworkHandler.CHANNEL.sendTo(packet, server.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
@@ -74,6 +75,7 @@ public class PacketHandler {
 				});
 			}
 		}
+		*/
 	}
 
 }

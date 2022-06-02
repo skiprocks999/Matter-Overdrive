@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "matteroverdrive:block/network_power_supply"
+    }
+  }
+}

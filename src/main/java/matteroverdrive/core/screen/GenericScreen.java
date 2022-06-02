@@ -1,4 +1,3 @@
-// Modified variant of class by AurilisDev https://github.com/aurilisdev/Electrodynamics
 package matteroverdrive.core.screen;
 
 import java.util.ArrayList;
@@ -12,24 +11,22 @@ import matteroverdrive.core.inventory.slot.IToggleableSlot;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentSlot;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
-import matteroverdrive.core.screen.component.utils.IGuiComponent;
+import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T>
-		implements IScreenWrapper {
+public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> {
 
-	protected ResourceLocation defaultBackground = new ResourceLocation(
+	protected static final ResourceLocation DEFAULT_BACKGROUND = new ResourceLocation(
 			References.ID + ":textures/gui/base/base_gui.png");
-	protected List<IGuiComponent> components = new ArrayList<>();
+	private List<OverdriveScreenComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
 
 	private static final int OFFSET = 37;
@@ -40,14 +37,15 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	public GenericScreen(T menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 		setScreenParams();
-		updateSlotActivity(getScreenNumber());
-		initializeComponents();
 	}
-
-	protected void initializeComponents() {
+	
+	@Override
+	protected void init() {
+		super.init();
 		for (Slot slot : menu.slots) {
-			components.add(createScreenSlot(slot));
+			addScreenComponent(createScreenSlot(slot));
 		}
+		updateComponentActivity(getScreenNumber());
 	}
 
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
@@ -64,6 +62,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
+		updateComponentActivity(getScreenNumber());
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		renderTooltip(matrixStack, mouseX, mouseY);
 	}
@@ -74,87 +73,14 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		float offset = (144.0F - length) / 2.0F;
 		this.font.draw(stack, this.title, (float) this.titleLabelX + 3 + offset, (float) this.titleLabelY + 1,
 				UtilsRendering.TITLE_BLUE);
-		int xAxis = x - (width - imageWidth) / 2;
-		int yAxis = y - (height - imageHeight) / 2;
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.renderForeground(stack, xAxis, yAxis);
-			}
-		}
 	}
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTick, int x, int y) {
-		UtilsRendering.bindTexture(defaultBackground);
+		UtilsRendering.bindTexture(DEFAULT_BACKGROUND);
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
 		blit(stack, guiWidth, guiHeight, 0, 0, imageWidth, imageHeight);
-		int xAxis = x - guiWidth;
-		int yAxis = y - guiHeight;
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.renderBackground(stack, xAxis, yAxis, guiWidth, guiHeight);
-			}
-		}
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		double xAxis = x - (width - imageWidth) / 2.0;
-		double yAxis = y - (height - imageHeight) / 2.0;
-
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.preMouseClicked(xAxis, yAxis, button);
-			}
-		}
-
-		boolean ret = super.mouseClicked(x, y, button);
-
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.mouseClicked(xAxis, yAxis, button);
-			}
-		}
-		return ret;
-	}
-
-	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-		double xAxis = mouseX - (width - imageWidth) / 2.0;
-		double yAxis = mouseY - (height - imageHeight) / 2.0;
-
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.mouseClicked(xAxis, yAxis, button);
-			}
-		}
-		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-	}
-
-	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		boolean ret = super.mouseReleased(mouseX, mouseY, button);
-
-		double xAxis = mouseX - (width - imageWidth) / 2.0;
-		double yAxis = mouseY - (height - imageHeight) / 2.0;
-
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.mouseReleased(xAxis, yAxis, button);
-			}
-		}
-		return ret;
-	}
-
-	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		for (IGuiComponent component : components) {
-			if (component.matchesScreenNumber(getScreenNumber())) {
-				component.mouseWheel(mouseX, mouseY, delta);
-			}
-		}
-		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
 
 	public int getXPos() {
@@ -165,51 +91,40 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		return (height - imageHeight) / 2;
 	}
 
-	@Override
-	public void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h) {
-		blit(stack, x, y, u, v, w, h);
-	}
-
-	@Override
-	public void drawTexturedRect(PoseStack stack, int x, int y, int u, int v, int w, int h, int tW, int tH) {
-		blit(stack, x, y, getBlitOffset(), u, v, w, h, tW, tH);
-	}
-
-	@Override
-	public void drawTexturedRectFromIcon(PoseStack stack, int x, int y, TextureAtlasSprite icon, int w, int h, int tW,
-			int tH) {
-		blit(stack, x, y, (int) (icon.getU0() * icon.getWidth()), (int) (icon.getV0() * icon.getHeight()), w, h, tH,
-				tW);
-	}
-
-	@Override
-	public void displayTooltip(PoseStack stack, Component text, int xAxis, int yAxis) {
-		this.renderTooltip(stack, text, xAxis, yAxis);
-	}
-
-	@Override
-	public void displayTooltips(PoseStack stack, List<? extends FormattedCharSequence> tooltips, int xAxis, int yAxis) {
-		super.renderTooltip(stack, tooltips, xAxis, yAxis, font);
-	}
-
-	@Override
 	public Font getFontRenderer() {
 		return font;
 	}
 
-	@Override
 	public int[] getAxisAndGuiWidth(int mouseX, int mouseY) {
 		int guiWidth = (width - imageWidth) / 2;
 		int guiHeight = (height - imageHeight) / 2;
 		return new int[] { guiWidth, guiHeight, mouseX - guiWidth, mouseY - guiHeight };
 	}
 
-	public void updateSlotActivity(int screenNum) {
+	public void updateComponentActivity(int screenNum) {
+		for (OverdriveScreenComponent component : components) {
+			component.updateVisiblity(screenNum);
+		}
 		for (Slot slot : menu.slots) {
 			if (slot instanceof IToggleableSlot toggle) {
 				toggle.setActive(toggle.isScreenNumber(screenNum));
 			}
 		}
+	}
+	
+	public void addScreenComponent(OverdriveScreenComponent component) {
+		component.initScreenSize();
+		components.add(component);
+		addRenderableOnly(component);
+	}
+	
+	public void addButton(AbstractOverdriveButton button) {
+		button.initScreenSize();
+		addRenderableWidget(button);
+	}
+	
+	public void addEditBox(EditBoxOverdrive box) {
+		addRenderableWidget(box);
 	}
 
 	public void setScreenParams() {
@@ -228,9 +143,5 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	public abstract int getScreenNumber();
-	
-	public void addExternalWidget(AbstractWidget widget) {
-		addRenderableWidget(widget);
-	}
 
 }

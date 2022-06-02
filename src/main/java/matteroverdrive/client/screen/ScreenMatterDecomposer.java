@@ -61,84 +61,20 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 
 	public ScreenMatterDecomposer(InventoryMatterDecomposer menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
-		components.add(new ScreenComponentProgress(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
-			}
-			return 0;
-		}, this, 33, 48, new int[] { 0 }));
-		components.add(new ScreenComponentCharge(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null && matter.clientRunning) {
-				return matter.getCurrentPowerUsage(true);
-			}
-			return 0;
-		}, this, 167, 35, new int[] { 0 }));
-		components.add(new ScreenComponentCharge(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientMatter.getMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientMatter.getMaxMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null && matter.clientRunning) {
-				return matter.clientRecipeValue;
-			}
-			return 0;
-		}, this, 95, 35, new int[] { 0 }).setGenerator().setMatter());
-		components.add(new ScreenComponentIndicator(() -> {
-			TileMatterDecomposer matter = menu.getTile();
-			if (matter != null) {
-				return matter.clientRunning;
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
-				UtilsRendering.TEXT_BLUE));
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		int guiWidth = (width - imageWidth) / 2;
-		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
-		}, this);
-		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
+		});
+		home = new ButtonMenuOption(this, 217, FIRST_HEIGHT, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -154,7 +90,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
@@ -170,7 +106,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 2, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -186,7 +122,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
+		ioconfig = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 3, button -> {
 			updateScreen(3);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -202,7 +138,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
@@ -214,7 +150,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return 0;
 		});
-		items = new ButtonIOConfig(guiWidth + 48, guiHeight + 32, button -> {
+		items = new ButtonIOConfig(this, 48, 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -225,7 +161,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
 		}, IOConfigButtonType.ITEM);
-		energy = new ButtonIOConfig(guiWidth + 48, guiHeight + 72, button -> {
+		energy = new ButtonIOConfig(this, 48, 72, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -236,7 +172,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			energyWrapper.showButtons();
 			matterWrapper.hideButtons();
 		}, IOConfigButtonType.ENERGY);
-		matter = new ButtonIOConfig(guiWidth + 48, guiHeight + 112, button -> {
+		matter = new ButtonIOConfig(this, 48, 112, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -248,7 +184,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			matterWrapper.showButtons();
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientInventory.getInputDirections();
@@ -279,7 +215,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientEnergy.getInputDirections();
@@ -310,7 +246,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
-		matterWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
 				return matter.clientMatter.getInputDirections();
@@ -346,24 +282,24 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		energyWrapper.initButtons();
 		matterWrapper.initButtons();
 
-		addRenderableWidget(close);
-		addRenderableWidget(menu);
-		addRenderableWidget(home);
-		addRenderableWidget(settings);
-		addRenderableWidget(upgrades);
-		addRenderableWidget(redstone);
-		addRenderableWidget(ioconfig);
-		addRenderableWidget(items);
-		addRenderableWidget(energy);
-		addRenderableWidget(matter);
+		addButton(close);
+		addButton(menu);
+		addButton(home);
+		addButton(settings);
+		addButton(upgrades);
+		addButton(redstone);
+		addButton(ioconfig);
+		addButton(items);
+		addButton(energy);
+		addButton(matter);
 		for (ButtonIO button : itemWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 		for (ButtonIO button : energyWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 		for (ButtonIO button : matterWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 
 		redstone.visible = false;
@@ -373,6 +309,70 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
+		
+		addScreenComponent(new ScreenComponentProgress(() -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
+			}
+			return 0;
+		}, this, 33, 48, new int[] { 0 }));
+		addScreenComponent(new ScreenComponentCharge(() -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.getEnergyStored();
+			}
+			return 0;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientEnergy.getMaxEnergyStored();
+			}
+			return 0;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null && matter.clientRunning) {
+				return matter.getCurrentPowerUsage(true);
+			}
+			return 0;
+		}, this, 167, 35, new int[] { 0 }));
+		addScreenComponent(new ScreenComponentCharge(() -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.getMatterStored();
+			}
+			return 0;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientMatter.getMaxMatterStored();
+			}
+			return 0;
+		}, () -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null && matter.clientRunning) {
+				return matter.clientRecipeValue;
+			}
+			return 0;
+		}, this, 95, 35, new int[] { 0 }).setGenerator().setMatter());
+		addScreenComponent(new ScreenComponentIndicator(() -> {
+			TileMatterDecomposer matter = getMenu().getTile();
+			if (matter != null) {
+				return matter.clientRunning;
+			}
+			return false;
+		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
+				UtilsRendering.TEXT_BLUE));
+		
 	}
 
 	private void toggleBarOpen() {
@@ -381,7 +381,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 
 	private void updateScreen(int screenNumber) {
 		this.screenNumber = screenNumber;
-		updateSlotActivity(this.screenNumber);
+		updateComponentActivity(screenNumber);
 	}
 
 	@Override

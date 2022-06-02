@@ -165,6 +165,15 @@ public class UtilsTile {
 			}
 		}
 	}
+	
+	public static boolean isFEReciever(BlockEntity acceptor, Direction dir) {
+		if (acceptor != null) {
+			if (acceptor.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static boolean adjacentRedstoneSignal(GenericTile tile) {
 		return tile.getLevel().hasNeighborSignal(tile.getBlockPos());

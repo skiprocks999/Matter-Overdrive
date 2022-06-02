@@ -8,15 +8,15 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
+import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.core.block.WaterloggableEntityBlock;
 import matteroverdrive.core.cable.api.EnumConnectType;
 import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
 import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
-import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -26,7 +26,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -39,6 +38,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockMatterNetworkCable extends WaterloggableEntityBlock {
+	
 	public static final Map<Direction, EnumProperty<EnumConnectType>> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), p -> {
 		p.put(Direction.NORTH, EnumConnectType.NORTH);
 		p.put(Direction.EAST, EnumConnectType.EAST);
@@ -61,9 +61,11 @@ public class BlockMatterNetworkCable extends WaterloggableEntityBlock {
 	protected HashMap<HashSet<Direction>, VoxelShape> shapestates = new HashMap<>();
 	protected boolean locked = false;
 
-	public BlockMatterNetworkCable() {
+	public TypeMatterNetworkCable cable;
+	
+	public BlockMatterNetworkCable(TypeMatterNetworkCable cable) {
 		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.15f).dynamicShape());
-		double w = 3;
+		double w = 2.5;
 		double sm = 8 - w;
 		double lg = 8 + w;
 		cube = Block.box(sm, sm, sm, lg, lg, lg);
@@ -74,6 +76,7 @@ public class BlockMatterNetworkCable extends WaterloggableEntityBlock {
 		cubewest = Block.box(0, sm, sm, lg, lg, lg);
 		cubeeast = Block.box(sm, sm, sm, 16, lg, lg);
 		WIRESET.add(this);
+		this.cable = cable;
 	}
 
 	@Override
@@ -216,6 +219,6 @@ public class BlockMatterNetworkCable extends WaterloggableEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new TileWire(pos, state);
+		return new TileMatterNetworkCable(pos, state);
 	}
 }
