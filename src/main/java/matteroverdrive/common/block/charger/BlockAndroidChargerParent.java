@@ -59,7 +59,7 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
 		
-		if(!state.hasProperty(FACING) && !level.isClientSide) {
+		if(!newState.hasProperty(FACING) && !level.isClientSide) {
 			level.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.offset(0, 2, 0), Blocks.AIR.defaultBlockState());
 		}
