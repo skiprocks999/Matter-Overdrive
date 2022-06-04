@@ -51,7 +51,7 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 	@Override
 	public TypeMatterNetworkCable getConductorType() {
 		if (cable == null) {
-			cable = ((BlockMatterNetworkCable) getBlockState().getBlock()).cable;
+			cable = ((BlockMatterNetworkCable) getBlockState().getBlock()).type;
 		}
 		return cable;
 	}

@@ -2,8 +2,8 @@ package matteroverdrive.core.utils;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.cable.BlockMatterConduit;
+import matteroverdrive.common.block.states.OverdriveBlockStates.CableConnectionType;
 import matteroverdrive.common.tile.TileMatterConduit;
-import matteroverdrive.core.cable.api.EnumConnectType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
@@ -119,11 +119,11 @@ public class UtilsMatter {
 			conduit.refreshNetworkIfChange();
 			BlockState state = world.getBlockState(offset);
 			if (UtilsMatter.isMatterReceiver(tile, dir)) {
-				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()),
-						EnumConnectType.INVENTORY);
+				state = state.setValue(BlockMatterConduit.DIRECTION_TO_PROPERTY_MAP.get(dir.getOpposite()),
+						CableConnectionType.INVENTORY);
 			} else {
-				state = state.setValue(BlockMatterConduit.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()),
-						EnumConnectType.NONE);
+				state = state.setValue(BlockMatterConduit.DIRECTION_TO_PROPERTY_MAP.get(dir.getOpposite()),
+						CableConnectionType.NONE);
 			}
 			world.setBlockAndUpdate(offset, state);
 		});

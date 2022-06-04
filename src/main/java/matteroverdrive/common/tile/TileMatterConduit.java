@@ -225,7 +225,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	@Override
 	public TypeMatterConduit getMatterConduitType() {
 		if (pipe == null) {
-			pipe = ((BlockMatterConduit) getBlockState().getBlock()).matterConduit;
+			pipe = ((BlockMatterConduit) getBlockState().getBlock()).type;
 		}
 		return pipe;
 	}

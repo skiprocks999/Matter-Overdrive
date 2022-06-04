@@ -3,11 +3,11 @@ package matteroverdrive.common.block.charger;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
+import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -47,10 +47,10 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 			Direction facing = state.getValue(FACING);
 			BlockState middle = DeferredRegisters.BLOCK_MULTI_SUBNODE.get().defaultBlockState();
 			BlockState top = DeferredRegisters.BLOCK_MULTI_SUBNODE.get().defaultBlockState();
-			middle.setValue(BlockAndroidChargerChild.FACING, facing);
-			middle.setValue(OverdriveBlockStates.CHARGER_POS, Position.MIDDLE);
-			top.setValue(BlockAndroidChargerChild.FACING, facing);
-			top.setValue(OverdriveBlockStates.CHARGER_POS, Position.TOP);
+			middle = middle.setValue(BlockAndroidChargerChild.FACING, facing);
+			middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
+			top = top.setValue(BlockAndroidChargerChild.FACING, facing);
+			top = top.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.TOP);
 			world.setBlockAndUpdate(pos.offset(0, 1, 0), middle);
 			world.setBlockAndUpdate(pos.offset(0, 2, 0), top);
 		}
@@ -80,15 +80,6 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 		}
 		return super.rotate(state, level, pos, rot);
-	}
-	
-	public enum Position implements StringRepresentable {
-		BOTTOM, MIDDLE, TOP;
-
-		@Override
-		public String getSerializedName() {
-			return name().toLowerCase();
-		}
 	}
 
 }
