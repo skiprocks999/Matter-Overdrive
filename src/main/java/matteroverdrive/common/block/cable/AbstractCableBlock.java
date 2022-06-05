@@ -108,8 +108,8 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		
 		HashSet<Direction> checkedDirs = new HashSet<>();
 		for(EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
-			if (!CableConnectionType.NONE.equals(state.getValue(checkState)) && !CableConnectionType.NONE_SEAMLESS.equals(state.getValue(checkState))
-					&& !CableConnectionType.IGNORED.equals(state.getValue(checkState))) {
+			CableConnectionType type = state.getValue(checkState);
+			if (type == CableConnectionType.CABLE || type == CableConnectionType.INVENTORY) {
 				checkedDirs.add(PROPERTY_TO_DIRECTION_MAP.get(checkState));
 			}
 		}
@@ -119,7 +119,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		}
 		
 		for (Direction dir : checkedDirs) {
-			Shapes.join(shape, DIRECTION_TO_SHAPE_MAP.get(dir), BooleanOp.OR);
+			shape = Shapes.or(shape, DIRECTION_TO_SHAPE_MAP.get(dir));
 		}
 		
 		shapestates.put(checkedDirs, shape);
