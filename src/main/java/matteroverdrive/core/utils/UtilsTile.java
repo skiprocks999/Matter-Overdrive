@@ -94,7 +94,7 @@ public class UtilsTile {
 			CapabilityMatterStorage matter = tile.exposeCapability(CapabilityType.Matter);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
-			if (matter.canExtract()) {
+			if (matter.canExtract() && matter.getMatterStored() > 0) {
 				if (matter.isSided()) {
 					Direction facing = tile.getFacing();
 					HashSet<Direction> directions = matter.getOutputDirections();

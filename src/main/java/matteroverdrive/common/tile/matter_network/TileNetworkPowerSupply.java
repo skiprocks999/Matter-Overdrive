@@ -3,10 +3,10 @@ package matteroverdrive.common.tile.matter_network;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
@@ -46,24 +46,7 @@ public class TileNetworkPowerSupply extends GenericUpgradableTile implements IMa
 	
 	@Override
 	public void tickServer() {
-		if(canRun()) {
-			running = true;
-			UtilsTile.drainElectricSlot(this);
-			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-			if(energy.getEnergyStored() > 0) {
-				Level world = getLevel();
-				BlockPos pos = getBlockPos();
-				BlockEntity entity;
-				for(Direction dir : Direction.values()) {
-					entity = world.getBlockEntity(pos.relative(dir));
-					if(entity != null && entity instanceof TileMatterNetworkCable cable && energy.getEnergyStored() > 0) {
-						usagePerTick = energy.removeEnergy(cable.sendToNetwork(energy.getEnergyStored(), 0, this, false).fe());
-					}
-				}
-			}
-		} else {
-			running = false;
-		}
+		
 	}
 	
 	@Override

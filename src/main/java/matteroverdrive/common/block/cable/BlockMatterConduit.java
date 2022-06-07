@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.tile.TileMatterConduit;
-import matteroverdrive.core.cable.types.matter_pipe.IMatterConduit;
+import matteroverdrive.core.network.cable.utils.IMatterConduit;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,8 +36,8 @@ public class BlockMatterConduit extends AbstractCableBlock {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (!worldIn.isClientSide) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (tile instanceof IMatterConduit p) {
-				p.refreshNetwork();
+			if (tile instanceof IMatterConduit conduit) {
+				conduit.refreshNetwork();
 			}
 		}
 	}
@@ -47,8 +47,8 @@ public class BlockMatterConduit extends AbstractCableBlock {
 		super.onNeighborChange(state, world, pos, neighbor);
 		if (!world.isClientSide()) {
 			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile instanceof IMatterConduit p) {
-				p.refreshNetworkIfChange();
+			if (tile instanceof IMatterConduit conduit) {
+				conduit.refreshNetworkIfChange();
 			}
 		}
 	}

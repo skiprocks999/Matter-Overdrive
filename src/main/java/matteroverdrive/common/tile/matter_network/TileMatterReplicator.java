@@ -1,6 +1,6 @@
 package matteroverdrive.common.tile.matter_network;
 
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
+import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

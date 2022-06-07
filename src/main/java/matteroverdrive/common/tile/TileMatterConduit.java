@@ -12,10 +12,10 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.cable.BlockMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.cable_network.MatterConduitNetwork;
-import matteroverdrive.core.cable.AbstractNetwork;
-import matteroverdrive.core.cable.types.matter_pipe.IMatterConduit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
+import matteroverdrive.core.network.AbstractNetwork;
+import matteroverdrive.core.network.cable.utils.IMatterConduit;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.misc.Scheduler;
@@ -86,11 +86,6 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public AbstractNetwork<?, ?, ?, ?> getAbstractNetwork() {
-		return conduitNetwork;
-	}
-
 	private HashSet<IMatterConduit> getConnectedConductors() {
 		HashSet<IMatterConduit> set = new HashSet<>();
 		for (Direction dir : Direction.values()) {
@@ -103,18 +98,14 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	}
 
 	@Override
-	public MatterConduitNetwork getNetwork() {
-		return getNetwork(true);
-	}
-
-	@Override
 	public MatterConduitNetwork getNetwork(boolean createIfNull) {
 		if (conduitNetwork == null && createIfNull) {
 			HashSet<IMatterConduit> adjacentCables = getConnectedConductors();
 			HashSet<MatterConduitNetwork> connectedNets = new HashSet<>();
 			for (IMatterConduit wire : adjacentCables) {
-				if (wire.getNetwork(false) != null && wire.getNetwork() instanceof MatterConduitNetwork f) {
-					connectedNets.add(f);
+				MatterConduitNetwork network = wire.getNetwork(false);
+				if (network != null) {
+					connectedNets.add(network);
 				}
 			}
 			if (connectedNets.isEmpty()) {
@@ -132,10 +123,10 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	}
 
 	@Override
-	public void setNetwork(AbstractNetwork<?, ?, ?, ?> network) {
-		if (conduitNetwork != network && network instanceof MatterConduitNetwork f) {
+	public void setNetwork(AbstractNetwork<?, ?, ?> network) {
+		if (conduitNetwork != network) {
 			removeFromNetwork();
-			conduitNetwork = f;
+			conduitNetwork = (MatterConduitNetwork) network;
 		}
 	}
 
@@ -146,8 +137,8 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 			ArrayList<MatterConduitNetwork> foundNetworks = new ArrayList<>();
 			for (Direction dir : Direction.values()) {
 				BlockEntity facing = level.getBlockEntity(new BlockPos(worldPosition).relative(dir));
-				if (facing instanceof IMatterConduit p && p.getNetwork() instanceof MatterConduitNetwork n) {
-					foundNetworks.add(n);
+				if (facing instanceof IMatterConduit conduit) {
+					foundNetworks.add(conduit.getNetwork());
 				}
 			}
 			if (!foundNetworks.isEmpty()) {
@@ -221,9 +212,9 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 		super.onLoad();
 		Scheduler.schedule(1, this::refreshNetwork);
 	}
-
+	
 	@Override
-	public TypeMatterConduit getMatterConduitType() {
+	public TypeMatterConduit getConductorType() {
 		if (pipe == null) {
 			pipe = ((BlockMatterConduit) getBlockState().getBlock()).type;
 		}
@@ -232,7 +223,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 
 	@Override
 	public void saveAdditional(CompoundTag compound) {
-		compound.putInt("ord", getMatterConduitType().ordinal());
+		compound.putInt("ord", getConductorType().ordinal());
 		super.saveAdditional(compound);
 	}
 
@@ -240,6 +231,11 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		pipe = TypeMatterConduit.values()[compound.getInt("ord")];
+	}
+
+	@Override
+	public double getMaxTransfer() {
+		return getConductorType().capacity;
 	}
 
 }

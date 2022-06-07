@@ -2,7 +2,6 @@ package matteroverdrive.common.cable_network;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,20 +14,17 @@ import matteroverdrive.common.tile.matter_network.TileMatterTank;
 import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
 import matteroverdrive.common.tile.matter_network.TilePatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.core.cable.AbstractNetwork;
-import matteroverdrive.core.cable.CableNetworkRegistry;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
-import matteroverdrive.core.cable.types.matter_network.MatterNetworkEMPack;
-import matteroverdrive.core.cable.types.matter_network.MatterNetworkUtils;
+import matteroverdrive.core.network.AbstractNetwork;
+import matteroverdrive.core.network.CableNetworkRegistry;
+import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
+import matteroverdrive.core.network.cable.utils.INetworkCable;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterNetwork
-		extends AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> {
+public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> {
 
 	private List<TileMatterAnalyzer> analyzers = new ArrayList<>();
 	private List<TileMatterReplicator> replicators = new ArrayList<>();
@@ -37,21 +33,18 @@ public class MatterNetwork
 	private List<TileMatterTank> matterTanks = new ArrayList<>();
 	private List<TileNetworkPowerSupply> powerSupplies = new ArrayList<>();
 
-	private int feTransmittedThisTick = 0;
-	private int feTransmittedLastTick = 0;
-
 	public MatterNetwork() {
-		this(new HashSet<IMatterNetworkCable>());
+		this(new HashSet<INetworkCable>());
 	}
 
-	public MatterNetwork(Collection<? extends IMatterNetworkCable> varCables) {
+	public MatterNetwork(Collection<? extends INetworkCable> varCables) {
 		conductorSet.addAll(varCables);
 		CableNetworkRegistry.register(this);
 	}
 
 	public MatterNetwork(
-			Set<AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack>> networks) {
-		for (AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> net : networks) {
+			Set<AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity>> networks) {
+		for (AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> net : networks) {
 			if (net != null) {
 				conductorSet.addAll(net.conductorSet);
 				net.deregister();
@@ -72,75 +65,6 @@ public class MatterNetwork
 		CableNetworkRegistry.register(this);
 	}
 
-	@Override
-	public MatterNetworkEMPack emit(MatterNetworkEMPack maxTransfer, ArrayList<BlockEntity> ignored,
-			boolean debug) {
-		if (maxTransfer.fe() > 0 || maxTransfer.matter() > 0) {
-			Set<BlockEntity> availableAcceptors = getNetworkAcceptors();
-			double matterSent = 0;
-			int feSent = 0;
-			availableAcceptors.removeAll(ignored);
-			if (!availableAcceptors.isEmpty()) {
-				Iterator<BlockEntity> it = availableAcceptors.iterator();
-				double totalMatterUsage = 0;
-				int totalFEUsage = 0;
-				HashMap<BlockEntity, MatterNetworkEMPack> usage = new HashMap<>();
-				while (it.hasNext()) {
-					BlockEntity receiver = it.next();
-					double localMatterUsage = 0;
-					int localFEUsage = 0;
-					if (acceptorInputMap.containsKey(receiver)) {
-						boolean shouldRemove = true;
-						for (Direction connection : acceptorInputMap.get(receiver)) {
-							MatterNetworkEMPack pack = MatterNetworkUtils.recieveEM(receiver, connection, maxTransfer,
-									true);
-							if (pack.fe() > 0 || pack.matter() > 0) {
-								shouldRemove = false;
-								totalMatterUsage += pack.matter();
-								totalFEUsage += pack.fe();
-								localMatterUsage += pack.matter();
-								localFEUsage += pack.fe();
-								break;
-							}
-						}
-						if (shouldRemove) {
-							it.remove();
-						}
-					}
-					usage.put(receiver, new MatterNetworkEMPack(localFEUsage, localMatterUsage));
-				}
-				for (BlockEntity receiver : availableAcceptors) {
-					MatterNetworkEMPack recieved = usage.get(receiver);
-					int dedicatedFe = totalFEUsage > 0
-							? (int) (maxTransfer.fe() * ((double) recieved.fe() / (double) totalFEUsage))
-							: 0;
-					double dedicatedMatter = totalMatterUsage > 0
-							? maxTransfer.matter() * (recieved.matter() / totalMatterUsage)
-							: 0;
-					MatterNetworkEMPack dedicated = new MatterNetworkEMPack(dedicatedFe, dedicatedMatter);
-					if (acceptorInputMap.containsKey(receiver)) {
-						double size = acceptorInputMap.get(receiver).size();
-						MatterNetworkEMPack perConnection = new MatterNetworkEMPack(
-								(int) ((double) dedicated.fe() / size), dedicated.matter() / size);
-						for (Direction connection : acceptorInputMap.get(receiver)) {
-							MatterNetworkEMPack pack = MatterNetworkUtils.recieveEM(receiver, connection, perConnection,
-									debug);
-							matterSent += pack.matter();
-							feSent += pack.fe();
-							if (!debug) {
-								transmittedThisTick += pack.matter();
-								feTransmittedThisTick += pack.fe();
-							}
-						}
-					}
-				}
-			}
-			return new MatterNetworkEMPack(Math.min(feSent, maxTransfer.fe()),
-					Math.min(matterSent, maxTransfer.matter()));
-		}
-		return MatterNetworkEMPack.EMPTY;
-	}
-
 	public Set<BlockEntity> getNetworkAcceptors() {
 		return new HashSet<>(acceptorSet);
 	}
@@ -148,13 +72,11 @@ public class MatterNetwork
 	@Override
 	public void tick() {
 		super.tick();
-		feTransmittedLastTick = feTransmittedThisTick;
-		feTransmittedThisTick = 0;
 
-		Iterator<IMatterNetworkCable> it = conductorSet.iterator();
+		Iterator<INetworkCable> it = conductorSet.iterator();
 		boolean broken = false;
 		while (it.hasNext()) {
-			IMatterNetworkCable conductor = it.next();
+			INetworkCable conductor = it.next();
 			if (conductor instanceof BlockEntity entity && entity.isRemoved() || conductor.getNetwork() != this) {
 				broken = true;
 				break;
@@ -170,18 +92,18 @@ public class MatterNetwork
 
 	@Override
 	public void refresh() {
-		Iterator<IMatterNetworkCable> it = conductorSet.iterator();
+		Iterator<INetworkCable> it = conductorSet.iterator();
 		acceptorSet.clear();
 		acceptorInputMap.clear();
 		while (it.hasNext()) {
-			IMatterNetworkCable conductor = it.next();
+			INetworkCable conductor = it.next();
 			if (conductor == null || ((BlockEntity) conductor).isRemoved()) {
 				it.remove();
 			} else {
 				conductor.setNetwork(this);
 			}
 		}
-		for (IMatterNetworkCable conductor : conductorSet) {
+		for (INetworkCable conductor : conductorSet) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
@@ -235,7 +157,7 @@ public class MatterNetwork
 
 	@Override
 	public boolean isConductor(BlockEntity tile) {
-		return tile instanceof IMatterNetworkCable;
+		return tile instanceof INetworkCable;
 	}
 
 	@Override
@@ -244,19 +166,19 @@ public class MatterNetwork
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstance() {
+	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstance() {
 		return new MatterNetwork();
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstanceConductor(
-			Set<IMatterNetworkCable> conductors) {
+	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstanceConductor(
+			Set<INetworkCable> conductors) {
 		return new MatterNetwork(conductors);
 	}
 
 	@Override
-	public AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack> createInstance(
-			Set<AbstractNetwork<IMatterNetworkCable, TypeMatterNetworkCable, BlockEntity, MatterNetworkEMPack>> networks) {
+	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstance(
+			Set<AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity>> networks) {
 		return new MatterNetwork(networks);
 
 	}
@@ -270,6 +192,11 @@ public class MatterNetwork
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		Direction opposite = orientation.getOpposite();
 		return UtilsTile.isFEReciever(acceptor, opposite) || UtilsMatter.isMatterReceiver(acceptor, opposite);
+	}
+	
+	@Override
+	public void split(INetworkCable splitPoint) {
+		super.split(splitPoint);
 	}
 
 	public List<TileMatterAnalyzer> getAnalyzers() {

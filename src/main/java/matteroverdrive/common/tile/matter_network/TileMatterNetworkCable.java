@@ -9,10 +9,9 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.cable.BlockMatterNetworkCable;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.cable_network.MatterNetwork;
-import matteroverdrive.core.cable.AbstractNetwork;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
-import matteroverdrive.core.cable.types.matter_network.MatterNetworkEMPack;
+import matteroverdrive.core.network.AbstractNetwork;
+import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
+import matteroverdrive.core.network.cable.utils.INetworkCable;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
@@ -21,31 +20,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileMatterNetworkCable extends GenericTile implements IMatterNetworkCable {
+public class TileMatterNetworkCable extends GenericTile implements INetworkCable {
 
-	public MatterNetwork network;
+	public MatterNetwork matterNetwork;
 	public TypeMatterNetworkCable cable = null;
 	
 	public TileMatterNetworkCable(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_NETWORK_CABLE.get(), pos, state);
 	}
-	
-	public MatterNetworkEMPack sendToNetwork(int fe, double matter, BlockEntity sender ,boolean debug) {
-		ArrayList<BlockEntity> ignored = new ArrayList<>();
-		ignored.add(sender);
-		return getNetwork(true).emit(new MatterNetworkEMPack(fe, matter), ignored, debug);
-	}
 
 	@Override
 	public void removeFromNetwork() {
-		if (network != null) {
-			network.removeFromNetwork(this);
+		if (matterNetwork != null) {
+			matterNetwork.removeFromNetwork(this);
 		}
-	}
-
-	@Override
-	public AbstractNetwork<?, ?, ?, ?> getAbstractNetwork() {
-		return network;
 	}
 
 	@Override
@@ -57,40 +45,36 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 	}
 
 	@Override
-	public MatterNetwork getNetwork() {
-		return getNetwork(true);
-	}
-
-	@Override
 	public MatterNetwork getNetwork(boolean createIfNull) {
-		if (network == null && createIfNull) {
-			HashSet<IMatterNetworkCable> adjacentCables = getConnectedConductors();
+		if (matterNetwork == null && createIfNull) {
+			HashSet<INetworkCable> adjacentCables = getConnectedConductors();
 			HashSet<MatterNetwork> connectedNets = new HashSet<>();
-			for (IMatterNetworkCable wire : adjacentCables) {
-				if (wire.getNetwork(false) != null && wire.getNetwork() instanceof MatterNetwork f) {
-					connectedNets.add(f);
+			for (INetworkCable wire : adjacentCables) {
+				MatterNetwork network = wire.getNetwork(false);
+				if (network != null) {
+					connectedNets.add(network);
 				}
 			}
 			if (connectedNets.isEmpty()) {
-				network = new MatterNetwork(Sets.newHashSet(this));
+				matterNetwork = new MatterNetwork(Sets.newHashSet(this));
 			} else {
 				if (connectedNets.size() == 1) {
-					network = (MatterNetwork) connectedNets.toArray()[0];
+					matterNetwork = (MatterNetwork) connectedNets.toArray()[0];
 				} else {
-					network = new MatterNetwork(connectedNets, false);
+					matterNetwork = new MatterNetwork(connectedNets, false);
 				}
-				network.conductorSet.add(this);
+				matterNetwork.conductorSet.add(this);
 			}
 		}
-		return network;
+		return matterNetwork;
 	}
 	
-	private HashSet<IMatterNetworkCable> getConnectedConductors() {
-		HashSet<IMatterNetworkCable> set = new HashSet<>();
+	private HashSet<INetworkCable> getConnectedConductors() {
+		HashSet<INetworkCable> set = new HashSet<>();
 		for (Direction dir : Direction.values()) {
 			BlockEntity facing = level.getBlockEntity(new BlockPos(worldPosition).relative(dir));
-			if (facing instanceof IMatterNetworkCable p) {
-				set.add(p);
+			if (facing instanceof INetworkCable cable) {
+				set.add(cable);
 			}
 		}
 		return set;
@@ -103,13 +87,13 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 			ArrayList<MatterNetwork> foundNetworks = new ArrayList<>();
 			for (Direction dir : Direction.values()) {
 				BlockEntity facing = level.getBlockEntity(new BlockPos(worldPosition).relative(dir));
-				if (facing instanceof IMatterNetworkCable p && p.getNetwork() instanceof MatterNetwork n) {
-					foundNetworks.add(n);
+				if (facing instanceof INetworkCable cable) {
+					foundNetworks.add(cable.getNetwork());
 				}
 			}
 			if (!foundNetworks.isEmpty()) {
 				foundNetworks.get(0).conductorSet.add(this);
-				network = foundNetworks.get(0);
+				matterNetwork = foundNetworks.get(0);
 				if (foundNetworks.size() > 1) {
 					foundNetworks.remove(0);
 					for (MatterNetwork network : foundNetworks) {
@@ -128,7 +112,7 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 		boolean flag = false;
 		for (Direction dir : Direction.values()) {
 			BlockEntity tile = level.getBlockEntity(worldPosition.relative(dir));
-			boolean is = tile instanceof IMatterNetworkCable || tile instanceof IMatterNetworkMember;
+			boolean is = tile instanceof INetworkCable || tile instanceof IMatterNetworkMember;
 			if (connections[dir.ordinal()] != is) {
 				connections[dir.ordinal()] = is;
 				tileConnections[dir.ordinal()] = tile;
@@ -144,7 +128,6 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 		return tileConnections;
 	}
 
-
 	@Override
 	public void refreshNetworkIfChange() {
 		if (updateAdjacent()) {
@@ -153,16 +136,16 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 	}
 
 	@Override
-	public void setNetwork(AbstractNetwork<?, ?, ?, ?> aNetwork) {
-		if (network != aNetwork && aNetwork instanceof MatterNetwork f) {
+	public void setNetwork(AbstractNetwork<?, ?, ?> network) {
+		if (matterNetwork != network) {
 			removeFromNetwork();
-			network = f;
+			matterNetwork = (MatterNetwork) network;
 		}
 	}
 	
 	@Override
 	public void setRemoved() {
-		if (!level.isClientSide && network != null) {
+		if (!level.isClientSide && matterNetwork != null) {
 			getNetwork().split(this);
 		}
 		super.setRemoved();
@@ -170,7 +153,7 @@ public class TileMatterNetworkCable extends GenericTile implements IMatterNetwor
 
 	@Override
 	public void onChunkUnloaded() {
-		if (!level.isClientSide && network != null) {
+		if (!level.isClientSide && matterNetwork != null) {
 			getNetwork().split(this);
 		}
 	}

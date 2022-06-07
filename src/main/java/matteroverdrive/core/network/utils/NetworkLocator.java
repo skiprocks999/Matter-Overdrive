@@ -1,23 +1,24 @@
-package matteroverdrive.core.cable.api;
+package matteroverdrive.core.network.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.core.cable.AbstractNetwork;
+import matteroverdrive.core.network.AbstractNetwork;
+import matteroverdrive.core.network.cable.IAbstractCable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class AbstractCableNetworkFinder {
+public class NetworkLocator {
 	public Level worldObj;
 	public BlockPos start;
-	public AbstractNetwork<?, ?, ?, ?> net;
+	public AbstractNetwork<?, ?, ?> net;
 	public List<BlockEntity> iteratedTiles = new ArrayList<>();
 	public List<BlockPos> toIgnore = new ArrayList<>();
 
-	public AbstractCableNetworkFinder(Level world, BlockPos location, AbstractNetwork<?, ?, ?, ?> net,
+	public NetworkLocator(Level world, BlockPos location, AbstractNetwork<?, ?, ?> net,
 			BlockPos... ignore) {
 		worldObj = world;
 		start = location;

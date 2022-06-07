@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkCable;
-import matteroverdrive.core.cable.types.matter_network.IMatterNetworkMember;
+import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
+import matteroverdrive.core.network.cable.utils.INetworkCable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -31,8 +31,8 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (!worldIn.isClientSide) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (tile instanceof IMatterNetworkCable c) {
-				c.refreshNetwork();
+			if (tile instanceof INetworkCable cable) {
+				cable.refreshNetwork();
 			}
 		}
 	}
@@ -42,8 +42,8 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 		super.onNeighborChange(state, world, pos, neighbor);
 		if (!world.isClientSide()) {
 			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile instanceof IMatterNetworkCable c) {
-				c.refreshNetworkIfChange();
+			if (tile instanceof INetworkCable cable) {
+				cable.refreshNetworkIfChange();
 			}
 		}
 	}
@@ -55,10 +55,10 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 		BlockEntity entity;
 		for(Direction dir : Direction.values()) {
 			entity = world.getBlockEntity(pos.relative(dir));
-			if (entity instanceof IMatterNetworkCable) {
+			if (entity instanceof INetworkCable) {
 				usedDirs.add(dir);
 				cable.add(dir);
-			} else if (entity instanceof IMatterNetworkMember) {
+			} else if (entity instanceof IMatterNetworkMember member && member.canConnectToFace(dir.getOpposite())) {
 				usedDirs.add(dir);
 				inventory.add(dir);
 			} 

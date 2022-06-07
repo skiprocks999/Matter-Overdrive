@@ -1,6 +1,6 @@
 {
 	"credit": "skip999",
-	"parent" : "block/cube_all",
+	"parent": "block/cube_all",
 	"texture_size": [
 		32,
 		32
@@ -22,8 +22,8 @@
 					"uv": [
 						0,
 						0,
-						5,
-						5
+						3,
+						3
 					],
 					"texture": "#texture",
 					"tintindex": 0
@@ -31,49 +31,49 @@
 				"east": {
 					"uv": [
 						0,
-						5,
-						5,
-						10
+						3,
+						3,
+						6
 					],
 					"texture": "#texture",
 					"tintindex": 0
 				},
 				"south": {
 					"uv": [
-						5,
+						3,
 						0,
-						10,
-						5
+						6,
+						3
 					],
 					"texture": "#texture",
 					"tintindex": 0
 				},
 				"west": {
 					"uv": [
-						5,
-						5,
-						10,
-						10
+						3,
+						3,
+						6,
+						6
 					],
 					"texture": "#texture",
 					"tintindex": 0
 				},
 				"up": {
 					"uv": [
-						5,
-						15,
+						3,
+						9,
 						0,
-						10
+						6
 					],
 					"texture": "#texture",
 					"tintindex": 0
 				},
 				"down": {
 					"uv": [
-						15,
+						9,
 						0,
-						10,
-						5
+						6,
+						3
 					],
 					"texture": "#texture",
 					"tintindex": 0

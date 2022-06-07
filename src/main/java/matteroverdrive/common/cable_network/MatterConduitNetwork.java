@@ -8,14 +8,15 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import matteroverdrive.common.block.type.TypeMatterConduit;
-import matteroverdrive.core.cable.AbstractNetwork;
-import matteroverdrive.core.cable.CableNetworkRegistry;
-import matteroverdrive.core.cable.types.matter_pipe.IMatterConduit;
+import matteroverdrive.core.network.AbstractNetwork;
+import matteroverdrive.core.network.AbstractTransferNetwork;
+import matteroverdrive.core.network.CableNetworkRegistry;
+import matteroverdrive.core.network.cable.utils.IMatterConduit;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> {
+public class MatterConduitNetwork extends AbstractTransferNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> {
 	
 	public MatterConduitNetwork() {
 		this(new HashSet<IMatterConduit>());
@@ -26,8 +27,8 @@ public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMa
 		CableNetworkRegistry.register(this);
 	}
 
-	public MatterConduitNetwork(Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double>> networks) {
-		for (AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> net : networks) {
+	public MatterConduitNetwork(Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity>> networks) {
+		for (AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> net : networks) {
 			if (net != null) {
 				conductorSet.addAll(net.conductorSet);
 				net.deregister();
@@ -62,7 +63,6 @@ public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMa
 						for (Direction connection : acceptorInputMap.get(receiver)) {
 							double rec = UtilsMatter.receiveMatter(receiver, connection, perConnection, false);
 							sent += rec;
-							transmittedThisTick += rec;
 						}
 					}
 				}
@@ -83,19 +83,19 @@ public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMa
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstance() {
+	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstance() {
 		return new MatterConduitNetwork();
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstanceConductor(
+	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstanceConductor(
 			Set<IMatterConduit> conductors) {
 		return new MatterConduitNetwork(conductors);
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> createInstance(
-			Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double>> networks) {
+	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstance(
+			Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity>> networks) {
 		return new MatterConduitNetwork(networks);
 
 	}
@@ -109,4 +109,5 @@ public class MatterConduitNetwork extends AbstractNetwork<IMatterConduit, TypeMa
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor, orientation.getOpposite());
 	}
+
 }
