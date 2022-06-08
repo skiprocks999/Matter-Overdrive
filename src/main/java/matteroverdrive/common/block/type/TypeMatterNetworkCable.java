@@ -1,8 +1,8 @@
 package matteroverdrive.common.block.type;
 
-import matteroverdrive.core.registers.IBulkRegistryObject;
+import matteroverdrive.common.block.cable.ICableType;
 
-public enum TypeMatterNetworkCable implements IBulkRegistryObject {
+public enum TypeMatterNetworkCable implements ICableType {
 	
 	REGULAR(2.5);
 
@@ -15,6 +15,16 @@ public enum TypeMatterNetworkCable implements IBulkRegistryObject {
 	@Override
 	public String id() {
 		return "network_cable_" + this.toString().toLowerCase();
+	}
+
+	@Override
+	public int getOrdinal() {
+		return ordinal();
+	}
+
+	@Override
+	public double getWidth() {
+		return width;
 	}
 
 }

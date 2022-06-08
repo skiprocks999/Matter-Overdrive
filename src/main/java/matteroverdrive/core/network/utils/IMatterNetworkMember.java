@@ -1,4 +1,4 @@
-package matteroverdrive.core.network.cable.utils;
+package matteroverdrive.core.network.utils;
 
 import net.minecraft.core.Direction;
 

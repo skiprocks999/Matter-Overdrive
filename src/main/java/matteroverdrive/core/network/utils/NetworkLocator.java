@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.core.network.AbstractNetwork;
-import matteroverdrive.core.network.cable.IAbstractCable;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
+import matteroverdrive.core.network.BaseNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class NetworkLocator {
 	public Level worldObj;
 	public BlockPos start;
-	public AbstractNetwork<?, ?, ?> net;
+	public BaseNetwork net;
 	public List<BlockEntity> iteratedTiles = new ArrayList<>();
 	public List<BlockPos> toIgnore = new ArrayList<>();
 
-	public NetworkLocator(Level world, BlockPos location, AbstractNetwork<?, ?, ?> net,
+	public NetworkLocator(Level world, BlockPos location, BaseNetwork net,
 			BlockPos... ignore) {
 		worldObj = world;
 		start = location;
@@ -39,7 +39,7 @@ public class NetworkLocator {
 				if (worldObj.hasChunkAt(obj)) {
 					BlockEntity tileEntity = worldObj.getBlockEntity(obj);
 					if (!iteratedTiles.contains(tileEntity) && net.isConductor(tileEntity)) {
-						loopAll((IAbstractCable) tileEntity);
+						loopAll((AbstractCableTile<?>) tileEntity);
 					}
 				}
 			}
@@ -47,7 +47,7 @@ public class NetworkLocator {
 
 	}
 
-	public void loopAll(IAbstractCable conductor) {
+	public void loopAll(AbstractCableTile<?> conductor) {
 		iteratedTiles.add((BlockEntity) conductor);
 		for (BlockEntity connections : conductor.getAdjacentConnections()) {
 			if (connections != null) {
@@ -55,7 +55,7 @@ public class NetworkLocator {
 				if (!iteratedTiles.contains(connections)
 						&& !(toIgnore.size() == 1 ? toIgnore.get(0) == pos : toIgnore.contains(pos))) {
 					if (net.isConductor(connections)) {
-						loopAll((IAbstractCable) connections);
+						loopAll((AbstractCableTile<?>) connections);
 					}
 				}
 			}

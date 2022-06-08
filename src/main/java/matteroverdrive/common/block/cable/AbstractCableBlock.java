@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.CableConnectionType;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.block.WaterloggableEntityBlock;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -57,11 +60,15 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 	
 	protected HashMap<HashSet<Direction>, VoxelShape> shapestates = new HashMap<>();
 	
-	public AbstractCableBlock(Properties properties, double width) {
+	protected final ICableType type;
+	
+	public AbstractCableBlock(Properties properties, ICableType type) {
 		super(properties);
 		
-		double bottom = 8 - width;
-		double top = 8 + width;
+		this.type = type;
+		
+		double bottom = 8 - type.getWidth();
+		double top = 8 + type.getWidth();
 		
 		DIRECTION_TO_SHAPE_MAP = Util.make(Maps.newEnumMap(Direction.class), map -> {
 			map.put(Direction.NORTH, Block.box(bottom, bottom, 0, top, top, top));
@@ -93,6 +100,28 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		builder.add(OverdriveBlockStates.CABLE_EAST);
 		builder.add(OverdriveBlockStates.CABLE_SOUTH);
 		builder.add(OverdriveBlockStates.CABLE_WEST);
+	}
+	
+	@Override
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, worldIn, pos, oldState, isMoving);
+		if (!worldIn.isClientSide) {
+			BlockEntity tile = worldIn.getBlockEntity(pos);
+			if (checkConductorClass(tile)) {
+				((AbstractCableTile<?>)tile).refreshNetwork();
+			}
+		}
+	}
+
+	@Override
+	public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
+		super.onNeighborChange(state, world, pos, neighbor);
+		if (!world.isClientSide()) {
+			BlockEntity tile = world.getBlockEntity(pos);
+			if (checkConductorClass(tile)) {
+				((AbstractCableTile<?>)tile).refreshNetwork();
+			}
+		}
 	}
 	
 	@Override
@@ -206,6 +235,12 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		
 		return startingState;
 	}
+	
+	public ICableType getConductorType() {
+		return type;
+	}
+	
+	public abstract boolean checkConductorClass(BlockEntity entity);
 	
 	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable, 
 			LevelAccessor world, BlockPos pos);

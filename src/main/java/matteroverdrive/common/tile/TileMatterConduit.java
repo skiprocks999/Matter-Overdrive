@@ -9,16 +9,14 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Sets;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.cable.BlockMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.cable_network.MatterConduitNetwork;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
+import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
-import matteroverdrive.core.network.AbstractNetwork;
-import matteroverdrive.core.network.cable.utils.IMatterConduit;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.network.BaseNetwork;
 import matteroverdrive.core.utils.UtilsMatter;
-import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,11 +25,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileMatterConduit extends GenericTile implements IMatterConduit {
+public class TileMatterConduit extends AbstractEmittingCable<MatterConduitNetwork> {
 
-	public MatterConduitNetwork conduitNetwork;
 	private ArrayList<ICapabilityMatterStorage> handler = new ArrayList<>();
-	public TypeMatterConduit pipe = null;
 
 	public TileMatterConduit(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_CONDUIT.get(), pos, state);
@@ -45,7 +41,7 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 					}
 					ArrayList<BlockEntity> ignored = new ArrayList<>();
 					ignored.add(level.getBlockEntity(new BlockPos(worldPosition).relative(dir)));
-					return conduitNetwork.emit(maxReceive, ignored, false);
+					return network.emit(maxReceive, ignored, false);
 				}
 
 				@Override
@@ -86,156 +82,50 @@ public class TileMatterConduit extends GenericTile implements IMatterConduit {
 		return super.getCapability(capability, facing);
 	}
 
-	private HashSet<IMatterConduit> getConnectedConductors() {
-		HashSet<IMatterConduit> set = new HashSet<>();
-		for (Direction dir : Direction.values()) {
-			BlockEntity facing = level.getBlockEntity(new BlockPos(worldPosition).relative(dir));
-			if (facing instanceof IMatterConduit p) {
-				set.add(p);
-			}
-		}
-		return set;
+	@Override
+	public void load(CompoundTag compound) {
+		super.load(compound);
+		cableType = TypeMatterConduit.values()[compound.getInt("ord")];
 	}
 
 	@Override
-	public MatterConduitNetwork getNetwork(boolean createIfNull) {
-		if (conduitNetwork == null && createIfNull) {
-			HashSet<IMatterConduit> adjacentCables = getConnectedConductors();
+	public double getMaxTransfer() {
+		return ((TypeMatterConduit) getConductorType()).capacity;
+	}
+
+	@Override
+	public boolean isCable(BlockEntity entity) {
+		return entity instanceof TileMatterConduit;
+	}
+
+	@Override
+	public boolean isValidConnection(BlockEntity entity, Direction dir) {
+		return UtilsMatter.isMatterReceiver(entity, dir.getOpposite());
+	}
+	
+	@Override
+	public BaseNetwork getNetwork(boolean createIfNull) {
+		if (network == null && createIfNull) {
+			HashSet<AbstractCableTile<MatterConduitNetwork>> adjacentCables = getConnectedConductors();
 			HashSet<MatterConduitNetwork> connectedNets = new HashSet<>();
-			for (IMatterConduit wire : adjacentCables) {
-				MatterConduitNetwork network = wire.getNetwork(false);
+			for (AbstractCableTile<MatterConduitNetwork> wire : adjacentCables) {
+				MatterConduitNetwork network = (MatterConduitNetwork) wire.getNetwork(false);
 				if (network != null) {
 					connectedNets.add(network);
 				}
 			}
 			if (connectedNets.isEmpty()) {
-				conduitNetwork = new MatterConduitNetwork(Sets.newHashSet(this));
+				network = new MatterConduitNetwork(Sets.newHashSet(this));
 			} else {
 				if (connectedNets.size() == 1) {
-					conduitNetwork = (MatterConduitNetwork) connectedNets.toArray()[0];
+					network = (MatterConduitNetwork) connectedNets.toArray()[0];
 				} else {
-					conduitNetwork = new MatterConduitNetwork(connectedNets, false);
+					network = new MatterConduitNetwork(connectedNets, false);
 				}
-				conduitNetwork.conductorSet.add(this);
+				network.conductorSet.add(this);
 			}
 		}
-		return conduitNetwork;
-	}
-
-	@Override
-	public void setNetwork(AbstractNetwork<?, ?, ?> network) {
-		if (conduitNetwork != network) {
-			removeFromNetwork();
-			conduitNetwork = (MatterConduitNetwork) network;
-		}
-	}
-
-	@Override
-	public void refreshNetwork() {
-		if (!level.isClientSide) {
-			updateAdjacent();
-			ArrayList<MatterConduitNetwork> foundNetworks = new ArrayList<>();
-			for (Direction dir : Direction.values()) {
-				BlockEntity facing = level.getBlockEntity(new BlockPos(worldPosition).relative(dir));
-				if (facing instanceof IMatterConduit conduit) {
-					foundNetworks.add(conduit.getNetwork());
-				}
-			}
-			if (!foundNetworks.isEmpty()) {
-				foundNetworks.get(0).conductorSet.add(this);
-				conduitNetwork = foundNetworks.get(0);
-				if (foundNetworks.size() > 1) {
-					foundNetworks.remove(0);
-					for (MatterConduitNetwork network : foundNetworks) {
-						getNetwork().merge(network);
-					}
-				}
-			}
-			getNetwork().refresh();
-		}
-	}
-
-	@Override
-	public void removeFromNetwork() {
-		if (conduitNetwork != null) {
-			conduitNetwork.removeFromNetwork(this);
-		}
-	}
-
-	private boolean[] connections = new boolean[6];
-	private BlockEntity[] tileConnections = new BlockEntity[6];
-
-	public boolean updateAdjacent() {
-		boolean flag = false;
-		for (Direction dir : Direction.values()) {
-			BlockEntity tile = level.getBlockEntity(worldPosition.relative(dir));
-			boolean is = UtilsMatter.isMatterReceiver(tile, dir.getOpposite());
-			if (connections[dir.ordinal()] != is) {
-				connections[dir.ordinal()] = is;
-				tileConnections[dir.ordinal()] = tile;
-				flag = true;
-			}
-
-		}
-		return flag;
-	}
-
-	@Override
-	public BlockEntity[] getAdjacentConnections() {
-		return tileConnections;
-	}
-
-	@Override
-	public void refreshNetworkIfChange() {
-		if (updateAdjacent()) {
-			refreshNetwork();
-		}
-	}
-
-	@Override
-	public void setRemoved() {
-		if (!level.isClientSide && conduitNetwork != null) {
-			getNetwork().split(this);
-		}
-		super.setRemoved();
-	}
-
-	@Override
-	public void onChunkUnloaded() {
-		if (!level.isClientSide && conduitNetwork != null) {
-			getNetwork().split(this);
-		}
-	}
-
-	@Override
-	public void onLoad() {
-		super.onLoad();
-		Scheduler.schedule(1, this::refreshNetwork);
-	}
-	
-	@Override
-	public TypeMatterConduit getConductorType() {
-		if (pipe == null) {
-			pipe = ((BlockMatterConduit) getBlockState().getBlock()).type;
-		}
-		return pipe;
-	}
-
-	@Override
-	public void saveAdditional(CompoundTag compound) {
-		compound.putInt("ord", getConductorType().ordinal());
-		super.saveAdditional(compound);
-	}
-
-	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		pipe = TypeMatterConduit.values()[compound.getInt("ord")];
-	}
-
-	@Override
-	public double getMaxTransfer() {
-		return getConductorType().capacity;
+		return network;
 	}
 
 }

@@ -2,53 +2,38 @@ package matteroverdrive.common.cable_network;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.block.type.TypeMatterConduit;
-import matteroverdrive.core.network.AbstractNetwork;
-import matteroverdrive.core.network.AbstractTransferNetwork;
-import matteroverdrive.core.network.CableNetworkRegistry;
-import matteroverdrive.core.network.cable.utils.IMatterConduit;
+import matteroverdrive.common.tile.TileMatterConduit;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
+import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.TransferNetwork;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterConduitNetwork extends AbstractTransferNetwork<IMatterConduit, TypeMatterConduit, BlockEntity, Double> {
-	
+public class MatterConduitNetwork extends TransferNetwork<Double> {
+
 	public MatterConduitNetwork() {
-		this(new HashSet<IMatterConduit>());
+		super();
 	}
-
-	public MatterConduitNetwork(Collection<? extends IMatterConduit> varCables) {
-		conductorSet.addAll(varCables);
-		CableNetworkRegistry.register(this);
+	
+	public MatterConduitNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+		super(varCables);
 	}
-
-	public MatterConduitNetwork(Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity>> networks) {
-		for (AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> net : networks) {
-			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
-				net.deregister();
-			}
-		}
-		refresh();
-		CableNetworkRegistry.register(this);
+	
+	public MatterConduitNetwork(Set<? extends BaseNetwork> networks) {
+		super(networks);
 	}
-
-	public MatterConduitNetwork(Set<MatterConduitNetwork> networks, boolean special) {
-		for (MatterConduitNetwork net : networks) {
-			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
-				net.deregister();
-			}
-		}
-		refresh();
-		CableNetworkRegistry.register(this);
+	
+	public MatterConduitNetwork(Set<? extends BaseNetwork> networks, boolean special) {
+		super(networks, special);
 	}
-
+	
 	@Override
 	public Double emit(Double transfer, ArrayList<BlockEntity> ignored, boolean debug) {
 		if (transfer > 0) {
@@ -74,7 +59,7 @@ public class MatterConduitNetwork extends AbstractTransferNetwork<IMatterConduit
 
 	@Override
 	public boolean isConductor(BlockEntity tile) {
-		return tile instanceof IMatterConduit;
+		return tile instanceof TileMatterConduit;
 	}
 
 	@Override
@@ -83,31 +68,28 @@ public class MatterConduitNetwork extends AbstractTransferNetwork<IMatterConduit
 	}
 
 	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstance() {
-		return new MatterConduitNetwork();
-	}
-
-	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstanceConductor(
-			Set<IMatterConduit> conductors) {
-		return new MatterConduitNetwork(conductors);
-	}
-
-	@Override
-	public AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity> createInstance(
-			Set<AbstractNetwork<IMatterConduit, TypeMatterConduit, BlockEntity>> networks) {
-		return new MatterConduitNetwork(networks);
-
-	}
-
-	@Override
-	public TypeMatterConduit[] getConductorTypes() {
+	public ICableType[] getConductorTypes() {
 		return TypeMatterConduit.values();
 	}
 
 	@Override
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor, orientation.getOpposite());
+	}
+
+	@Override
+	public BaseNetwork newInstance() {
+		return new MatterConduitNetwork();
+	}
+
+	@Override
+	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks) {
+		return new MatterConduitNetwork(networks);
+	}
+
+	@Override
+	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special) {
+		return new MatterConduitNetwork(networks, special);
 	}
 
 }

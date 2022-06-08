@@ -1,6 +1,7 @@
 package matteroverdrive.core.network;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,34 +10,65 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import matteroverdrive.core.network.cable.IAbstractCable;
-import matteroverdrive.core.network.cable.ITransferableCable;
+import matteroverdrive.common.block.cable.ICableType;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.network.utils.NetworkLocator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
-	public HashSet<C> conductorSet = new HashSet<>();
-	public HashSet<A> acceptorSet = new HashSet<>();
-	public HashMap<A, HashSet<Direction>> acceptorInputMap = new HashMap<>();
-	public HashMap<T, HashSet<C>> conductorTypeMap = new HashMap<>();
-	public double networkMaxTransfer;
+public abstract class BaseNetwork {
+	
+	public HashSet<AbstractCableTile<?>> conductorSet = new HashSet<>();
+	public HashSet<BlockEntity> acceptorSet = new HashSet<>();
+	public HashMap<BlockEntity, HashSet<Direction>> acceptorInputMap = new HashMap<>();
+	public HashMap<ICableType, HashSet<AbstractCableTile<?>>> conductorTypeMap = new HashMap<>();
 	public boolean fixed;
 
+	public BaseNetwork() {
+		this(new HashSet<AbstractCableTile<?>>());
+	}
+
+	public BaseNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+		conductorSet.addAll(varCables);
+		CableNetworkRegistry.register(this);
+	}
+
+	public BaseNetwork(Set<? extends BaseNetwork> networks) {
+		for (BaseNetwork net : networks) {
+			if (net != null) {
+				conductorSet.addAll(net.conductorSet);
+				net.deregister();
+			}
+		}
+		refresh();
+		CableNetworkRegistry.register(this);
+	}
+
+	public BaseNetwork(Set<? extends BaseNetwork> networks, boolean special) {
+		for (BaseNetwork net : networks) {
+			if (net != null) {
+				conductorSet.addAll(net.conductorSet);
+				net.deregister();
+			}
+		}
+		refresh();
+		CableNetworkRegistry.register(this);
+	}
+	
 	public void refresh() {
-		Iterator<C> it = conductorSet.iterator();
+		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
 		acceptorSet.clear();
 		acceptorInputMap.clear();
 		while (it.hasNext()) {
-			C conductor = it.next();
-			if (conductor == null || ((BlockEntity) conductor).isRemoved()) {
+			AbstractCableTile<?> conductor = it.next();
+			if (conductor == null || conductor.isRemoved()) {
 				it.remove();
 			} else {
 				conductor.setNetwork(this);
 			}
 		}
-		for (C conductor : conductorSet) {
+		for (AbstractCableTile<?> conductor : conductorSet) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
@@ -44,12 +76,12 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 				if (acceptor != null && !isConductor(acceptor)) {
 					if (isAcceptor(acceptor, direction)) {
 						if (canConnect(acceptor, direction)) {
-							acceptorSet.add((A) acceptor);
+							acceptorSet.add(acceptor);
 							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor)
 									? acceptorInputMap.get(acceptor)
 									: new HashSet<>();
 							directions.add(direction.getOpposite());
-							acceptorInputMap.put((A) acceptor, directions);
+							acceptorInputMap.put(acceptor, directions);
 						}
 					}
 				}
@@ -60,27 +92,22 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 
 	public void updateStatistics() {
 		conductorTypeMap.clear();
-		for (T type : getConductorTypes()) {
+		for (ICableType type : getConductorTypes()) {
 			conductorTypeMap.put(type, new HashSet<>());
 		}
-		for (C wire : conductorSet) {
+		for (AbstractCableTile<?> wire : conductorSet) {
 			conductorTypeMap.get(wire.getConductorType()).add(wire);
-			if(wire instanceof ITransferableCable<?> transfer) {
-				networkMaxTransfer = networkMaxTransfer == -1 ? transfer.getMaxTransfer()
-						: Math.min(networkMaxTransfer, transfer.getMaxTransfer());
-			}
 		}
 	}
 
-	public void split(@Nonnull C splitPoint) {
-		if (splitPoint instanceof BlockEntity blockentity) {
+	public void split(@Nonnull AbstractCableTile<?> splitPoint) {
 			removeFromNetwork(splitPoint);
 			BlockEntity[] connectedTiles = new BlockEntity[6];
 			boolean[] dealtWith = { false, false, false, false, false, false };
 			for (Direction direction : Direction.values()) {
-				BlockPos ex = blockentity.getBlockPos().offset(direction.getNormal());
-				if (blockentity.getLevel().hasChunkAt(ex)) {
-					BlockEntity sideTile = blockentity.getLevel().getBlockEntity(ex);
+				BlockPos ex = splitPoint.getBlockPos().offset(direction.getNormal());
+				if (splitPoint.getLevel().hasChunkAt(ex)) {
+					BlockEntity sideTile = splitPoint.getLevel().getBlockEntity(ex);
 					if (sideTile != null) {
 						connectedTiles[Arrays.asList(Direction.values()).indexOf(direction)] = sideTile;
 					}
@@ -90,8 +117,8 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 				BlockEntity connectedBlockA = connectedTiles[countOne];
 				if (connectedBlockA != null) {
 					if (isConductor(connectedBlockA) && !dealtWith[countOne]) {
-						NetworkLocator finder = new NetworkLocator(blockentity.getLevel(),
-								connectedBlockA.getBlockPos(), this, blockentity.getBlockPos());
+						NetworkLocator finder = new NetworkLocator(splitPoint.getLevel(),
+								connectedBlockA.getBlockPos(), this, splitPoint.getBlockPos());
 						List<BlockEntity> partNetwork = finder.exploreNetwork();
 						for (int countTwo = countOne + 1; countTwo < connectedTiles.length; countTwo++) {
 							BlockEntity connectedBlockB = connectedTiles[countTwo];
@@ -100,11 +127,11 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 								dealtWith[countTwo] = true;
 							}
 						}
-						AbstractNetwork<C, T, A> newNetwork = createInstance();
+						BaseNetwork newNetwork = newInstance();
 
 						for (BlockEntity tile : finder.iteratedTiles) {
 							if (tile != splitPoint) {
-								newNetwork.conductorSet.add((C) tile);
+								newNetwork.conductorSet.add((AbstractCableTile<?>) tile);
 							}
 						}
 						newNetwork.refresh();
@@ -112,20 +139,20 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 				}
 			}
 			deregister();
-		}
+		
 	}
 
-	public void merge(AbstractNetwork<C, T, A> network) {
+	public void merge(BaseNetwork network) {
 		if (network != null && network != this) {
-			Set<AbstractNetwork<C, T, A>> networks = new HashSet<>();
+			Set<BaseNetwork> networks = new HashSet<>();
 			networks.add(this);
 			networks.add(network);
-			AbstractNetwork<C, T, A> newNetwork = createInstance(networks);
+			BaseNetwork newNetwork = newInstance(networks);
 			newNetwork.refresh();
 		}
 	}
 
-	public void removeFromNetwork(C conductor) {
+	public void removeFromNetwork(AbstractCableTile<?> conductor) {
 		conductorSet.remove(conductor);
 		if (conductorSet.isEmpty()) {
 			deregister();
@@ -143,10 +170,6 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 	public int getSize() {
 		return conductorSet.size();
 	}
-
-	public double getNetworkMaxTransfer() {
-		return networkMaxTransfer;
-	}
 	
 	public void tick() {
 		
@@ -157,12 +180,13 @@ public abstract class AbstractNetwork<C extends IAbstractCable<?>, T, A> {
 	public abstract boolean isAcceptor(BlockEntity acceptor, Direction orientation);
 
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
+	
+	public abstract BaseNetwork newInstance();
+	
+	public abstract BaseNetwork newInstance(Set<? extends BaseNetwork> networks);
+	
+	public abstract BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special);
 
-	public abstract AbstractNetwork<C, T, A> createInstance();
+	public abstract ICableType[] getConductorTypes();
 
-	public abstract AbstractNetwork<C, T, A> createInstanceConductor(Set<C> conductors);
-
-	public abstract AbstractNetwork<C, T, A> createInstance(Set<AbstractNetwork<C, T, A>> networks);
-
-	public abstract T[] getConductorTypes();
 }

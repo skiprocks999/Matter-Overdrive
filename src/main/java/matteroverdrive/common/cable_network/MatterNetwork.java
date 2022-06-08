@@ -7,24 +7,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
+import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
+import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.TileMatterTank;
 import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
 import matteroverdrive.common.tile.matter_network.TilePatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.core.network.AbstractNetwork;
-import matteroverdrive.core.network.CableNetworkRegistry;
-import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
-import matteroverdrive.core.network.cable.utils.INetworkCable;
+import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> {
+public class MatterNetwork extends BaseNetwork {
 
 	private List<TileMatterAnalyzer> analyzers = new ArrayList<>();
 	private List<TileMatterReplicator> replicators = new ArrayList<>();
@@ -34,37 +35,21 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 	private List<TileNetworkPowerSupply> powerSupplies = new ArrayList<>();
 
 	public MatterNetwork() {
-		this(new HashSet<INetworkCable>());
+		super();
 	}
-
-	public MatterNetwork(Collection<? extends INetworkCable> varCables) {
-		conductorSet.addAll(varCables);
-		CableNetworkRegistry.register(this);
+	
+	public MatterNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+		super(varCables);
 	}
-
-	public MatterNetwork(
-			Set<AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity>> networks) {
-		for (AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> net : networks) {
-			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
-				net.deregister();
-			}
-		}
-		refresh();
-		CableNetworkRegistry.register(this);
+	
+	public MatterNetwork(Set<? extends BaseNetwork> networks) {
+		super(networks);
 	}
-
-	public MatterNetwork(Set<MatterNetwork> networks, boolean special) {
-		for (MatterNetwork net : networks) {
-			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
-				net.deregister();
-			}
-		}
-		refresh();
-		CableNetworkRegistry.register(this);
+	
+	public MatterNetwork(Set<? extends BaseNetwork> networks, boolean special) {
+		super(networks, special);
 	}
-
+	
 	public Set<BlockEntity> getNetworkAcceptors() {
 		return new HashSet<>(acceptorSet);
 	}
@@ -73,11 +58,11 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 	public void tick() {
 		super.tick();
 
-		Iterator<INetworkCable> it = conductorSet.iterator();
+		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
 		boolean broken = false;
 		while (it.hasNext()) {
-			INetworkCable conductor = it.next();
-			if (conductor instanceof BlockEntity entity && entity.isRemoved() || conductor.getNetwork() != this) {
+			AbstractCableTile<?> conductor = it.next();
+			if (conductor.isRemoved() || conductor.getNetwork() != this) {
 				broken = true;
 				break;
 			}
@@ -92,18 +77,18 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 
 	@Override
 	public void refresh() {
-		Iterator<INetworkCable> it = conductorSet.iterator();
+		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
 		acceptorSet.clear();
 		acceptorInputMap.clear();
 		while (it.hasNext()) {
-			INetworkCable conductor = it.next();
-			if (conductor == null || ((BlockEntity) conductor).isRemoved()) {
+			AbstractCableTile<?> conductor = it.next();
+			if (conductor == null || conductor.isRemoved()) {
 				it.remove();
 			} else {
 				conductor.setNetwork(this);
 			}
 		}
-		for (INetworkCable conductor : conductorSet) {
+		for (AbstractCableTile<?> conductor : conductorSet) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
@@ -157,7 +142,7 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 
 	@Override
 	public boolean isConductor(BlockEntity tile) {
-		return tile instanceof INetworkCable;
+		return tile instanceof TileMatterNetworkCable;
 	}
 
 	@Override
@@ -166,25 +151,7 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 	}
 
 	@Override
-	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstance() {
-		return new MatterNetwork();
-	}
-
-	@Override
-	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstanceConductor(
-			Set<INetworkCable> conductors) {
-		return new MatterNetwork(conductors);
-	}
-
-	@Override
-	public AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity> createInstance(
-			Set<AbstractNetwork<INetworkCable, TypeMatterNetworkCable, BlockEntity>> networks) {
-		return new MatterNetwork(networks);
-
-	}
-
-	@Override
-	public TypeMatterNetworkCable[] getConductorTypes() {
+	public ICableType[] getConductorTypes() {
 		return TypeMatterNetworkCable.values();
 	}
 
@@ -192,11 +159,6 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		Direction opposite = orientation.getOpposite();
 		return UtilsTile.isFEReciever(acceptor, opposite) || UtilsMatter.isMatterReceiver(acceptor, opposite);
-	}
-	
-	@Override
-	public void split(INetworkCable splitPoint) {
-		super.split(splitPoint);
 	}
 
 	public List<TileMatterAnalyzer> getAnalyzers() {
@@ -221,6 +183,21 @@ public class MatterNetwork extends AbstractNetwork<INetworkCable, TypeMatterNetw
 
 	public List<TileNetworkPowerSupply> getPowerSupplies() {
 		return powerSupplies;
+	}
+
+	@Override
+	public BaseNetwork newInstance() {
+		return new MatterNetwork();
+	}
+
+	@Override
+	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks) {
+		return new MatterNetwork(networks);
+	}
+
+	@Override
+	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special) {
+		return new MatterNetwork(networks, special);
 	}
 
 }

@@ -6,15 +6,12 @@ import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.network.cable.utils.IMatterNetworkMember;
+import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
-import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileNetworkPowerSupply extends GenericUpgradableTile implements IMatterNetworkMember {
