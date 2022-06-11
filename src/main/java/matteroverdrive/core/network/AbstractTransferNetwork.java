@@ -4,30 +4,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public abstract class TransferNetwork<EMIT> extends AbstractCableNetwork {
+public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork {
 
 	public double networkMaxTransfer;
 	
-	public TransferNetwork(List<? extends AbstractCableTile<?>> varCables) {
+	public AbstractTransferNetwork(List<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
 	}
 	
-	public TransferNetwork(Collection<? extends AbstractCableNetwork> networks) {
+	public AbstractTransferNetwork(Collection<? extends AbstractCableNetwork> networks) {
 		super(networks);
 	}
 	
-	public double getNetworkMaxTransfer() {
-		return networkMaxTransfer;
-	}
-	
-	public void updateStatistics() {
+	@Override
+	public void sortCables() {
 		cableTypes.clear();
 		for (ICableType type : getConductorTypes()) {
 			cableTypes.put(type, new HashSet<>());
@@ -35,11 +31,16 @@ public abstract class TransferNetwork<EMIT> extends AbstractCableNetwork {
 		for (AbstractCableTile<?> abs : cables) {
 			AbstractEmittingCable<?> wire = (AbstractEmittingCable<?>) abs;
 			cableTypes.get(wire.getConductorType()).add(wire);
-			networkMaxTransfer = networkMaxTransfer == -1 ? wire.getMaxTransfer() : Math.min(networkMaxTransfer, wire.getMaxTransfer());
-			
+			networkMaxTransfer = Math.min(networkMaxTransfer, wire.getMaxTransfer());
 		}
 	}
 	
-	public abstract EMIT emit(EMIT transfer, ArrayList<BlockEntity> ignored, boolean debug);
+	public abstract EMIT emitToConnected(EMIT transfer, ArrayList<BlockEntity> ignored, boolean debug);
+	
+	public abstract EMIT extractFromConnected(EMIT amount, boolean simulate);
+	
+	public abstract EMIT getCurrentMemberStorage();
+	
+	public abstract EMIT getTotalMemberStorage();
 	
 }

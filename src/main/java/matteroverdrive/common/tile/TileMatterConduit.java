@@ -35,26 +35,35 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 
 				@Override
 				public double receiveMatter(double maxReceive, boolean simulate) {
-					if (simulate || getNetwork() == null) {
+					if (simulate || network == null) {
 						return 0;
 					}
 					ArrayList<BlockEntity> ignored = new ArrayList<>();
-					ignored.add(level.getBlockEntity(new BlockPos(worldPosition).relative(dir)));
-					return network.emit(maxReceive, ignored, false);
+					ignored.add(level.getBlockEntity(worldPosition.relative(dir)));
+					return network.emitToConnected(maxReceive, ignored, false);
 				}
 
 				@Override
 				public double extractMatter(double maxExtract, boolean simulate) {
+					if(network != null) {
+						return network.extractFromConnected(maxExtract, simulate);
+					}
 					return 0;
 				}
 
 				@Override
 				public double getMatterStored() {
+					if(network != null) {
+						return network.getCurrentMemberStorage();
+					}
 					return 0;
 				}
 
 				@Override
 				public double getMaxMatterStored() {
+					if(network != null) {
+						return network.getTotalMemberStorage();
+					}
 					return 0;
 				}
 

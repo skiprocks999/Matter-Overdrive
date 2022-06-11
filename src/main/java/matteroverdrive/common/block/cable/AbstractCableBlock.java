@@ -107,7 +107,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (!worldIn.isClientSide) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (checkConductorClass(tile)) {
+			if (checkCableClass(tile)) {
 				((AbstractCableTile<?>)tile).refreshNetwork();
 			}
 		}
@@ -118,7 +118,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		super.onNeighborChange(state, world, pos, neighbor);
 		if (!world.isClientSide()) {
 			BlockEntity tile = world.getBlockEntity(pos);
-			if (checkConductorClass(tile)) {
+			if (checkCableClass(tile)) {
 				((AbstractCableTile<?>)tile).refreshNetwork();
 			}
 		}
@@ -256,11 +256,11 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		return startingState;
 	}
 	
-	public ICableType getConductorType() {
+	public ICableType getCableType() {
 		return type;
 	}
 	
-	public abstract boolean checkConductorClass(BlockEntity entity);
+	public abstract boolean checkCableClass(BlockEntity entity);
 	
 	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable, 
 			LevelAccessor world, BlockPos pos);

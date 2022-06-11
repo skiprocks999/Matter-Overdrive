@@ -136,6 +136,16 @@ public class NetworkMatter extends AbstractCableNetwork {
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return acceptor instanceof IMatterNetworkMember member && member.canConnectToFace(orientation.getOpposite());
 	}
+	
+	@Override
+	public AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks) {
+		return new NetworkMatter(networks);
+	}
+	
+	@Override
+	public AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables) {
+		return new NetworkMatter(cables);
+	}
 
 	public List<TileMatterAnalyzer> getAnalyzers() {
 		return analyzers;

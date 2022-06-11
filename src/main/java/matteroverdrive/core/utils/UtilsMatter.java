@@ -103,7 +103,7 @@ public class UtilsMatter {
 		Level world = tile.getLevel();
 		BlockPos offset;
 		for (Direction dir : Direction.values()) {
-			offset = new BlockPos(pos.getX(), pos.getY(), pos.getZ()).relative(dir);
+			offset = pos.relative(dir);
 			BlockEntity entity = world.getBlockEntity(offset);
 			if (entity != null && entity instanceof TileMatterConduit conduit) {
 				updateMatterCable(offset, world, conduit, dir, tile);

@@ -43,7 +43,7 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 	}
 
 	@Override
-	public boolean checkConductorClass(BlockEntity entity) {
+	public boolean checkCableClass(BlockEntity entity) {
 		return entity instanceof TileMatterNetworkCable;
 	}
 	

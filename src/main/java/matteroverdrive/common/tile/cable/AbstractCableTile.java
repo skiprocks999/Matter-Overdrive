@@ -48,7 +48,7 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 
 	public ICableType getConductorType() {
 		if (cableType == null) {
-			cableType = ((AbstractCableBlock) getBlockState().getBlock()).getConductorType();
+			cableType = ((AbstractCableBlock) getBlockState().getBlock()).getCableType();
 		}
 		return cableType;
 	}
