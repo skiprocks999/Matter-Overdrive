@@ -14,7 +14,7 @@ import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
-import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -103,7 +103,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 	}
 	
 	@Override
-	public BaseNetwork getNetwork(boolean createIfNull) {
+	public AbstractCableNetwork getNetwork(boolean createIfNull) {
 		if (network == null && createIfNull) {
 			HashSet<AbstractCableTile<NetworkMatterConduit>> adjacentCables = getConnectedConductors();
 			HashSet<NetworkMatterConduit> connectedNets = new HashSet<>();

@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.cable.ICableType;
-import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractCableTile<NETWORK extends BaseNetwork> extends GenericTile {
+public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> extends GenericTile {
 
 	protected boolean[] connections = new boolean[6];
 	protected BlockEntity[] tileConnections = new BlockEntity[6];
@@ -35,7 +35,7 @@ public abstract class AbstractCableTile<NETWORK extends BaseNetwork> extends Gen
 		}
 	}
 
-	public void setNetwork(BaseNetwork network) {
+	public void setNetwork(AbstractCableNetwork network) {
 		if (this.network != network) {
 			removeFromNetwork();
 			this.network = (NETWORK) network;
@@ -59,11 +59,11 @@ public abstract class AbstractCableTile<NETWORK extends BaseNetwork> extends Gen
 		}
 	}
 	
-	public BaseNetwork getNetwork() {
+	public AbstractCableNetwork getNetwork() {
 		return getNetwork(true);
 	}
 	
-	public abstract BaseNetwork getNetwork(boolean createIfNull);
+	public abstract AbstractCableNetwork getNetwork(boolean createIfNull);
 	
 	public void refreshNetwork() {
 		if (!level.isClientSide) {

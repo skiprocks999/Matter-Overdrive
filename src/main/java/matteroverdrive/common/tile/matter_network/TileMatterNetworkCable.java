@@ -7,7 +7,7 @@ import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
-import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
 	}
 	
 	@Override
-	public BaseNetwork getNetwork(boolean createIfNull) {
+	public AbstractCableNetwork getNetwork(boolean createIfNull) {
 		if (network == null && createIfNull) {
 			HashSet<AbstractCableTile<NetworkMatter>> adjacentCables = getConnectedConductors();
 			HashSet<NetworkMatter> connectedNets = new HashSet<>();

@@ -11,7 +11,7 @@ import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
-import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.TransferNetwork;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Direction;
@@ -23,7 +23,7 @@ public class NetworkMatterConduit extends TransferNetwork<Double> {
 		super(varCables);
 	}
 	
-	public NetworkMatterConduit(Collection<? extends BaseNetwork> networks) {
+	public NetworkMatterConduit(Collection<? extends AbstractCableNetwork> networks) {
 		super(networks);
 	}
 	
@@ -63,11 +63,6 @@ public class NetworkMatterConduit extends TransferNetwork<Double> {
 	@Override
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor, orientation.getOpposite());
-	}
-
-	@Override
-	public BaseNetwork newInstance(Collection<? extends BaseNetwork> networks) {
-		return new NetworkMatterConduit(networks);
 	}
 
 }

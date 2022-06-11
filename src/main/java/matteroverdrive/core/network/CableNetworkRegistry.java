@@ -12,14 +12,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(modid = References.ID, bus = Bus.FORGE)
 public class CableNetworkRegistry {
-	private static final Set<BaseNetwork> NETWORKS = ConcurrentHashMap.newKeySet();
-	private static final Set<BaseNetwork> SHOULD_REMOVE = ConcurrentHashMap.newKeySet();
+	private static final Set<AbstractCableNetwork> NETWORKS = ConcurrentHashMap.newKeySet();
+	private static final Set<AbstractCableNetwork> SHOULD_REMOVE = ConcurrentHashMap.newKeySet();
 
-	public static void register(BaseNetwork network) {
+	public static void register(AbstractCableNetwork network) {
 		NETWORKS.add(network);
 	}
 
-	public static void deregister(BaseNetwork network) {
+	public static void deregister(AbstractCableNetwork network) {
 		if (NETWORKS.contains(network)) {
 			SHOULD_REMOVE.add(network);
 		}
@@ -30,7 +30,7 @@ public class CableNetworkRegistry {
 		if (event.phase == Phase.END) {
 			NETWORKS.removeAll(SHOULD_REMOVE);
 			SHOULD_REMOVE.clear();
-			for(BaseNetwork network : NETWORKS) {
+			for(AbstractCableNetwork network : NETWORKS) {
 				// safety check
 				if(network != null) {
 					if(network.getSize() > 0) {

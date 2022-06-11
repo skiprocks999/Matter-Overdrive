@@ -17,12 +17,12 @@ import matteroverdrive.common.tile.matter_network.TileMatterTank;
 import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
 import matteroverdrive.common.tile.matter_network.TilePatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.core.network.BaseNetwork;
+import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class NetworkMatter extends BaseNetwork {
+public class NetworkMatter extends AbstractCableNetwork {
 
 	private List<TileMatterAnalyzer> analyzers = new ArrayList<>();
 	private List<TileMatterReplicator> replicators = new ArrayList<>();
@@ -35,7 +35,7 @@ public class NetworkMatter extends BaseNetwork {
 		super(varCables);
 	}
 	
-	public NetworkMatter(Collection<? extends BaseNetwork> networks) {
+	public NetworkMatter(Collection<? extends AbstractCableNetwork> networks) {
 		super(networks);
 	}
 	
@@ -91,7 +91,7 @@ public class NetworkMatter extends BaseNetwork {
 				}
 			}
 		}
-		updateStatistics();
+		sortCables();
 	}
 
 	private void addTileToCategory(BlockEntity entity) {
@@ -159,11 +159,6 @@ public class NetworkMatter extends BaseNetwork {
 
 	public List<TileNetworkPowerSupply> getPowerSupplies() {
 		return powerSupplies;
-	}
-
-	@Override
-	public BaseNetwork newInstance(Collection<? extends BaseNetwork> networks) {
-		return new NetworkMatter(networks);
 	}
 
 }

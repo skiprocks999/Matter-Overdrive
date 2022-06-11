@@ -11,7 +11,7 @@ import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public abstract class TransferNetwork<EMIT> extends BaseNetwork {
+public abstract class TransferNetwork<EMIT> extends AbstractCableNetwork {
 
 	public double networkMaxTransfer;
 	
@@ -19,7 +19,7 @@ public abstract class TransferNetwork<EMIT> extends BaseNetwork {
 		super(varCables);
 	}
 	
-	public TransferNetwork(Collection<? extends BaseNetwork> networks) {
+	public TransferNetwork(Collection<? extends AbstractCableNetwork> networks) {
 		super(networks);
 	}
 	
