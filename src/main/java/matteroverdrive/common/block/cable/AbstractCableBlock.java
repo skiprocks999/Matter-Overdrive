@@ -173,7 +173,26 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		
+		if(shouldntChange(stateIn, facingState, facing)) {
+			return stateIn;
+		}
+		
 		return handleConnectionUpdate(stateIn, currentPos, world);
+	}
+	
+	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing) {
+		
+		EnumProperty<CableConnectionType> thisProperty = DIRECTION_TO_PROPERTY_MAP.get(facing);
+		EnumProperty<CableConnectionType> facingProperty = DIRECTION_TO_PROPERTY_MAP.get(facing.getOpposite());
+		
+		CableConnectionType thisType = thisState.getValue(thisProperty);
+		
+		//do not combine!
+		if(changedState.hasProperty(facingProperty)) {
+			return thisType == changedState.getValue(facingProperty);
+		} else {
+			return thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE || thisType == CableConnectionType.NONE_SEAMLESS;
+		}
 	}
 	
 	protected BlockState handleConnectionUpdate(BlockState startingState, BlockPos pos, LevelAccessor world) {

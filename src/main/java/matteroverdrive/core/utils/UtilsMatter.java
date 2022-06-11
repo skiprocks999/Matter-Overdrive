@@ -79,9 +79,7 @@ public class UtilsMatter {
 
 	public static boolean isMatterReceiver(BlockEntity acceptor, Direction dir) {
 		if (acceptor != null) {
-			if (acceptor.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, dir).isPresent()) {
-				return true;
-			}
+			return acceptor.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, dir).isPresent();
 		}
 		return false;
 	}
