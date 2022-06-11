@@ -1,16 +1,15 @@
 package matteroverdrive.common.tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Sets;
-
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMatterConduit;
-import matteroverdrive.common.cable_network.MatterConduitNetwork;
+import matteroverdrive.common.network.NetworkMatterConduit;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
@@ -25,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileMatterConduit extends AbstractEmittingCable<MatterConduitNetwork> {
+public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterConduit> {
 
 	private ArrayList<ICapabilityMatterStorage> handler = new ArrayList<>();
 
@@ -106,21 +105,21 @@ public class TileMatterConduit extends AbstractEmittingCable<MatterConduitNetwor
 	@Override
 	public BaseNetwork getNetwork(boolean createIfNull) {
 		if (network == null && createIfNull) {
-			HashSet<AbstractCableTile<MatterConduitNetwork>> adjacentCables = getConnectedConductors();
-			HashSet<MatterConduitNetwork> connectedNets = new HashSet<>();
-			for (AbstractCableTile<MatterConduitNetwork> wire : adjacentCables) {
-				MatterConduitNetwork network = (MatterConduitNetwork) wire.getNetwork(false);
+			HashSet<AbstractCableTile<NetworkMatterConduit>> adjacentCables = getConnectedConductors();
+			HashSet<NetworkMatterConduit> connectedNets = new HashSet<>();
+			for (AbstractCableTile<NetworkMatterConduit> wire : adjacentCables) {
+				NetworkMatterConduit network = (NetworkMatterConduit) wire.getNetwork(false);
 				if (network != null) {
 					connectedNets.add(network);
 				}
 			}
 			if (connectedNets.isEmpty()) {
-				network = new MatterConduitNetwork(Sets.newHashSet(this));
+				network = new NetworkMatterConduit(Arrays.asList(this));
 			} else {
 				if (connectedNets.size() == 1) {
-					network = (MatterConduitNetwork) connectedNets.toArray()[0];
+					network = (NetworkMatterConduit) connectedNets.toArray()[0];
 				} else {
-					network = new MatterConduitNetwork(connectedNets, false);
+					network = new NetworkMatterConduit(connectedNets);
 				}
 				network.cables.add(this);
 			}

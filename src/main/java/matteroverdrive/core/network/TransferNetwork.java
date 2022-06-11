@@ -3,6 +3,7 @@ package matteroverdrive.core.network;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import matteroverdrive.common.block.cable.ICableType;
@@ -14,16 +15,12 @@ public abstract class TransferNetwork<EMIT> extends BaseNetwork {
 
 	public double networkMaxTransfer;
 	
-	public TransferNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+	public TransferNetwork(List<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
 	}
 	
-	public TransferNetwork(Set<? extends BaseNetwork> networks) {
+	public TransferNetwork(Collection<? extends BaseNetwork> networks) {
 		super(networks);
-	}
-	
-	public TransferNetwork(Set<? extends BaseNetwork> networks, boolean special) {
-		super(networks, special);
 	}
 	
 	public double getNetworkMaxTransfer() {

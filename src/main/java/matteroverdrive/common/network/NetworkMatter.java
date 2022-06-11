@@ -1,4 +1,4 @@
-package matteroverdrive.common.cable_network;
+package matteroverdrive.common.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterNetwork extends BaseNetwork {
+public class NetworkMatter extends BaseNetwork {
 
 	private List<TileMatterAnalyzer> analyzers = new ArrayList<>();
 	private List<TileMatterReplicator> replicators = new ArrayList<>();
@@ -31,16 +31,12 @@ public class MatterNetwork extends BaseNetwork {
 	private List<TileMatterTank> matterTanks = new ArrayList<>();
 	private List<TileNetworkPowerSupply> powerSupplies = new ArrayList<>();
 	
-	public MatterNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+	public NetworkMatter(List<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
 	}
 	
-	public MatterNetwork(Set<? extends BaseNetwork> networks) {
+	public NetworkMatter(Collection<? extends BaseNetwork> networks) {
 		super(networks);
-	}
-	
-	public MatterNetwork(Set<? extends BaseNetwork> networks, boolean special) {
-		super(networks, special);
 	}
 	
 	public Set<BlockEntity> getNetworkAcceptors() {
@@ -166,13 +162,8 @@ public class MatterNetwork extends BaseNetwork {
 	}
 
 	@Override
-	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks) {
-		return new MatterNetwork(networks);
-	}
-
-	@Override
-	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special) {
-		return new MatterNetwork(networks, special);
+	public BaseNetwork newInstance(Collection<? extends BaseNetwork> networks) {
+		return new NetworkMatter(networks);
 	}
 
 }

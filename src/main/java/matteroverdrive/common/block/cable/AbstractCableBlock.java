@@ -191,6 +191,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		if(changedState.hasProperty(facingProperty)) {
 			return thisType == changedState.getValue(facingProperty);
 		} else {
+			//TODO fix
 			return thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE || thisType == CableConnectionType.NONE_SEAMLESS;
 		}
 	}

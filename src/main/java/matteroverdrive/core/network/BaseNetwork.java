@@ -26,23 +26,12 @@ public abstract class BaseNetwork {
 	public Map<ICableType, Set<AbstractCableTile<?>>> cableTypes = new HashMap<>();
 	public boolean fixed;
 
-	public BaseNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+	public BaseNetwork(List<? extends AbstractCableTile<?>> varCables) {
 		cables.addAll(varCables);
 		CableNetworkRegistry.register(this);
 	}
 
-	public BaseNetwork(Set<? extends BaseNetwork> networks) {
-		for (BaseNetwork net : networks) {
-			if (net != null) {
-				cables.addAll(net.cables);
-				net.deregister();
-			}
-		}
-		refresh();
-		CableNetworkRegistry.register(this);
-	}
-
-	public BaseNetwork(Set<? extends BaseNetwork> networks, boolean special) {
+	public BaseNetwork(Collection<? extends BaseNetwork> networks) {
 		for (BaseNetwork net : networks) {
 			if (net != null) {
 				cables.addAll(net.cables);
@@ -169,9 +158,7 @@ public abstract class BaseNetwork {
 
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
 	
-	public abstract BaseNetwork newInstance(Set<? extends BaseNetwork> networks);
-	
-	public abstract BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special);
+	public abstract BaseNetwork newInstance(Collection<? extends BaseNetwork> networks);
 
 	public abstract ICableType[] getConductorTypes();
 

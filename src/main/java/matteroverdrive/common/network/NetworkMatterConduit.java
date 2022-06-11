@@ -1,7 +1,8 @@
-package matteroverdrive.common.cable_network;
+package matteroverdrive.common.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -16,18 +17,14 @@ import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MatterConduitNetwork extends TransferNetwork<Double> {
+public class NetworkMatterConduit extends TransferNetwork<Double> {
 	
-	public MatterConduitNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
+	public NetworkMatterConduit(List<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
 	}
 	
-	public MatterConduitNetwork(Set<? extends BaseNetwork> networks) {
+	public NetworkMatterConduit(Collection<? extends BaseNetwork> networks) {
 		super(networks);
-	}
-	
-	public MatterConduitNetwork(Set<? extends BaseNetwork> networks, boolean special) {
-		super(networks, special);
 	}
 	
 	@Override
@@ -69,13 +66,8 @@ public class MatterConduitNetwork extends TransferNetwork<Double> {
 	}
 
 	@Override
-	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks) {
-		return new MatterConduitNetwork(networks);
-	}
-
-	@Override
-	public BaseNetwork newInstance(Set<? extends BaseNetwork> networks, boolean special) {
-		return new MatterConduitNetwork(networks, special);
+	public BaseNetwork newInstance(Collection<? extends BaseNetwork> networks) {
+		return new NetworkMatterConduit(networks);
 	}
 
 }
