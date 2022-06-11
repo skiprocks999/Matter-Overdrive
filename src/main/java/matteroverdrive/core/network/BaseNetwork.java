@@ -72,18 +72,12 @@ public abstract class BaseNetwork {
 		for (AbstractCableTile<?> conductor : cables) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
-				BlockEntity acceptor = tileEntity.getLevel()
-						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
-				if (acceptor != null && !isCable(acceptor) && isValidConnection(acceptor, direction) && canConnect(acceptor, direction)) {
+				BlockEntity acceptor = tileEntity.getLevel().getBlockEntity(tileEntity.getBlockPos().relative(direction));
+				if (acceptor != null && !isCable(acceptor) && canConnect(acceptor, direction)) {
 					connected.add(acceptor);
 					Set<Direction> directions = dirsPerConnectionMap.getOrDefault(acceptor, new HashSet<>());
-							//dirsPerConnectionMap.containsKey(acceptor)
-							//? dirsPerConnectionMap.get(acceptor)
-							//: new HashSet<>();
 					directions.add(direction.getOpposite());
 					dirsPerConnectionMap.put(acceptor, directions);
-						
-					
 				}
 			}
 		}
@@ -176,8 +170,6 @@ public abstract class BaseNetwork {
 	}
 
 	public abstract boolean isCable(BlockEntity tile);
-
-	public abstract boolean isValidConnection(BlockEntity acceptor, Direction orientation);
 
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
 	

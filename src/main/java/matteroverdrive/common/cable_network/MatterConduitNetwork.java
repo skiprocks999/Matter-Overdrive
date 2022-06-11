@@ -63,11 +63,6 @@ public class MatterConduitNetwork extends TransferNetwork<Double> {
 	}
 
 	@Override
-	public boolean isValidConnection(BlockEntity acceptor, Direction orientation) {
-		return UtilsMatter.isMatterReceiver(acceptor);
-	}
-
-	@Override
 	public ICableType[] getConductorTypes() {
 		return TypeMatterConduit.values();
 	}

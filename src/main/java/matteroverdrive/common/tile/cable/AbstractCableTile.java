@@ -5,8 +5,6 @@ import java.util.HashSet;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Sets;
-
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.core.network.BaseNetwork;

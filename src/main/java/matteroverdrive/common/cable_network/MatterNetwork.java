@@ -19,8 +19,6 @@ import matteroverdrive.common.tile.matter_network.TilePatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.network.BaseNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
-import matteroverdrive.core.utils.UtilsMatter;
-import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -93,19 +91,13 @@ public class MatterNetwork extends BaseNetwork {
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
 						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
-				if (acceptor != null && !isCable(acceptor)) {
-					if (isValidConnection(acceptor, direction)) {
-						if (canConnect(acceptor, direction)) {
-							BlockEntity casted = (BlockEntity) acceptor;
-							connected.add(casted);
-							Set<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
-									? dirsPerConnectionMap.get(acceptor)
-									: new HashSet<>();
-							directions.add(direction.getOpposite());
-							dirsPerConnectionMap.put(casted, directions);
-							addTileToCategory(casted);
-						}
-					}
+				if (acceptor != null && !isCable(acceptor) && canConnect(acceptor, direction)) {
+					BlockEntity casted = (BlockEntity) acceptor;
+					connected.add(casted);
+					Set<Direction> directions = dirsPerConnectionMap.getOrDefault(acceptor, new HashSet<>()); 
+					directions.add(direction.getOpposite());
+					dirsPerConnectionMap.put(casted, directions);
+					addTileToCategory(casted);
 				}
 			}
 		}
@@ -146,19 +138,13 @@ public class MatterNetwork extends BaseNetwork {
 	}
 
 	@Override
-	public boolean isValidConnection(BlockEntity acceptor, Direction orientation) {
-		return acceptor instanceof IMatterNetworkMember member && member.canConnectToFace(orientation);
-	}
-
-	@Override
 	public ICableType[] getConductorTypes() {
 		return TypeMatterNetworkCable.values();
 	}
 
 	@Override
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
-		Direction opposite = orientation.getOpposite();
-		return UtilsTile.isFEReciever(acceptor, opposite) || UtilsMatter.isMatterReceiver(acceptor, opposite);
+		return acceptor instanceof IMatterNetworkMember member && member.canConnectToFace(orientation.getOpposite());
 	}
 
 	public List<TileMatterAnalyzer> getAnalyzers() {
