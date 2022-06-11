@@ -98,7 +98,7 @@ public class MatterNetwork extends BaseNetwork {
 						if (canConnect(acceptor, direction)) {
 							BlockEntity casted = (BlockEntity) acceptor;
 							connected.add(casted);
-							HashSet<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
+							Set<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
 									? dirsPerConnectionMap.get(acceptor)
 									: new HashSet<>();
 							directions.add(direction.getOpposite());

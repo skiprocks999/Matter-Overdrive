@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -19,10 +20,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class BaseNetwork {
 	
-	public HashSet<AbstractCableTile<?>> cables = new HashSet<>();
-	public HashSet<BlockEntity> connected = new HashSet<>();
-	public HashMap<BlockEntity, HashSet<Direction>> dirsPerConnectionMap = new HashMap<>();
-	public HashMap<ICableType, HashSet<AbstractCableTile<?>>> cableTypes = new HashMap<>();
+	public Set<AbstractCableTile<?>> cables = new HashSet<>();
+	public Set<BlockEntity> connected = new HashSet<>();
+	public Map<BlockEntity, Set<Direction>> dirsPerConnectionMap = new HashMap<>();
+	public Map<ICableType, Set<AbstractCableTile<?>>> cableTypes = new HashMap<>();
 	public boolean fixed;
 
 	public BaseNetwork() {
@@ -77,7 +78,7 @@ public abstract class BaseNetwork {
 					if (isValidConnection(acceptor, direction)) {
 						if (canConnect(acceptor, direction)) {
 							connected.add(acceptor);
-							HashSet<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
+							Set<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
 									? dirsPerConnectionMap.get(acceptor)
 									: new HashSet<>();
 							directions.add(direction.getOpposite());
