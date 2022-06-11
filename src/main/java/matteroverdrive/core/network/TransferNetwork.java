@@ -14,10 +14,6 @@ public abstract class TransferNetwork<EMIT> extends BaseNetwork {
 
 	public double networkMaxTransfer;
 	
-	public TransferNetwork() {
-		super();
-	}
-	
 	public TransferNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
 	}

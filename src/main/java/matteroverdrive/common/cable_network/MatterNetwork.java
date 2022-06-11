@@ -19,7 +19,6 @@ import matteroverdrive.common.tile.matter_network.TilePatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.network.BaseNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -31,10 +30,6 @@ public class MatterNetwork extends BaseNetwork {
 	private List<TilePatternMonitor> patternMonitors = new ArrayList<>();
 	private List<TileMatterTank> matterTanks = new ArrayList<>();
 	private List<TileNetworkPowerSupply> powerSupplies = new ArrayList<>();
-
-	public MatterNetwork() {
-		super();
-	}
 	
 	public MatterNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
@@ -89,8 +84,7 @@ public class MatterNetwork extends BaseNetwork {
 		for (AbstractCableTile<?> conductor : cables) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
-				BlockEntity acceptor = tileEntity.getLevel()
-						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
+				BlockEntity acceptor = tileEntity.getLevel().getBlockEntity(tileEntity.getBlockPos().relative(direction));
 				if (acceptor != null && !isCable(acceptor) && canConnect(acceptor, direction)) {
 					BlockEntity casted = (BlockEntity) acceptor;
 					connected.add(casted);
@@ -169,11 +163,6 @@ public class MatterNetwork extends BaseNetwork {
 
 	public List<TileNetworkPowerSupply> getPowerSupplies() {
 		return powerSupplies;
-	}
-
-	@Override
-	public BaseNetwork newInstance() {
-		return new MatterNetwork();
 	}
 
 	@Override

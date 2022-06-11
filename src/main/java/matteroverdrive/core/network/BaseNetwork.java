@@ -1,6 +1,5 @@
 package matteroverdrive.core.network;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +15,7 @@ import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.network.utils.NetworkLocator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class BaseNetwork {
@@ -25,10 +25,6 @@ public abstract class BaseNetwork {
 	public Map<BlockEntity, Set<Direction>> dirsPerConnectionMap = new HashMap<>();
 	public Map<ICableType, Set<AbstractCableTile<?>>> cableTypes = new HashMap<>();
 	public boolean fixed;
-
-	public BaseNetwork() {
-		this(new HashSet<AbstractCableTile<?>>());
-	}
 
 	public BaseNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
 		cables.addAll(varCables);
@@ -97,31 +93,31 @@ public abstract class BaseNetwork {
 	public void split(@Nonnull AbstractCableTile<?> splitPoint) {
 			removeFromNetwork(splitPoint);
 			BlockEntity[] connectedTiles = new BlockEntity[6];
-			boolean[] dealtWith = { false, false, false, false, false, false };
-			for (Direction direction : Direction.values()) {
-				BlockPos ex = splitPoint.getBlockPos().offset(direction.getNormal());
-				if (splitPoint.getLevel().hasChunkAt(ex)) {
-					BlockEntity sideTile = splitPoint.getLevel().getBlockEntity(ex);
+			boolean[] tilesToHandle = { false, false, false, false, false, false };
+			Level world = splitPoint.getLevel();
+			BlockPos splitPos = splitPoint.getBlockPos();
+			for (Direction dir : Direction.values()) {
+				BlockPos adjacent = splitPos.relative(dir);
+				if (world.hasChunkAt(adjacent)) {
+					BlockEntity sideTile = world.getBlockEntity(adjacent);
 					if (sideTile != null) {
-						connectedTiles[Arrays.asList(Direction.values()).indexOf(direction)] = sideTile;
+						connectedTiles[dir.ordinal()] = sideTile;
 					}
 				}
 			}
-			for (int countOne = 0; countOne < connectedTiles.length; countOne++) {
-				BlockEntity connectedBlockA = connectedTiles[countOne];
-				if (connectedBlockA != null) {
-					if (isCable(connectedBlockA) && !dealtWith[countOne]) {
-						NetworkLocator finder = new NetworkLocator(splitPoint.getLevel(),
-								connectedBlockA.getBlockPos(), this, splitPoint.getBlockPos());
+			for (int i = 0; i < 6; i++) {
+				BlockEntity currentBlock = connectedTiles[i];
+				if (currentBlock != null) {
+					if (isCable(currentBlock) && !tilesToHandle[i]) {
+						NetworkLocator finder = new NetworkLocator(world, currentBlock.getBlockPos(), this, splitPos);
 						List<BlockEntity> partNetwork = finder.exploreNetwork();
-						for (int countTwo = countOne + 1; countTwo < connectedTiles.length; countTwo++) {
-							BlockEntity connectedBlockB = connectedTiles[countTwo];
-							if (isCable(connectedBlockB) && !dealtWith[countTwo]
-									&& partNetwork.contains(connectedBlockB)) {
-								dealtWith[countTwo] = true;
+						for (int j = i + 1; j < 6; j++) {
+							BlockEntity nextBlock = connectedTiles[j];
+							if (isCable(nextBlock) && !tilesToHandle[j] && partNetwork.contains(nextBlock)) {
+								tilesToHandle[j] = true;
 							}
 						}
-						BaseNetwork newNetwork = newInstance();
+						BaseNetwork newNetwork = newInstance(new HashSet<>());
 
 						for (BlockEntity tile : finder.iteratedTiles) {
 							if (tile != splitPoint) {
@@ -172,8 +168,6 @@ public abstract class BaseNetwork {
 	public abstract boolean isCable(BlockEntity tile);
 
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
-	
-	public abstract BaseNetwork newInstance();
 	
 	public abstract BaseNetwork newInstance(Set<? extends BaseNetwork> networks);
 	

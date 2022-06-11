@@ -17,10 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class MatterConduitNetwork extends TransferNetwork<Double> {
-
-	public MatterConduitNetwork() {
-		super();
-	}
 	
 	public MatterConduitNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
 		super(varCables);
@@ -70,11 +66,6 @@ public class MatterConduitNetwork extends TransferNetwork<Double> {
 	@Override
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor, orientation.getOpposite());
-	}
-
-	@Override
-	public BaseNetwork newInstance() {
-		return new MatterConduitNetwork();
 	}
 
 	@Override
