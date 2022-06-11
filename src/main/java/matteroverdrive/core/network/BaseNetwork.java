@@ -19,10 +19,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class BaseNetwork {
 	
-	public HashSet<AbstractCableTile<?>> conductorSet = new HashSet<>();
-	public HashSet<BlockEntity> acceptorSet = new HashSet<>();
-	public HashMap<BlockEntity, HashSet<Direction>> acceptorInputMap = new HashMap<>();
-	public HashMap<ICableType, HashSet<AbstractCableTile<?>>> conductorTypeMap = new HashMap<>();
+	public HashSet<AbstractCableTile<?>> cables = new HashSet<>();
+	public HashSet<BlockEntity> connected = new HashSet<>();
+	public HashMap<BlockEntity, HashSet<Direction>> dirsPerConnectionMap = new HashMap<>();
+	public HashMap<ICableType, HashSet<AbstractCableTile<?>>> cableTypes = new HashMap<>();
 	public boolean fixed;
 
 	public BaseNetwork() {
@@ -30,14 +30,14 @@ public abstract class BaseNetwork {
 	}
 
 	public BaseNetwork(Collection<? extends AbstractCableTile<?>> varCables) {
-		conductorSet.addAll(varCables);
+		cables.addAll(varCables);
 		CableNetworkRegistry.register(this);
 	}
 
 	public BaseNetwork(Set<? extends BaseNetwork> networks) {
 		for (BaseNetwork net : networks) {
 			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
+				cables.addAll(net.cables);
 				net.deregister();
 			}
 		}
@@ -48,7 +48,7 @@ public abstract class BaseNetwork {
 	public BaseNetwork(Set<? extends BaseNetwork> networks, boolean special) {
 		for (BaseNetwork net : networks) {
 			if (net != null) {
-				conductorSet.addAll(net.conductorSet);
+				cables.addAll(net.cables);
 				net.deregister();
 			}
 		}
@@ -57,9 +57,9 @@ public abstract class BaseNetwork {
 	}
 	
 	public void refresh() {
-		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
-		acceptorSet.clear();
-		acceptorInputMap.clear();
+		Iterator<AbstractCableTile<?>> it = cables.iterator();
+		connected.clear();
+		dirsPerConnectionMap.clear();
 		while (it.hasNext()) {
 			AbstractCableTile<?> conductor = it.next();
 			if (conductor == null || conductor.isRemoved()) {
@@ -68,20 +68,20 @@ public abstract class BaseNetwork {
 				conductor.setNetwork(this);
 			}
 		}
-		for (AbstractCableTile<?> conductor : conductorSet) {
+		for (AbstractCableTile<?> conductor : cables) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
 						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
-				if (acceptor != null && !isConductor(acceptor)) {
-					if (isAcceptor(acceptor, direction)) {
+				if (acceptor != null && !isCable(acceptor)) {
+					if (isValidConnection(acceptor, direction)) {
 						if (canConnect(acceptor, direction)) {
-							acceptorSet.add(acceptor);
-							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor)
-									? acceptorInputMap.get(acceptor)
+							connected.add(acceptor);
+							HashSet<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
+									? dirsPerConnectionMap.get(acceptor)
 									: new HashSet<>();
 							directions.add(direction.getOpposite());
-							acceptorInputMap.put(acceptor, directions);
+							dirsPerConnectionMap.put(acceptor, directions);
 						}
 					}
 				}
@@ -91,12 +91,12 @@ public abstract class BaseNetwork {
 	}
 
 	public void updateStatistics() {
-		conductorTypeMap.clear();
+		cableTypes.clear();
 		for (ICableType type : getConductorTypes()) {
-			conductorTypeMap.put(type, new HashSet<>());
+			cableTypes.put(type, new HashSet<>());
 		}
-		for (AbstractCableTile<?> wire : conductorSet) {
-			conductorTypeMap.get(wire.getConductorType()).add(wire);
+		for (AbstractCableTile<?> wire : cables) {
+			cableTypes.get(wire.getConductorType()).add(wire);
 		}
 	}
 
@@ -116,13 +116,13 @@ public abstract class BaseNetwork {
 			for (int countOne = 0; countOne < connectedTiles.length; countOne++) {
 				BlockEntity connectedBlockA = connectedTiles[countOne];
 				if (connectedBlockA != null) {
-					if (isConductor(connectedBlockA) && !dealtWith[countOne]) {
+					if (isCable(connectedBlockA) && !dealtWith[countOne]) {
 						NetworkLocator finder = new NetworkLocator(splitPoint.getLevel(),
 								connectedBlockA.getBlockPos(), this, splitPoint.getBlockPos());
 						List<BlockEntity> partNetwork = finder.exploreNetwork();
 						for (int countTwo = countOne + 1; countTwo < connectedTiles.length; countTwo++) {
 							BlockEntity connectedBlockB = connectedTiles[countTwo];
-							if (isConductor(connectedBlockB) && !dealtWith[countTwo]
+							if (isCable(connectedBlockB) && !dealtWith[countTwo]
 									&& partNetwork.contains(connectedBlockB)) {
 								dealtWith[countTwo] = true;
 							}
@@ -131,7 +131,7 @@ public abstract class BaseNetwork {
 
 						for (BlockEntity tile : finder.iteratedTiles) {
 							if (tile != splitPoint) {
-								newNetwork.conductorSet.add((AbstractCableTile<?>) tile);
+								newNetwork.cables.add((AbstractCableTile<?>) tile);
 							}
 						}
 						newNetwork.refresh();
@@ -153,31 +153,31 @@ public abstract class BaseNetwork {
 	}
 
 	public void removeFromNetwork(AbstractCableTile<?> conductor) {
-		conductorSet.remove(conductor);
-		if (conductorSet.isEmpty()) {
+		cables.remove(conductor);
+		if (cables.isEmpty()) {
 			deregister();
 		}
 	}
 
 	public void deregister() {
-		conductorSet.clear();
-		acceptorSet.clear();
-		acceptorInputMap.clear();
-		conductorTypeMap.clear();
+		cables.clear();
+		connected.clear();
+		dirsPerConnectionMap.clear();
+		cableTypes.clear();
 		CableNetworkRegistry.deregister(this);
 	}
 
 	public int getSize() {
-		return conductorSet.size();
+		return cables.size();
 	}
 	
 	public void tick() {
 		
 	}
 
-	public abstract boolean isConductor(BlockEntity tile);
+	public abstract boolean isCable(BlockEntity tile);
 
-	public abstract boolean isAcceptor(BlockEntity acceptor, Direction orientation);
+	public abstract boolean isValidConnection(BlockEntity acceptor, Direction orientation);
 
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
 	

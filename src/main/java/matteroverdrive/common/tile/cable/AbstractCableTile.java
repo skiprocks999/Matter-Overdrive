@@ -78,7 +78,7 @@ public abstract class AbstractCableTile<NETWORK extends BaseNetwork> extends Gen
 				}
 			}
 			if (!foundNetworks.isEmpty()) {
-				foundNetworks.get(0).conductorSet.add(this);
+				foundNetworks.get(0).cables.add(this);
 				network = foundNetworks.get(0);
 				if (foundNetworks.size() > 1) {
 					foundNetworks.remove(0);

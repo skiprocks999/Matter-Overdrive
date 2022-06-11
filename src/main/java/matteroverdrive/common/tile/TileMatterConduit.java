@@ -122,7 +122,7 @@ public class TileMatterConduit extends AbstractEmittingCable<MatterConduitNetwor
 				} else {
 					network = new MatterConduitNetwork(connectedNets, false);
 				}
-				network.conductorSet.add(this);
+				network.cables.add(this);
 			}
 		}
 		return network;

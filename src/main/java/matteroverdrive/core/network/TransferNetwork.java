@@ -35,13 +35,13 @@ public abstract class TransferNetwork<EMIT> extends BaseNetwork {
 	}
 	
 	public void updateStatistics() {
-		conductorTypeMap.clear();
+		cableTypes.clear();
 		for (ICableType type : getConductorTypes()) {
-			conductorTypeMap.put(type, new HashSet<>());
+			cableTypes.put(type, new HashSet<>());
 		}
-		for (AbstractCableTile<?> abs : conductorSet) {
+		for (AbstractCableTile<?> abs : cables) {
 			AbstractEmittingCable<?> wire = (AbstractEmittingCable<?>) abs;
-			conductorTypeMap.get(wire.getConductorType()).add(wire);
+			cableTypes.get(wire.getConductorType()).add(wire);
 			networkMaxTransfer = networkMaxTransfer == -1 ? wire.getMaxTransfer() : Math.min(networkMaxTransfer, wire.getMaxTransfer());
 			
 		}

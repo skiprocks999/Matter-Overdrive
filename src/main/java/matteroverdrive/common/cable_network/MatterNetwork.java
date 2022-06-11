@@ -51,14 +51,14 @@ public class MatterNetwork extends BaseNetwork {
 	}
 	
 	public Set<BlockEntity> getNetworkAcceptors() {
-		return new HashSet<>(acceptorSet);
+		return new HashSet<>(connected);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
+		Iterator<AbstractCableTile<?>> it = cables.iterator();
 		boolean broken = false;
 		while (it.hasNext()) {
 			AbstractCableTile<?> conductor = it.next();
@@ -77,9 +77,9 @@ public class MatterNetwork extends BaseNetwork {
 
 	@Override
 	public void refresh() {
-		Iterator<AbstractCableTile<?>> it = conductorSet.iterator();
-		acceptorSet.clear();
-		acceptorInputMap.clear();
+		Iterator<AbstractCableTile<?>> it = cables.iterator();
+		connected.clear();
+		dirsPerConnectionMap.clear();
 		while (it.hasNext()) {
 			AbstractCableTile<?> conductor = it.next();
 			if (conductor == null || conductor.isRemoved()) {
@@ -88,21 +88,21 @@ public class MatterNetwork extends BaseNetwork {
 				conductor.setNetwork(this);
 			}
 		}
-		for (AbstractCableTile<?> conductor : conductorSet) {
+		for (AbstractCableTile<?> conductor : cables) {
 			BlockEntity tileEntity = (BlockEntity) conductor;
 			for (Direction direction : Direction.values()) {
 				BlockEntity acceptor = tileEntity.getLevel()
 						.getBlockEntity(new BlockPos(tileEntity.getBlockPos()).offset(direction.getNormal()));
-				if (acceptor != null && !isConductor(acceptor)) {
-					if (isAcceptor(acceptor, direction)) {
+				if (acceptor != null && !isCable(acceptor)) {
+					if (isValidConnection(acceptor, direction)) {
 						if (canConnect(acceptor, direction)) {
 							BlockEntity casted = (BlockEntity) acceptor;
-							acceptorSet.add(casted);
-							HashSet<Direction> directions = acceptorInputMap.containsKey(acceptor)
-									? acceptorInputMap.get(acceptor)
+							connected.add(casted);
+							HashSet<Direction> directions = dirsPerConnectionMap.containsKey(acceptor)
+									? dirsPerConnectionMap.get(acceptor)
 									: new HashSet<>();
 							directions.add(direction.getOpposite());
-							acceptorInputMap.put(casted, directions);
+							dirsPerConnectionMap.put(casted, directions);
 							addTileToCategory(casted);
 						}
 					}
@@ -141,12 +141,12 @@ public class MatterNetwork extends BaseNetwork {
 	}
 
 	@Override
-	public boolean isConductor(BlockEntity tile) {
+	public boolean isCable(BlockEntity tile) {
 		return tile instanceof TileMatterNetworkCable;
 	}
 
 	@Override
-	public boolean isAcceptor(BlockEntity acceptor, Direction orientation) {
+	public boolean isValidConnection(BlockEntity acceptor, Direction orientation) {
 		return acceptor instanceof IMatterNetworkMember member && member.canConnectToFace(orientation);
 	}
 

@@ -38,14 +38,14 @@ public class MatterConduitNetwork extends TransferNetwork<Double> {
 	public Double emit(Double transfer, ArrayList<BlockEntity> ignored, boolean debug) {
 		if (transfer > 0) {
 			double sent = 0;
-			Set<BlockEntity> availableAcceptors = Sets.newHashSet(acceptorSet);
+			Set<BlockEntity> availableAcceptors = Sets.newHashSet(connected);
 			availableAcceptors.removeAll(ignored);
 			if (!availableAcceptors.isEmpty()) {
 				double perReciever = transfer / availableAcceptors.size();
 				for (BlockEntity receiver : availableAcceptors) {
-					if (acceptorInputMap.containsKey(receiver)) {
-						double perConnection = perReciever / acceptorInputMap.get(receiver).size();
-						for (Direction connection : acceptorInputMap.get(receiver)) {
+					if (dirsPerConnectionMap.containsKey(receiver)) {
+						double perConnection = perReciever / dirsPerConnectionMap.get(receiver).size();
+						for (Direction connection : dirsPerConnectionMap.get(receiver)) {
 							double rec = UtilsMatter.receiveMatter(receiver, connection, perConnection, false);
 							sent += rec;
 						}
@@ -58,12 +58,12 @@ public class MatterConduitNetwork extends TransferNetwork<Double> {
 	}
 
 	@Override
-	public boolean isConductor(BlockEntity tile) {
+	public boolean isCable(BlockEntity tile) {
 		return tile instanceof TileMatterConduit;
 	}
 
 	@Override
-	public boolean isAcceptor(BlockEntity acceptor, Direction orientation) {
+	public boolean isValidConnection(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor);
 	}
 

@@ -30,7 +30,7 @@ public class NetworkLocator {
 
 	public void loopAll(BlockPos location) {
 		BlockEntity curr = worldObj.getBlockEntity(location);
-		if (net.isConductor(curr)) {
+		if (net.isCable(curr)) {
 			iteratedTiles.add(curr);
 		}
 		for (Direction direction : Direction.values()) {
@@ -38,7 +38,7 @@ public class NetworkLocator {
 			if (!(toIgnore.size() == 1 ? toIgnore.get(0) == obj : toIgnore.contains(obj))) {
 				if (worldObj.hasChunkAt(obj)) {
 					BlockEntity tileEntity = worldObj.getBlockEntity(obj);
-					if (!iteratedTiles.contains(tileEntity) && net.isConductor(tileEntity)) {
+					if (!iteratedTiles.contains(tileEntity) && net.isCable(tileEntity)) {
 						loopAll((AbstractCableTile<?>) tileEntity);
 					}
 				}
@@ -54,7 +54,7 @@ public class NetworkLocator {
 				BlockPos pos = connections.getBlockPos();
 				if (!iteratedTiles.contains(connections)
 						&& !(toIgnore.size() == 1 ? toIgnore.get(0) == pos : toIgnore.contains(pos))) {
-					if (net.isConductor(connections)) {
+					if (net.isCable(connections)) {
 						loopAll((AbstractCableTile<?>) connections);
 					}
 				}

@@ -57,7 +57,7 @@ public class TileMatterNetworkCable extends AbstractCableTile<MatterNetwork> {
 				} else {
 					network = new MatterNetwork(connectedNets, false);
 				}
-				network.conductorSet.add(this);
+				network.cables.add(this);
 			}
 		}
 		return network;
