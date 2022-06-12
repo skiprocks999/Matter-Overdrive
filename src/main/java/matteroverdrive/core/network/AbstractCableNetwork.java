@@ -1,5 +1,6 @@
 /**
  * Based on Dynamic Network and various sub and super classes from Mekanism under MIT License 
+ * and the Electrodynamics cable network by AurilisDev
  * 
  * I suppose I can list them all if asked
  * 
@@ -9,11 +10,11 @@
  */
 package matteroverdrive.core.network;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,16 +65,15 @@ public abstract class AbstractCableNetwork {
 		//Step 1. Check what cables are still valid
 		connected.clear();
 		dirsPerConnectionMap.clear();
-		List<AbstractCableTile<?>> currCables = new ArrayList<>(cables);
-		List<AbstractCableTile<?>> toRemove = new ArrayList<>();
-		for(AbstractCableTile<?> cable : currCables) {
+		Iterator<AbstractCableTile<?>> cableIterator = cables.iterator();
+		while(cableIterator.hasNext()) {
+			AbstractCableTile<?> cable = cableIterator.next();
 			if (cable == null || cable.isRemoved()) {
-				toRemove.add(cable);
+				cableIterator.remove();
 			} else {
 				cable.setNetwork(this);
 			}
 		}
-		currCables.removeAll(toRemove);
 		//Step 2. Store the surrounding connected cables
 		for (AbstractCableTile<?> cable : cables) {
 			for (Direction direction : Direction.values()) {
@@ -179,7 +179,7 @@ public abstract class AbstractCableNetwork {
 		}
 	}
 
-	// combine cable networks when more are placed
+	// combine cable networks when more cables are placed
 	public void merge(AbstractCableNetwork network) {
 		if (network != null && network != this) {
 			Set<AbstractCableNetwork> networks = new HashSet<>();
@@ -199,7 +199,7 @@ public abstract class AbstractCableNetwork {
 		}
 	}
 
-	//Clear out all cables before 
+	//Clear out all cables before removing from the network registry 
 	public void deregister() {
 		cables.clear();
 		connected.clear();
