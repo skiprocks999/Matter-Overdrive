@@ -3,6 +3,7 @@ package matteroverdrive.common.block.states;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
@@ -28,6 +29,8 @@ public class OverdriveBlockStates {
 	public static final EnumProperty<CableConnectionType> CABLE_WEST = EnumProperty.create("cable_west", CableConnectionType.class);
 	public static final EnumProperty<CableConnectionType> CABLE_EAST = EnumProperty.create("cable_east", CableConnectionType.class);
 	
+	public static final EnumProperty<VerticalFacing> VERTICAL_FACING = EnumProperty.create("vertical_facing", VerticalFacing.class);
+	
 	public enum CableConnectionType implements StringRepresentable {
 		
 		NONE, NONE_SEAMLESS, CABLE, INVENTORY, IGNORED;
@@ -45,6 +48,32 @@ public class OverdriveBlockStates {
 		public String getSerializedName() {
 			return name().toLowerCase();
 		}
+	}
+	
+	public enum VerticalFacing implements StringRepresentable {
+		UP(Direction.UP), DOWN(Direction.DOWN), NONE(null);
+
+		public final Direction mapped;
+		
+		private VerticalFacing(Direction dir) {
+			mapped = dir;
+		}
+		
+		
+		@Override
+		public String getSerializedName() {
+			return name().toLowerCase();
+		}
+		
+		public static VerticalFacing fromDirection(Direction direction) {
+			for(VerticalFacing facing : values()) {
+				if(facing.mapped == direction) {
+					return facing;
+				}
+			}
+			return NONE;
+		}
+		
 	}
 	
 

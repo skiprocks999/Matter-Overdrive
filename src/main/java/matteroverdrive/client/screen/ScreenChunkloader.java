@@ -1,7 +1,7 @@
 package matteroverdrive.client.screen;
 
-import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
-import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
+import matteroverdrive.common.inventory.InventoryChunkloader;
+import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
@@ -21,7 +21,7 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenNetworkPowerSupply extends GenericScreen<InventoryNetworkPowerSupply> {
+public class ScreenChunkloader extends GenericScreen<InventoryChunkloader> {
 
 	private static boolean EXTENDED = false;
 
@@ -37,7 +37,7 @@ public class ScreenNetworkPowerSupply extends GenericScreen<InventoryNetworkPowe
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
 	
-	public ScreenNetworkPowerSupply(InventoryNetworkPowerSupply menu, Inventory playerinventory, Component title) {
+	public ScreenChunkloader(InventoryChunkloader menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
 
@@ -71,12 +71,12 @@ public class ScreenNetworkPowerSupply extends GenericScreen<InventoryNetworkPowe
 		}, MenuButtonType.UPGRADES, menu, false);
 
 		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(supply.getBlockPos()));
 			}
 		}, () -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
 				return supply.clientRedstoneMode;
 			}
@@ -93,26 +93,26 @@ public class ScreenNetworkPowerSupply extends GenericScreen<InventoryNetworkPowe
 		redstone.visible = false;
 		
 		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
 				return supply.clientEnergy.getEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
 				return supply.clientEnergy.getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null && supply.clientRunning) {
 				return supply.clientUsage;
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));
 		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileNetworkPowerSupply supply = getMenu().getTile();
+			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
 				return supply.clientRunning;
 			}

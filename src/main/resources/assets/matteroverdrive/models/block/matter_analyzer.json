@@ -1,0 +1,11 @@
+{
+	"parent": "matteroverdrive:block/parent/matter_analyzer_base",
+	"textures": {
+		"bottom": "matteroverdrive:block/base",
+		"top": "matteroverdrive:block/matter_analyzer/matter_analyzer_top",
+		"side": "matteroverdrive:block/vent2",
+		"front": "matteroverdrive:block/matter_analyzer/matter_analyzer_front",
+		"back": "matteroverdrive:block/network_port",
+		"particle": "matteroverdrive:block/matter_analyzer/matter_analyzer_front"
+	}
+}

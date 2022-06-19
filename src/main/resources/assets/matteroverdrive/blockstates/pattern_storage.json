@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "matteroverdrive:block/pattern_storage",
+			"y": 0
+		},
+		"facing=south": {
+			"model": "matteroverdrive:block/pattern_storage",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "matteroverdrive:block/pattern_storage",
+			"y": 90
+		},
+		"facing=east": {
+			"model": "matteroverdrive:block/pattern_storage",
+			"y": 270
+		}
+	}
+}

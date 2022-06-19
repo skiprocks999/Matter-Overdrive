@@ -22,7 +22,14 @@ public enum TypeMachine {
 			Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D) }, true),
 	INSCRIBER(Shapes.box(0.015625D, 0.0D, 0.015625D, 0.984375D, 0.96875D, 0.984375D), true), TRANSPORTER(true),
 	SPACETIME_ACCELERATOR(Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), true),
-	NETWORK_POWER_SUPPLY(true);
+	CHUNKLOADER(true), MATTER_ANALYZER(true), PATTERN_STORAGE(false), PATTERN_MONITOR(
+			new VoxelShape[] { Shapes.box(0.0D, 0.6875D, 0.0D, 1.0D, 1.0D, 1.0D),
+					Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D),
+					Shapes.box(0.0D, 0.0D, 0.6875D, 1.0D, 1.0D, 1.0D),
+					Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.3125D),
+					Shapes.box(0.6875D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+					Shapes.box(0.0D, 0.0D, 0.0D, 0.3125D, 1.0D, 1.0D)}, false),
+	MATTER_REPLICATOR(true);
 
 	// DUNSEW
 	public VoxelShape[] shapes = new VoxelShape[6];

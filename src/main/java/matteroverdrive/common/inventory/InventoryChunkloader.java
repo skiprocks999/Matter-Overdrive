@@ -2,7 +2,7 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
-import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
+import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;
@@ -11,16 +11,16 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public class InventoryNetworkPowerSupply extends GenericInventoryTile<TileNetworkPowerSupply> {
+public class InventoryChunkloader extends GenericInventoryTile<TileChunkloader> {
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.POWER_STORAGE };
 
-	public InventoryNetworkPowerSupply(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_NETWORK_POWER_SUPPLY.get(), id, playerinv, invcap, tilecoords);
+	public InventoryChunkloader(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
+		super(DeferredRegisters.MENU_CHUNKLOADER.get(), id, playerinv, invcap, tilecoords);
 	}
 	
-	public InventoryNetworkPowerSupply(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileNetworkPowerSupply.SLOT_COUNT, true, true), new SimpleContainerData(3));
+	public InventoryChunkloader(int id, Inventory playerinv) {
+		this(id, playerinv, new CapabilityInventory(TileChunkloader.SLOT_COUNT, true, true), new SimpleContainerData(3));
 	}
 
 	@Override

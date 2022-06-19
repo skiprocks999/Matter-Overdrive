@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "matteroverdrive:block/charger_child"
+    }
+  }
+}

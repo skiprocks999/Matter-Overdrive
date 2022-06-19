@@ -12,8 +12,9 @@ import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.BlockTritaniumCrate;
-import matteroverdrive.common.block.cable.BlockMatterConduit;
-import matteroverdrive.common.block.cable.BlockMatterNetworkCable;
+import matteroverdrive.common.block.BlockVerticalMachine;
+import matteroverdrive.common.block.cable.dualside.BlockMatterNetworkCable;
+import matteroverdrive.common.block.cable.serverside.BlockMatterConduit;
 import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
 import matteroverdrive.common.block.charger.BlockAndroidChargerChild;
 import matteroverdrive.common.block.type.BlockColors;
@@ -26,11 +27,12 @@ import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.inventory.InventoryMicrowave;
-import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
+import matteroverdrive.common.inventory.InventoryChunkloader;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
+import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
@@ -39,6 +41,7 @@ import matteroverdrive.common.item.tools.ItemTransporterFlashdrive;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
+import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileInscriber;
@@ -46,12 +49,16 @@ import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.common.tile.TileMicrowave;
+import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
+import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
-import matteroverdrive.common.tile.matter_network.TileNetworkPowerSupply;
+import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
+import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
@@ -124,7 +131,7 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
-	public static final RegistryObject<Block> BLOCK_MULTI_SUBNODE = registerBlock("multisubnode",
+	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child",
 			() -> new BlockAndroidChargerChild());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
 			() -> new BlockAndroidChargerParent<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
@@ -149,10 +156,22 @@ public class DeferredRegisters {
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
 			TypeMatterNetworkCable.values());
-	public static final RegistryObject<Block> BLOCK_NETWORK_POWER_SUPPLY = registerBlock(
-			TypeMachine.NETWORK_POWER_SUPPLY.id(),
-			() -> new BlockMachine<TileNetworkPowerSupply>(TileNetworkPowerSupply::new,
-					TypeMachine.NETWORK_POWER_SUPPLY, DeferredRegisters.TILE_NETWORK_POWER_SUPPLY));
+	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(
+			TypeMachine.CHUNKLOADER.id(),
+			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new,
+					TypeMachine.CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER));
+	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(
+			TypeMachine.MATTER_ANALYZER.id(),
+			() -> new BlockLightableMachine<TileMatterAnalyzer>(TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER));
+	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(
+			TypeMachine.PATTERN_STORAGE.id(),
+			() -> new BlockMachine<TilePatternStorage>(TilePatternStorage::new, TypeMachine.PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE));
+	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(
+			TypeMachine.PATTERN_MONITOR.id(),
+			() -> new BlockVerticalMachine<TilePatternMonitor>(TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR));
+	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(TypeMachine.MATTER_REPLICATOR.id(), 
+			() -> new BlockLightableMachine<TileMatterReplicator>(TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
+	
 
 	/* ITEMS */
 
@@ -192,6 +211,8 @@ public class DeferredRegisters {
 			TypeIsolinearCircuit.values());
 	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive",
 			() -> new ItemTransporterFlashdrive());
+	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive", () -> new ItemPatternDrive());
+	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner", () -> new ItemMatterScanner());
 
 	/* TILES */
 
@@ -228,9 +249,21 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterNetworkCable>> TILE_MATTER_NETWORK_CABLE = TILES
 			.register("network_cable", () -> new BlockEntityType<>(TileMatterNetworkCable::new,
 					Sets.newHashSet(BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0])), null));
-	public static final RegistryObject<BlockEntityType<TileNetworkPowerSupply>> TILE_NETWORK_POWER_SUPPLY = TILES
-			.register(TypeMachine.NETWORK_POWER_SUPPLY.id(),
-				() -> new BlockEntityType<>(TileNetworkPowerSupply::new, Sets.newHashSet(BLOCK_NETWORK_POWER_SUPPLY.get()), null));
+	public static final RegistryObject<BlockEntityType<TileChunkloader>> TILE_CHUNKLOADER = TILES
+			.register(TypeMachine.CHUNKLOADER.id(),
+				() -> new BlockEntityType<>(TileChunkloader::new, Sets.newHashSet(BLOCK_CHUNKLOADER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterAnalyzer>> TILE_MATTER_ANALYZER = TILES
+			.register(TypeMachine.MATTER_ANALYZER.id(),
+					() -> new BlockEntityType<>(TileMatterAnalyzer::new, Sets.newHashSet(BLOCK_MATTER_ANALYZER.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternStorage>> TILE_PATTERN_STORAGE = TILES
+			.register(TypeMachine.PATTERN_STORAGE.id(), 
+					() -> new BlockEntityType<>(TilePatternStorage::new, Sets.newHashSet(BLOCK_PATTERN_STORAGE.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternMonitor>> TILE_PATTERN_MONITOR = TILES
+			.register(TypeMachine.PATTERN_MONITOR.id(), 
+					() -> new BlockEntityType<>(TilePatternMonitor::new, Sets.newHashSet(BLOCK_PATTERN_MONITOR.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterReplicator>> TILE_MATTER_REPLICATOR = TILES
+			.register(TypeMachine.MATTER_REPLICATOR.id(), 
+					() -> new BlockEntityType<>(TileMatterReplicator::new, Sets.newHashSet(BLOCK_MATTER_REPLICATOR.get()), null));
 
 	/* MENUS */
 
@@ -252,8 +285,8 @@ public class DeferredRegisters {
 			.register(TypeMachine.TRANSPORTER.id(), () -> new MenuType<>(InventoryTransporter::new));
 	public static final RegistryObject<MenuType<InventorySpacetimeAccelerator>> MENU_SPACETIME_ACCELERATOR = CONTAINERS
 			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new MenuType<>(InventorySpacetimeAccelerator::new));
-	public static final RegistryObject<MenuType<InventoryNetworkPowerSupply>> MENU_NETWORK_POWER_SUPPLY = CONTAINERS
-			.register(TypeMachine.NETWORK_POWER_SUPPLY.id(), () -> new MenuType<>(InventoryNetworkPowerSupply::new));
+	public static final RegistryObject<MenuType<InventoryChunkloader>> MENU_CHUNKLOADER = CONTAINERS
+			.register(TypeMachine.CHUNKLOADER.id(), () -> new MenuType<>(InventoryChunkloader::new));
 
 	/* Particles */
 

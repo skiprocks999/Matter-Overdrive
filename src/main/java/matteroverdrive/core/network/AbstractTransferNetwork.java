@@ -14,12 +14,12 @@ public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork
 
 	public double networkMaxTransfer;
 	
-	public AbstractTransferNetwork(List<? extends AbstractCableTile<?>> varCables) {
-		super(varCables);
+	public AbstractTransferNetwork(List<? extends AbstractCableTile<?>> varCables, boolean client) {
+		super(varCables, client);
 	}
 	
-	public AbstractTransferNetwork(Collection<? extends AbstractCableNetwork> networks) {
-		super(networks);
+	public AbstractTransferNetwork(Collection<? extends AbstractCableNetwork> networks, boolean client) {
+		super(networks, client);
 	}
 	
 	@Override

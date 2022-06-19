@@ -1,4 +1,4 @@
-package matteroverdrive.common.block.cable;
+package matteroverdrive.common.block.cable.dualside;
 
 import java.util.HashSet;
 
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
-public class BlockMatterNetworkCable extends AbstractCableBlock {
+public class BlockMatterNetworkCable extends AbstractDualSideCableBlock {
 	
 	public BlockMatterNetworkCable(TypeMatterNetworkCable type) {
 		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.15f).dynamicShape(), type);
@@ -45,6 +45,11 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 	@Override
 	public boolean checkCableClass(BlockEntity entity) {
 		return entity instanceof TileMatterNetworkCable;
+	}
+
+	@Override
+	public boolean isValidConnection(BlockEntity facingTile, Direction facing) {
+		return facingTile instanceof IMatterNetworkMember member && member.canConnectToFace(facing);
 	}
 	
 }

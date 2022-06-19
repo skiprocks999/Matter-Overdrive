@@ -1,20 +1,18 @@
-package matteroverdrive.common.tile.matter_network;
+package matteroverdrive.common.tile;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.common.inventory.InventoryNetworkPowerSupply;
+import matteroverdrive.common.inventory.InventoryChunkloader;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileNetworkPowerSupply extends GenericUpgradableTile implements IMatterNetworkMember {
+public class TileChunkloader extends GenericUpgradableTile {
 
 	public static final int SLOT_COUNT = 5;
 	public static final int ENERGY_CAPACITY = 1024000;
@@ -27,16 +25,16 @@ public class TileNetworkPowerSupply extends GenericUpgradableTile implements IMa
 	
 	public CapabilityEnergyStorage clientEnergy;
 	
-	public TileNetworkPowerSupply(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_NETWORK_POWER_SUPPLY.get(), pos, state);
+	public TileChunkloader(BlockPos pos, BlockState state) {
+		super(DeferredRegisters.TILE_CHUNKLOADER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setEnergySlots(1).setUpgrades(4).setOwner(this)
-				.setValidator(machineValidator()).setValidUpgrades(InventoryNetworkPowerSupply.UPGRADES));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryChunkloader.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this));
 		setMenuProvider(
 				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryNetworkPowerSupply(id, play.getInventory(),
+						(id, inv, play) -> new InventoryChunkloader(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName(TypeMachine.NETWORK_POWER_SUPPLY.id())));
+						getContainerName(TypeMachine.CHUNKLOADER.id())));
 		setHasMenuData();
 		setTickable();
 	}
@@ -64,11 +62,6 @@ public class TileNetworkPowerSupply extends GenericUpgradableTile implements IMa
 		clientUsage = tag.getInt("usage");
 		clientSAMultipler = tag.getDouble("sabonus");
 		clientRunning = tag.getBoolean("running");
-	}
-
-	@Override
-	public boolean canConnectToFace(Direction face) {
-		return true;
 	}
 
 	@Override

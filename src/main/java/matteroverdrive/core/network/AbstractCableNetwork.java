@@ -10,7 +10,7 @@
  */
 package matteroverdrive.core.network;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,22 +42,25 @@ public abstract class AbstractCableNetwork {
 	public Set<BlockEntity> connected = new HashSet<>();
 	public Map<BlockEntity, Set<Direction>> dirsPerConnectionMap = new HashMap<>();
 	public Map<ICableType, Set<AbstractCableTile<?>>> cableTypes = new HashMap<>();
-	public boolean fixed;
+	
+	protected boolean clientSide;
 
-	public AbstractCableNetwork(List<? extends AbstractCableTile<?>> varCables) {
+	public AbstractCableNetwork(List<? extends AbstractCableTile<?>> varCables, boolean client) {
+		clientSide = client;
 		cables.addAll(varCables);
-		CableNetworkRegistry.register(this);
+		CableNetworkRegistry.register(this, client);
 	}
 
-	public AbstractCableNetwork(Collection<? extends AbstractCableNetwork> networks) {
+	public AbstractCableNetwork(Collection<? extends AbstractCableNetwork> networks, boolean client) {
+		clientSide = client;
 		for (AbstractCableNetwork network : networks) {
 			if (network != null) {
 				cables.addAll(network.cables);
-				network.deregister();
+				network.deregister(client);
 			}
 		}
 		refresh();
-		CableNetworkRegistry.register(this);
+		CableNetworkRegistry.register(this, client);
 	}
 
 	//Refresh the network without modifying it
@@ -131,14 +134,16 @@ public abstract class AbstractCableNetwork {
 				AbstractCableTile<?> currentCable = (AbstractCableTile<?>) currentBlock;
 				BlockPos currentPos = currentCable.getBlockPos();
 				
-				List<AbstractCableTile<?>> checked = Arrays.asList(currentCable);
-				List<BlockPos> posToIgnore = Arrays.asList(splitPos);
+				ArrayList<AbstractCableTile<?>> checked = new ArrayList<>();
+				checked.add(currentCable);
+				ArrayList<BlockPos> posToIgnore = new ArrayList<>();
+				posToIgnore.add(splitPos);
 				
 				for (Direction dir : Direction.values()) {
 					BlockPos adjacent = currentPos.relative(dir);
 					if (!posToIgnore.contains(adjacent) && world.hasChunkAt(adjacent)) {
 						BlockEntity adjacentTile = world.getBlockEntity(adjacent);
-						if (!checked.contains(adjacentTile) && isCable(adjacentTile)) {
+						if (adjacentTile != null && !checked.contains(adjacentTile) && isCable(adjacentTile)) {
 							checkSurroundingBlocks((AbstractCableTile<?>) adjacentTile, checked, posToIgnore);
 						}
 					}
@@ -157,16 +162,16 @@ public abstract class AbstractCableNetwork {
 				//safety check
 				checked.remove(cableToRemove);
 				
-				AbstractCableNetwork newNetwork = newInstance(checked);
+				AbstractCableNetwork newNetwork = newInstance(checked, clientSide);
 				newNetwork.refresh();
 			}
 		}
 		
 		//Step 4. Remove this network
-		deregister();
+		deregister(clientSide);
 	}
 	
-	private void checkSurroundingBlocks(AbstractCableTile<?> cable, List<AbstractCableTile<?>> checked, List<BlockPos> posToIgnore) {
+	private void checkSurroundingBlocks(AbstractCableTile<?> cable, ArrayList<AbstractCableTile<?>> checked, ArrayList<BlockPos> posToIgnore) {
 		checked.add(cable);
 		for (BlockEntity adjConnected : cable.getAdjacentConnections()) {
 			if (adjConnected != null) {
@@ -186,7 +191,7 @@ public abstract class AbstractCableNetwork {
 			networks.add(this);
 			networks.add(network);
 			//need this because abstract classes 
-			AbstractCableNetwork newNetwork = newInstance(networks);
+			AbstractCableNetwork newNetwork = newInstance(networks, clientSide);
 			newNetwork.refresh();
 		}
 	}
@@ -195,17 +200,17 @@ public abstract class AbstractCableNetwork {
 	public void removeFromNetwork(AbstractCableTile<?> conductor) {
 		cables.remove(conductor);
 		if (cables.isEmpty()) {
-			deregister();
+			deregister(clientSide);
 		}
 	}
 
 	//Clear out all cables before removing from the network registry 
-	public void deregister() {
+	public void deregister(boolean client) {
 		cables.clear();
 		connected.clear();
 		dirsPerConnectionMap.clear();
 		cableTypes.clear();
-		CableNetworkRegistry.deregister(this);
+		CableNetworkRegistry.deregister(this, client);
 	}
 
 	public int getSize() {
@@ -222,8 +227,8 @@ public abstract class AbstractCableNetwork {
 
 	public abstract ICableType[] getConductorTypes();
 	
-	public abstract AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables);
+	public abstract AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables, boolean client);
 	
-	public abstract AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks);
+	public abstract AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks, boolean client);
 
 }

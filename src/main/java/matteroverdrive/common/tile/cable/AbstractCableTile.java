@@ -92,7 +92,7 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 	@Override
 	public void setRemoved() {
 		if (!level.isClientSide && network != null) {
-			getNetwork().split(this);
+			network.split(this);
 		}
 		super.setRemoved();
 	}
@@ -100,14 +100,14 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 	@Override
 	public void onChunkUnloaded() {
 		if (!level.isClientSide && network != null) {
-			getNetwork().split(this);
+			network.split(this);
 		}
 	}
 	
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		Scheduler.schedule(1, this::refreshNetwork);
+		Scheduler.schedule(1, this::refreshNetwork, false);
 	}
 	
 	@Override

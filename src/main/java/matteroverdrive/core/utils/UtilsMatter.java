@@ -1,8 +1,7 @@
 package matteroverdrive.core.utils;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.cable.BlockMatterConduit;
-import matteroverdrive.common.block.states.OverdriveBlockStates.CableConnectionType;
+import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
@@ -106,25 +105,19 @@ public class UtilsMatter {
 			offset = pos.relative(dir);
 			BlockEntity entity = world.getBlockEntity(offset);
 			if (entity != null && entity instanceof TileMatterConduit conduit) {
-				updateMatterCable(offset, world, conduit, dir, tile);
+				updateMatterCable(world, conduit);
 			}
 		}
 	}
 
-	private static void updateMatterCable(BlockPos offset, Level world, TileMatterConduit conduit, Direction dir,
-			GenericTile tile) {
+	private static void updateMatterCable(Level world, TileMatterConduit conduit) {
 		Scheduler.schedule(1, () -> {
+			BlockState conduitState = conduit.getBlockState();
+			BlockPos conduitPos = conduit.getBlockPos();
+			BlockState updatedState = ((AbstractCableBlock)conduitState.getBlock()).handleConnectionUpdate(conduitState, conduitPos, world);
 			conduit.refreshNetworkIfChange();
-			BlockState state = world.getBlockState(offset);
-			if (UtilsMatter.isMatterReceiver(tile, dir)) {
-				state = state.setValue(BlockMatterConduit.DIRECTION_TO_PROPERTY_MAP.get(dir.getOpposite()),
-						CableConnectionType.INVENTORY);
-			} else {
-				state = state.setValue(BlockMatterConduit.DIRECTION_TO_PROPERTY_MAP.get(dir.getOpposite()),
-						CableConnectionType.NONE);
-			}
-			world.setBlockAndUpdate(offset, state);
-		});
+			world.setBlockAndUpdate(conduitPos, updatedState);
+		}, false);
 	}
 
 }

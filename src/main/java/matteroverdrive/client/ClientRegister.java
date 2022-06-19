@@ -11,7 +11,7 @@ import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
 import matteroverdrive.client.screen.ScreenMicrowave;
-import matteroverdrive.client.screen.ScreenNetworkPowerSupply;
+import matteroverdrive.client.screen.ScreenChunkloader;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
@@ -43,6 +43,7 @@ public class ClientRegister {
 	/* MODELS */
 
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
+	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
 	public static void init() {
 
@@ -55,7 +56,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
 		MenuScreens.register(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
-		MenuScreens.register(DeferredRegisters.MENU_NETWORK_POWER_SUPPLY.get(), ScreenNetworkPowerSupply::new);
+		MenuScreens.register(DeferredRegisters.MENU_CHUNKLOADER.get(), ScreenChunkloader::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -141,6 +142,7 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void onModelEvent(ModelRegistryEvent event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
+		ForgeModelBakery.addSpecialModel(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent

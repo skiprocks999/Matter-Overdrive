@@ -23,11 +23,11 @@ import net.minecraftforge.common.util.LazyOptional;
 public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 	
 	public NetworkMatterConduit(List<? extends AbstractCableTile<?>> varCables) {
-		super(varCables);
+		super(varCables, false);
 	}
 	
 	public NetworkMatterConduit(Collection<? extends AbstractCableNetwork> networks) {
-		super(networks);
+		super(networks, false);
 	}
 	
 	@Override
@@ -142,12 +142,12 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 	}
 	
 	@Override
-	public AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks) {
+	public AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks, boolean client) {
 		return new NetworkMatterConduit(networks);
 	}
 
 	@Override
-	public AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables) {
+	public AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables, boolean client) {
 		return new NetworkMatterConduit(cables);
 	}
 

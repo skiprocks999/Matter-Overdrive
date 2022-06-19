@@ -45,8 +45,8 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 		super.setPlacedBy(world, pos, state, placer, stack);
 		if(!world.isClientSide) {
 			Direction facing = state.getValue(FACING);
-			BlockState middle = DeferredRegisters.BLOCK_MULTI_SUBNODE.get().defaultBlockState();
-			BlockState top = DeferredRegisters.BLOCK_MULTI_SUBNODE.get().defaultBlockState();
+			BlockState middle = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
+			BlockState top = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
 			middle = middle.setValue(BlockAndroidChargerChild.FACING, facing);
 			middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
 			top = top.setValue(BlockAndroidChargerChild.FACING, facing);

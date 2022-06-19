@@ -145,7 +145,7 @@ public class TileTransporter extends GenericSoundTile {
 									});
 									Scheduler.schedule(1, () -> {
 										dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-									});
+									}, false);
 								}
 							}
 							setChanged();

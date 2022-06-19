@@ -6,8 +6,8 @@
 		128
 	],
 	"textures": {
-		"0": "matteroverdrive:block/network_power_supply",
-		"particle": "matteroverdrive:block/network_power_supply"
+		"0": "matteroverdrive:block/chunkloader",
+		"particle": "matteroverdrive:block/chunkloader"
 	},
 	"elements": [
 		{

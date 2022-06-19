@@ -1,7 +1,8 @@
-package matteroverdrive.common.block.cable;
+package matteroverdrive.common.block.cable.serverside;
 
 import java.util.HashSet;
 
+import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.core.utils.UtilsMatter;
@@ -48,6 +49,11 @@ public class BlockMatterConduit extends AbstractCableBlock {
 	@Override
 	public boolean checkCableClass(BlockEntity entity) {
 		return entity instanceof TileMatterConduit;
+	}
+
+	@Override
+	public boolean isValidConnection(BlockEntity facingTile, Direction facing) {
+		return UtilsMatter.isMatterReceiver(facingTile, facing);
 	}
 
 }

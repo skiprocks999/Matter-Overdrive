@@ -14,6 +14,8 @@ import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -79,6 +81,7 @@ public class MatterOverdrive {
 
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
+		ItemBlockRenderTypes.setRenderLayer(DeferredRegisters.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
 		ClientRegister.init();
 	}
 }

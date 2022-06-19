@@ -67,6 +67,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
 
 			addItem(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
+			
+			addItem(DeferredRegisters.ITEM_PATTERN_DRIVE, "Pattern Drive");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -87,13 +89,17 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
-			addBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "Multiblock Subnode");
+			addBlock(DeferredRegisters.BLOCK_CHARGER_CHILD, "Charger Child");
 			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
 			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
 			addBlock(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
-			addBlock(DeferredRegisters.BLOCK_NETWORK_POWER_SUPPLY, "Network Power Supply");
+			addBlock(DeferredRegisters.BLOCK_CHUNKLOADER, "Chunkloader");
+			addBlock(DeferredRegisters.BLOCK_MATTER_ANALYZER, "Matter Analyzer");
+			addBlock(DeferredRegisters.BLOCK_PATTERN_STORAGE, "Pattern Storage");
+			addBlock(DeferredRegisters.BLOCK_PATTERN_MONITOR, "Pattern Monitor");
+			addBlock(DeferredRegisters.BLOCK_MATTER_REPLICATOR, "Matter Replicator");
 
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
@@ -134,6 +140,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("rangebonus", "Range: %s");
 			addTooltip("mufflerupgrade", "Mutes machine sound");
 			addTooltip("invaliddest", "Invalid Destination");
+			addTooltip("empty", "Empty");
+			addTooltip("storedpattern", "%1$s [%2$s]");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -167,7 +175,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.INSCRIBER.id(), "Inscriber");
 			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
 			addContainer(TypeMachine.SPACETIME_ACCELERATOR.id(), "Spacetime Accelerator");
-			addContainer(TypeMachine.NETWORK_POWER_SUPPLY.id(), "Network Power Supply");
+			addContainer(TypeMachine.CHUNKLOADER.id(), "Chunkloader");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

@@ -173,14 +173,14 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		
-		if(shouldntChange(stateIn, facingState, facing)) {
+		if(shouldntChange(stateIn, facingState, facing, world.getBlockEntity(facingPos))) {
 			return stateIn;
 		}
 		
 		return handleConnectionUpdate(stateIn, currentPos, world);
 	}
 	
-	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing) {
+	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing, BlockEntity facingTile) {
 		
 		EnumProperty<CableConnectionType> thisProperty = DIRECTION_TO_PROPERTY_MAP.get(facing);
 		EnumProperty<CableConnectionType> facingProperty = DIRECTION_TO_PROPERTY_MAP.get(facing.getOpposite());
@@ -191,12 +191,14 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		if(changedState.hasProperty(facingProperty)) {
 			return thisType == changedState.getValue(facingProperty);
 		} else {
-			//TODO fix
-			return thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE || thisType == CableConnectionType.NONE_SEAMLESS;
+			if(thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE || thisType == CableConnectionType.NONE_SEAMLESS) {
+				return !isValidConnection(facingTile, facing.getOpposite());
+			}
+			return false;
 		}
 	}
 	
-	protected BlockState handleConnectionUpdate(BlockState startingState, BlockPos pos, LevelAccessor world) {
+	public BlockState handleConnectionUpdate(BlockState startingState, BlockPos pos, LevelAccessor world) {
 		
 		HashSet<Direction> dirsUsed = new HashSet<>();
 		HashSet<Direction> inventory = new HashSet<>();
@@ -264,5 +266,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 	
 	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable, 
 			LevelAccessor world, BlockPos pos);
+	
+	public abstract boolean isValidConnection(BlockEntity facingTile, Direction facing);
 
 }

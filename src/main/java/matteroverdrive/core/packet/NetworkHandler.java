@@ -3,6 +3,7 @@ package matteroverdrive.core.packet;
 import java.util.Optional;
 
 import matteroverdrive.References;
+import matteroverdrive.core.packet.type.PacketClientMNData;
 import matteroverdrive.core.packet.type.PacketClientMatterValues;
 import matteroverdrive.core.packet.type.PacketSyncClientEntityCapability;
 import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
@@ -40,6 +41,9 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketSyncClientEntityCapability.class,
 				PacketSyncClientEntityCapability::encode, PacketSyncClientEntityCapability::decode,
 				PacketSyncClientEntityCapability::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketClientMNData.class,
+				PacketClientMNData::encode, PacketClientMNData::decode,
+				PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 	}
 
 }
