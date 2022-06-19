@@ -67,8 +67,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
 
 			addItem(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
-			
 			addItem(DeferredRegisters.ITEM_PATTERN_DRIVE, "Pattern Drive");
+			addItem(DeferredRegisters.ITEM_MATTER_SCANNER, "Matter Scanner");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -176,6 +176,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
 			addContainer(TypeMachine.SPACETIME_ACCELERATOR.id(), "Spacetime Accelerator");
 			addContainer(TypeMachine.CHUNKLOADER.id(), "Chunkloader");
+			addContainer(TypeMachine.PATTERN_MONITOR.id(), "Pattern Monitor");
+			addContainer(TypeMachine.PATTERN_STORAGE.id(), "Pattern Storage");
+			addContainer(TypeMachine.MATTER_ANALYZER.id(), "Matter Analyzer");
+			addContainer(TypeMachine.MATTER_REPLICATOR.id(), "Matter Replicator");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

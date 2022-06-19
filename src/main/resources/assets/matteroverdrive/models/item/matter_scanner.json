@@ -1,0 +1,14 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/matter_scanner/matter_scanner_off"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"charge": 1.0
+			},
+			"model": "matteroverdrive:item/matter_scanner_on"
+		}
+	]
+}

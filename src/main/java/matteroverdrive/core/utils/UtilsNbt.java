@@ -13,6 +13,7 @@ public class UtilsNbt {
 	public static final String STORED_MATTER_VAL = "matter_val";
 	public static final String BLOCK_POS = "block_pos";
 	public static final String DIMENSION = "dimension";
+	public static final String ON = "on";
 
 	/* COMPOUND TAG */
 	

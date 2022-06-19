@@ -5,12 +5,17 @@ import javax.annotation.Nullable;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.VerticalFacing;
+import matteroverdrive.common.block.type.TypeMachine;
+import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.network.NetworkMatter;
+import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -18,6 +23,12 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 
 	public TilePatternMonitor(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_PATTERN_MONITOR.get(), pos, state);
+		addCapability(new CapabilityInventory(0, false, false));
+		setMenuProvider(
+				new SimpleMenuProvider(
+						(id, inv, play) -> new InventoryPatternMonitor(id, play.getInventory(),
+								exposeCapability(CapabilityType.Item), getCoordsData()),
+						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
 	}
 
 	@Override

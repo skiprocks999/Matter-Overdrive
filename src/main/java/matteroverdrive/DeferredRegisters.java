@@ -24,9 +24,13 @@ import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.block_item.BlockItemColored;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryInscriber;
+import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
+import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.common.inventory.InventoryMicrowave;
+import matteroverdrive.common.inventory.InventoryPatternMonitor;
+import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.inventory.InventoryChunkloader;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
@@ -287,6 +291,14 @@ public class DeferredRegisters {
 			.register(TypeMachine.SPACETIME_ACCELERATOR.id(), () -> new MenuType<>(InventorySpacetimeAccelerator::new));
 	public static final RegistryObject<MenuType<InventoryChunkloader>> MENU_CHUNKLOADER = CONTAINERS
 			.register(TypeMachine.CHUNKLOADER.id(), () -> new MenuType<>(InventoryChunkloader::new));
+	public static final RegistryObject<MenuType<InventoryPatternStorage>> MENU_PATTERN_STORAGE = CONTAINERS
+			.register(TypeMachine.PATTERN_STORAGE.id(), () -> new MenuType<>(InventoryPatternStorage::new));
+	public static final RegistryObject<MenuType<InventoryMatterReplicator>> MENU_MATTER_REPLICATOR = CONTAINERS
+			.register(TypeMachine.MATTER_REPLICATOR.id(), () -> new MenuType<>(InventoryMatterReplicator::new));
+	public static final RegistryObject<MenuType<InventoryPatternMonitor>> MENU_PATTERN_MONITOR = CONTAINERS
+			.register(TypeMachine.PATTERN_MONITOR.id(), () -> new MenuType<>(InventoryPatternMonitor::new));
+	public static final RegistryObject<MenuType<InventoryMatterAnalyzer>> MENU_MATTER_ANALYZER = CONTAINERS
+			.register(TypeMachine.MATTER_ANALYZER.id(), () -> new MenuType<>(InventoryMatterAnalyzer::new));
 
 	/* Particles */
 

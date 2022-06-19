@@ -8,9 +8,13 @@ import matteroverdrive.client.renderer.tile.RendererCharger;
 import matteroverdrive.client.renderer.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
+import matteroverdrive.client.screen.ScreenMatterAnalyzer;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
+import matteroverdrive.client.screen.ScreenMatterReplicator;
 import matteroverdrive.client.screen.ScreenMicrowave;
+import matteroverdrive.client.screen.ScreenPatternMonitor;
+import matteroverdrive.client.screen.ScreenPatternStorage;
 import matteroverdrive.client.screen.ScreenChunkloader;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
@@ -57,6 +61,10 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
 		MenuScreens.register(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
 		MenuScreens.register(DeferredRegisters.MENU_CHUNKLOADER.get(), ScreenChunkloader::new);
+		MenuScreens.register(DeferredRegisters.MENU_PATTERN_STORAGE.get(), ScreenPatternStorage::new);
+		MenuScreens.register(DeferredRegisters.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
+		MenuScreens.register(DeferredRegisters.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
+		MenuScreens.register(DeferredRegisters.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -128,6 +136,13 @@ public class ClientRegister {
 					}
 					return 0;
 				});
+		ItemProperties.register(DeferredRegisters.ITEM_MATTER_SCANNER.get(), CHARGE, 
+				(stack, world, entity, call) -> {
+					if(stack.hasTag() && stack.getTag().getBoolean("on")) {
+						return 1;
+					}
+					return 0;
+		});
 
 	}
 
