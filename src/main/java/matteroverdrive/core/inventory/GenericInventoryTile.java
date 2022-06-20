@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketUpdateTile;
+import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

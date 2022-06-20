@@ -75,5 +75,36 @@
 		"sounds": [
 			"matteroverdrive:button/button_loud3"
 		]
+	},
+	"matter_scanner_running": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.matter_scanner_running",
+		"sounds": [
+			"matteroverdrive:item/matter_scanner_running"
+		]
+	}
+	,
+	"matter_scanner_beep": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.matter_scanner_beep",
+		"sounds": [
+			"matteroverdrive:item/matter_scanner_beep"
+		]
+	}
+	,
+	"matter_scanner_fail": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.matter_scanner_fail",
+		"sounds": [
+			"matteroverdrive:item/matter_scanner_fail"
+		]
+	}
+	,
+	"matter_scanner_success": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.matter_scanner_success",
+		"sounds": [
+			"matteroverdrive:item/matter_scanner_success"
+		]
 	}
 }

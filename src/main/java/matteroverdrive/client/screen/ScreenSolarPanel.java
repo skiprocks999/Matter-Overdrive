@@ -3,7 +3,7 @@ package matteroverdrive.client.screen;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;

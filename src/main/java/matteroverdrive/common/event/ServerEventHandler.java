@@ -21,7 +21,7 @@ import matteroverdrive.core.command.CommandGenerateMatterValues;
 import matteroverdrive.core.command.CommandManualMatterValue;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketSyncClientEntityCapability;
+import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
 import matteroverdrive.core.utils.UtilsMath;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;

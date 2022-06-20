@@ -13,8 +13,9 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.GenericRedstoneTile;
 import matteroverdrive.core.utils.UtilsDirection;
+import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,23 +25,28 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.TriPredicate;
 
-public class TilePatternStorage extends GenericTile implements IMatterNetworkMember {
+public class TilePatternStorage extends GenericRedstoneTile implements IMatterNetworkMember {
 
 	private boolean isPowered = false;
 	
-	public static final int SLOT_COUNT = 8;
+	public static final int SLOT_COUNT = 9;
 	private static final int ENERGY_STORAGE = 64000;
-	private static final int USAGE_PER_TICK = 100;
+	public static final int BASE_USAGE = 50;
+	public static final int USAGE_PER_DRIVE = 100;
 	
-	public CapabilityInventory clientNetworkInv;
+	public CapabilityInventory clientNetworkInventory;
 	public boolean clientNetworkPowered;
 	
-	public CapabilityInventory clientTileInv;
+	
 	public boolean clientTilePowered;
+	
+	public CapabilityInventory clientInventory;
+	public CapabilityEnergyStorage clientEnergy;
+	
 	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_PATTERN_STORAGE.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setEnergySlots(1).setOwner(this)
+		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
 				.setValidator(getValidator()));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
 		setMenuProvider(
@@ -55,7 +61,61 @@ public class TilePatternStorage extends GenericTile implements IMatterNetworkMem
 	
 	@Override
 	public void tickServer() {
+		if(canRun()) {
+			UtilsTile.drainElectricSlot(this);
+			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+			int drives = 0;
+			for(ItemStack stack : inv.getInputs()) {
+				if (stack.getItem() instanceof ItemPatternDrive) {
+					drives++;
+				}
+			}
+			int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
+			if(energy.getEnergyStored() >= usage) {
+				isPowered = true;
+				energy.removeEnergy(usage);
+			} else {
+				isPowered = false;
+			}
+		} else {
+			isPowered = false;
+		}
+	}
+	
+	@Override
+	public void getMenuData(CompoundTag tag) {
+		CompoundTag data = new CompoundTag();
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		data.put(energy.getSaveKey(), energy.serializeNBT());
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		data.put(inv.getSaveKey(), inv.serializeNBT());
 		
+		tag.put("data", data);
+	}
+	
+	@Override
+	public void readMenuData(CompoundTag tag) {
+		CompoundTag data = tag.getCompound("data");
+		clientEnergy = new CapabilityEnergyStorage(0, false, false);
+		clientEnergy.deserializeNBT(data.getCompound(clientEnergy.getSaveKey()));
+		clientInventory = new CapabilityInventory();
+		clientInventory.deserializeNBT(data.getCompound(clientInventory.getSaveKey()));
+	}
+	
+	@Override
+	public void getRenderData(CompoundTag tag) {
+		CompoundTag data = new CompoundTag();
+		
+		data.putBoolean("isPowered", isPowered);
+		
+		tag.put("data", data);
+	}
+	
+	@Override
+	public void readRenderData(CompoundTag tag) {
+		CompoundTag data = tag.getCompound("data");
+		clientTilePowered = data.getBoolean("isPowered");
 	}
 
 	@Override
@@ -86,14 +146,21 @@ public class TilePatternStorage extends GenericTile implements IMatterNetworkMem
 	}
 	
 	public void handleNetworkData(CompoundTag tag) {
-		clientNetworkInv = new CapabilityInventory();
-		clientNetworkInv.deserializeNBT(tag.getCompound(clientNetworkInv.getSaveKey()));
-		clientNetworkPowered = tag.getBoolean("ispowered");
+		CompoundTag data = tag.getCompound("data");
+		
+		clientNetworkInventory = new CapabilityInventory();
+		clientNetworkInventory.deserializeNBT(data.getCompound(clientNetworkInventory.getSaveKey()));
+		clientNetworkPowered = data.getBoolean("ispowered");
+	}
+
+	@Override
+	public int getMaxMode() {
+		return 2;
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index < 7 && stack.getItem() instanceof ItemPatternDrive
-				|| index == 7 && stack.getItem() instanceof ItemMatterScanner 
+		return (index, stack, cap) -> index < 6 && stack.getItem() instanceof ItemPatternDrive
+				|| index == 6 && stack.getItem() instanceof ItemMatterScanner 
 				|| index == 8 && stack.getItem() instanceof ItemElectric;
 	}
 

@@ -3,13 +3,14 @@ package matteroverdrive.core.packet;
 import java.util.Optional;
 
 import matteroverdrive.References;
-import matteroverdrive.core.packet.type.PacketClientMNData;
-import matteroverdrive.core.packet.type.PacketClientMatterValues;
-import matteroverdrive.core.packet.type.PacketSyncClientEntityCapability;
-import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
-import matteroverdrive.core.packet.type.PacketUpdateCapabilitySides;
-import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
-import matteroverdrive.core.packet.type.PacketUpdateTile;
+import matteroverdrive.core.packet.type.clientbound.PacketClientMNData;
+import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
+import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
+import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
+import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -24,11 +25,9 @@ public class NetworkHandler {
 			PROTOCOL_VERSION::equals);
 
 	public static void init() {
-		CHANNEL.registerMessage(disc++, PacketUpdateTile.class, PacketUpdateTile::encode, PacketUpdateTile::decode,
-				PacketUpdateTile::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
-				PacketClientMatterValues::decode, PacketClientMatterValues::handle,
-				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		
+		/* SERVER-BOUND */
+		
 		CHANNEL.registerMessage(disc++, PacketUpdateRedstoneMode.class, PacketUpdateRedstoneMode::encode,
 				PacketUpdateRedstoneMode::decode, PacketUpdateRedstoneMode::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
@@ -38,12 +37,24 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketUpdateTransporterLocationInfo.class,
 				PacketUpdateTransporterLocationInfo::encode, PacketUpdateTransporterLocationInfo::decode,
 				PacketUpdateTransporterLocationInfo::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, PacketToggleMatterScanner.class, PacketToggleMatterScanner::encode,
+				PacketToggleMatterScanner::decode, PacketToggleMatterScanner::handle,
+				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		
+		/* CLIENT-BOUND */
+		
+		CHANNEL.registerMessage(disc++, PacketUpdateTile.class, PacketUpdateTile::encode, PacketUpdateTile::decode,
+				PacketUpdateTile::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
+				PacketClientMatterValues::decode, PacketClientMatterValues::handle,
+				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(disc++, PacketSyncClientEntityCapability.class,
 				PacketSyncClientEntityCapability::encode, PacketSyncClientEntityCapability::decode,
 				PacketSyncClientEntityCapability::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(disc++, PacketClientMNData.class,
 				PacketClientMNData::encode, PacketClientMNData::decode,
 				PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		
 	}
 
 }

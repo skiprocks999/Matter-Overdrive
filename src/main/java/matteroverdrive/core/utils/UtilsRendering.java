@@ -16,11 +16,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class UtilsRendering {
 
-	public static final int TEXT_BLUE = getRGBA(1, 169, 226, 251);
-	public static final int TITLE_BLUE = getRGBA(1, 191, 228, 230);
-	public static final int RED = getRGBA(1, 255, 0, 0);
-	public static final int GREEN = getRGBA(1, 0, 255, 0);
-	public static final int WHITE = getRGBA(1, 255, 255, 255);
+	public static final int TEXT_BLUE = getRGBA(255, 169, 226, 251);
+	public static final int TITLE_BLUE = getRGBA(255, 191, 228, 230);
+	public static final int GUI_STANDARD = getRGBA(255, 62, 81, 84);
+	public static final int GUI_DARK = getRGBA(255, 44, 54, 52);
+	public static final int RED = getRGBA(255, 255, 0, 0);
+	public static final int GREEN = getRGBA(255, 0, 255, 0);
+	public static final int WHITE = getRGBA(255, 255, 255, 255);
 
 	public static void bindTexture(ResourceLocation resource) {
 		RenderSystem.setShaderTexture(0, resource);
@@ -52,6 +54,10 @@ public class UtilsRendering {
 
 	public static void color(int color) {
 		RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
+	}
+	
+	public static void resetColor() {
+		color(WHITE);
 	}
 
 	public static BakedModel getBakedModel(ResourceLocation model) {

@@ -1,4 +1,4 @@
-package matteroverdrive.core.packet.type;
+package matteroverdrive.core.packet.type.serverbound;
 
 import java.util.function.Supplier;
 

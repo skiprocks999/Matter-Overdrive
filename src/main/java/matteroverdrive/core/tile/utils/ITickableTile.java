@@ -1,7 +1,7 @@
 package matteroverdrive.core.tile.utils;
 
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketUpdateTile;
+import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

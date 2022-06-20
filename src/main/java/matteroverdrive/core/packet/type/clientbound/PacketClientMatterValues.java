@@ -1,4 +1,4 @@
-package matteroverdrive.core.packet.type;
+package matteroverdrive.core.packet.type.clientbound;
 
 import java.util.HashMap;
 import java.util.function.Supplier;

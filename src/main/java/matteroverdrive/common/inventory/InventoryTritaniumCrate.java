@@ -6,6 +6,7 @@ import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
+import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.sounds.SoundSource;
@@ -32,7 +33,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 		for (int j = 0; j < 6; ++j) {
 			for (int k = 0; k < 9; ++k) {
 				this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] { 0, 1, 2 },
-						SlotType.VANILLA, null));
+						SlotType.VANILLA, IconType.NONE));
 			}
 		}
 	}

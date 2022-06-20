@@ -10,11 +10,11 @@
 		},
 		"facing=west": {
 			"model": "matteroverdrive:block/pattern_storage",
-			"y": 90
+			"y": 270
 		},
 		"facing=east": {
 			"model": "matteroverdrive:block/pattern_storage",
-			"y": 270
+			"y": 90
 		}
 	}
 }

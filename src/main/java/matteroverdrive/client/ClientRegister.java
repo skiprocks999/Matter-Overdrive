@@ -143,6 +143,8 @@ public class ClientRegister {
 					}
 					return 0;
 		});
+		
+		KeyBinds.registerKeys();
 
 	}
 

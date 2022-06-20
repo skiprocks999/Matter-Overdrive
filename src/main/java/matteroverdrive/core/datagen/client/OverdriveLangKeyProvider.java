@@ -142,6 +142,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("invaliddest", "Invalid Destination");
 			addTooltip("empty", "Empty");
 			addTooltip("storedpattern", "%1$s [%2$s]");
+			addTooltip("has_storage_loc" , "Bound: %s");
+			addTooltip("no_storage_loc" , "Unbound");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -196,10 +198,17 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("generic_machine", "Machine runs");
 			addSubtitle("transporter", "Transporter Build-up");
 			addSubtitle("transporter_arrive", "Transported Entity Appears");
+			addSubtitle("matter_scanner_running", "Matter Scanner scans");
+			addSubtitle("matter_scanner_beep", "Matter Scanner beeps");
+			addSubtitle("matter_scanner_fail", "Scan fails");
+			addSubtitle("matter_scanner_success", "Scan succeeds");
 			
 			addDimension("overworld", "Overworld");
 			addDimension("the_nether", "Nether");
 			addDimension("the_end", "End");
+			
+			addKeyCategory("main", "Matter Overdrive - Main");
+			addKeyLabel("togglematterscanner" , "Toggle Matter Scanner");
 		}
 	}
 
@@ -233,6 +242,14 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	
 	private void addDimension(String key, String translation) {
 		add("dimension." + References.ID + "." + key, translation);
+	}
+	
+	private void addKeyCategory(String key, String translation) {
+		add("keycategory." + References.ID + "." + key, translation);
+	}
+	
+	private void addKeyLabel(String key, String translation) {
+		add("key." + References.ID + "." + key, translation);
 	}
 
 	private static String getNameFromEnum(String baseString) {
