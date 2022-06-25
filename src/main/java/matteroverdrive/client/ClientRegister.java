@@ -1,5 +1,9 @@
 package matteroverdrive.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
@@ -28,11 +32,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,6 +56,16 @@ public class ClientRegister {
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
 	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
+	/* TEXTURES */
+	
+	public static final HashMap<ResourceLocation, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
+	private static final List<ResourceLocation> CUSTOM_BLOCK_TEXTURES = new ArrayList<>();
+	
+	private static final String CUSTOM_LOC = References.ID + ":custom/";
+	
+	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "holo_pattern_monitor");
+	
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
@@ -172,5 +189,27 @@ public class ClientRegister {
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
+	
+	static {
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
+	}
+
+	@SubscribeEvent
+	public static void addCustomTextureAtlases(TextureStitchEvent.Pre event) {
+		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+			CUSTOM_BLOCK_TEXTURES.forEach(h -> event.addSprite(h));
+		}
+	}
+
+	@SubscribeEvent
+	public static void cacheCustomTextureAtlases(TextureStitchEvent.Post event) {
+		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+			for (ResourceLocation loc : CUSTOM_BLOCK_TEXTURES) {
+				ClientRegister.CACHED_TEXTUREATLASSPRITES.put(loc, event.getAtlas().getSprite(loc));
+			}
+		}
+	}
+
 
 }

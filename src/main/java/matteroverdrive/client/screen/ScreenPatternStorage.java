@@ -106,7 +106,7 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null && matter.clientTilePowered) {
 				int drives = 0;
-				for(ItemStack stack : matter.clientInventory.getInputs()) {
+				for(ItemStack stack : matter.getDrives(true, false)) {
 					if(stack.getItem() instanceof ItemPatternDrive) {
 						drives++;
 					}
