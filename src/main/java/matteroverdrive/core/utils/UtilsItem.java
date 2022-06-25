@@ -2,7 +2,10 @@ package matteroverdrive.core.utils;
 
 import javax.annotation.Nullable;
 
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
+import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
+import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -30,6 +33,24 @@ public class UtilsItem {
 	public static CapabilityEnergyStorage getEnergyStorageCap(ItemStack stack) {
 		IEnergyStorage storage = getEnergyCap(stack);
 		if(storage instanceof CapabilityEnergyStorage cap) {
+			return cap;
+		}
+		return null;
+	}
+	
+	@Nullable
+	public static ICapabilityItemPatternStorage getPatternCap(ItemStack stack) {
+		LazyOptional<ICapabilityItemPatternStorage> lazy = stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
+		if(lazy.isPresent()) {
+			return lazy.resolve().get();
+		}
+		return null;
+	}
+	
+	@Nullable
+	public static CapabilityItemPatternStorage getPatternStorageCap(ItemStack stack) {
+		ICapabilityItemPatternStorage storage = getPatternCap(stack);
+		if(storage instanceof CapabilityItemPatternStorage cap) {
 			return cap;
 		}
 		return null;

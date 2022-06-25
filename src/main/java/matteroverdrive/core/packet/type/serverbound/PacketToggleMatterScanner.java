@@ -3,12 +3,10 @@ package matteroverdrive.core.packet.type.serverbound;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,9 +30,12 @@ public class PacketToggleMatterScanner {
 				Player player = world.getPlayerByUUID(message.id);
 				if(player != null) {
 					ItemStack stack = player.getItemInHand(message.hand);
-					if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
-						stack.getOrCreateTag().putBoolean(UtilsNbt.ON, !stack.getOrCreateTag().getBoolean(UtilsNbt.ON));
-						world.playSound(null, player.getOnPos(), SoundRegister.SOUND_MATTER_SCANNER_BEEP.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
+					if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner scanner) {
+						boolean newMode = !stack.getOrCreateTag().getBoolean(UtilsNbt.ON);
+						stack.getOrCreateTag().putBoolean(UtilsNbt.ON, newMode);
+						if(!newMode) {
+							scanner.setNotHolding(stack);
+						}
 					}
 				}
 			}

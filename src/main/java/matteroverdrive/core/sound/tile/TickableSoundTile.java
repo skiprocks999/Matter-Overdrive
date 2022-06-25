@@ -1,4 +1,4 @@
-package matteroverdrive.core.sound;
+package matteroverdrive.core.sound.tile;
 
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsWorld;

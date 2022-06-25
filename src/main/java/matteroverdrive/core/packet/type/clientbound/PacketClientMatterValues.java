@@ -3,8 +3,7 @@ package matteroverdrive.core.packet.type.clientbound;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-import matteroverdrive.core.matter.MatterRegister;
-import net.minecraft.client.Minecraft;
+import matteroverdrive.core.packet.PacketBarrierMethods;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,9 +20,7 @@ public class PacketClientMatterValues {
 	public static void handle(PacketClientMatterValues message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null) {
-				MatterRegister.INSTANCE.setClientValues(message.values);
-			}
+			PacketBarrierMethods.handlePacketClientMatterValues(message.values);
 		});
 		ctx.setPacketHandled(true);
 	}

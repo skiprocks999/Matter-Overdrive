@@ -1,4 +1,4 @@
-package matteroverdrive.core.sound;
+package matteroverdrive.core.sound.tile;
 
 public interface ITickingSoundTile {
 

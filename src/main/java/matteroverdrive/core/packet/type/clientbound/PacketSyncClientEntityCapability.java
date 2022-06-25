@@ -3,14 +3,9 @@ package matteroverdrive.core.packet.type.clientbound;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
-import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import matteroverdrive.core.packet.PacketBarrierMethods;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketSyncClientEntityCapability {
@@ -26,15 +21,7 @@ public class PacketSyncClientEntityCapability {
 	public static void handle(PacketSyncClientEntityCapability message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ClientLevel world = Minecraft.getInstance().level;
-			if (world != null) {
-				Player player = Minecraft.getInstance().player;
-				if(player.getUUID().equals(message.id) && player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
-					LazyOptional<ICapabilityEntityData> lazy = player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).cast();
-					CapabilityEntityData cap = (CapabilityEntityData) lazy.resolve().get();
-					cap.copyFromOther(message.clientCapability);
-				}
-			}
+			PacketBarrierMethods.handlePacketSyncClientEntityCapability(message.id, message.clientCapability);
 		});
 		ctx.setPacketHandled(true);
 	}

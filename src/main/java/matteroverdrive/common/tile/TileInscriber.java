@@ -12,11 +12,10 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.recipe.CountableIngredient;
-import matteroverdrive.core.sound.TickableSoundTile;
+import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -138,8 +137,7 @@ public class TileInscriber extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			Minecraft.getInstance().getSoundManager()
-					.play(new TickableSoundTile(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F));
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F);
 		}
 	}
 

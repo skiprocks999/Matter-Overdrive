@@ -2,14 +2,11 @@ package matteroverdrive.core.packet.type.clientbound;
 
 import java.util.function.Supplier;
 
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.packet.PacketBarrierMethods;
 import matteroverdrive.core.tile.utils.IUpdatableTile;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketUpdateTile {
@@ -39,17 +36,7 @@ public class PacketUpdateTile {
 	public static void handle(PacketUpdateTile message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ClientLevel world = Minecraft.getInstance().level;
-			if (world != null) {
-				BlockEntity tile = world.getBlockEntity(message.pos);
-				if (tile instanceof GenericTile generic) {
-					if (message.isGui && generic.hasMenuData) {
-						generic.readMenuData(message.data);
-					} else if(!message.isGui && generic.hasRenderData) {
-						generic.readRenderData(message.data);
-					}
-				}
-			}
+			PacketBarrierMethods.handlePacketUpdateTile(message.data, message.isGui, message.pos);
 		});
 		ctx.setPacketHandled(true);
 	}

@@ -13,12 +13,11 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
-import matteroverdrive.core.sound.TickableSoundTile;
+import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -155,8 +154,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			Minecraft.getInstance().getSoundManager()
-					.play(new TickableSoundTile(SoundRegister.SOUND_DECOMPOSER.get(), this));
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_DECOMPOSER.get(), this);
 		}
 	}
 

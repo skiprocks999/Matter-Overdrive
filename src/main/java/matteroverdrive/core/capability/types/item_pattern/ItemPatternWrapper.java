@@ -1,5 +1,6 @@
 package matteroverdrive.core.capability.types.item_pattern;
 
+import matteroverdrive.core.utils.UtilsItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -11,28 +12,58 @@ public class ItemPatternWrapper {
 
 	public static ItemPatternWrapper EMPTY = new ItemPatternWrapper(Items.AIR, 0);
 	
-	public double percentage = 0;
-	public Item item = Items.AIR;
+	private int percentage = 0;
+	private Item item = Items.AIR;
 	
-	public ItemPatternWrapper(Item item, double percentage) {
+	public static final int MAX = 100;
+	
+	public ItemPatternWrapper(Item item, int percentage) {
 		this.item = item;
 		this.percentage = percentage;
 	}
 	
-	public boolean isNotAir() {
+	public int getPercentage() {
+		return percentage;
+	}
+	
+	public void increasePercentage(int amt) {
+		percentage = Math.min(percentage + amt, MAX);
+	}
+	
+	public Item getItem() {
+		return item;
+	}
+	
+	public void setItem(Item item) {
+		this.item = item;
+	}
+	
+	public boolean isItem(Item item) {
+		return UtilsItem.compareItems(item, this.item);
+	}
+	
+	public boolean isMax() {
+		return percentage >= MAX;
+	}
+	
+	public boolean isAir() {
 		ItemStack stack = new ItemStack(item);
-		return !stack.isEmpty();
+		return stack.isEmpty();
+	}
+	
+	public boolean isNotAir() {
+		return !isAir();
 	}
 	
 	public void writeToNbt(CompoundTag tag, String key) {
 		CompoundTag data = new CompoundTag();
 		data.putString("item", item.getRegistryName().toString().toLowerCase());
-		data.putDouble("percentage", percentage);
+		data.putInt("percentage", percentage);
 		tag.put(key, data);
 	}
 	
 	public static ItemPatternWrapper readFromNbt(CompoundTag data) {
-		return new ItemPatternWrapper(ForgeRegistries.ITEMS.getValue(new ResourceLocation(data.getString("item"))), data.getDouble("percentage"));
+		return new ItemPatternWrapper(ForgeRegistries.ITEMS.getValue(new ResourceLocation(data.getString("item"))), data.getInt("percentage"));
 	}
 	
 }

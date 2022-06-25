@@ -19,13 +19,12 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.sound.TickableSoundTile;
+import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import matteroverdrive.core.utils.misc.Scheduler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -180,8 +179,7 @@ public class TileTransporter extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			Minecraft.getInstance().getSoundManager()
-					.play(new TickableSoundTile(SoundRegister.SOUND_TRANSPORTER.get(), this));
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this);
 		}
 		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
 			int particlesPerTick = (int) ((clientProgress / (double) BUILD_UP_TIME) * 20);

@@ -9,7 +9,6 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
-import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
@@ -19,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,10 +47,10 @@ public class ItemPatternDrive extends OverdriveItem {
 		stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
 			if(Screen.hasShiftDown()) {
 				for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
-					if(wrapper.item != null && UtilsItem.compareItems(wrapper.item, Items.AIR)) {
-						TranslatableComponent name = new TranslatableComponent(wrapper.item.getDescriptionId());
+					if(wrapper.isNotAir()) {
+						TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
 						ChatFormatting color = ChatFormatting.RED;
-						double percentage = wrapper.percentage;
+						int percentage = wrapper.getPercentage();
 						if(percentage >= 100) {
 							color = ChatFormatting.GREEN;
 						} else if (percentage < 100 && percentage > 50) {
@@ -60,7 +58,7 @@ public class ItemPatternDrive extends OverdriveItem {
 						} else {
 							color = ChatFormatting.RED;
 						}
-						tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage)).withStyle(color));
+						tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
 					} else {
 						tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
 					}
@@ -125,8 +123,8 @@ public class ItemPatternDrive extends OverdriveItem {
 			if(lazyOp.isPresent()) {
 				ICapabilityItemPatternStorage storage = lazyOp.resolve().get();
 				ItemPatternWrapper pattern = storage.getStoredPatterns()[index];
-				if(pattern.item != null && pattern.isNotAir()) {
-					double percentage = pattern.percentage;
+				if(pattern.isNotAir()) {
+					int percentage = pattern.getPercentage();
 					if(percentage >= 100) {
 						return GREEN;
 					} else if (percentage < 100 && percentage > 50) {

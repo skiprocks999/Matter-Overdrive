@@ -5,6 +5,7 @@ import java.util.Optional;
 import matteroverdrive.References;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMNData;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
+import matteroverdrive.core.packet.type.clientbound.PacketPlayMatterScannerSound;
 import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
 import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
 import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
@@ -54,6 +55,9 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketClientMNData.class,
 				PacketClientMNData::encode, PacketClientMNData::decode,
 				PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class,
+				PacketPlayMatterScannerSound::encode, PacketPlayMatterScannerSound::decode,
+				PacketPlayMatterScannerSound::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		
 	}
 

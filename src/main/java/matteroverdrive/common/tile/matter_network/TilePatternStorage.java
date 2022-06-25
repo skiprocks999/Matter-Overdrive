@@ -1,5 +1,7 @@
 package matteroverdrive.common.tile.matter_network;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import matteroverdrive.DeferredRegisters;
@@ -12,14 +14,21 @@ import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
+import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
+import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericRedstoneTile;
 import matteroverdrive.core.utils.UtilsDirection;
+import matteroverdrive.core.utils.UtilsItem;
+import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -77,6 +86,12 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 				energy.removeEnergy(usage);
 			} else {
 				isPowered = false;
+			}
+			ItemStack scanner = inv.getStackInSlot(6);
+			if(!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
+				scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
+				inv.setStackInSlot(7, scanner.copy());
+				scanner.shrink(1);
 			}
 		} else {
 			isPowered = false;
@@ -156,6 +171,176 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	@Override
 	public int getMaxMode() {
 		return 2;
+	}
+	
+	public boolean containsItem(Item item, boolean client, boolean network) {
+		for(ItemStack stack : getDrives(client, network)) {
+			if(stack.getItem() instanceof ItemPatternDrive drive) {
+				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
+				if(cap != null) {
+					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
+						if(wrapper.isItem(item)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Attempts to store an item
+	 * 
+	 * SERVERSIDE ONLY
+	 * 
+	 * @param item : the item to store
+	 * @param amt : the percentage amount to add
+	 * @param index : the index to store at
+	 * @return whether or not the item was actually stored
+	 */
+	public boolean storeItem(Item item, int amt, int[] index) {
+		if(index[0] > -1 && index[2] < ItemPatternWrapper.MAX) {
+			ItemPatternWrapper wrapper = getWrapperFromIndex(index);
+			if(wrapper == null) {
+				return false;
+			}
+			wrapper.increasePercentage(amt);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Will attempt to store an item in the fisrt empty slot it finds
+	 * 
+	 * SEVERSIDE ONLY
+	 * 
+	 * @param item : the item to store
+	 * @param amt : the percentage amount
+	 * @return if the item was stored
+	 */
+	public boolean storeItemFirstChance(Item item, int amt) {
+		for(ItemStack stack : getDrives(false, false)) {
+			if(stack.getItem() instanceof ItemPatternDrive drive) {
+				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
+				if(cap != null) {
+					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
+						if(wrapper.isAir()) {
+							wrapper.setItem(item);
+							wrapper.increasePercentage(amt);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks whether or not a pattern can be stored to this drive
+	 * 
+	 * @param client : whether or not the request is on the client
+	 * @param network : whether or not the request is for the client network inventory
+	 * @return true if no slots available, false if a slot is available
+	 */
+	public boolean isFull(boolean client, boolean network) {
+		for(ItemStack stack : getDrives(client, network)) {
+			if(stack.getItem() instanceof ItemPatternDrive drive) {
+				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
+				if(cap != null) {
+					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
+						if(wrapper.isAir()) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Will return the drive slot, wrapper slot, and percentage stored for the most complete
+	 * pattern of the specified item
+	 * 
+	 * SERVERSIDE ONLY
+	 * 
+	 * @param item : the item to search for
+	 * @return the relevant indexes
+	 */
+	public int[] getHighestStorageLocForItem(Item item) {
+		ItemPatternWrapper[][] array = getWrappers(false, false);
+		ItemPatternWrapper[] holder;
+		int drive = -1;
+		int patSlot = -1;
+		int highestPerc = -1;
+		for(int i = 0; i < 6; i++) {
+			holder = array[i];
+			int j = 0;
+			for(ItemPatternWrapper wrapper : holder) {
+				if(wrapper.isItem(item) && wrapper.getPercentage() > highestPerc) {
+					highestPerc = wrapper.getPercentage();
+					drive = i;
+					patSlot = j;
+				}
+				j++;
+			}
+		}
+		return new int[] {drive, patSlot, highestPerc};
+	}
+	
+	public List<ItemStack> getDrives(boolean client, boolean network){
+		if(client) {
+			if(network) {
+				clientNetworkInventory.getItems().subList(0, 6);
+			} 
+			return clientInventory.getItems().subList(0, 6);
+		} else {
+			return this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().subList(0, 6);
+		}
+	}
+	
+	/**
+	 * Returns an array of the stored patterns for each drive in a slot
+	 * 
+	 * Note a member can never be null
+	 * 
+	 * @param client : whether or not the request is on the client
+	 * @param network : whether or not the request is for the client network inventory
+	 * @return an array of the stored patterns for each drive in a slot
+	 */
+	public ItemPatternWrapper[][] getWrappers(boolean client, boolean network){
+		ItemPatternWrapper[][] array = new ItemPatternWrapper[6][];
+		List<ItemStack> drives = getDrives(client, network);
+		for(int i = 0; i < 6; i++) {
+			CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(drives.get(i));
+			if(cap == null) {
+				array[i] = new ItemPatternWrapper[] { };
+			} else {
+				array[i] = cap.getStoredPatterns();
+			}
+		}
+		return array;
+	}
+	
+	/**
+	 * Returns a pattern wrapper from the specified index
+	 * 
+	 * @param index : the index to look at
+	 * @return the pattern wrapper from the location
+	 */
+	@Nullable
+	public ItemPatternWrapper getWrapperFromIndex(int[] index) {
+		if(index[0] > -1) {
+			ItemStack stack = this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().get(index[0]);
+			ICapabilityItemPatternStorage cap = UtilsItem.getPatternCap(stack);
+			if(cap != null) {
+				return cap.getStoredPatterns()[index[1]];
+			}
+		}
+		return null;
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {

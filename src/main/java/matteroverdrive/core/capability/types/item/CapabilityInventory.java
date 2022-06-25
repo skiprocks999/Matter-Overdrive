@@ -264,6 +264,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
+		
+		int[] vals = new int[] {inputs, outputs, byproducts, energySlot, matterSlot, upgrades};
+		
+		tag.putIntArray("sizes", vals);
 
 		return tag;
 	}
@@ -289,6 +293,13 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		hasInput = nbt.getBoolean("hasInput");
 		hasOutput = nbt.getBoolean("hasOutput");
+		int[] vals = nbt.getIntArray("sizes");
+		inputs = vals[0];
+		outputs = vals[1];
+		byproducts = vals[2];
+		energySlot = vals[3];
+		matterSlot = vals[4];
+		upgrades = vals[5];
 	}
 
 	@Override
