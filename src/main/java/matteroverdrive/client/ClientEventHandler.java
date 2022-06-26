@@ -25,12 +25,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
@@ -40,7 +40,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -147,30 +146,19 @@ public class ClientEventHandler {
 		PoseStack matrix = event.getPoseStack();
 		MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
 		VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
-		GameRenderer renderer = minecraft.gameRenderer;
-		Vec3 camera = renderer.getMainCamera().getPosition();
 		
 		Player player = minecraft.player;
 		BlockHitResult trace = Item.getPlayerPOVHitResult(player.level, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
 		boolean[] scannerStatus = scannerHeldOnUse(player);
 		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus[0] && scannerStatus[1]) {
 			matrix.pushPose();
+			BlockPos pos = trace.getBlockPos();
 			
-			switch(player.getDirection()) {
-			case SOUTH:
-				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
-				break;
-			case EAST:
-				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
-				break;
-			case WEST:
-				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
-				break;
-			default:
-				break;
-			}
+			matrix.translate(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 			
-			matrix.translate(-camera.x, -camera.y, -camera.z);
+			rotateMatrixForScanner(matrix, player.getDirection(), trace.getDirection());
+			
+			matrix.translate(-0.5, -0.5, -0.5);
 			
 			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_HOLO_GRID);
 			float[] holo_uv = {holoGrid.getU0(), holoGrid.getU1(), holoGrid.getV0(), holoGrid.getV1()};
@@ -181,9 +169,7 @@ public class ClientEventHandler {
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
 			float[] spinner_color = getSpinnerColor(player, scannerStatus[2]);
 		
-			BlockPos pos = trace.getBlockPos();
-			
-			AABB box = new AABB(pos).inflate(0.05);
+			AABB box = new AABB(0, 0, 0, 1, 1, 1).inflate(0.05);
 		
 			Matrix4f matrix4f = matrix.last().pose();
 			Matrix3f matrix3f = matrix.last().normal();
@@ -195,32 +181,32 @@ public class ClientEventHandler {
 			switch(trace.getDirection()) {
 			case DOWN:
 				UtilsRendering.renderBottomOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() + 0.35, pos.getY() - 0.01, pos.getZ() + 0.35, pos.getX() + 0.65, pos.getY(), pos.getZ() + 0.65);
+				spinnerBox = new AABB(0.35, - 0.01, 0.35, 0.65, 0, 0.65);
 				UtilsRendering.renderBottomOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case UP:
 				UtilsRendering.renderTopOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() + 0.35, pos.getY() + 1, pos.getZ() + 0.35, pos.getX() + 0.65, pos.getY() + 1.01, pos.getZ() + 0.65);
+				spinnerBox = new AABB(0.35, 1, 0.35, 0.65,1.01, 0.65);
 				UtilsRendering.renderTopOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case EAST:
 				UtilsRendering.renderEastOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() + 1.0, pos.getY() + 0.35, pos.getZ() + 0.35, pos.getX() + 1.01, pos.getY() + 0.65, pos.getZ() + 0.65);
+				spinnerBox = new AABB(1.0, 0.35, 0.35, 1.01, 0.65, 0.65);
 				UtilsRendering.renderEastOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case WEST:
 				UtilsRendering.renderWestOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() - 0.01, pos.getY() + 0.35, pos.getZ() + 0.35, pos.getX(), pos.getY() + 0.65, pos.getZ() + 0.65);
+				spinnerBox = new AABB(-0.01, 0.35, 0.35, 0, 0.65, 0.65);
 				UtilsRendering.renderWestOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case NORTH:
 				UtilsRendering.renderNorthOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() + 0.35, pos.getY() + 0.35, pos.getZ() - 0.01, pos.getX() + 0.65, pos.getY() + 0.65, pos.getZ());
+				spinnerBox = new AABB(0.35, 0.35, -0.01, 0.65, 0.65, 0);
 				UtilsRendering.renderNorthOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case SOUTH:
 				UtilsRendering.renderSouthOfBox(builder, coords, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				spinnerBox = new AABB(pos.getX() + 0.35, pos.getY() + 0.35, pos.getZ() + 1.0, pos.getX() + 0.65, pos.getY() + 0.65, pos.getZ() + 1.01);
+				spinnerBox = new AABB(0.35, 0.35, 1.0, 0.65, 0.65, 1.01);
 				UtilsRendering.renderSouthOfBox(builder, UtilsRendering.getCoordsFromAABB(spinnerBox), spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			}
@@ -248,6 +234,25 @@ public class ClientEventHandler {
 			}
 		}
 		return new boolean[] {held, on, inUse};
+	}
+	
+	private static void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
+		if(traceDir == Direction.NORTH || traceDir == Direction.SOUTH) {
+			switch(playerDir) {
+			case SOUTH:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
+				break;
+			case EAST:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
+				break;
+			case WEST:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
+				break;
+			default:
+				break;
+			}
+		}
+		
 	}
 	
 	private static float[] getSpinnerColor(Player player, boolean isInUse) {
