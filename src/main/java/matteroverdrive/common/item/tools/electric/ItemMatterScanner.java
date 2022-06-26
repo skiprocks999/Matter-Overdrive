@@ -102,6 +102,7 @@ public class ItemMatterScanner extends ItemElectric {
 					storage.removeEnergy(USAGE_PER_TICK);
 				} else {
 					entity.stopUsingItem();
+					stack.getOrCreateTag().putBoolean(UtilsNbt.ON, false);
 					playFailureSound(player);
 				}
 			}

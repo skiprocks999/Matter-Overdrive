@@ -61,10 +61,11 @@ public class ClientRegister {
 	public static final HashMap<ResourceLocation, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
 	private static final List<ResourceLocation> CUSTOM_BLOCK_TEXTURES = new ArrayList<>();
 	
-	private static final String CUSTOM_LOC = References.ID + ":custom/";
+	private static final String CUSTOM_LOC = References.ID + ":atlas/";
 	
 	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
 	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "holo_pattern_monitor");
+	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
 	
 	public static void init() {
 
@@ -193,6 +194,7 @@ public class ClientRegister {
 	static {
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_SPINNER);
 	}
 
 	@SubscribeEvent
