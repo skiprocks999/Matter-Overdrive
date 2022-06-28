@@ -1,4 +1,4 @@
-package matteroverdrive.core.render;
+package matteroverdrive.core.eventhandler.client;
 
 import net.minecraft.client.Minecraft;
 

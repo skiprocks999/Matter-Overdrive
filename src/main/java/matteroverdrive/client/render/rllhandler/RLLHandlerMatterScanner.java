@@ -9,7 +9,7 @@ import com.mojang.math.Vector3f;
 
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.core.render.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;

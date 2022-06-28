@@ -2,8 +2,8 @@ package matteroverdrive.client.render.tooltip;
 
 import java.util.List;
 
+import matteroverdrive.core.eventhandler.client.AbstractTooltipHandler;
 import matteroverdrive.core.matter.MatterRegister;
-import matteroverdrive.core.render.AbstractTooltipEventHandler;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;
@@ -14,7 +14,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class MatterValueTooltipHandler extends AbstractTooltipEventHandler {
+public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 
 	@Override
 	public void handleTooltips(List<Component> tooltips, ItemStack stack, Player player) {

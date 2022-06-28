@@ -11,9 +11,9 @@ import matteroverdrive.client.render.rllhandler.RLLHandlerMatterScanner;
 import matteroverdrive.client.render.tooltip.MatterValueTooltipHandler;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.render.AbstractKeyPressHandler;
-import matteroverdrive.core.render.AbstractRenderLevelLastHandler;
-import matteroverdrive.core.render.AbstractTooltipEventHandler;
+import matteroverdrive.core.eventhandler.client.AbstractKeyPressHandler;
+import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.eventhandler.client.AbstractTooltipHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -36,7 +36,7 @@ public class ClientEventHandler {
 	
 	private static final List<AbstractKeyPressHandler> KEY_PRESS_HANDLERS = new ArrayList<>();
 	
-	private static final List<AbstractTooltipEventHandler> TOOLTIP_HANDLERS = new ArrayList<>();
+	private static final List<AbstractTooltipHandler> TOOLTIP_HANDLERS = new ArrayList<>();
 	
 	
 	protected static void init() {
@@ -48,13 +48,13 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void matterTooltipApplier(ItemTooltipEvent event) {
+	public static void handleTooltipEvents(ItemTooltipEvent event) {
 		List<Component> tooltips = event.getToolTip();
 		ItemStack item = event.getItemStack();
 		//Note player can be null
 		Player player = event.getPlayer();
 		
-		for(AbstractTooltipEventHandler handler : TOOLTIP_HANDLERS) {
+		for(AbstractTooltipHandler handler : TOOLTIP_HANDLERS) {
 			handler.handleTooltips(tooltips, item, player);
 		}
 	}

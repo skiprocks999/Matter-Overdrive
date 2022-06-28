@@ -1,4 +1,4 @@
-package matteroverdrive.core.render;
+package matteroverdrive.core.eventhandler.client;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class AbstractTooltipEventHandler {
+public abstract class AbstractTooltipHandler {
 
-	public AbstractTooltipEventHandler() {
+	public AbstractTooltipHandler() {
 		
 	}
 	

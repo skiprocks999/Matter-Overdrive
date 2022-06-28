@@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
@@ -61,6 +62,8 @@ public class MatterOverdrive {
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();
+		
+		ServerEventHandler.init();
 
 	}
 
