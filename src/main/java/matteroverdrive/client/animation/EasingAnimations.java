@@ -4,7 +4,7 @@
  */
 package matteroverdrive.client.animation;
 
-public class AnimationUtils {
+public class EasingAnimations {
 
 	// t - time
 	// b - from value

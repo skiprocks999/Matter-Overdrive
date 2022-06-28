@@ -6,10 +6,11 @@ import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
+import matteroverdrive.client.keys.KeyBinds;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
-import matteroverdrive.client.renderer.tile.RendererCharger;
-import matteroverdrive.client.renderer.tile.RendererInscriber;
+import matteroverdrive.client.render.tile.RendererCharger;
+import matteroverdrive.client.render.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterAnalyzer;
@@ -66,6 +67,7 @@ public class ClientRegister {
 	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
 	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "holo_pattern_monitor");
 	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
+	public static final ResourceLocation TEXTURE_SPINNER_SOLID = new ResourceLocation(CUSTOM_LOC + "spinner");
 	
 	public static void init() {
 
@@ -163,6 +165,7 @@ public class ClientRegister {
 		});
 		
 		KeyBinds.registerKeys();
+		ClientEventHandler.init();
 
 	}
 

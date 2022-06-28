@@ -1,4 +1,4 @@
-package matteroverdrive.client;
+package matteroverdrive.client.keys;
 
 import com.mojang.blaze3d.platform.InputConstants;
 

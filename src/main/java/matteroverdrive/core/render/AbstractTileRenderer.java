@@ -1,4 +1,4 @@
-package matteroverdrive.client.renderer.tile.utils;
+package matteroverdrive.core.render;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

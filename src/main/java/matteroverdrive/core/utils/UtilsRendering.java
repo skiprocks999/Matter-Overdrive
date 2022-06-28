@@ -30,7 +30,13 @@ public class UtilsRendering {
 	public static final int WHITE = getRGBA(255, 255, 255, 255);
 	public static final int HOLO_RED = getRGBA(255, 230, 80, 20);
 	public static final int HOLO_GREEN = getRGBA(255, 24, 207, 0);
+	
+	public static final float[] FLOAT_TEXT_BLUE = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
+	public static final float[] FLOAT_HOLO_RED = UtilsRendering.getColorArray(UtilsRendering.HOLO_RED);
+	public static final float[] FLOAT_HOLO_GREEN = UtilsRendering.getColorArray(UtilsRendering.HOLO_GREEN);
 
+	public static final AABB AABB_BLOCK = new AABB(0, 0, 0, 1, 1, 1);
+	
 	public static void bindTexture(ResourceLocation resource) {
 		RenderSystem.setShaderTexture(0, resource);
 	}

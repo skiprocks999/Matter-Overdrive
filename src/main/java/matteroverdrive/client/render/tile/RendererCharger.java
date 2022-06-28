@@ -1,12 +1,12 @@
-package matteroverdrive.client.renderer.tile;
+package matteroverdrive.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import matteroverdrive.client.ClientRegister;
-import matteroverdrive.client.renderer.tile.utils.AbstractTileRenderer;
 import matteroverdrive.common.tile.TileCharger;
+import matteroverdrive.core.render.AbstractTileRenderer;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
