@@ -8,6 +8,7 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -46,20 +47,23 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	public void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix, Matrix4f projMatrix,
 			float partialTick, long startNano) {
 
-		MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-		VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
-		
 		Player player = minecraft.player;
 		BlockHitResult trace = Item.getPlayerPOVHitResult(player.level, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
 		boolean[] scannerStatus = scannerHeldOnUse(player);
 		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus[0] && scannerStatus[1]) {
+			
+			MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
+			VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
+			
 			matrix.pushPose();
 			BlockPos pos = trace.getBlockPos();
 			
 			Vec3 cam = minecraft.gameRenderer.getMainCamera().getPosition();
 			matrix.translate(-cam.x() + (double)pos.getX(), -cam.y() + (double)pos.getY(), -cam.z() + (double)pos.getZ());
 			
-			rotateMatrixForScanner(matrix, player.getDirection(), trace.getDirection());
+			Direction traceDir = trace.getDirection();
+			
+			rotateMatrixForScanner(matrix, player.getDirection(), traceDir);
 			
 			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_HOLO_GRID);
 			float[] holo_uv = {holoGrid.getU0(), holoGrid.getU1(), holoGrid.getV0(), holoGrid.getV1()};
@@ -68,37 +72,60 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
-			float[] spinner_color = getSpinnerColor(player, scannerStatus[2]);
+			float cutoff = getCuttoffFloat(player, scannerStatus[2]);
+			float[] spinner_color = getSpinnerColor(scannerStatus[2], cutoff);
 		
 			Matrix4f matrix4f = matrix.last().pose();
 			Matrix3f matrix3f = matrix.last().normal();
 			
-			switch(trace.getDirection()) {
+			switch(traceDir) {
 			case DOWN:
 				UtilsRendering.renderBottomOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				UtilsRendering.renderBottomOfBox(builder, SPINNER_COORDS[0], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case UP:
 				UtilsRendering.renderTopOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				UtilsRendering.renderTopOfBox(builder, SPINNER_COORDS[1], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case NORTH:
 				UtilsRendering.renderNorthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				UtilsRendering.renderNorthOfBox(builder, SPINNER_COORDS[2], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case SOUTH:
 				UtilsRendering.renderSouthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				UtilsRendering.renderSouthOfBox(builder, SPINNER_COORDS[3], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case EAST:
 				UtilsRendering.renderEastOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				UtilsRendering.renderEastOfBox(builder, SPINNER_COORDS[4], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			case WEST:
 				UtilsRendering.renderWestOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			}
+			
+			buffer.endBatch(Sheets.translucentCullBlockSheet());
+			
+			builder = buffer.getBuffer(MORenderTypes.getRenderTypeAlphaCutoff(cutoff));
+			
+			switch(traceDir) {
+			case DOWN:
+				UtilsRendering.renderBottomOfBox(builder, SPINNER_COORDS[0], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case UP:
+				UtilsRendering.renderTopOfBox(builder, SPINNER_COORDS[1], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case NORTH:
+				UtilsRendering.renderNorthOfBox(builder, SPINNER_COORDS[2], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case SOUTH:
+				UtilsRendering.renderSouthOfBox(builder, SPINNER_COORDS[3], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case EAST:
+				UtilsRendering.renderEastOfBox(builder, SPINNER_COORDS[4], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case WEST:
 				UtilsRendering.renderWestOfBox(builder, SPINNER_COORDS[5], spinner_color, spinner_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
 				break;
 			}
+			
+			buffer.endBatch(MORenderTypes.GREATER_ALPHA);
+			
 			matrix.popPose();
 		}
 		
@@ -146,12 +173,9 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		
 	}
 	
-	private float[] getSpinnerColor(Player player, boolean isInUse) {
+	private float[] getSpinnerColor(boolean isInUse, float ratio) {
 		if(isInUse) {
-			int count = player.getUseItemRemainingTicks();
-			int maxCount = player.getUseItem().getUseDuration();
-
-			float ratio = ((float) count / (float) maxCount);
+			
 			float iRatio = 1.0F - ratio;
 			
 			return new float[] { UtilsRendering.FLOAT_HOLO_RED[0] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[0] * iRatio, UtilsRendering.FLOAT_HOLO_RED[1] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[1] * iRatio,
@@ -159,6 +183,17 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 		} else {
 			return UtilsRendering.FLOAT_TEXT_BLUE;
+		}
+	}
+	
+	private float getCuttoffFloat(Player player, boolean isInUse) {
+		if(isInUse) {
+			int count = player.getUseItemRemainingTicks();
+			int maxCount = player.getUseItem().getUseDuration();
+
+			return ((float) count / (float) maxCount);
+		} else {
+			return 0.0F;
 		}
 	}
 
