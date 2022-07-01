@@ -35,12 +35,12 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	
 	// DUNSEW
 	private static final float[][] SPINNER_COORDS = new float[][] {
-		UtilsRendering.getCoordsFromAABB(new AABB(0.35, - 0.01, 0.35, 0.65, 0, 0.65)),
-		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 1, 0.35, 0.65,1.01, 0.65)),
-		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 0.35, -0.01, 0.65, 0.65, 0)),
-		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 0.35, 1.0, 0.65, 0.65, 1.01)),
-		UtilsRendering.getCoordsFromAABB(new AABB(1.0, 0.35, 0.35, 1.01, 0.65, 0.65)),
-		UtilsRendering.getCoordsFromAABB(new AABB(-0.01, 0.35, 0.35, 0, 0.65, 0.65))
+		UtilsRendering.getCoordsFromAABB(new AABB(0.35, - 0.01, 0.35, 0.65, 0, 0.65).inflate(0.001)),
+		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 1, 0.35, 0.65,1.01, 0.65).inflate(0.001)),
+		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 0.35, -0.01, 0.65, 0.65, 0).inflate(0.001)),
+		UtilsRendering.getCoordsFromAABB(new AABB(0.35, 0.35, 1.0, 0.65, 0.65, 1.01).inflate(0.001)),
+		UtilsRendering.getCoordsFromAABB(new AABB(1.0, 0.35, 0.35, 1.01, 0.65, 0.65).inflate(0.001)),
+		UtilsRendering.getCoordsFromAABB(new AABB(-0.01, 0.35, 0.35, 0, 0.65, 0.65).inflate(0.001))
 	};
 	
 	@Override
