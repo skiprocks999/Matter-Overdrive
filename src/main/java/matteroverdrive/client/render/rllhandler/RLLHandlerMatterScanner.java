@@ -11,8 +11,12 @@ import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.matter.MatterRegister;
+import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -20,10 +24,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -31,7 +39,7 @@ import net.minecraft.world.phys.HitResult.Type;
 
 public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	
-	private static final float[] GRID_COORDS = UtilsRendering.getCoordsFromAABB(UtilsRendering.AABB_BLOCK.inflate(0.05));
+	private static final float[] GRID_COORDS = UtilsRendering.getCoordsFromAABB(UtilsRendering.AABB_BLOCK.inflate(0.001));
 	
 	// DUNSEW
 	private static final float[][] SPINNER_COORDS = new float[][] {
@@ -49,19 +57,71 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 		Player player = minecraft.player;
 		BlockHitResult trace = Item.getPlayerPOVHitResult(player.level, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
-		boolean[] scannerStatus = scannerHeldOnUse(player);
-		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus[0] && scannerStatus[1]) {
+		int[] scannerStatus = scannerHeldOnUse(player);
+		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus[0] == 1 && scannerStatus[1] == 1) {
+			
+			Level world = minecraft.level;
 			
 			MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-			VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
+			VertexConsumer builder;
+			
+			BlockPos pos = trace.getBlockPos();
+			Vec3 cam = minecraft.gameRenderer.getMainCamera().getPosition();
+			Direction traceDir = trace.getDirection();
+			Font font = minecraft.font;
+			BlockState state = world.getBlockState(pos);
+			
+			/* Render Block Name */
 			
 			matrix.pushPose();
-			BlockPos pos = trace.getBlockPos();
 			
-			Vec3 cam = minecraft.gameRenderer.getMainCamera().getPosition();
-			matrix.translate(-cam.x() + (double)pos.getX(), -cam.y() + (double)pos.getY(), -cam.z() + (double)pos.getZ());
+			translateToPos(matrix, pos, cam);
+		
+			Component text = state.getBlock().asItem().getDescription();
 			
-			Direction traceDir = trace.getDirection();
+			int[] shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 1.5D, 15.0D, 0.5);
+			
+			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer, true, 0, 255);
+			
+			matrix.popPose();
+			
+			/* Render Block Matter Val */
+			
+			matrix.pushPose();
+			
+			translateToPos(matrix, pos, cam);
+			
+			Double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(state.getBlock()));
+			
+			text = val == null
+					? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter"))
+					: UtilsText.tooltip("matterval", new TextComponent(UtilsText.formatMatterValue(val)));
+			
+			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 3.5D, 13.0D, 0.75);
+			
+			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer, true, 0, 255);
+			
+			matrix.popPose();
+			
+			/* Render Stored Percentage */
+			
+			matrix.pushPose();
+			
+			translateToPos(matrix, pos, cam);
+			
+			text = new TextComponent(UtilsText.SINGLE_DECIMAL.format(scannerStatus[3]) + "%");
+			
+			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
+			
+			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer, true, 0, 255);
+			
+			matrix.popPose();
+			
+			/* Render Spinner and Grid */
+			
+			matrix.pushPose();
+			
+			translateToPos(matrix, pos, cam);
 			
 			rotateMatrixForScanner(matrix, player.getDirection(), traceDir);
 			
@@ -72,34 +132,11 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
-			float cutoff = getCuttoffFloat(player, scannerStatus[2]);
-			float[] spinner_color = getSpinnerColor(scannerStatus[2], cutoff);
+			float cutoff = getCuttoffFloat(player, scannerStatus[2] == 1);
+			float[] spinner_color = getSpinnerColor(scannerStatus[2] == 1, cutoff);
 		
 			Matrix4f matrix4f = matrix.last().pose();
 			Matrix3f matrix3f = matrix.last().normal();
-			
-			switch(traceDir) {
-			case DOWN:
-				UtilsRendering.renderBottomOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			case UP:
-				UtilsRendering.renderTopOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			case NORTH:
-				UtilsRendering.renderNorthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			case SOUTH:
-				UtilsRendering.renderSouthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			case EAST:
-				UtilsRendering.renderEastOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			case WEST:
-				UtilsRendering.renderWestOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
-				break;
-			}
-			
-			buffer.endBatch(Sheets.translucentCullBlockSheet());
 			
 			builder = buffer.getBuffer(MORenderTypes.getRenderTypeAlphaCutoff(cutoff));
 			
@@ -126,33 +163,155 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			buffer.endBatch(MORenderTypes.GREATER_ALPHA);
 			
+			builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
+			
+			switch(traceDir) {
+			case DOWN:
+				UtilsRendering.renderBottomOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case UP:
+				UtilsRendering.renderTopOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case NORTH:
+				UtilsRendering.renderNorthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case SOUTH:
+				UtilsRendering.renderSouthOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case EAST:
+				UtilsRendering.renderEastOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			case WEST:
+				UtilsRendering.renderWestOfBox(builder, GRID_COORDS, holo_color, holo_uv, matrix4f, matrix3f, 255, OverlayTexture.NO_OVERLAY);
+				break;
+			}
+			
+			buffer.endBatch(Sheets.translucentCullBlockSheet());
+			
 			matrix.popPose();
+			
 		}
 		
 	}
 	
-	private boolean[] scannerHeldOnUse(Player player) {
+	//giving Neo a run for his money
+	private int[] moveMatrixForText(PoseStack matrix, Direction traceDir, Direction playerDir, double txtWidth,
+			double yUp, double yDown, double xOver) {
+		
+		switch(traceDir) {
+		case SOUTH:
+			matrix.translate(0, 0, 1.001);
+			break;
+		case NORTH:
+			matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
+			matrix.translate(-1.0, 0, 0.001);
+			break;
+		case WEST:
+			matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
+			matrix.translate(0, 0, 0.001);
+			break;
+		case EAST:
+			matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
+			matrix.translate(-1 , 0, 1.001);
+			break;
+		default:
+			if(traceDir == Direction.UP || traceDir == Direction.DOWN) {
+				switch(playerDir) {
+				case SOUTH:
+					matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
+					matrix.translate(-1, 0, -1);
+					break;
+				case EAST:
+					matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
+					matrix.translate(0, 0, -1);
+					break;
+				case WEST:
+					matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
+					matrix.translate(-1 , 0, 0);
+					break;
+				default:
+					break;
+				}
+				if(traceDir == Direction.UP) {
+					matrix.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90.0F, true));
+					matrix.translate(0, 0, 1.001);
+				} else {
+					matrix.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90.0F, true));	
+					matrix.translate(0, 0, 0.001);
+				}
+				
+			}
+			break;
+		}
+		
+		
+
+		//Fit text to 1 block wide face
+		double baseScale = 1.0D / 16.153846153846153846153846153846D;
+		double widthScale = txtWidth / 16.0D;
+		double textScale = 5.2D;
+		
+		double addScale = textScale > widthScale ? textScale : widthScale;
+		
+		float actualScale = (float) ((float) baseScale / addScale);
+		
+		matrix.scale(actualScale, -actualScale, actualScale);
+		
+		//shift text to middle of block face
+		
+		double baseShift = 4.0D / 26.0D * addScale;
+		
+		double pixelConstant = 0.90933584803987606089182271318874D;
+		
+		int x = 0;
+		
+		if(textScale > widthScale) {
+			double pixelWidth = txtWidth / addScale / pixelConstant;
+			double xShift = 8.0D - pixelWidth / 2;
+			x = (int) (baseShift + (xShift + xOver) * addScale);
+		} else {
+			x = (int) baseShift;
+		}
+		
+		int y = 0;
+		
+		if(traceDir == Direction.UP) {
+			y = -(int) (baseShift - yUp * addScale);
+		} else {
+			y = -(int) (yDown * addScale - baseShift);
+		}
+		
+		
+		
+		return new int[] {x, y};
+	}
+
+	//Old-school booleans
+	private int[] scannerHeldOnUse(Player player) {
 		ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-		boolean held = false;
-		boolean on = false;
-		boolean inUse = false;
+		int held = 0;
+		int on = 0;
+		int inUse = 0;
+		int perc = 0;
 		if(stack.getItem() instanceof ItemMatterScanner scanner) {
-			held = true;
-			on = scanner.isOn(stack);
-			inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner;
+			held = 1;
+			on = scanner.isOn(stack) ? 1 : 0;
+			inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner ? 1 : 0;
+			perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 		} else {
 			stack = player.getItemInHand(InteractionHand.OFF_HAND);
 			if(stack.getItem() instanceof ItemMatterScanner scanner) {
-				held = true;
-				on = scanner.isOn(stack);
-				inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner;
+				held = 1;
+				on = scanner.isOn(stack) ? 1 : 0;
+				inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner ? 1 : 0;
+				perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 			}
 		}
-		return new boolean[] {held, on, inUse};
+		return new int[] {held, on, inUse, perc};
 	}
 	
 	private void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
-		if(traceDir == Direction.UP || traceDir == Direction.DOWN) {
+		if(traceDir == Direction.UP ) {
 			switch(playerDir) {
 			case SOUTH:
 				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
@@ -163,6 +322,23 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 				matrix.translate(0, 0, -1);
 				break;
 			case WEST:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
+				matrix.translate(-1 , 0, 0);
+				break;
+			default:
+				break;
+			}
+		} else if (traceDir == Direction.DOWN) {
+			switch(playerDir) {
+			case NORTH:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
+				matrix.translate(-1, 0, -1);
+				break;
+			case WEST:
+				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
+				matrix.translate(0, 0, -1);
+				break;
+			case EAST:
 				matrix.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
 				matrix.translate(-1 , 0, 0);
 				break;
@@ -195,6 +371,10 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		} else {
 			return 0.0F;
 		}
+	}
+	
+	private void translateToPos(PoseStack matrix, BlockPos pos, Vec3 cam) {
+		matrix.translate(-cam.x() + (double)pos.getX(), -cam.y() + (double)pos.getY(), -cam.z() + (double)pos.getZ());
 	}
 
 }

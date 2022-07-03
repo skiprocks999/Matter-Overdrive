@@ -20,6 +20,7 @@ public class UtilsNbt {
 	public static final String ON = "on";
 	public static final String ITEM = "item";
 	public static final String HELD = "help";
+	public static final String PERCENTAGE = "percentage";
 
 	/* COMPOUND TAG */
 	

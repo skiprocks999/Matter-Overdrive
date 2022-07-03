@@ -21,8 +21,8 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +30,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,25 +43,12 @@ public class ItemMatterScanner extends ItemElectric {
 	public static final int USAGE_PER_TICK = 1;
 	
 	private static final String RAY_TRACE_POS = "ray_trace";
+	private static final String CYCLED = "cycled";
 	
 	private static final int AMT_PER_SCAN = 10;
 	
 	public ItemMatterScanner() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN), MAX_STORAGE, true, false);
-	}
-	
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		ItemStack stack = context.getItemInHand();
-		Level world = context.getLevel();
-		if(!world.isClientSide && isOn(stack)) {
-			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(context.getPlayer());
-			BlockState state = world.getBlockState(pos);
-			if(pos != null && !state.isAir()) {
-				saveBlockToStack(stack, state, pos);
-			}
-		}
-		return super.useOn(context);
 	}
 	
 	@Override
@@ -73,41 +59,62 @@ public class ItemMatterScanner extends ItemElectric {
 				stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
 			} else if (isOn(stack) && isPowered(stack)) {
 				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
-				BlockState state = world.getBlockState(pos);
-				if(pos != null && !state.isAir() && hasStoredBlock(stack) && doesStoredMatch(state, stack) && isSamePos(stack, pos)) {
-					if(!isHeld(stack)) {
-						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+				if(pos != null) {
+					BlockState state = world.getBlockState(pos);
+					if(state.isAir()) {
+						playFailureSound(player);
+						player.stopUsingItem();
+						setNotHolding(stack);
+						resetCycled(stack);
+					} else {
+						if(isHeld(stack) && isCycled(stack)) {
+							saveBlockToStack(stack, state, pos);
+						} else if(!isHeld(stack)) {
+							saveBlockToStack(stack, state, pos);
+							NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+						}
+						resetCycled(stack);
+						if(hasStoredBlock(stack) && doesStoredMatch(state, stack) && isSamePos(stack, pos)) {
+							setHolding(stack);
+							player.startUsingItem(hand);
+						} else {
+							playFailureSound(player);
+							player.stopUsingItem();
+							setNotHolding(stack);
+						}
 					}
-					setHolding(stack);
-					player.startUsingItem(hand);
-					return InteractionResultHolder.pass(player.getItemInHand(hand));
 				} else {
 					playFailureSound(player);
-				}	
+					player.stopUsingItem();
+					setNotHolding(stack);
+					resetCycled(stack);
+				}
 			}
 		}
 		return super.use(world, player, hand);
 	}
 	
 	@Override
-	public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remaining) {
-		if(!level.isClientSide && entity instanceof Player player) {
-			if(isNotSameBlock(player, stack)) {
+	public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int remaining) {
+		if(!world.isClientSide && entity instanceof Player player) {
+			boolean notSame = isNotSameBlock(player, stack);
+			if(notSame) {
 				entity.stopUsingItem();
 				playFailureSound(player);
 			}
-			CapabilityEnergyStorage storage = UtilsItem.getEnergyStorageCap(stack);
-			if(storage != null) {
+			CapabilityEnergyStorage energy = UtilsItem.getEnergyStorageCap(stack);
+			if(energy != null) {
 				if(isPowered(stack)) {
-					storage.removeEnergy(USAGE_PER_TICK);
+					energy.removeEnergy(USAGE_PER_TICK);
 				} else {
 					entity.stopUsingItem();
 					stack.getOrCreateTag().putBoolean(UtilsNbt.ON, false);
 					playFailureSound(player);
 				}
 			}
+			
 		}
-		super.onUseTick(level, entity, stack, remaining);
+		super.onUseTick(world, entity, stack, remaining);
 	}
 	
 	@Override
@@ -129,6 +136,7 @@ public class ItemMatterScanner extends ItemElectric {
 			} else {
 				playFailureSound(player);
 			}
+			setCycled(stack);
 		}
 		return stack;
 	}
@@ -136,9 +144,34 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int charged) {
 		super.releaseUsing(stack, level, entity, charged);
-		if(!level.isClientSide) {
-			setNotHolding(stack);
-		}
+		setNotHolding(stack);
+		resetCycled(stack);
+	}
+	
+	@Override
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
+		if(!level.isClientSide && entity instanceof Player player && isSelected && isOn(stack) && isBound(stack)) {
+			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
+			if(pos != null) {
+				BlockState state = player.level.getBlockState(pos);
+				if(!state.isAir()) {
+					BlockEntity tile = level.getBlockEntity(NbtUtils.readBlockPos(stack.getTag().getCompound(UtilsNbt.BLOCK_POS)));
+					if(tile != null && tile instanceof TilePatternStorage storage) {
+						int perc = storage.getHighestStorageLocForItem(state.getBlock().asItem(), false, false)[2];
+						if(perc < 0) {
+							perc = 0;
+						}
+						setStoredPercentage(stack, perc);
+					} else {
+						setStoredPercentage(stack, 0);
+					}
+				} else {
+					setStoredPercentage(stack, 0);
+				}
+			} else {
+				setStoredPercentage(stack, 0);
+			}
+		} 
 	}
 	
 	@Override
@@ -168,7 +201,7 @@ public class ItemMatterScanner extends ItemElectric {
 		if(isBound(stack)) {
 			BlockEntity entity = world.getBlockEntity(NbtUtils.readBlockPos(stack.getTag().getCompound(UtilsNbt.BLOCK_POS)));
 			if(entity != null && entity instanceof TilePatternStorage storage) {
-				int[] index = storage.getHighestStorageLocForItem(item);
+				int[] index = storage.getHighestStorageLocForItem(item, false, false);
 				if(index[0] > -1) {
 					boolean stored = storage.storeItem(item, AMT_PER_SCAN, index);
 					if(stored) {
@@ -225,11 +258,15 @@ public class ItemMatterScanner extends ItemElectric {
 	
 	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos) {
 		Double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
+		CompoundTag tag = stack.getOrCreateTag();
 		if(value != null) {
-			CompoundTag tag = stack.getOrCreateTag();
 			tag.putString(UtilsNbt.ITEM, state.getBlock().asItem().getRegistryName().toString().toLowerCase());
 			tag.putDouble(UtilsNbt.STORED_MATTER_VAL, value);
 			tag.put(RAY_TRACE_POS, NbtUtils.writeBlockPos(pos));
+		} else {
+			tag.remove(UtilsNbt.ITEM);
+			tag.remove(UtilsNbt.STORED_MATTER_VAL);
+			tag.remove(RAY_TRACE_POS);
 		}
 	}
 	
@@ -276,6 +313,22 @@ public class ItemMatterScanner extends ItemElectric {
 			return true;
 		}
 		return false;
+	}
+	
+	private void setStoredPercentage(ItemStack stack, int percentage) {
+		stack.getOrCreateTag().putInt(UtilsNbt.PERCENTAGE, percentage);
+	}
+	
+	private void setCycled(ItemStack stack) {
+		stack.getOrCreateTag().putBoolean(CYCLED, true);
+	}
+	
+	private void resetCycled(ItemStack stack) {
+		stack.getOrCreateTag().putBoolean(CYCLED, false);
+	}
+	
+	private boolean isCycled(ItemStack stack) {
+		return stack.getOrCreateTag().getBoolean(CYCLED);
 	}
 
 }

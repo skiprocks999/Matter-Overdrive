@@ -270,8 +270,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	 * @param item : the item to search for
 	 * @return the relevant indexes
 	 */
-	public int[] getHighestStorageLocForItem(Item item) {
-		ItemPatternWrapper[][] array = getWrappers(false, false);
+	public int[] getHighestStorageLocForItem(Item item, boolean client, boolean network) {
+		ItemPatternWrapper[][] array = getWrappers(client, network);
 		ItemPatternWrapper[] holder;
 		int drive = -1;
 		int patSlot = -1;
