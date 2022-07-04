@@ -53,55 +53,52 @@ public class ItemMatterScanner extends ItemElectric {
 	
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-		if(!world.isClientSide) {
-			ItemStack stack = player.getItemInHand(hand);
-			if(!player.isShiftKeyDown() && world.isClientSide) {
-				
-				stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
-				return InteractionResultHolder.pass(player.getItemInHand(hand));
+		ItemStack stack = player.getItemInHand(hand);
+		if(!player.isShiftKeyDown() && !world.isClientSide) {
 			
-			} else if (isOn(stack) && isPowered(stack)) {
-				
-				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
-				
-				if(pos == null) {
-					return InteractionResultHolder.fail(player.getItemInHand(hand));
-				}
-				
-				BlockState state = world.getBlockState(pos);
-				if(state.isAir()) {
-					return InteractionResultHolder.fail(player.getItemInHand(hand));
-				}
-				
-				//Store block and start playing sound
-				if(!hasStoredBlock(stack)) {
+			stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
+			return InteractionResultHolder.pass(player.getItemInHand(hand));
+		
+		} else if (isOn(stack) && isPowered(stack)) {
+			
+			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
+			
+			if(pos == null) {
+				return InteractionResultHolder.fail(player.getItemInHand(hand));
+			}
+			
+			BlockState state = world.getBlockState(pos);
+			if(state.isAir()) {
+				return InteractionResultHolder.fail(player.getItemInHand(hand));
+			}
+			
+			//Store block and start playing sound
+			if(!hasStoredBlock(stack)) {
+				saveBlockToStack(stack, state, pos);
+				if(!isHeld(stack)) {
+					setHolding(stack);
 					if(!world.isClientSide) {
-						saveBlockToStack(stack, state, pos);
-						if(!isHeld(stack)) {
-							setHolding(stack);
-							NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
-						}
+						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
 					}
-					MatterOverdrive.LOGGER.info("started using");
-					player.startUsingItem(hand);
-					return InteractionResultHolder.consume(player.getItemInHand(hand));
 				}
-				
-				if(!doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
-					return InteractionResultHolder.fail(player.getItemInHand(hand));
-				} 
-				
+				MatterOverdrive.LOGGER.info("started using");
+				player.startUsingItem(hand);
 				return InteractionResultHolder.consume(player.getItemInHand(hand));
-				
+			}
+			
+			if(!doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
+				return InteractionResultHolder.fail(player.getItemInHand(hand));
 			} 
-			return InteractionResultHolder.fail(player.getItemInHand(hand));
-		}
-		return InteractionResultHolder.pass(player.getItemInHand(hand));
+			
+			return InteractionResultHolder.consume(player.getItemInHand(hand));
+			
+		} 
+		return InteractionResultHolder.fail(player.getItemInHand(hand));
 	}
 	
 	@Override
 	public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int remaining) {
-		if(!world.isClientSide && entity instanceof Player player) {
+		if(entity instanceof Player player) {
 			//MatterOverdrive.LOGGER.info(player.useItemRemaining + "");
 			if(isOn(stack) && isPowered(stack)) {
 				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
@@ -128,25 +125,27 @@ public class ItemMatterScanner extends ItemElectric {
 	
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-		if(!world.isClientSide && entity instanceof Player player && isOn(stack) && isPowered(stack)) {
+		if(entity instanceof Player player && isOn(stack) && isPowered(stack)) {
 			
 			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 			
 			if(pos == null) {
-				playFailureSound(player);
+				if(!world.isClientSide) playFailureSound(player);
 				wipeStoredBlocks(stack);
 				return stack;
 			}
 			
 			BlockState state = world.getBlockState(pos);
 			if(state.isAir() || !doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
-				playFailureSound(player);
+				if(!world.isClientSide) playFailureSound(player);
 				wipeStoredBlocks(stack);
 				return stack;
 			}
 			
-			scanBlockToDrive(world, stack);
-			playSuccessSound(player);
+			if(!world.isClientSide) {
+				scanBlockToDrive(world, stack);
+				playSuccessSound(player);
+			}
 			wipeStoredBlocks(stack);
 		}
 		return stack;
@@ -158,12 +157,12 @@ public class ItemMatterScanner extends ItemElectric {
 	}
 
 	@Override
-	public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int charged) {
-		if(!level.isClientSide && entity instanceof Player player) {
+	public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int charged) {
+		if(entity instanceof Player player) {
 			MatterOverdrive.LOGGER.info("called release");
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
-			playFailureSound(player);
+			if(!world.isClientSide) playFailureSound(player);
 		}
 	}
 	
