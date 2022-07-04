@@ -307,7 +307,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 				perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 			}
 		}
-		return new ScannerDataWrapper(inUse, on, held, perc, stack);
+		return new ScannerDataWrapper(held, on, inUse, perc, stack);
 	}
 	
 	private void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
