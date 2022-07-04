@@ -57,8 +57,8 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 		Player player = minecraft.player;
 		BlockHitResult trace = Item.getPlayerPOVHitResult(player.level, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
-		int[] scannerStatus = scannerHeldOnUse(player);
-		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus[0] == 1 && scannerStatus[1] == 1) {
+		ScannerDataWrapper scannerStatus = scannerHeldOnUse(player);
+		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY && scannerStatus.inUse && scannerStatus.on) {
 			
 			Level world = minecraft.level;
 			
@@ -109,7 +109,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			translateToPos(matrix, pos, cam);
 			
-			text = new TextComponent(UtilsText.SINGLE_DECIMAL.format(scannerStatus[3]) + "%");
+			text = new TextComponent(UtilsText.SINGLE_DECIMAL.format(scannerStatus.percent) + "%");
 			
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
 			
@@ -132,8 +132,8 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
-			float cutoff = getCuttoffFloat(player, scannerStatus[2] == 1);
-			float[] spinner_color = getSpinnerColor(scannerStatus[2] == 1, cutoff);
+			float cutoff = getCuttoffFloat(player, scannerStatus.held, scannerStatus.scanner);
+			float[] spinner_color = getSpinnerColor(scannerStatus.held, cutoff);
 		
 			Matrix4f matrix4f = matrix.last().pose();
 			Matrix3f matrix3f = matrix.last().normal();
@@ -287,27 +287,27 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	}
 
 	//Old-school booleans
-	private int[] scannerHeldOnUse(Player player) {
+	private ScannerDataWrapper scannerHeldOnUse(Player player) {
 		ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-		int held = 0;
-		int on = 0;
-		int inUse = 0;
+		boolean held = false;
+		boolean on = false;
+		boolean inUse = false;
 		int perc = 0;
 		if(stack.getItem() instanceof ItemMatterScanner scanner) {
-			held = 1;
-			on = scanner.isOn(stack) ? 1 : 0;
-			inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner ? 1 : 0;
+			held = true;
+			on = scanner.isOn(stack);
+			inUse = scanner.isHeld(stack);
 			perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 		} else {
 			stack = player.getItemInHand(InteractionHand.OFF_HAND);
 			if(stack.getItem() instanceof ItemMatterScanner scanner) {
-				held = 1;
-				on = scanner.isOn(stack) ? 1 : 0;
-				inUse = player.isUsingItem() && player.getUseItem().getItem() instanceof ItemMatterScanner ? 1 : 0;
+				held = true;
+				on = scanner.isOn(stack);
+				inUse = scanner.isHeld(stack);
 				perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 			}
 		}
-		return new int[] {held, on, inUse, perc};
+		return new ScannerDataWrapper(inUse, on, held, perc, stack);
 	}
 	
 	private void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
@@ -362,12 +362,12 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		}
 	}
 	
-	private float getCuttoffFloat(Player player, boolean isInUse) {
+	private float getCuttoffFloat(Player player, boolean isInUse, ItemStack scanner) {
 		if(isInUse) {
-			int count = player.getUseItemRemainingTicks();
-			int maxCount = player.getUseItem().getUseDuration();
-
-			return ((float) count / (float) maxCount);
+			int count = scanner.getOrCreateTag().getInt(UtilsNbt.TIMER);
+			int maxCount = scanner.getOrCreateTag().getInt(UtilsNbt.USE_TIME);
+			
+			return maxCount > 0 ? ((float) count / (float) maxCount) : 0.0F;
 		} else {
 			return 0.0F;
 		}
@@ -375,6 +375,24 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	
 	private void translateToPos(PoseStack matrix, BlockPos pos, Vec3 cam) {
 		matrix.translate(-cam.x() + (double)pos.getX(), -cam.y() + (double)pos.getY(), -cam.z() + (double)pos.getZ());
+	}
+	
+	private static final class ScannerDataWrapper {
+		
+		private boolean inUse;
+		private boolean on;
+		private boolean held;
+		private int percent;
+		private ItemStack scanner;
+		
+		private ScannerDataWrapper(boolean inUse, boolean on, boolean held, int percent, ItemStack scanner) {
+			this.inUse = inUse;
+			this.on = on;
+			this.held = held;
+			this.percent = percent;
+			this.scanner = scanner;
+		}
+		
 	}
 
 }

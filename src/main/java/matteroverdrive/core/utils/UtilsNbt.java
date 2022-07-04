@@ -21,6 +21,8 @@ public class UtilsNbt {
 	public static final String ITEM = "item";
 	public static final String HELD = "help";
 	public static final String PERCENTAGE = "percentage";
+	public static final String TIMER = "timer";
+	public static final String USE_TIME = "use_time";
 
 	/* COMPOUND TAG */
 	
