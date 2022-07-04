@@ -65,67 +65,87 @@ public class ItemMatterScanner extends ItemElectric {
 				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 				
 				if(pos == null) {
-					setNotHolding(stack);
-					wipeStoredBlocks(stack);
-					playFailureSound(player);
-					return InteractionResultHolder.pass(player.getItemInHand(hand));
+					return InteractionResultHolder.fail(player.getItemInHand(hand));
 				}
 				
 				BlockState state = world.getBlockState(pos);
 				if(state.isAir()) {
-					setNotHolding(stack);
-					wipeStoredBlocks(stack);
-					playFailureSound(player);
-					return InteractionResultHolder.pass(player.getItemInHand(hand));
+					return InteractionResultHolder.fail(player.getItemInHand(hand));
 				}
 				
 				//Store block and start playing sound
 				if(!hasStoredBlock(stack)) {
 					saveBlockToStack(stack, state, pos);
-					setHolding(stack);
-					resetTimer(stack);
-					NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+					if(!isHeld(stack)) {
+						setHolding(stack);
+						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+					}
 					player.startUsingItem(hand);
 					return InteractionResultHolder.consume(player.getItemInHand(hand));
 				}
 				
 				if(!doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
-					setNotHolding(stack);
-					wipeStoredBlocks(stack);
-					playFailureSound(player);
-					return InteractionResultHolder.pass(player.getItemInHand(hand));
+					return InteractionResultHolder.fail(player.getItemInHand(hand));
 				} 
 				
-				CapabilityEnergyStorage energy = UtilsItem.getEnergyStorageCap(stack);
-				
-				if(energy == null || !isPowered(stack)) {
-					setNotHolding(stack);
-					playFailureSound(player);
-					wipeStoredBlocks(stack);
-					return InteractionResultHolder.pass(player.getItemInHand(hand));
-				}		
-				
-				energy.extractEnergy(AMT_PER_SCAN, true);
-				
-				int useTime = getUseTime(stack);
-				int timer = getTimer(stack);
-				
-				if(timer >= useTime) {
-					scanBlockToDrive(world, stack);
-					playSuccessSound(player);
-					resetTimer(stack);
-				} else {
-					incrementTimer(stack, timer);
-				}
 				return InteractionResultHolder.consume(player.getItemInHand(hand));
 				
 			} 
-			setNotHolding(stack);
-			wipeStoredBlocks(stack);
-			playFailureSound(player);
-			return InteractionResultHolder.pass(player.getItemInHand(hand));
+			return InteractionResultHolder.fail(player.getItemInHand(hand));
 		}
 		return InteractionResultHolder.pass(player.getItemInHand(hand));
+	}
+	
+	@Override
+	public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int remaining) {
+		if(!world.isClientSide && entity instanceof Player player) {
+			if(isOn(stack) && isPowered(stack)) {
+				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
+				
+				if(pos == null) {
+					player.releaseUsingItem();
+					return;
+				}
+				
+				BlockState state = world.getBlockState(pos);
+				if(state.isAir() || !doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
+					player.releaseUsingItem();
+					return;
+				}
+				
+				UtilsItem.getEnergyStorageCap(stack).extractEnergy(USAGE_PER_TICK, true);
+				
+				return;
+			}
+			player.releaseUsingItem();
+			return;
+		}
+	}
+	
+	@Override
+	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
+		if(!world.isClientSide && entity instanceof Player player && isOn(stack) && isPowered(stack)) {
+			
+			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
+			
+			if(pos == null) {
+				playFailureSound(player);
+				wipeStoredBlocks(stack);
+				return stack;
+			}
+			
+			BlockState state = world.getBlockState(pos);
+			if(state.isAir() || !doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
+				playFailureSound(player);
+				wipeStoredBlocks(stack);
+				return stack;
+			}
+			
+			scanBlockToDrive(world, stack);
+			playSuccessSound(player);
+			wipeStoredBlocks(stack);
+		}
+		return stack;
 	}
 	
 	@Override
@@ -137,16 +157,21 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int charged) {
 		MatterOverdrive.LOGGER.info("called");
-		if(!level.isClientSide) {
-			
+		if(!level.isClientSide && entity instanceof Player player) {
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
+			playFailureSound(player);
 		}
 	}
 	
 	@Override
 	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
 		if(!level.isClientSide && entity instanceof Player player) {
+			
+			if(isHeld(stack) && !player.isUsingItem()) {
+				setNotHolding(stack);
+				wipeStoredBlocks(stack);
+			}
 			
 			if(!isSelected || !isOn(stack) || !isBound(stack)) {
 				setStoredPercentage(stack, 0);
@@ -283,7 +308,7 @@ public class ItemMatterScanner extends ItemElectric {
 	public boolean isPowered(ItemStack stack) {
 		CapabilityEnergyStorage storage = UtilsItem.getEnergyStorageCap(stack);
 		if(storage != null) {
-			return storage.getEnergyStored() > 0;
+			return storage.getEnergyStored() > USAGE_PER_TICK;
 		}
 		return false;
 	}
@@ -313,29 +338,12 @@ public class ItemMatterScanner extends ItemElectric {
 		stack.getOrCreateTag().putInt(UtilsNbt.PERCENTAGE, percentage);
 	}
 	
-	private int getTimer(ItemStack stack) {
-		return stack.getOrCreateTag().getInt(UtilsNbt.TIMER);
-	}
-	
-	private void incrementTimer(ItemStack stack, int amt) {
-		stack.getOrCreateTag().putInt(UtilsNbt.TIMER, stack.getOrCreateTag().getInt(UtilsNbt.TIMER) + amt);
-	}
-	
-	private void resetTimer(ItemStack stack) {
-		stack.getOrCreateTag().putInt(UtilsNbt.TIMER, 0);
-	}
-	
-	private int getUseTime(ItemStack stack) {
-		return stack.getOrCreateTag().getInt(UtilsNbt.USE_TIME);
-	}
-	
 	private void wipeStoredBlocks(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		tag.remove(UtilsNbt.ITEM);
 		tag.remove(UtilsNbt.STORED_MATTER_VAL);
 		tag.remove(RAY_TRACE_POS);
 		tag.remove(UtilsNbt.USE_TIME);
-		tag.remove(UtilsNbt.TIMER);
 	}
 
 }

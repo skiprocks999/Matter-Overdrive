@@ -132,7 +132,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
-			float cutoff = getCuttoffFloat(player, scannerStatus.held, scannerStatus.scanner);
+			float cutoff = getCuttoffFloat(player, scannerStatus.held);
 			float[] spinner_color = getSpinnerColor(scannerStatus.held, cutoff);
 		
 			Matrix4f matrix4f = matrix.last().pose();
@@ -307,7 +307,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 				perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 			}
 		}
-		return new ScannerDataWrapper(held, on, inUse, perc, stack);
+		return new ScannerDataWrapper(held, on, inUse, perc);
 	}
 	
 	private void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
@@ -362,12 +362,12 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		}
 	}
 	
-	private float getCuttoffFloat(Player player, boolean isInUse, ItemStack scanner) {
+	private float getCuttoffFloat(Player player, boolean isInUse) {
 		if(isInUse) {
-			int count = scanner.getOrCreateTag().getInt(UtilsNbt.TIMER);
-			int maxCount = scanner.getOrCreateTag().getInt(UtilsNbt.USE_TIME);
+			int count = player.getUseItemRemainingTicks();
+			int maxCount = player.getUseItem().getUseDuration();
 			
-			return maxCount > 0 ? ((float) count / (float) maxCount) : 0.0F;
+			return (float) count / (float) maxCount;
 		} else {
 			return 0.0F;
 		}
@@ -383,14 +383,12 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		private boolean on;
 		private boolean held;
 		private int percent;
-		private ItemStack scanner;
 		
-		private ScannerDataWrapper(boolean inUse, boolean on, boolean held, int percent, ItemStack scanner) {
+		private ScannerDataWrapper(boolean inUse, boolean on, boolean held, int percent) {
 			this.inUse = inUse;
 			this.on = on;
 			this.held = held;
 			this.percent = percent;
-			this.scanner = scanner;
 		}
 		
 	}
