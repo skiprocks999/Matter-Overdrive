@@ -54,11 +54,11 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		if(!world.isClientSide) {
-			MatterOverdrive.LOGGER.info("use called");
 			ItemStack stack = player.getItemInHand(hand);
-			if(player.isShiftKeyDown()) {
+			if(!player.isShiftKeyDown() && world.isClientSide) {
 				
 				stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
+				return InteractionResultHolder.pass(player.getItemInHand(hand));
 			
 			} else if (isOn(stack) && isPowered(stack)) {
 				
@@ -75,11 +75,14 @@ public class ItemMatterScanner extends ItemElectric {
 				
 				//Store block and start playing sound
 				if(!hasStoredBlock(stack)) {
-					saveBlockToStack(stack, state, pos);
-					if(!isHeld(stack)) {
-						setHolding(stack);
-						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+					if(!world.isClientSide) {
+						saveBlockToStack(stack, state, pos);
+						if(!isHeld(stack)) {
+							setHolding(stack);
+							NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
+						}
 					}
+					MatterOverdrive.LOGGER.info("started using");
 					player.startUsingItem(hand);
 					return InteractionResultHolder.consume(player.getItemInHand(hand));
 				}
@@ -99,6 +102,7 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int remaining) {
 		if(!world.isClientSide && entity instanceof Player player) {
+			//MatterOverdrive.LOGGER.info(player.useItemRemaining + "");
 			if(isOn(stack) && isPowered(stack)) {
 				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 				
@@ -150,14 +154,13 @@ public class ItemMatterScanner extends ItemElectric {
 	
 	@Override
 	public int getUseDuration(ItemStack stack) {
-		MatterOverdrive.LOGGER.info(stack.getOrCreateTag().getInt(UtilsNbt.USE_TIME) + "");
 		return stack.getOrCreateTag().getInt(UtilsNbt.USE_TIME);
 	}
 
 	@Override
 	public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int charged) {
-		MatterOverdrive.LOGGER.info("called");
 		if(!level.isClientSide && entity instanceof Player player) {
+			MatterOverdrive.LOGGER.info("called release");
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
 			playFailureSound(player);
@@ -167,11 +170,6 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
 		if(!level.isClientSide && entity instanceof Player player) {
-			
-			if(isHeld(stack) && !player.isUsingItem()) {
-				setNotHolding(stack);
-				wipeStoredBlocks(stack);
-			}
 			
 			if(!isSelected || !isOn(stack) || !isBound(stack)) {
 				setStoredPercentage(stack, 0);

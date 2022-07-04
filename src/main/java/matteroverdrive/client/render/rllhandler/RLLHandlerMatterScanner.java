@@ -7,6 +7,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
@@ -286,7 +287,6 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		return new int[] {x, y};
 	}
 
-	//Old-school booleans
 	private ScannerDataWrapper scannerHeldOnUse(Player player) {
 		ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
 		boolean held = false;
@@ -367,7 +367,10 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			int count = player.getUseItemRemainingTicks();
 			int maxCount = player.getUseItem().getUseDuration();
 			
-			return (float) count / (float) maxCount;
+			//MatterOverdrive.LOGGER.info("count " + count);
+			//MatterOverdrive.LOGGER.info("max count " + maxCount);
+			
+			return maxCount == 0 ? 0 : (float) count / (float) maxCount;
 		} else {
 			return 0.0F;
 		}
