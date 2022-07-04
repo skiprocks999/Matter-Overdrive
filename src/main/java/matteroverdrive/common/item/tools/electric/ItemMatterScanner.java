@@ -130,22 +130,23 @@ public class ItemMatterScanner extends ItemElectric {
 			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 			
 			if(pos == null) {
-				if(!world.isClientSide) playFailureSound(player);
+				playFailureSound(player);
 				wipeStoredBlocks(stack);
 				return stack;
 			}
 			
 			BlockState state = world.getBlockState(pos);
 			if(state.isAir() || !doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
-				if(!world.isClientSide) playFailureSound(player);
+				playFailureSound(player);
 				wipeStoredBlocks(stack);
 				return stack;
 			}
 			
 			if(!world.isClientSide) {
 				scanBlockToDrive(world, stack);
-				playSuccessSound(player);
 			}
+			
+			playSuccessSound(player);
 			wipeStoredBlocks(stack);
 		}
 		return stack;
@@ -162,7 +163,7 @@ public class ItemMatterScanner extends ItemElectric {
 			MatterOverdrive.LOGGER.info("called release");
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
-			if(!world.isClientSide) playFailureSound(player);
+			playFailureSound(player);
 		}
 	}
 	
