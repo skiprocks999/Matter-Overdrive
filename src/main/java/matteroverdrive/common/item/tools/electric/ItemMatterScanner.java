@@ -74,7 +74,7 @@ public class ItemMatterScanner extends ItemElectric {
 			
 			//Store block and start playing sound
 			if(!hasStoredBlock(stack)) {
-				saveBlockToStack(stack, state, pos);
+				saveBlockToStack(stack, state, pos, !world.isClientSide);
 				if(!isHeld(stack)) {
 					setHolding(stack);
 					if(!world.isClientSide) {
@@ -285,8 +285,9 @@ public class ItemMatterScanner extends ItemElectric {
 		return item != null && UtilsItem.compareItems(item, state.getBlock().asItem());
 	}
 	
-	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos) {
-		Double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
+	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos, boolean serverside) {
+		Double value = serverside ? MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock())):
+			MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(state.getBlock()));
 		CompoundTag tag = stack.getOrCreateTag();
 		if(value != null) {
 			tag.putString(UtilsNbt.ITEM, state.getBlock().asItem().getRegistryName().toString().toLowerCase());
