@@ -3,6 +3,7 @@ package matteroverdrive.common.item.tools.electric;
 import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
@@ -64,11 +65,13 @@ public class ItemMatterScanner extends ItemElectric {
 			BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 			
 			if(pos == null) {
+				setNotHolding(stack);
 				return InteractionResultHolder.fail(player.getItemInHand(hand));
 			}
 			
 			BlockState state = world.getBlockState(pos);
 			if(state.isAir()) {
+				setNotHolding(stack);
 				return InteractionResultHolder.fail(player.getItemInHand(hand));
 			}
 			
@@ -79,7 +82,6 @@ public class ItemMatterScanner extends ItemElectric {
 					setHolding(stack);
 					if(!world.isClientSide) NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
 				}
-				
 				player.startUsingItem(hand);
 				return InteractionResultHolder.pass(player.getItemInHand(hand));
 			}
@@ -91,6 +93,7 @@ public class ItemMatterScanner extends ItemElectric {
 			return InteractionResultHolder.pass(player.getItemInHand(hand));
 			
 		} 
+		setNotHolding(stack);
 		return InteractionResultHolder.fail(player.getItemInHand(hand));
 	}
 	
@@ -111,10 +114,11 @@ public class ItemMatterScanner extends ItemElectric {
 					return;
 				}
 				
-				if(!world.isClientSide) UtilsItem.getEnergyStorageCap(stack).removeEnergy(USAGE_PER_TICK);
-				
-				decrementTimer(stack);
-				
+				if(!world.isClientSide) {
+					UtilsItem.getEnergyStorageCap(stack).removeEnergy(USAGE_PER_TICK);
+					decrementTimer(stack);
+				}
+
 				return;
 			}
 			player.releaseUsingItem();
@@ -141,9 +145,9 @@ public class ItemMatterScanner extends ItemElectric {
 				return stack;
 			}
 			
-			if(!world.isClientSide) {
-				scanBlockToDrive(world, stack);
-			}
+			if(!world.isClientSide)	scanBlockToDrive(world, stack);
+				
+			
 			wipeStoredBlocks(stack);
 			playSuccessSound(player);
 			
@@ -162,7 +166,6 @@ public class ItemMatterScanner extends ItemElectric {
 			playFailureSound(player);
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
-			
 		}
 	}
 	
