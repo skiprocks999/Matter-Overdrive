@@ -7,7 +7,6 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
@@ -133,7 +132,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
 			float[] spinner_uv = {spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1()};
-			float cutoff = getCuttoffFloat(player, scannerStatus.held);
+			float cutoff = getCuttoffFloat(player, scannerStatus.held, scannerStatus.stack);
 			float[] spinner_color = getSpinnerColor(scannerStatus.held, cutoff);
 		
 			Matrix4f matrix4f = matrix.last().pose();
@@ -307,7 +306,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 				perc = stack.getOrCreateTag().getInt(UtilsNbt.PERCENTAGE);
 			}
 		}
-		return new ScannerDataWrapper(held, on, inUse, perc);
+		return new ScannerDataWrapper(held, on, inUse, perc, stack);
 	}
 	
 	private void rotateMatrixForScanner(PoseStack matrix, Direction playerDir, Direction traceDir) {
@@ -362,13 +361,11 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		}
 	}
 	
-	private float getCuttoffFloat(Player player, boolean isInUse) {
+	private float getCuttoffFloat(Player player, boolean isInUse, ItemStack stack) {
 		if(isInUse) {
-			int count = player.getUseItemRemainingTicks();
-			int maxCount = player.getUseItem().getUseDuration();
-			
-			//MatterOverdrive.LOGGER.info("count " + count);
-			//MatterOverdrive.LOGGER.info("max count " + maxCount);
+			ItemMatterScanner scanner = (ItemMatterScanner) stack.getItem();
+			int count = scanner.getTimeRemaining(stack);
+			int maxCount = scanner.getUseDuration(stack);
 			
 			return maxCount == 0 ? 0 : (float) count / (float) maxCount;
 		} else {
@@ -386,12 +383,14 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 		private boolean on;
 		private boolean held;
 		private int percent;
+		private ItemStack stack;
 		
-		private ScannerDataWrapper(boolean inUse, boolean on, boolean held, int percent) {
+		private ScannerDataWrapper(boolean inUse, boolean on, boolean held, int percent, ItemStack stack) {
 			this.inUse = inUse;
 			this.on = on;
 			this.held = held;
 			this.percent = percent;
+			this.stack = stack;
 		}
 		
 	}

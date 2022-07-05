@@ -3,7 +3,6 @@ package matteroverdrive.common.item.tools.electric;
 import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
@@ -43,7 +42,7 @@ public class ItemMatterScanner extends ItemElectric {
 	
 	public static final int USAGE_PER_TICK = 1;
 	
-	private static final String RAY_TRACE_POS = "ray_trace";
+	public static final String RAY_TRACE_POS = "ray_trace";
 	
 	private static final int AMT_PER_SCAN = 10;
 	
@@ -54,9 +53,10 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if(!player.isShiftKeyDown() && !world.isClientSide) {
+		if(player.isShiftKeyDown()) {
 			
-			stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
+			if(!world.isClientSide) stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
+			
 			return InteractionResultHolder.pass(player.getItemInHand(hand));
 		
 		} else if (isOn(stack) && isPowered(stack)) {
@@ -74,23 +74,21 @@ public class ItemMatterScanner extends ItemElectric {
 			
 			//Store block and start playing sound
 			if(!hasStoredBlock(stack)) {
-				saveBlockToStack(stack, state, pos, !world.isClientSide);
+				saveBlockToStack(stack, state, pos);
 				if(!isHeld(stack)) {
 					setHolding(stack);
-					if(!world.isClientSide) {
-						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
-					}
+					if(!world.isClientSide) NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PacketPlayMatterScannerSound(player.getUUID(), hand));
 				}
-				MatterOverdrive.LOGGER.info("started using");
+				
 				player.startUsingItem(hand);
-				return InteractionResultHolder.consume(player.getItemInHand(hand));
+				return InteractionResultHolder.pass(player.getItemInHand(hand));
 			}
 			
 			if(!doesStoredMatch(state, stack) || !isSamePos(stack, pos)) {
 				return InteractionResultHolder.fail(player.getItemInHand(hand));
 			} 
 			
-			return InteractionResultHolder.consume(player.getItemInHand(hand));
+			return InteractionResultHolder.pass(player.getItemInHand(hand));
 			
 		} 
 		return InteractionResultHolder.fail(player.getItemInHand(hand));
@@ -99,7 +97,6 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int remaining) {
 		if(entity instanceof Player player) {
-			//MatterOverdrive.LOGGER.info(player.useItemRemaining + "");
 			if(isOn(stack) && isPowered(stack)) {
 				BlockPos pos = UtilsWorld.getPosFromTraceNoFluid(player);
 				
@@ -114,7 +111,9 @@ public class ItemMatterScanner extends ItemElectric {
 					return;
 				}
 				
-				UtilsItem.getEnergyStorageCap(stack).extractEnergy(USAGE_PER_TICK, true);
+				if(!world.isClientSide) UtilsItem.getEnergyStorageCap(stack).removeEnergy(USAGE_PER_TICK);
+				
+				decrementTimer(stack);
 				
 				return;
 			}
@@ -145,9 +144,9 @@ public class ItemMatterScanner extends ItemElectric {
 			if(!world.isClientSide) {
 				scanBlockToDrive(world, stack);
 			}
-			
-			playSuccessSound(player);
 			wipeStoredBlocks(stack);
+			playSuccessSound(player);
+			
 		}
 		return stack;
 	}
@@ -160,10 +159,10 @@ public class ItemMatterScanner extends ItemElectric {
 	@Override
 	public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int charged) {
 		if(entity instanceof Player player) {
-			MatterOverdrive.LOGGER.info("called release");
+			playFailureSound(player);
 			setNotHolding(stack);
 			wipeStoredBlocks(stack);
-			playFailureSound(player);
+			
 		}
 	}
 	
@@ -286,15 +285,15 @@ public class ItemMatterScanner extends ItemElectric {
 		return item != null && UtilsItem.compareItems(item, state.getBlock().asItem());
 	}
 	
-	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos, boolean serverside) {
-		Double value = serverside ? MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock())):
-			MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(state.getBlock()));
+	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos) {
+		Double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
 		CompoundTag tag = stack.getOrCreateTag();
 		if(value != null) {
 			tag.putString(UtilsNbt.ITEM, state.getBlock().asItem().getRegistryName().toString().toLowerCase());
 			tag.putDouble(UtilsNbt.STORED_MATTER_VAL, value);
 			tag.put(RAY_TRACE_POS, NbtUtils.writeBlockPos(pos));
 			tag.putInt(UtilsNbt.USE_TIME, (int) (BASE_SCAN_TIME + Math.ceil(value)));
+			resetTimer(stack);
 		} else {
 			wipeStoredBlocks(stack);
 		}
@@ -327,6 +326,18 @@ public class ItemMatterScanner extends ItemElectric {
 		return false;
 	}
 	
+	public int getTimeRemaining(ItemStack stack) {
+		return stack.getOrCreateTag().getInt(UtilsNbt.TIMER);
+	}
+	
+	private void resetTimer(ItemStack stack) {
+		stack.getOrCreateTag().putInt(UtilsNbt.TIMER, getUseDuration(stack));
+	}
+	
+	private void decrementTimer(ItemStack stack) {
+		stack.getOrCreateTag().putInt(UtilsNbt.TIMER, getTimeRemaining(stack) - 1);
+	}
+	
 	private void spawnMatterDust (Level world, ItemStack stack, BlockPos blockLoc) {
 		ItemStack dust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 		dust.getOrCreateTag().putDouble(UtilsNbt.STORED_MATTER_VAL, stack.getTag().getDouble(UtilsNbt.STORED_MATTER_VAL));
@@ -343,6 +354,7 @@ public class ItemMatterScanner extends ItemElectric {
 		tag.remove(UtilsNbt.STORED_MATTER_VAL);
 		tag.remove(RAY_TRACE_POS);
 		tag.remove(UtilsNbt.USE_TIME);
+		tag.remove(UtilsNbt.TIMER);
 	}
 
 }

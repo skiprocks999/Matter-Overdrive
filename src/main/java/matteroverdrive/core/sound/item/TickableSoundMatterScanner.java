@@ -4,12 +4,18 @@ import java.util.UUID;
 
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
+import matteroverdrive.core.utils.UtilsItem;
+import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
@@ -17,7 +23,8 @@ public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
 	private final InteractionHand hand;
 	private final UUID id;
 	
-	private long ticks = 0;
+	private BlockPos previousPos;
+	private Item previousBlock;
 	
 	private Player originPlayer;
 	
@@ -34,7 +41,6 @@ public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
 
 	@Override
 	public void tick() {
-		ticks++;
 		Minecraft minecraft = Minecraft.getInstance();
 		originPlayer = minecraft.level.getPlayerByUUID(id);
 		if(checkStop()) {
@@ -63,8 +69,35 @@ public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
 		if(scanner.isEmpty()) {
 			return true;
 		}
-		if(scanner.getItem() instanceof ItemMatterScanner matter && matter.isOn(scanner) && matter.isPowered(scanner) && matter.isHeld(scanner)) {
-			return false;
+		if(scanner.getItem() instanceof ItemMatterScanner matter && scanner.hasTag() && matter.isOn(scanner) && matter.isPowered(scanner) && matter.isHeld(scanner)) {
+			
+			CompoundTag tag = scanner.getTag();
+			
+			if(previousBlock == null || previousPos == null) {
+				Item item = UtilsNbt.getItemFromString(tag.getString(UtilsNbt.ITEM));
+				if(item == null) {
+					return true;
+				}
+				previousBlock = item;
+				if(!tag.contains(ItemMatterScanner.RAY_TRACE_POS)) {
+					return true;
+				}
+				previousPos = NbtUtils.readBlockPos(tag.getCompound(ItemMatterScanner.RAY_TRACE_POS));
+				
+				return false;
+			}
+			
+			Item item = UtilsNbt.getItemFromString(tag.getString(UtilsNbt.ITEM));
+			if(item == null) {
+				return true;
+			}
+			
+			if(!tag.contains(ItemMatterScanner.RAY_TRACE_POS)) {
+				return true;
+			}
+			BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(ItemMatterScanner.RAY_TRACE_POS)); 
+			
+			return !UtilsItem.compareItems(previousBlock, item) || !pos.equals(pos);
 		} 
 		return true;
 	}
