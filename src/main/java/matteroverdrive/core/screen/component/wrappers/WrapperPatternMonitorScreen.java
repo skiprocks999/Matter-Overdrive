@@ -24,6 +24,7 @@ public class WrapperPatternMonitorScreen {
 	private final int y;
 	private ButtonItemPattern[][] patterns = new ButtonItemPattern[4][6];
 	private EditBoxSearchbar searchbar;
+	public ButtonItemPattern selectedItem;
 	
 	private int topRowIndex = 0;
 	private int lastRowCount = 0;
@@ -47,22 +48,28 @@ public class WrapperPatternMonitorScreen {
 			for(int j = 0; j < 6; j++) {
 				patterns[i][j] = new ButtonItemPattern(screen, x + butOffX + 25 * j, y + butOffY + 24 * i, (button) -> {
 					ButtonItemPattern pattern = (ButtonItemPattern) button;
-					for(ButtonItemPattern[] arr : this.patterns) {
-						for(ButtonItemPattern but : arr) {
-							if(!pattern.isSame(but)) {
-								but.isActivated = false;
-							} 
-						}
+					if(selectedItem.getPattern() != null && selectedItem.getPattern().isSame(pattern.getPattern())) {
+						selectedItem.setPattern(null);
+						selectedItem.isActivated = false;
+					} else {
+						selectedItem.setPattern(pattern.getPattern());
+						selectedItem.isActivated = true;
 					}
-				}, renderer, i, j);
+				}, renderer, i, j, this);
 			}
 		}
+		selectedItem = new ButtonItemPattern(screen, x - 9, y + 119, (button) -> {
+			ButtonItemPattern pattern = (ButtonItemPattern) button;
+			pattern.isActivated = true;
+			pattern.setPattern(null);
+		}, renderer, -1, -1, this).setNoHover();
 		screen.addEditBox(searchbar);
 		for(int i = 3; i >= 0; i--) {
 			for(int j = 5; j >= 0; j--) {
 				screen.addButton(patterns[i][j]);
 			}
 		}
+		screen.addButton(selectedItem);
 	}
 	
 	public void tick() {
@@ -116,6 +123,8 @@ public class WrapperPatternMonitorScreen {
 			}
 		} else {
 			slider.updateActive(false);
+			slider.setSliderYOffset(0);
+			topRowIndex = 0;
 		}
 		
 	}
@@ -146,6 +155,7 @@ public class WrapperPatternMonitorScreen {
 				button.visible = visible && button.isFilled();
 			}
 		}
+		selectedItem.visible = visible;
 	}
 	
 	private void handleSearchBar(String string) {
@@ -196,6 +206,10 @@ public class WrapperPatternMonitorScreen {
 				}
 			}
 		};
+	}
+	
+	public boolean isSearchBarSelected() {
+		return searchbar.isFocused();
 	}
 	
 }

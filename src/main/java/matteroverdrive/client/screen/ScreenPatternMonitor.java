@@ -1,5 +1,7 @@
 package matteroverdrive.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.screen.GenericScreen;
@@ -68,6 +70,8 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 			wrapper.updateButtons(false);
 		}, MenuButtonType.TASKS, menu, false);
 		
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0, 1 }));
+		
 		wrapper = new WrapperPatternMonitorScreen(this, 53, 26);
 		
 		addButton(close);
@@ -85,7 +89,7 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 			return false;
 		}, this, 6, 159, new int[] { 0, 1 }));
 		
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0, 1 }));
+		
 		slider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 0 });
 		slider.setClickConsumer(wrapper.getSliderClickedConsumer());
 		slider.setDragConsumer(wrapper.getSliderDraggedConsumer());
@@ -143,6 +147,15 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 			slider.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);
+	}
+	
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
+		if(this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) && screenNumber == 0) {
+			return false;
+		}
+		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}
 
 }

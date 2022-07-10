@@ -55,6 +55,11 @@ public class ItemPatternWrapper {
 		return !isAir();
 	}
 	
+	public boolean isSame(ItemPatternWrapper other) {
+		if(other == null) return false;
+		return isItem(other.getItem()) && other.getPercentage() == getPercentage();
+	}
+	
 	public void writeToNbt(CompoundTag tag, String key) {
 		CompoundTag data = new CompoundTag();
 		data.putString("item", item.getRegistryName().toString().toLowerCase());

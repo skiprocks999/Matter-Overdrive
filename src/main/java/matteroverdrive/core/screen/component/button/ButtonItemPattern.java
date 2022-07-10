@@ -9,6 +9,7 @@ import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
@@ -28,16 +29,18 @@ public class ButtonItemPattern extends ButtonHoldPress {
 	private static final ResourceLocation REGULAR = new ResourceLocation(REG.getTextureLoc());
 	private static final ResourceLocation HOVERED = new ResourceLocation(HOV.getTextureLoc());
 	
-	private final int col;
-	private final int row;
+	private boolean shouldHover = true;
+	
+	private int col;
+	private int row;
 	
 	private ItemPatternWrapper wrapper;
 	private final ItemRenderer renderer;
 	
-	private final String currentSearch = "";
+	private final WrapperPatternMonitorScreen parent;
 	
 	public ButtonItemPattern(GenericScreen<?> gui, int x, int y, OnPress onPress, ItemRenderer renderer, 
-			int row, int col) {
+			int row, int col, WrapperPatternMonitorScreen parent) {
 		super(gui, x, y, 22, 22, TextComponent.EMPTY, onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonItemPattern pattern = (ButtonItemPattern) button;
 			if(pattern.wrapper != null) {
@@ -67,12 +70,23 @@ public class ButtonItemPattern extends ButtonHoldPress {
 		this.renderer = renderer;
 		this.col = col;
 		this.row = row;
+		this.parent = parent;
+	}
+	
+	public ButtonItemPattern setNoHover() {
+		this.shouldHover = false;
+		return this;
 	}
 	
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		SlotType type;
-		if(isActivated || isHovered) {
+		ItemPatternWrapper orderedPattern = parent.selectedItem.getPattern();
+		boolean shouldActivate = false;
+		if(orderedPattern != null && wrapper != null) {
+			shouldActivate = orderedPattern.isItem(wrapper.getItem());
+		}
+		if(shouldActivate || isHovered && shouldHover) {
 			UtilsRendering.bindTexture(HOVERED);
 			type = HOV;
 		} else {
@@ -109,6 +123,18 @@ public class ButtonItemPattern extends ButtonHoldPress {
 	
 	public boolean isSame(ButtonItemPattern press) {
 		return press.col == col && press.row == row;
+	}
+	
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	public void setCol(int col) {
+		this.col = col;
+	}
+	
+	public ItemPatternWrapper getPattern() {
+		return wrapper;
 	}
 
 }
