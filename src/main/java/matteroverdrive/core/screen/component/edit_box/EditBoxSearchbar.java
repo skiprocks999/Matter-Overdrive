@@ -1,73 +1,31 @@
 package matteroverdrive.core.screen.component.edit_box;
 
-import java.util.function.Predicate;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
-import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class EditBoxOverdrive extends EditBox {
-
-	protected GenericScreen<?> gui;
+public class EditBoxSearchbar extends EditBoxOverdrive {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
-			"textures/gui/button/edit_box.png");
-
+			"textures/gui/guidebook/search_field.png");
 	
-	private static final char[] VALID_NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'};
+	private static final double RS_WIDTH_COEFF = 0.13855421686746987951807228915663; // 23/166
+	private static final double LS_WIDTH_COEFF = 0.07228915662650602409638554216867; // 12/166
 	
-	public static final Predicate<String> INTEGER_BOX = (string) -> {
-		if(string == null) {
-			return false;
-		}
-		if(string.length() == 0) {
-			string = "0";
-			return true;
-		}
-		boolean validChar = false;
-		for(char character : string.toCharArray()) {
-			validChar = false;
-			for(char valid : VALID_NUMBERS) {
-				if(valid == character) {
-					validChar = true;
-					break;
-				}
-			}
-			if(!validChar) {
-				return false;
-			}
-		}
-		int firstOccurance = string.indexOf('-');
-		if(firstOccurance < 0) {
-			return true;
-		} else if(firstOccurance > 0) {
-			return false;
-		} else {
-			int nextIndex = string.indexOf('-', 1);
-			if(nextIndex < 0) {
-				return true;
-			}
-		}
-		
-		return false;
-	};
+	private final int totalWidth;
 	
-	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {
-		super(gui.getFontRenderer(), x, y, width, height, TextComponent.EMPTY);
-		this.gui = gui;
-
+	public EditBoxSearchbar(GenericScreen<?> gui, int x, int y, int width, int height, int totalWidth) {
+		super(gui, x, y, width, height);
+		this.totalWidth = totalWidth;
 	}
-
+	
 	@Override
 	public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTick) {
 		if (this.isVisible()) {
@@ -76,7 +34,11 @@ public class EditBoxOverdrive extends EditBox {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			UtilsRendering.bindTexture(TEXTURE);
-			ButtonOverdrive.drawButton(stack, this.x, this.y, this.width, this.height);
+			int leftSide = (int) ((double) this.totalWidth * LS_WIDTH_COEFF);
+			int rightSide = (int) ((double) this.totalWidth * RS_WIDTH_COEFF);
+			
+			blit(stack, this.x - leftSide, this.y, width + rightSide, 0, 0, 166, 14, 166, 14);
+			
 
 			int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
 			int j = this.cursorPos - this.displayPos;

@@ -9,6 +9,7 @@ import matteroverdrive.References;
 import matteroverdrive.client.keys.KeyBinds;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
+import matteroverdrive.client.particle.vent.ParticleVent;
 import matteroverdrive.client.render.tile.RendererCharger;
 import matteroverdrive.client.render.tile.RendererInscriber;
 import matteroverdrive.client.screen.ScreenCharger;
@@ -65,7 +66,7 @@ public class ClientRegister {
 	private static final String CUSTOM_LOC = References.ID + ":atlas/";
 	
 	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "holo_pattern_monitor");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo");
 	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
 	public static final ResourceLocation TEXTURE_SPINNER_SOLID = new ResourceLocation(CUSTOM_LOC + "spinner");
 	
@@ -188,6 +189,7 @@ public class ClientRegister {
 		ParticleEngine engine = Minecraft.getInstance().particleEngine;
 		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
 		engine.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
+		engine.register(DeferredRegisters.PARTICLE_VENT.get(), ParticleVent.Factory::new);
 	}
 
 	private static ResourceLocation blockModel(String path) {

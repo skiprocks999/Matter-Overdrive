@@ -29,14 +29,14 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 						(id, inv, play) -> new InventoryPatternMonitor(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
+		setHasMenuData();
 	}
 
 	@Override
 	public boolean canConnectToFace(Direction face) {
 		VerticalFacing vertical = getBlockState().getValue(OverdriveBlockStates.VERTICAL_FACING);
 		if(vertical == null || vertical == VerticalFacing.NONE) {
-			Direction facing = getFacing();
-			Direction relative = UtilsDirection.getRelativeSide(Direction.NORTH, facing);
+			Direction relative = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 			return relative == face;
 		} else {
 			return face == vertical.mapped.getOpposite();
@@ -53,6 +53,11 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 			return (NetworkMatter) cable.getNetwork(false);
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isPowered(boolean client, boolean network) {
+		return true;
 	}
 
 }

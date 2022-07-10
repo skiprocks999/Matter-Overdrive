@@ -8,5 +8,12 @@ public interface IMatterNetworkMember {
 	boolean canConnectToFace(Direction face);
 	
 	NetworkMatter getConnectedNetwork();
+	
+	boolean isPowered(boolean client, boolean network);
+	
+	//Work around for a bug that I cannot seem to solve for now
+	default Direction handleEastWest(Direction dir) {
+		return dir == Direction.EAST || dir == Direction.WEST ? dir.getOpposite() : dir;
+	}
 
 }

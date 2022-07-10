@@ -1,11 +1,12 @@
 package matteroverdrive.common.item.tools.electric;
 
+import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
+import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.matter.MatterRegister;
@@ -193,7 +194,14 @@ public class ItemMatterScanner extends ItemElectric {
 			}
 			BlockEntity tile = level.getBlockEntity(NbtUtils.readBlockPos(stack.getTag().getCompound(UtilsNbt.BLOCK_POS)));
 			if(tile != null && tile instanceof TilePatternStorage storage) {
-				int perc = storage.getHighestStorageLocForItem(state.getBlock().asItem(), false, false)[2];
+				NetworkMatter network = storage.getConnectedNetwork();
+				Item item = state.getBlock().asItem();
+				int perc = 0;
+				if(network != null) {
+					perc = network.getHighestStorageLocationForItem(item, false, false, false)[3];
+				} else {
+					perc = storage.getHighestStorageLocForItem(item, false, false)[2];
+				}
 				if(perc < 0) {
 					perc = 0;
 				}
@@ -226,6 +234,9 @@ public class ItemMatterScanner extends ItemElectric {
 		return slotChanged;
 	}
 	
+	/*
+	 * Attempts to save to the Network first; falls back to bound tile if Network save fails
+	 */
 	private void scanBlockToDrive(Level world, ItemStack stack) {
 		BlockPos blockLoc = NbtUtils.readBlockPos(stack.getTag().getCompound(RAY_TRACE_POS));
 		Item item = world.getBlockState(blockLoc).getBlock().asItem();
@@ -233,29 +244,48 @@ public class ItemMatterScanner extends ItemElectric {
 		if(isBound(stack)) {
 			BlockEntity entity = world.getBlockEntity(NbtUtils.readBlockPos(stack.getTag().getCompound(UtilsNbt.BLOCK_POS)));
 			if(entity != null && entity instanceof TilePatternStorage storage) {
-				int[] index = storage.getHighestStorageLocForItem(item, false, false);
-				if(index[0] > -1) {
-					boolean stored = storage.storeItem(item, AMT_PER_SCAN, index);
-					if(stored) {
-						storage.setChanged();
-					} else {
-						spawnMatterDust(world, stack, blockLoc);
-					}
-				} else if (!storage.isFull(false, false)) {
-					boolean stored = storage.storeItemFirstChance(item, AMT_PER_SCAN);
-					if(stored) {
+				NetworkMatter network = storage.getConnectedNetwork();
+				if(network != null) {
+					int[] driveData = network.getHighestStorageLocationForItem(item, false, false, false);
+					if(driveData[0] > 0) {
+						TilePatternStorage found = network.getStorageFromIndex(driveData[0]);
+						if(found == null) {
+							spawnMatterDust(world, stack, blockLoc);
+						} else {
+							handlePatternStorage(world, found, Arrays.copyOfRange(driveData, 1, 4), stack, item, blockLoc);
+						}
+					} else if(network.storeItemFirstChance(item, AMT_PER_SCAN, false)) {
 						storage.setChanged();
 					} else {
 						spawnMatterDust(world, stack, blockLoc);
 					}
 				} else {
-					spawnMatterDust(world, stack, blockLoc);
+					int[] index = storage.getHighestStorageLocForItem(item, false, false);
+					handlePatternStorage(world, storage, index, stack, item, blockLoc);
 				}
 			} else {
 				spawnMatterDust(world, stack, blockLoc);
 			}
 		} else {
 			spawnMatterDust(world, stack, blockLoc);
+		}
+	}
+	
+	private void handlePatternStorage(Level world, TilePatternStorage storage, int[] index, ItemStack stack, Item item, BlockPos blockLoc) {
+		if(index[0] > -1) {
+			if(storage.storeItem(item, AMT_PER_SCAN, index)) {
+				storage.setChanged();
+			} else {
+				spawnMatterDust(world, stack, blockLoc);
+			}
+		} else if (storage.isFull(false, false)) {
+			spawnMatterDust(world, stack, blockLoc);
+		} else {
+			if(storage.storeItemFirstChance(item, AMT_PER_SCAN)) {
+				storage.setChanged();
+			} else {
+				spawnMatterDust(world, stack, blockLoc);
+			}
 		}
 	}
 	

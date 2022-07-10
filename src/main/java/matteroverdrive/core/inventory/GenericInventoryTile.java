@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkDirection;
 
-public abstract class GenericInventoryTile<T extends BlockEntity> extends GenericInventory {
+public abstract class GenericInventoryTile<T extends GenericTile> extends GenericInventory {
 
 	protected final ContainerData tilecoords;
 
@@ -42,10 +42,16 @@ public abstract class GenericInventoryTile<T extends BlockEntity> extends Generi
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
-		if (player instanceof ServerPlayer server && getTile() != null && getTile() instanceof GenericTile generic && generic.hasMenuData) {
-			PacketUpdateTile packet = new PacketUpdateTile(generic.getBlockPos(), generic, true);
+		T tile = getTile();
+		if (player instanceof ServerPlayer server && tile != null && tile.hasMenuData) {
+			PacketUpdateTile packet = new PacketUpdateTile(tile.getBlockPos(), tile, true);
 			NetworkHandler.CHANNEL.sendTo(packet, server.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+			sendAdditional(tile, server);
 		}
+	}
+	
+	public void sendAdditional(T tile, ServerPlayer player) {
+		
 	}
 
 }

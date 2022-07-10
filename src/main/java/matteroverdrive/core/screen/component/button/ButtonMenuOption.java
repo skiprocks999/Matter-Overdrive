@@ -89,7 +89,8 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 		HOME(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_HOME, UtilsText.tooltip("menuhome")),
 		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH, UtilsText.tooltip("menusettings")),
 		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES, UtilsText.tooltip("menuupgrades")),
-		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("menuio"));
+		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("menuio")),
+		TASKS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_TASKS, UtilsText.tooltip("menutasks"));
 
 		public final SlotType defaultSlot;
 		public final SlotType activeSlot;

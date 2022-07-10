@@ -47,7 +47,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public final void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
 			
 			this.isHovered = isPointInRegion(mouseX, mouseY);

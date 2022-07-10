@@ -93,6 +93,12 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		return null;
 	}
 	
+	@Override
+	public boolean isPowered(boolean client, boolean network) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	public CompoundTag getNetworkData() {
 		CompoundTag data = new CompoundTag();
 		
@@ -112,5 +118,5 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 				|| index == 7 && stack.getItem() instanceof ItemMatterScanner 
 				|| index == 8 && stack.getItem() instanceof ItemElectric;
 	}
-
+	
 }

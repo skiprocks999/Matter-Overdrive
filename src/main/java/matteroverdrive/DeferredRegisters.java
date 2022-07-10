@@ -7,6 +7,7 @@ import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
+import matteroverdrive.client.particle.vent.ParticleOptionVent;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockLightableMachine;
 import matteroverdrive.common.block.BlockMachine;
@@ -306,6 +307,8 @@ public class DeferredRegisters {
 			() -> new ParticleOptionReplicator());
 	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave",
 			() -> new ParticleOptionShockwave());
+	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent", 
+			() -> new ParticleOptionVent());
 
 	// Functional Methods
 

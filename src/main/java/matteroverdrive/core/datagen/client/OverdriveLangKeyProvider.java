@@ -144,6 +144,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("storedpattern", "%1$s [%2$s]");
 			addTooltip("has_storage_loc" , "Bound: %s");
 			addTooltip("no_storage_loc" , "Unbound");
+			addTooltip("menutasks", "Tasks");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");

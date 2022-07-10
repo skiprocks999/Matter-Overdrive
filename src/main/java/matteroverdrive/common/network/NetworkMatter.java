@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
@@ -16,11 +19,13 @@ import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
+import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class NetworkMatter extends AbstractCableNetwork {
@@ -184,6 +189,73 @@ public class NetworkMatter extends AbstractCableNetwork {
 		}
 		
 		return data;
+	}
+	
+	public List<ItemPatternWrapper> getStoredPatterns(boolean client, boolean network){
+		List<ItemPatternWrapper> patterns = new ArrayList<>();
+		for(TilePatternStorage storage : patternDrives) {
+			if(storage != null) {
+				for(ItemPatternWrapper[] wrapperArr : storage.getWrappers(client, network)) {
+					for(ItemPatternWrapper wrapper : wrapperArr) {
+						if(wrapper.isNotAir()) {
+							patterns.add(wrapper);
+						}
+					}
+				}
+			}
+		}
+		return patterns;
+	}
+	
+	/**
+	 * Gets the highest index of an item on a network
+	 * 
+	 * @param stack
+	 * @return A 4 int array representing the drive's location in the ArrayList, and the relative coordinates on
+	 * the Storage itself. return[0] will be -1 if no pattern is found.
+	 */
+	public int[] getHighestStorageLocationForItem(Item item, boolean checkPowered, boolean client, boolean network) {
+		
+		int[] highestStorageLoc = {-1, -1, -1, -1};
+		int[] currData;
+		int counter = 0;
+		for(TilePatternStorage drive : patternDrives) {
+			//Ternary in an if statement fight me
+			if(drive != null && checkPowered ? drive.isPowered(client, network) : true) {
+				currData = drive.getHighestStorageLocForItem(item, client, network);
+				if(currData[2] > highestStorageLoc[3]) {
+					highestStorageLoc[0] = counter;
+					highestStorageLoc[1] = currData[0];
+					highestStorageLoc[2] = currData[1];
+					highestStorageLoc[3] = currData[2];
+				}
+			}
+			counter++;
+		}
+		return highestStorageLoc;
+	}
+	
+	@Nullable
+	public TilePatternStorage getStorageFromIndex(int index) {
+		try {
+			return patternDrives.get(index);
+		} catch(Exception e) {
+			MatterOverdrive.LOGGER.info("Attempted to access drive at index " + index + " for network " + this.toString() + "; returning null");
+			return null;
+		}
+		
+	}
+	
+	//Serverside only
+	public boolean storeItemFirstChance(Item item, int amt, boolean checkPowered) {
+		for(TilePatternStorage drive : patternDrives) {
+			if(drive != null && checkPowered ? drive.isPowered(false, false) : true) {
+				if(drive.storeItemFirstChance(item, amt)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

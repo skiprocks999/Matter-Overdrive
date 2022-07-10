@@ -1,10 +1,14 @@
 package matteroverdrive.common.tile.matter_network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.math.Vector3f;
+
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.item.ItemPatternDrive;
@@ -21,7 +25,9 @@ import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericRedstoneTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
+import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsNbt;
+import matteroverdrive.core.utils.UtilsParticle;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +42,17 @@ import net.minecraftforge.common.util.TriPredicate;
 
 public class TilePatternStorage extends GenericRedstoneTile implements IMatterNetworkMember {
 
+	private static final List<ItemStack> EMPTY_DRIVES = new ArrayList<>();
+	
+	static {
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+		EMPTY_DRIVES.add(ItemStack.EMPTY);
+	}
+	
 	private boolean isPowered = false;
 	
 	public static final int SLOT_COUNT = 9;
@@ -99,6 +116,15 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	@Override
+	public void tickClient() {
+		if(clientTilePowered && MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+			Vector3f pos = UtilsMath.blockPosToVector(worldPosition);
+			pos.add(0.5F, 0.5F, 0.5F);
+			UtilsParticle.spawnVentParticles(pos, 0.03F, getFacing(), 1);
+		}
+	}
+	
+	@Override
 	public void getMenuData(CompoundTag tag) {
 		CompoundTag data = new CompoundTag();
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
@@ -135,7 +161,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 
 	@Override
 	public boolean canConnectToFace(Direction face) {
-		Direction relative = UtilsDirection.getRelativeSide(Direction.NORTH, getFacing());
+		Direction relative = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		return relative == face;
 	}
 	
@@ -150,6 +176,11 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		return null;
 	}
 	
+	@Override
+	public boolean isPowered(boolean client, boolean network) {
+		return client ? network ? clientNetworkPowered : clientTilePowered : isPowered;
+	}
+	
 	public CompoundTag getNetworkData() {
 		CompoundTag data = new CompoundTag();
 		
@@ -161,11 +192,10 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	public void handleNetworkData(CompoundTag tag) {
-		CompoundTag data = tag.getCompound("data");
 		
 		clientNetworkInventory = new CapabilityInventory();
-		clientNetworkInventory.deserializeNBT(data.getCompound(clientNetworkInventory.getSaveKey()));
-		clientNetworkPowered = data.getBoolean("ispowered");
+		clientNetworkInventory.deserializeNBT(tag.getCompound(clientNetworkInventory.getSaveKey()));
+		clientNetworkPowered = tag.getBoolean("ispowered");
 	}
 
 	@Override
@@ -293,10 +323,10 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	public List<ItemStack> getDrives(boolean client, boolean network){
 		if(client) {
-			if(network) {
-				clientNetworkInventory.getItems().subList(0, 6);
+			if(network && clientNetworkInventory != null) {
+				return clientNetworkInventory.getItems().subList(0, 6);
 			} 
-			return clientInventory.getItems().subList(0, 6);
+			return clientInventory == null ? EMPTY_DRIVES : clientInventory.getItems().subList(0, 6);
 		} else {
 			return this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().subList(0, 6);
 		}
@@ -348,5 +378,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 				|| index == 6 && stack.getItem() instanceof ItemMatterScanner 
 				|| index == 8 && stack.getItem() instanceof ItemElectric;
 	}
+
+	
 
 }
