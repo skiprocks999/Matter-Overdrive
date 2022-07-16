@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
+import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;

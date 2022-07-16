@@ -12,6 +12,7 @@ import matteroverdrive.client.particle.shockwave.ParticleShockwave;
 import matteroverdrive.client.particle.vent.ParticleVent;
 import matteroverdrive.client.render.tile.RendererCharger;
 import matteroverdrive.client.render.tile.RendererInscriber;
+import matteroverdrive.client.render.tile.RendererPatternMonitor;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterAnalyzer;
@@ -66,9 +67,14 @@ public class ClientRegister {
 	private static final String CUSTOM_LOC = References.ID + ":atlas/";
 	
 	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
+	//rotating matricies is a pain in the ass fight me
 	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_90 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_90");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_180 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_180");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_270 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_270");
 	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
-	public static final ResourceLocation TEXTURE_SPINNER_SOLID = new ResourceLocation(CUSTOM_LOC + "spinner");
+	public static final ResourceLocation TEXTURE_HOLO_GLOW = new ResourceLocation(CUSTOM_LOC + "holo_monitor_glow");
+	public static final ResourceLocation TEXTURE_CONNECTION_ICON = new ResourceLocation(CUSTOM_LOC + "connection_icon");
 	
 	public static void init() {
 
@@ -175,6 +181,7 @@ public class ClientRegister {
 
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
 
 	}
 
@@ -199,7 +206,12 @@ public class ClientRegister {
 	static {
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_90);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_180);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_270);
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_SPINNER);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GLOW);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_CONNECTION_ICON);
 	}
 
 	@SubscribeEvent

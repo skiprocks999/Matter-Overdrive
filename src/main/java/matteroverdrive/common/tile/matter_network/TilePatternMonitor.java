@@ -13,6 +13,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
+import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.SimpleMenuProvider;
@@ -29,7 +30,19 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 						(id, inv, play) -> new InventoryPatternMonitor(id, play.getInventory(),
 								exposeCapability(CapabilityType.Item), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
+		setTickable();
 		setHasMenuData();
+	}
+	
+	@Override
+	public void tickServer() {
+		if(getTicks() % 4 == 0) {
+			if(getConnectedNetwork() != null) {
+				UtilsTile.updateLit(this, true);
+			} else {
+				UtilsTile.updateLit(this, false);
+			}
+		}
 	}
 
 	@Override
@@ -47,7 +60,13 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	@Override
 	@Nullable
 	public NetworkMatter getConnectedNetwork() {
-		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, getFacing());
+		VerticalFacing vertical = getBlockState().getValue(OverdriveBlockStates.VERTICAL_FACING);
+		Direction back;
+		if(vertical == null || vertical == VerticalFacing.NONE) {
+			back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
+		} else {
+			back = vertical.mapped.getOpposite();
+		}
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
 		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);

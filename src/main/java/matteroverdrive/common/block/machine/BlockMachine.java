@@ -1,4 +1,4 @@
-package matteroverdrive.common.block;
+package matteroverdrive.common.block.machine;
 
 import java.util.Arrays;
 import java.util.List;

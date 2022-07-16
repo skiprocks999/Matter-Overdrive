@@ -2,7 +2,7 @@ package matteroverdrive.common.tile;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -123,7 +123,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F);
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
 		}
 	}
 
@@ -262,7 +262,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	}
 
 	@Override
-	public int getProcessingTime() {
+	public double getProcessingTime() {
 		return OPERATING_TIME;
 	}
 

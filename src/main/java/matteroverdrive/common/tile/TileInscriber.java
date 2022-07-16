@@ -137,7 +137,7 @@ public class TileInscriber extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F);
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
 		}
 	}
 
@@ -280,7 +280,7 @@ public class TileInscriber extends GenericSoundTile {
 	}
 
 	@Override
-	public int getProcessingTime() {
+	public double getProcessingTime() {
 		return OPERATING_TIME;
 	}
 

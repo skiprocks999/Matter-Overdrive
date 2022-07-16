@@ -179,7 +179,7 @@ public class TileTransporter extends GenericSoundTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this);
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
 		}
 		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
 			int particlesPerTick = (int) ((clientProgress / (double) BUILD_UP_TIME) * 20);
@@ -421,7 +421,7 @@ public class TileTransporter extends GenericSoundTile {
 	}
 
 	@Override
-	public int getProcessingTime() {
+	public double getProcessingTime() {
 		return BUILD_UP_TIME;
 	}
 	

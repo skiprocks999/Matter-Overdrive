@@ -18,11 +18,11 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 	private final float initialVolume;
 	private final float initialPitch;
 
-	public TickableSoundTile(SoundEvent event, GenericSoundTile tile) {
-		this(event, tile, 0.5F, 1.0F);
+	public TickableSoundTile(SoundEvent event, GenericSoundTile tile, boolean repeat) {
+		this(event, tile, 0.5F, 1.0F, repeat);
 	}
 
-	public TickableSoundTile(SoundEvent event, GenericSoundTile tile, float volume, float pitch) {
+	public TickableSoundTile(SoundEvent event, GenericSoundTile tile, float volume, float pitch, boolean repeat) {
 		super(event, SoundSource.BLOCKS);
 		this.tile = tile;
 		this.volume = 0.5F;
@@ -31,7 +31,7 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 		this.x = pos.getX();
 		this.y = pos.getY();
 		this.z = pos.getZ();
-		this.looping = true;
+		this.looping = repeat;
 		initialVolume = volume;
 		initialPitch = pitch;
 	}
@@ -40,7 +40,6 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 	public void tick() {
 		if (!tile.shouldPlaySound() || tile.isRemoved()) {
 			stop();
-			tile.setNotPlaying();
 		}
 		Player player = Minecraft.getInstance().player;
 		double distance = UtilsWorld.distanceBetweenPositions(player.blockPosition(), tile.getBlockPos());
@@ -51,6 +50,12 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 		} else {
 			this.volume = initialVolume;
 		}
+	}
+	
+	@Override
+	public void stop() {
+		super.stop();
+		tile.setNotPlaying();
 	}
 
 }

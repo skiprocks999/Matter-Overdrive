@@ -1,7 +1,7 @@
 package matteroverdrive.common.block.charger;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.BlockMachine;
+import matteroverdrive.common.block.machine.BlockMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;

@@ -2,7 +2,7 @@ package matteroverdrive.core.utils;
 
 import java.util.HashSet;
 
-import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;

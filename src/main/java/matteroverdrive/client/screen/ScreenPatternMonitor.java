@@ -152,7 +152,7 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if(this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) && screenNumber == 0) {
+		if(this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) && screenNumber == 0 && wrapper.isSearchBarSelected()) {
 			return false;
 		}
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);

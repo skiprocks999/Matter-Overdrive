@@ -1,4 +1,4 @@
-package matteroverdrive.common.block;
+package matteroverdrive.common.block.machine.variants;
 
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.VerticalFacing;
@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 
-public class BlockVerticalMachine<T extends GenericTile> extends BlockMachine<T> {
+public class BlockVerticalMachine<T extends GenericTile> extends BlockLightableMachine<T> {
 
 	public BlockVerticalMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
 			RegistryObject<BlockEntityType<T>> entity) {

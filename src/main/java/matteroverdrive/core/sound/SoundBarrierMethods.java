@@ -7,12 +7,12 @@ import net.minecraft.sounds.SoundEvent;
 
 public class SoundBarrierMethods {
 
-	public static void playTileSound(SoundEvent event, GenericSoundTile tile) {
-		Minecraft.getInstance().getSoundManager().play(new TickableSoundTile(event, tile));
+	public static void playTileSound(SoundEvent event, GenericSoundTile tile, boolean repeat) {
+		Minecraft.getInstance().getSoundManager().play(new TickableSoundTile(event, tile, repeat));
 	}
 	
-	public static void playTileSound(SoundEvent event, GenericSoundTile tile, float volume, float pitch) {
-		Minecraft.getInstance().getSoundManager().play(new TickableSoundTile(event, tile, volume, pitch));
+	public static void playTileSound(SoundEvent event, GenericSoundTile tile, float volume, float pitch, boolean repeat) {
+		Minecraft.getInstance().getSoundManager().play(new TickableSoundTile(event, tile, volume, pitch, repeat));
 	}
 	
 }

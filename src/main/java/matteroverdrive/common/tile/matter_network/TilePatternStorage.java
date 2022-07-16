@@ -168,7 +168,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	@Override
 	@Nullable
 	public NetworkMatter getConnectedNetwork() {
-		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, getFacing());
+		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
 		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);
@@ -242,7 +242,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	/**
-	 * Will attempt to store an item in the fisrt empty slot it finds
+	 * Will attempt to store an item in the first empty slot it finds
 	 * 
 	 * SEVERSIDE ONLY
 	 * 

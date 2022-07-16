@@ -57,7 +57,8 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 
 	public enum ButtonType {
 
-		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get());
+		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),
+		ORDER_ITEMS(0, 57, 20, 57, 20, 10, false, null);
 
 		public final int xOffset;
 		public final int yOffset;

@@ -66,14 +66,14 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public boolean canConnectToFace(Direction face) {
 		Direction facing = getFacing();
 		Direction back = Direction.NORTH;
-		Direction relative = UtilsDirection.getRelativeSide(back, facing);
+		Direction relative = UtilsDirection.getRelativeSide(back, handleEastWest(facing));
 		return relative == face;
 	}
 	
 	@Override
 	@Nullable
 	public NetworkMatter getConnectedNetwork() {
-		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, getFacing());
+		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
 		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);

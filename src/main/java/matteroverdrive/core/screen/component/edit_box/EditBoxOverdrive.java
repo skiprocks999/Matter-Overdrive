@@ -25,6 +25,7 @@ public class EditBoxOverdrive extends EditBox {
 
 	
 	private static final char[] VALID_NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'};
+	private static final char[] VALID_POSITIVE_NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	
 	public static final Predicate<String> INTEGER_BOX = (string) -> {
 		if(string == null) {
@@ -60,6 +61,30 @@ public class EditBoxOverdrive extends EditBox {
 		}
 		
 		return false;
+	};
+	
+	public static final Predicate<String> POSITIVE_INTEGER_BOX = (string) -> {
+		if(string == null) {
+			return false;
+		}
+		if(string.length() == 0) {
+			return true;
+		}
+		boolean validChar = false;
+		for(char character : string.toCharArray()) {
+			validChar = false;
+			for(char valid : VALID_POSITIVE_NUMBERS) {
+				if(valid == character) {
+					validChar = true;
+					break;
+				}
+			}
+			if(!validChar) {
+				return false;
+			}
+		}
+		
+		return true;
 	};
 	
 	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {

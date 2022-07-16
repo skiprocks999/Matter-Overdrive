@@ -86,7 +86,6 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			matrix.popPose();
 			
 			/* Render Block Matter Val */
-			
 			matrix.pushPose();
 			
 			translateToPos(matrix, pos, cam);

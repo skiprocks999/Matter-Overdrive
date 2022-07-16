@@ -2,7 +2,7 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
-import matteroverdrive.common.tile.matter_network.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import net.minecraft.world.entity.player.Inventory;
