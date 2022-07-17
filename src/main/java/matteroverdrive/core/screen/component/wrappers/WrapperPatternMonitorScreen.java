@@ -123,26 +123,38 @@ public class WrapperPatternMonitorScreen {
 		}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
 		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, TextComponent.EMPTY,(button) -> {
 			Minecraft minecraft = Minecraft.getInstance();
-			float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
 			ItemPatternWrapper wrapper = selectedItem.getPattern();
 			if(wrapper == null || wrapper.isAir()) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), pitch));
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			Double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
 			//safety check for data pack fuckery
 			if(value == null || value <= 0) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), pitch));
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
-			
-			
-			//TODO send order to system
-			
-			
-			
-			
-			
+			TilePatternMonitor monitor = screen.getMenu().getTile();
+			if(monitor == null) {
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+				return;
+			}
+			NetworkMatter matter = monitor.getConnectedNetwork();
+			if(matter == null) {
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+				return;
+			}
+			String order = orderQuantityBox.getValue();
+			int orderVal = 1;
+			if(order.length() > 0) {
+				orderVal = Integer.parseInt(order);
+			}
+			if(monitor.postOrderToNetwork(wrapper, orderVal, true)) {
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
+			} else {
+				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+			}
+
 		}, (button, stack, x, y) -> {
 			screen.renderTooltip(stack, ORDER, x, y);
 		});
@@ -168,7 +180,7 @@ public class WrapperPatternMonitorScreen {
 		if(monitor != null) {
 			NetworkMatter matter = monitor.getConnectedNetwork();
 			if(matter != null) {
-				patterns = matter.getStoredPatterns(true, true);
+				patterns = monitor.getStoredPatterns(true);
 				Collections.sort(patterns, new Comparator<ItemPatternWrapper>() {
 					@Override
 					public int compare(ItemPatternWrapper pattern1, ItemPatternWrapper pattern2) {

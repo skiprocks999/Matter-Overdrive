@@ -2,6 +2,7 @@ package matteroverdrive.core.capability.types.item_pattern;
 
 import matteroverdrive.core.utils.UtilsItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,6 +70,15 @@ public class ItemPatternWrapper {
 	
 	public static ItemPatternWrapper readFromNbt(CompoundTag data) {
 		return new ItemPatternWrapper(ForgeRegistries.ITEMS.getValue(new ResourceLocation(data.getString("item"))), data.getInt("percentage"));
+	}
+	
+	public void writeToBuffer(FriendlyByteBuf buffer) {
+		buffer.writeItem(new ItemStack(item));
+		buffer.writeInt(percentage);
+	}
+	
+	public static ItemPatternWrapper readFromBuffer(FriendlyByteBuf buffer) {
+		return new ItemPatternWrapper(buffer.readItem().getItem(), buffer.readInt());
 	}
 	
 }

@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.common.tile.matter_network.TilePatternStorage;
-import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
@@ -16,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -33,25 +31,12 @@ public class PacketBarrierMethods {
 		}
 	}
 	
-	public static void handlePacketClientMNData(CompoundTag data) {
+	public static void handlePacketClientMNData(CompoundTag data, BlockPos monitorPos) {
 		Level world = Minecraft.getInstance().level;
 		if(world != null) {
-			BlockEntity entity;
-			for(int i = 0; i < data.getInt("drivesize"); i++) {
-				entity = world.getBlockEntity(NbtUtils.readBlockPos(data.getCompound("drivepos" + i)));
-				if(entity != null && entity instanceof TilePatternStorage storage) {
-					storage.handleNetworkData(data.getCompound("drivedata" + i));
-					data.remove("drivepos" + i);
-					data.remove("drivedata" + i);
-				}
-			}
-			for(int i = 0; i < data.getInt("replicatorsize"); i++) {
-				entity = world.getBlockEntity(NbtUtils.readBlockPos(data.getCompound("reppos" + i)));
-				if(entity != null && entity instanceof TileMatterReplicator replicator) {
-					replicator.handleNetworkData(data.getCompound("repdata" + i));
-					data.remove("reppos" + i);
-					data.remove("repdata" + i);
-				}
+			BlockEntity tile = world.getBlockEntity(monitorPos);
+			if(tile != null && tile instanceof TilePatternMonitor monitor) {
+				monitor.handleNetworkData(data, world);
 			}
 		}
 	}

@@ -13,8 +13,7 @@ import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.common.item.ItemPatternDrive;
-import matteroverdrive.common.item.tools.electric.ItemElectric;
-import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
+import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -25,6 +24,7 @@ import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
@@ -39,7 +39,7 @@ import net.minecraftforge.common.util.TriPredicate;
 
 public class TileMatterReplicator extends GenericSoundTile implements IMatterNetworkMember {
 
-	public static final int SLOT_COUNT = 10;
+	public static final int SLOT_COUNT = 9;
 	
 	private static final int USAGE_PER_TICK = 80;
 	private static final float FAILURE_CHANCE = 0.005F;
@@ -62,7 +62,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	//Render data
 	public boolean clientPowered;
-	public boolean clientRunning;
+	public boolean clientRunning = false;
 	public CapabilityInventory clientInventory;
 	public QueuedReplication clientCurrentOrder;
 	private boolean clientMuffled;
@@ -78,15 +78,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public double clientSpeed;
 	public float clientFailure;
 	
-	//network data
-	public CapabilityInventory clientNetworkInventory;
-	public boolean clientNetworkPowered;
-	public List<QueuedReplication> clientNetworkOrders;
-	
-	
 	public TileMatterReplicator(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_REPLICATOR.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
+		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
 				.setValidator(getValidator()));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
@@ -103,6 +97,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	@Override
 	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
 		removeCompletedOrders();
 		if(!canRun()) {
 			isRunning = false;
@@ -174,7 +170,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			if(dustEmpty) {
 				ItemStack newDust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
 				UtilsNbt.writeMatterVal(newDust, currRecipeValue);
-				inv.setStackInSlot(3, newDust.copy());
+				inv.setStackInSlot(2, newDust.copy());
 			} else {
 				dust.grow(1);
 			}
@@ -182,7 +178,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		} 
 		
 		if(outputEmpty) {
-			inv.setStackInSlot(2, stack.copy());
+			inv.setStackInSlot(1, stack.copy());
 		} else {
 			output.grow(1);
 		}
@@ -191,6 +187,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	@Override
 	public void tickClient() {
+		//now you see why I have the sound instance handle resetting the play feature....
 		int adjustedTicks = getAdjustedTicks();
 		boolean shouldPlaySound = shouldPlaySound();
 		boolean adjustTicks = adjustedTicks <= SOUND_TICKS;
@@ -199,15 +196,17 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		if (shouldPlaySound && !clientSoundPlaying) {
 			if(lessThanOne || adjustTicks) {
 				clientSoundPlaying = true;
-				SoundBarrierMethods.playTileSound(SoundRegister.SOUND_DECOMPOSER.get(), this, true);
+				SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_REPLICATOR.get(), this, true);
 			} else if(!greaterThan) {
 				clientSoundPlaying = true;
-				SoundBarrierMethods.playTileSound(SoundRegister.SOUND_DECOMPOSER.get(), this, false);
+				SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_REPLICATOR.get(), this, false);
+				SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, true);
 			}
 		}
 		if(clientSoundPlaying && shouldPlaySound && !lessThanOne && !adjustTicks && greaterThan) {
 			setNotPlaying();
 		}
+		//TODO render here
 	}
 	
 	private void removeCompletedOrders() {
@@ -449,8 +448,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 	
 	@Override
-	public boolean isPowered(boolean client, boolean network) {
-		return client ? network ? clientNetworkPowered : clientPowered : isPowered;
+	public boolean isPowered(boolean client) {
+		return client ? clientPowered : isPowered;
 	}
 	
 	public CompoundTag getNetworkData() {
@@ -469,17 +468,17 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		return data;
 	}
 	
-	public void handleNetworkData(CompoundTag tag) {
-		
-		clientNetworkInventory = new CapabilityInventory();
-		clientNetworkInventory.deserializeNBT(tag.getCompound(clientNetworkInventory.getSaveKey()));
-		clientNetworkPowered = tag.getBoolean("ispowered");
+	public MatterReplicatorDataWrapper handleNetworkData(CompoundTag tag) {
+		CapabilityInventory inv = new CapabilityInventory();
+		inv.deserializeNBT(tag.getCompound(inv.getSaveKey()));
+		boolean powered = tag.getBoolean("ispowered");
 		
 		int orderSize = tag.getInt("orderCount");
-		clientNetworkOrders = new ArrayList<>();
+		List<QueuedReplication> orders = new ArrayList<>();
 		for(int i = 0; i < orderSize; i++) {
-			clientNetworkOrders.add(QueuedReplication.readFromNbt(tag.getCompound("order" + i)));
+			orders.add(QueuedReplication.readFromNbt(tag.getCompound("order" + i)));
 		}
+		return new MatterReplicatorDataWrapper(inv, powered, orders);
 	}
 	
 	private float roll() {
@@ -490,10 +489,53 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		return (int) Math.ceil(getProcessingTime() / clientSpeed == 0 ? 1.0D : clientSpeed);
 	}
 	
+	public int getCurrOrders() {
+		return orders == null ? 0 : orders.size();
+	}
+	
+	//Serverside
+	public void queueOrder(QueuedReplication replication) {
+		if(orders == null) {
+			orders = new ArrayList<>();
+		}
+		orders.add(replication);
+		setChanged();
+	}
+	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index < 7 && stack.getItem() instanceof ItemPatternDrive
-				|| index == 7 && stack.getItem() instanceof ItemMatterScanner 
-				|| index == 8 && stack.getItem() instanceof ItemElectric;
+		return (index, stack, cap) -> index == 0 && stack.getItem() instanceof ItemPatternDrive
+				|| index == 3 && UtilsCapability.hasEnergyCap(stack)
+				|| index == 4 && UtilsCapability.hasMatterCap(stack)
+				|| index > 4 && stack.getItem() instanceof ItemUpgrade;
+	}
+	
+	public static class MatterReplicatorDataWrapper {
+		
+		private CapabilityInventory inv;
+		private boolean isPowered;
+		private List<QueuedReplication> orders;
+		
+		public MatterReplicatorDataWrapper(CapabilityInventory inv, boolean isPowered, @Nullable List<QueuedReplication> orders) {
+			this.inv = inv;
+			this.isPowered = isPowered;
+			if(orders == null) {
+				orders = new ArrayList<>();
+			} 
+			this.orders = orders;
+		}
+		
+		public CapabilityInventory getInventory() {
+			return inv;
+		}
+		
+		public boolean isPowered() {
+			return isPowered;
+		}
+		
+		public List<QueuedReplication> getOrders(){
+			return orders;
+		}
+		
 	}
 	
 }

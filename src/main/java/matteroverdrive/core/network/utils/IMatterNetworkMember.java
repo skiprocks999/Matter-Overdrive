@@ -9,7 +9,7 @@ public interface IMatterNetworkMember {
 	
 	NetworkMatter getConnectedNetwork();
 	
-	boolean isPowered(boolean client, boolean network);
+	boolean isPowered(boolean client);
 	
 	//Work around for a bug that I cannot seem to solve for now
 	default Direction handleEastWest(Direction dir) {

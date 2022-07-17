@@ -12,7 +12,6 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.item.ItemPatternDrive;
-import matteroverdrive.common.item.tools.electric.ItemElectric;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -23,6 +22,7 @@ import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPattern
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.tile.types.GenericRedstoneTile;
+import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsMath;
@@ -59,10 +59,6 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	private static final int ENERGY_STORAGE = 64000;
 	public static final int BASE_USAGE = 50;
 	public static final int USAGE_PER_DRIVE = 100;
-	
-	public CapabilityInventory clientNetworkInventory;
-	public boolean clientNetworkPowered;
-	
 	
 	public boolean clientTilePowered;
 	
@@ -177,8 +173,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	@Override
-	public boolean isPowered(boolean client, boolean network) {
-		return client ? network ? clientNetworkPowered : clientTilePowered : isPowered;
+	public boolean isPowered(boolean client) {
+		return client ? clientTilePowered : isPowered;
 	}
 	
 	public CompoundTag getNetworkData() {
@@ -191,20 +187,19 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		return data;
 	}
 	
-	public void handleNetworkData(CompoundTag tag) {
-		
-		clientNetworkInventory = new CapabilityInventory();
-		clientNetworkInventory.deserializeNBT(tag.getCompound(clientNetworkInventory.getSaveKey()));
-		clientNetworkPowered = tag.getBoolean("ispowered");
+	public PatternStorageDataWrapper handleNetworkData(CompoundTag tag) {
+		CapabilityInventory inv = new CapabilityInventory();
+		inv.deserializeNBT(tag.getCompound(inv.getSaveKey()));
+		return new PatternStorageDataWrapper(inv, tag.getBoolean("ispowered"));
 	}
-
+	
 	@Override
 	public int getMaxMode() {
 		return 2;
 	}
 	
-	public boolean containsItem(Item item, boolean client, boolean network) {
-		for(ItemStack stack : getDrives(client, network)) {
+	public boolean containsItem(Item item) {
+		for(ItemStack stack : getDrives()) {
 			if(stack.getItem() instanceof ItemPatternDrive drive) {
 				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
 				if(cap != null) {
@@ -251,7 +246,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	 * @return if the item was stored
 	 */
 	public boolean storeItemFirstChance(Item item, int amt) {
-		for(ItemStack stack : getDrives(false, false)) {
+		for(ItemStack stack : getDrives()) {
 			if(stack.getItem() instanceof ItemPatternDrive drive) {
 				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
 				if(cap != null) {
@@ -275,8 +270,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	 * @param network : whether or not the request is for the client network inventory
 	 * @return true if no slots available, false if a slot is available
 	 */
-	public boolean isFull(boolean client, boolean network) {
-		for(ItemStack stack : getDrives(client, network)) {
+	public boolean isFull() {
+		for(ItemStack stack : getDrives()) {
 			if(stack.getItem() instanceof ItemPatternDrive drive) {
 				CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(stack);
 				if(cap != null) {
@@ -300,8 +295,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	 * @param item : the item to search for
 	 * @return the relevant indexes
 	 */
-	public int[] getHighestStorageLocForItem(Item item, boolean client, boolean network) {
-		ItemPatternWrapper[][] array = getWrappers(client, network);
+	public int[] getHighestStorageLocForItem(Item item) {
+		ItemPatternWrapper[][] array = getWrappers();
 		ItemPatternWrapper[] holder;
 		int drive = -1;
 		int patSlot = -1;
@@ -321,15 +316,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		return new int[] {drive, patSlot, highestPerc};
 	}
 	
-	public List<ItemStack> getDrives(boolean client, boolean network){
-		if(client) {
-			if(network && clientNetworkInventory != null) {
-				return clientNetworkInventory.getItems().subList(0, 6);
-			} 
-			return clientInventory == null ? EMPTY_DRIVES : clientInventory.getItems().subList(0, 6);
-		} else {
-			return this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().subList(0, 6);
-		}
+	public List<ItemStack> getDrives(){
+		return this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().subList(0, 6);
 	}
 	
 	/**
@@ -341,9 +329,9 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	 * @param network : whether or not the request is for the client network inventory
 	 * @return an array of the stored patterns for each drive in a slot
 	 */
-	public ItemPatternWrapper[][] getWrappers(boolean client, boolean network){
+	public ItemPatternWrapper[][] getWrappers(){
 		ItemPatternWrapper[][] array = new ItemPatternWrapper[6][];
-		List<ItemStack> drives = getDrives(client, network);
+		List<ItemStack> drives = getDrives();
 		for(int i = 0; i < 6; i++) {
 			CapabilityItemPatternStorage cap = UtilsItem.getPatternStorageCap(drives.get(i));
 			if(cap == null) {
@@ -376,9 +364,27 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
 		return (index, stack, cap) -> index < 6 && stack.getItem() instanceof ItemPatternDrive
 				|| index == 6 && stack.getItem() instanceof ItemMatterScanner 
-				|| index == 8 && stack.getItem() instanceof ItemElectric;
+				|| index == 8 && UtilsCapability.hasEnergyCap(stack);
 	}
 
-	
+	public static class PatternStorageDataWrapper {
+		
+		private CapabilityInventory inv;
+		private boolean isPowered;
+		
+		public PatternStorageDataWrapper(CapabilityInventory inv, boolean isPowered) {
+			this.inv = inv;
+			this.isPowered = isPowered;
+		}
+		
+		public CapabilityInventory getInventory() {
+			return inv;
+		}
+		
+		public boolean isPowered() {
+			return isPowered;
+		}
+		
+	}
 
 }

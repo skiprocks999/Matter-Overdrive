@@ -198,9 +198,9 @@ public class ItemMatterScanner extends ItemElectric {
 				Item item = state.getBlock().asItem();
 				int perc = 0;
 				if(network != null) {
-					perc = network.getHighestStorageLocationForItem(item, false, false, false)[3];
+					perc = network.getHighestStorageLocationForItem(item, false)[3];
 				} else {
-					perc = storage.getHighestStorageLocForItem(item, false, false)[2];
+					perc = storage.getHighestStorageLocForItem(item)[2];
 				}
 				if(perc < 0) {
 					perc = 0;
@@ -246,7 +246,7 @@ public class ItemMatterScanner extends ItemElectric {
 			if(entity != null && entity instanceof TilePatternStorage storage) {
 				NetworkMatter network = storage.getConnectedNetwork();
 				if(network != null) {
-					int[] driveData = network.getHighestStorageLocationForItem(item, false, false, false);
+					int[] driveData = network.getHighestStorageLocationForItem(item, false);
 					if(driveData[0] > 0) {
 						TilePatternStorage found = network.getStorageFromIndex(driveData[0]);
 						if(found == null) {
@@ -260,7 +260,7 @@ public class ItemMatterScanner extends ItemElectric {
 						spawnMatterDust(world, stack, blockLoc);
 					}
 				} else {
-					int[] index = storage.getHighestStorageLocForItem(item, false, false);
+					int[] index = storage.getHighestStorageLocForItem(item);
 					handlePatternStorage(world, storage, index, stack, item, blockLoc);
 				}
 			} else {
@@ -278,7 +278,7 @@ public class ItemMatterScanner extends ItemElectric {
 			} else {
 				spawnMatterDust(world, stack, blockLoc);
 			}
-		} else if (storage.isFull(false, false)) {
+		} else if (storage.isFull()) {
 			spawnMatterDust(world, stack, blockLoc);
 		} else {
 			if(storage.storeItemFirstChance(item, AMT_PER_SCAN)) {

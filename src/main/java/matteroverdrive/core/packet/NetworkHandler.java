@@ -8,6 +8,7 @@ import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
 import matteroverdrive.core.packet.type.clientbound.PacketPlayMatterScannerSound;
 import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
 import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
+import matteroverdrive.core.packet.type.serverbound.PacketQueueReplication;
 import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
@@ -40,6 +41,9 @@ public class NetworkHandler {
 				PacketUpdateTransporterLocationInfo::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 		CHANNEL.registerMessage(disc++, PacketToggleMatterScanner.class, PacketToggleMatterScanner::encode,
 				PacketToggleMatterScanner::decode, PacketToggleMatterScanner::handle,
+				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, PacketQueueReplication.class, PacketQueueReplication::encode,
+				PacketQueueReplication::decode, PacketQueueReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
 		
 		/* CLIENT-BOUND */

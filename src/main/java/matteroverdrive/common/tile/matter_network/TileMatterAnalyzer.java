@@ -82,7 +82,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	}
 
 	@Override
-	public boolean isPowered(boolean client, boolean network) {
+	public boolean isPowered(boolean client) {
 		// TODO Auto-generated method stub
 		return false;
 	}

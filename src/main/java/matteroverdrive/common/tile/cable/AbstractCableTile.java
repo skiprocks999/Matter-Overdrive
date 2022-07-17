@@ -128,6 +128,9 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 			}
 
 		}
+		if(flag) {
+			setChanged();
+		}
 		return flag;
 	}
 	

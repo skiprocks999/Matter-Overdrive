@@ -2,7 +2,7 @@ package matteroverdrive.common.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -17,11 +17,13 @@ import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
+import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -30,17 +32,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class NetworkMatter extends AbstractCableNetwork {
 
-	private ArrayList<TileMatterAnalyzer> analyzers = new ArrayList<>();
-	private ArrayList<TileMatterReplicator> replicators = new ArrayList<>();
-	private ArrayList<TilePatternStorage> patternDrives = new ArrayList<>();
-	private ArrayList<TilePatternMonitor> patternMonitors = new ArrayList<>();
+	private HashMap<BlockPos, TileMatterAnalyzer> analyzers = new HashMap<>();
+	private HashMap<BlockPos, TileMatterReplicator> replicators = new HashMap<>();
+	private HashMap<BlockPos, TilePatternStorage> patternDrives = new HashMap<>();
+	private HashMap<BlockPos, TilePatternMonitor> patternMonitors = new HashMap<>();
 	
-	public NetworkMatter(List<? extends AbstractCableTile<?>> varCables, boolean client) {
-		super(varCables, client);
+	public NetworkMatter(List<? extends AbstractCableTile<?>> varCables) {
+		super(varCables, false);
 	}
 	
-	public NetworkMatter(Collection<? extends AbstractCableNetwork> networks, boolean client) {
-		super(networks, client);
+	public NetworkMatter(Collection<? extends AbstractCableNetwork> networks) {
+		super(networks, false);
 	}
 	
 	public Set<BlockEntity> getNetworkAcceptors() {
@@ -70,10 +72,10 @@ public class NetworkMatter extends AbstractCableNetwork {
 
 	@Override
 	public void refresh() {
-		analyzers = new ArrayList<>();
-		replicators = new ArrayList<>();
-		patternDrives = new ArrayList<>();
-		patternMonitors = new ArrayList<>();
+		analyzers = new HashMap<>();
+		replicators = new HashMap<>();
+		patternDrives = new HashMap<>();
+		patternMonitors = new HashMap<>();
 		Iterator<AbstractCableTile<?>> it = cables.iterator();
 		connected.clear();
 		dirsPerConnectionMap.clear();
@@ -103,14 +105,15 @@ public class NetworkMatter extends AbstractCableNetwork {
 	}
 
 	private void addTileToCategory(BlockEntity entity) {
+		BlockPos pos = entity.getBlockPos();
 		if (entity instanceof TileMatterAnalyzer analyzer) {
-			analyzers.add(analyzer);
+			analyzers.put(pos, analyzer);
 		} else if (entity instanceof TileMatterReplicator replicator) {
-			replicators.add(replicator);
+			replicators.put(pos, replicator);
 		} else if (entity instanceof TilePatternMonitor monitor) {
-			patternMonitors.add(monitor);
+			patternMonitors.put(pos, monitor);
 		} else if (entity instanceof TilePatternStorage drive) {
-			patternDrives.add(drive);
+			patternDrives.put(pos, drive);
 		} 
 	}
 
@@ -141,47 +144,59 @@ public class NetworkMatter extends AbstractCableNetwork {
 	
 	@Override
 	public AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks, boolean client) {
-		return new NetworkMatter(networks, client);
+		return new NetworkMatter(networks);
 	}
 	
 	@Override
 	public AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables, boolean client) {
-		return new NetworkMatter(cables, client);
+		return new NetworkMatter(cables);
 	}
 
 	public List<TileMatterAnalyzer> getAnalyzers() {
-		return analyzers;
+		return new ArrayList<>(analyzers.values());
 	}
 
 	public List<TileMatterReplicator> getReplicators() {
-		return replicators;
+		return new ArrayList<>(replicators.values());
 	}
 
 	public List<TilePatternStorage> getPatternDrives() {
-		return patternDrives;
+		return new ArrayList<>(patternDrives.values());
 	}
 
 	public List<TilePatternMonitor> getPatternMonitors() {
-		return patternMonitors;
+		return new ArrayList<>(patternMonitors.values());
 	}
 	
 	public CompoundTag serializeNetworkNbt() {
 		CompoundTag data = new CompoundTag();
 		
-		patternDrives.removeAll(Collections.singletonList(null));
-		
-		data.putInt("drivesize", patternDrives.size());
+		List<TilePatternStorage> drives = new ArrayList<>(patternDrives.values());
+		Iterator<TilePatternStorage> storages = drives.iterator();
 		TilePatternStorage storage;
-		for(int i = 0; i < patternDrives.size(); i++){
-			storage = patternDrives.get(i);
+		while(storages.hasNext()) {
+			storage = storages.next();
+			if(storage == null || storage.isRemoved()) {
+				storages.remove();
+			}
+		}
+		data.putInt("drivesize", drives.size());
+		for(int i = 0; i < drives.size(); i++){
+			storage = drives.get(i);
 			data.put("drivedata" + i, storage.getNetworkData());
 			data.put("drivepos" + i, NbtUtils.writeBlockPos(storage.getBlockPos()));	
 		}
 		
-		replicators.removeAll(Collections.singletonList(null));
-		
-		data.putInt("replicatorsize", replicators.size());
+		List<TileMatterReplicator> replicators = new ArrayList<>(this.replicators.values());
+		Iterator<TileMatterReplicator> reps = replicators.iterator();
 		TileMatterReplicator replicator;
+		while(reps.hasNext()) {
+			replicator = reps.next();
+			if(replicator == null || replicator.isRemoved()) {
+				reps.remove();
+			}
+		}
+		data.putInt("replicatorsize", replicators.size());
 		for(int i = 0; i < replicators.size(); i++) {
 			replicator = replicators.get(i);
 			data.put("repdata" + i, replicator.getNetworkData());
@@ -191,11 +206,11 @@ public class NetworkMatter extends AbstractCableNetwork {
 		return data;
 	}
 	
-	public List<ItemPatternWrapper> getStoredPatterns(boolean client, boolean network){
+	public List<ItemPatternWrapper> getStoredPatterns(boolean checkPowered){
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
-		for(TilePatternStorage storage : patternDrives) {
-			if(storage != null) {
-				for(ItemPatternWrapper[] wrapperArr : storage.getWrappers(client, network)) {
+		for(TilePatternStorage storage : patternDrives.values()) {
+			if(storage != null && !storage.isRemoved() &&  checkPowered ? storage.isPowered(false) : true) {
+				for(ItemPatternWrapper[] wrapperArr : storage.getWrappers()) {
 					for(ItemPatternWrapper wrapper : wrapperArr) {
 						if(wrapper.isNotAir()) {
 							patterns.add(wrapper);
@@ -214,15 +229,15 @@ public class NetworkMatter extends AbstractCableNetwork {
 	 * @return A 4 int array representing the drive's location in the ArrayList, and the relative coordinates on
 	 * the Storage itself. return[0] will be -1 if no pattern is found.
 	 */
-	public int[] getHighestStorageLocationForItem(Item item, boolean checkPowered, boolean client, boolean network) {
+	public int[] getHighestStorageLocationForItem(Item item, boolean checkPowered) {
 		
 		int[] highestStorageLoc = {-1, -1, -1, -1};
 		int[] currData;
 		int counter = 0;
-		for(TilePatternStorage drive : patternDrives) {
+		for(TilePatternStorage drive : patternDrives.values()) {
 			//Ternary in an if statement fight me
-			if(drive != null && checkPowered ? drive.isPowered(client, network) : true) {
-				currData = drive.getHighestStorageLocForItem(item, client, network);
+			if(drive != null && !drive.isRemoved() && checkPowered ? drive.isPowered(false) : true) {
+				currData = drive.getHighestStorageLocForItem(item);
 				if(currData[2] > highestStorageLoc[3]) {
 					highestStorageLoc[0] = counter;
 					highestStorageLoc[1] = currData[0];
@@ -238,7 +253,7 @@ public class NetworkMatter extends AbstractCableNetwork {
 	@Nullable
 	public TilePatternStorage getStorageFromIndex(int index) {
 		try {
-			return patternDrives.get(index);
+			return (TilePatternStorage) patternDrives.values().toArray()[index];
 		} catch(Exception e) {
 			MatterOverdrive.LOGGER.info("Attempted to access drive at index " + index + " for network " + this.toString() + "; returning null");
 			return null;
@@ -248,12 +263,41 @@ public class NetworkMatter extends AbstractCableNetwork {
 	
 	//Serverside only
 	public boolean storeItemFirstChance(Item item, int amt, boolean checkPowered) {
-		for(TilePatternStorage drive : patternDrives) {
-			if(drive != null && checkPowered ? drive.isPowered(false, false) : true) {
+		for(TilePatternStorage drive : patternDrives.values()) {
+			if(drive != null && !drive.isRemoved() && checkPowered ? drive.isPowered(false) : true) {
 				if(drive.storeItemFirstChance(item, amt)) {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param pattern the item ordered
+	 * @param count MUST BE GREATER THAN ZERO
+	 * @return whether the request could be made
+	 */
+	public boolean postOrderToNetwork(ItemPatternWrapper pattern, int count, boolean checkPowered) {
+		int smallestQueue = -1;
+		TileMatterReplicator found = null;
+		for(TileMatterReplicator replicator : replicators.values()) {
+			if(replicator != null && !replicator.isRemoved() && checkPowered ? replicator.isPowered(false) : true) {
+				int queueSize = replicator.getCurrOrders();
+				if(queueSize > smallestQueue) {
+					smallestQueue = queueSize;
+					found = replicator;
+					if(queueSize == 0) {
+						found.queueOrder(new QueuedReplication(pattern, count));
+						return true;
+					}
+				} 
+			}
+		}
+		if(found != null) {
+			found.queueOrder(new QueuedReplication(pattern, count));
+			return true;
 		}
 		return false;
 	}

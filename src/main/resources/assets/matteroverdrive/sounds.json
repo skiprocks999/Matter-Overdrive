@@ -48,6 +48,13 @@
 			"matteroverdrive:block/transporter_arrive"
 		]
 	},
+	"matter_replicator": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.matter_replicator",
+		"sounds": [
+			"matteroverdrive:block/matter_replicator"
+		]
+	},
 	"button_expand": {
 		"category": "master",
 		"subtitle": "subtitles.matteroverdrive.button_expand",
