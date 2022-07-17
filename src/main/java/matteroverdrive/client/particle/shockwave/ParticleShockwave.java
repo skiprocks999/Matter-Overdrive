@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import matteroverdrive.client.animation.AnimationUtils;
+import matteroverdrive.client.animation.EasingAnimations;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -37,7 +37,7 @@ public class ParticleShockwave extends TextureSheetParticle {
 			this.remove();
 		}
 
-		this.quadSize = AnimationUtils.Quart.easeOut((float) this.age / (float) this.lifetime, 0, 1, 1) * maxScale;
+		this.quadSize = EasingAnimations.Quart.easeOut((float) this.age / (float) this.lifetime, 0, 1, 1) * maxScale;
 		updateBoundingBox();
 	}
 

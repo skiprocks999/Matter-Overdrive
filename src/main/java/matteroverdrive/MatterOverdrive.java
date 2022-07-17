@@ -12,12 +12,16 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.common.block.states.OverdriveBlockStates;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -45,6 +49,7 @@ public class MatterOverdrive {
 	public MatterOverdrive() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		SoundRegister.SOUNDS.register(bus);
+		OverdriveBlockStates.init();
 		DeferredRegisters.BLOCKS.register(bus);
 		DeferredRegisters.ITEMS.register(bus);
 		DeferredRegisters.TILES.register(bus);
@@ -62,6 +67,8 @@ public class MatterOverdrive {
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();
+		
+		ServerEventHandler.init();
 
 	}
 
@@ -82,7 +89,7 @@ public class MatterOverdrive {
 
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
-
+		ItemBlockRenderTypes.setRenderLayer(DeferredRegisters.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
 		for (RegistryObject<Block> block : DeferredRegisters.BLOCKS.getEntries()) {
 			if (block.get() instanceof BlockCustomGlass) {
 				ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout());

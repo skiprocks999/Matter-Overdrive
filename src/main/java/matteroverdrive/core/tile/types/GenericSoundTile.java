@@ -1,6 +1,6 @@
 package matteroverdrive.core.tile.types;
 
-import matteroverdrive.core.sound.ITickingSoundTile;
+import matteroverdrive.core.sound.tile.ITickingSoundTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;

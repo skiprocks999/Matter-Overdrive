@@ -1,16 +1,28 @@
 package matteroverdrive.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
+import matteroverdrive.client.keys.KeyBinds;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
-import matteroverdrive.client.renderer.tile.RendererCharger;
-import matteroverdrive.client.renderer.tile.RendererInscriber;
+import matteroverdrive.client.particle.vent.ParticleVent;
+import matteroverdrive.client.render.tile.RendererCharger;
+import matteroverdrive.client.render.tile.RendererInscriber;
+import matteroverdrive.client.render.tile.RendererPatternMonitor;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
+import matteroverdrive.client.screen.ScreenMatterAnalyzer;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
+import matteroverdrive.client.screen.ScreenMatterReplicator;
 import matteroverdrive.client.screen.ScreenMicrowave;
+import matteroverdrive.client.screen.ScreenPatternMonitor;
+import matteroverdrive.client.screen.ScreenPatternStorage;
+import matteroverdrive.client.screen.ScreenChunkloader;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
@@ -23,11 +35,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,7 +57,25 @@ public class ClientRegister {
 	/* MODELS */
 
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
+	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
+	/* TEXTURES */
+	
+	public static final HashMap<ResourceLocation, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
+	private static final List<ResourceLocation> CUSTOM_BLOCK_TEXTURES = new ArrayList<>();
+	
+	private static final String CUSTOM_LOC = References.ID + ":atlas/";
+	
+	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
+	//rotating matricies is a pain in the ass fight me
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_90 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_90");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_180 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_180");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_270 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_270");
+	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
+	public static final ResourceLocation TEXTURE_HOLO_GLOW = new ResourceLocation(CUSTOM_LOC + "holo_monitor_glow");
+	public static final ResourceLocation TEXTURE_CONNECTION_ICON = new ResourceLocation(CUSTOM_LOC + "connection_icon");
+	
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
@@ -54,6 +87,11 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
 		MenuScreens.register(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
+		MenuScreens.register(DeferredRegisters.MENU_CHUNKLOADER.get(), ScreenChunkloader::new);
+		MenuScreens.register(DeferredRegisters.MENU_PATTERN_STORAGE.get(), ScreenPatternStorage::new);
+		MenuScreens.register(DeferredRegisters.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
+		MenuScreens.register(DeferredRegisters.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
+		MenuScreens.register(DeferredRegisters.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -125,6 +163,16 @@ public class ClientRegister {
 					}
 					return 0;
 				});
+		ItemProperties.register(DeferredRegisters.ITEM_MATTER_SCANNER.get(), CHARGE, 
+				(stack, world, entity, call) -> {
+					if(stack.hasTag() && stack.getTag().getBoolean("on")) {
+						return 1;
+					}
+					return 0;
+		});
+		
+		KeyBinds.registerKeys();
+		ClientEventHandler.init();
 
 	}
 
@@ -133,12 +181,14 @@ public class ClientRegister {
 
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
 
 	}
 
 	@SubscribeEvent
 	public static void onModelEvent(ModelRegistryEvent event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
+		ForgeModelBakery.addSpecialModel(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent
@@ -146,10 +196,39 @@ public class ClientRegister {
 		ParticleEngine engine = Minecraft.getInstance().particleEngine;
 		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
 		engine.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
+		engine.register(DeferredRegisters.PARTICLE_VENT.get(), ParticleVent.Factory::new);
 	}
 
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
+	
+	static {
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_90);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_180);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_270);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_SPINNER);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GLOW);
+		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_CONNECTION_ICON);
+	}
+
+	@SubscribeEvent
+	public static void addCustomTextureAtlases(TextureStitchEvent.Pre event) {
+		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+			CUSTOM_BLOCK_TEXTURES.forEach(h -> event.addSprite(h));
+		}
+	}
+
+	@SubscribeEvent
+	public static void cacheCustomTextureAtlases(TextureStitchEvent.Post event) {
+		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+			for (ResourceLocation loc : CUSTOM_BLOCK_TEXTURES) {
+				ClientRegister.CACHED_TEXTUREATLASSPRITES.put(loc, event.getAtlas().getSprite(loc));
+			}
+		}
+	}
+
 
 }

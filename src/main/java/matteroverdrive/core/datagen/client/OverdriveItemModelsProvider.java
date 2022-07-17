@@ -34,7 +34,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
-		simpleBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "block/multisubnode");
+		simpleBlock(DeferredRegisters.BLOCK_CHARGER_CHILD, "block/charger_child");
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_TRANSPORTER), modLoc("block/transporter"));
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
 

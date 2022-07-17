@@ -1,0 +1,9 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "matteroverdrive:item/pattern_drive/pattern_drive_base",
+		"layer1": "matteroverdrive:item/pattern_drive/bottom_light",
+		"layer2": "matteroverdrive:item/pattern_drive/middle_light",
+		"layer3": "matteroverdrive:item/pattern_drive/left_light"
+	}
+}

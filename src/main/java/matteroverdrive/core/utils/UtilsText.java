@@ -10,6 +10,7 @@ public class UtilsText {
 
 	public static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 	public static final DecimalFormat MIN_FORMAT = new DecimalFormat("0.#");
+	public static final DecimalFormat SINGLE_DECIMAL = new DecimalFormat("0.0");
 	
 	public static final String GUI_BASE =  "gui";
 	public static final String TOOLTIP_BASE = "tooltip";

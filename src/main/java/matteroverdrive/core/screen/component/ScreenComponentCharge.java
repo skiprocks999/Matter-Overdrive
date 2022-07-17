@@ -1,6 +1,5 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -8,15 +7,15 @@ import java.util.function.DoubleSupplier;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
-public class ScreenComponentCharge extends ScreenComponent {
+public class ScreenComponentCharge extends OverdriveScreenComponent {
 
 	private boolean isMatter = false;
 	private boolean isGenerator = false;
@@ -24,19 +23,18 @@ public class ScreenComponentCharge extends ScreenComponent {
 	private boolean powerNonTick = false;
 	private boolean matterPerTick = false;
 
-	private final int matterHeight = 42;
-	private final int matterWidth = 14;
-	private final int energyHeight = 42;
-	private final int energyWidth = 14;
+	private static final int HEIGHT = 42;
+	private static final int WIDTH = 14;
 
 	private final DoubleSupplier maxStorage;
 	private final DoubleSupplier currStorage;
 	private final DoubleSupplier usage;
 
 	public ScreenComponentCharge(final DoubleSupplier currStorage, final DoubleSupplier maxStorage,
-			final DoubleSupplier generation, final IScreenWrapper gui, final int x, final int y,
+			final DoubleSupplier generation, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, 
+				WIDTH, HEIGHT, screenNumbers);
 		this.maxStorage = maxStorage;
 		this.currStorage = currStorage;
 		this.usage = generation;
@@ -63,71 +61,60 @@ public class ScreenComponentCharge extends ScreenComponent {
 	}
 
 	@Override
-	public void renderForeground(PoseStack stack, int xAxis, int yAxis) {
-		if (isPointInRegion(xLocation, yLocation, xAxis, yAxis, isMatter ? matterWidth : energyWidth,
-				isMatter ? matterHeight : energyHeight)) {
-			List<FormattedCharSequence> components = new ArrayList<>();
-			String storeLoc = isMatter ? "matterstored" : "energystored";
-			components.add(UtilsText.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
-					.getVisualOrderText());
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		List<FormattedCharSequence> components = new ArrayList<>();
+		String storeLoc = isMatter ? "matterstored" : "energystored";
+		components.add(UtilsText.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
+				.getVisualOrderText());
 
-			double use = usage.getAsDouble();
-			if (use > 0) {
-				if(isMatter) {
-					String usageLoc = matterPerTick ? "usagetick" : "usage";
-					String formatted = UtilsText.formatMatterValue(use);
-					if (isGenerator) {
-						components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
-								.getVisualOrderText());
-					} else {
-						components.add(
-								UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
-					}
+		double use = usage.getAsDouble();
+		if (use > 0) {
+			if(isMatter) {
+				String usageLoc = matterPerTick ? "usagetick" : "usage";
+				String formatted = UtilsText.formatMatterValue(use);
+				if (isGenerator) {
+					components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
+							.getVisualOrderText());
 				} else {
-					String usageLoc = powerNonTick ? "usage" : "usagetick";
-					String formatted = UtilsText.formatPowerValue(use);
-					if (isGenerator) {
-						components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
-								.getVisualOrderText());
-					} else {
-						components.add(
-								UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
-					}
+					components.add(
+							UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
+				}
+			} else {
+				String usageLoc = powerNonTick ? "usage" : "usagetick";
+				String formatted = UtilsText.formatPowerValue(use);
+				if (isGenerator) {
+					components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
+							.getVisualOrderText());
+				} else {
+					components.add(
+							UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
 				}
 			}
-			gui.displayTooltips(stack, components, xAxis, yAxis);
 		}
+		gui.renderTooltip(stack, components, mouseX, mouseY);
+		
 	}
 
-	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, isMatter ? matterWidth : energyWidth,
-				isMatter ? matterHeight : energyHeight);
-	}
 
 	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
-			final int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
 		double progress = maxStorage.getAsDouble() > 0
 				? Math.min(1.0, (double) currStorage.getAsDouble() / (double) maxStorage.getAsDouble())
 				: 0;
+		
+		int height = (int) (progress * this.height);
+		int offset = this.height - height;
+		
 		if (isMatter) {
-
-			int height = (int) (progress * matterHeight);
-			int offset = matterHeight - height;
-			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, energyWidth * 2, 0, energyWidth,
-					energyHeight);
-			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation + offset, energyWidth * 3, offset,
-					energyWidth, height);
+			
+			blit(stack, this.x, this.y, this.width * 2, 0, this.width, this.height);
+			blit(stack, this.x, this.y + offset, this.width * 3, offset, this.width, height);
 
 		} else {
 
-			int height = (int) (progress * energyHeight);
-			int offset = energyHeight - height;
-			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, 0, 0, energyWidth, energyHeight);
-			gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation + offset, energyWidth, offset,
-					energyWidth, height);
+			blit(stack, this.x, this.y, 0, 0, this.width, this.height);
+			blit(stack, this.x, this.y + offset, this.width, offset, this.width, height);
 
 		}
 	}

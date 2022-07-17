@@ -10,8 +10,6 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.UtilsWorld;
 import net.minecraft.core.BlockPos;
@@ -61,14 +59,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 				(id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
 				getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
-		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
-		setRenderPacketHandler(
-				new PacketHandler(this, false).packetReader(this::clientTileLoad).packetWriter(this::clientTileSave));
-		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
+		setTickable();
+		setHasMenuData();
+		setHasRenderData();
 	}
 	
-	private void tickServer(Ticker ticker) {
+	@Override
+	public void tickServer() {
 		if(canRun()) {
 			UtilsTile.drainElectricSlot(this);
 			UtilsTile.drainMatterSlot(this);
@@ -79,7 +76,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 					running = true;
 					energy.removeEnergy((int) getCurrentPowerUsage(false));
 					matter.removeMatter(getCurrentMatterUsage(false));
-					if(ticker.getTicks() % 10 == 0) {
+					if(ticks % 10 == 0) {
 						updateSurroundingTileMultipliers(getCurrentSpeed(false));
 					}
 					setChanged();
@@ -97,8 +94,9 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		}
 	}
 	
-	private void tickClient(Ticker ticker) {
-		if(clientRunning && ticker.getTicks() % (getCurrentRange(true) * 5) == 0) {
+	@Override
+	public void tickClient() {
+		if(clientRunning && ticks % (getCurrentRange(true) * 5) == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
 			shockwave.setMaxScale((float) getCurrentRange(true));
 			shockwave.setColor(191, 228, 230, 255);
@@ -107,7 +105,8 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		}
 	}
 	
-	private void clientMenuSave(CompoundTag tag) {
+	@Override
+	public void getMenuData(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
@@ -121,7 +120,8 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		tag.putDouble("matusage", matterUsage);
 	}
 	
-	private void clientMenuLoad(CompoundTag tag) {
+	@Override
+	public void readMenuData(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
@@ -135,12 +135,14 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		clientMatterUsage = tag.getDouble("matusage");
 	}
 	
-	private void clientTileSave(CompoundTag tag) {
+	@Override
+	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
 		tag.putInt("radius", radius);
 	}
 	
-	private void clientTileLoad(CompoundTag tag) {
+	@Override
+	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
 		clientRadius = tag.getInt("radius");
 	}

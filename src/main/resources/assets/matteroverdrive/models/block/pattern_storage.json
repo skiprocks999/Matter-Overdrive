@@ -1,0 +1,11 @@
+{
+	"parent" : "block/cube",
+	"loader": "forge:obj",
+	"model": "matteroverdrive:models/block/pattern_storage.obj",
+	"flip-v": true,
+	"textures": {
+		"base": "matteroverdrive:block/pattern_storage",
+		"vent": "matteroverdrive:block/vent",
+		"particle" : "#base"
+	}
+}

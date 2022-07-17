@@ -2,57 +2,26 @@
 	"multipart": [
 		{
 			"when": {
-				"down": "none"
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none",
-				"x": 90
-			}
-		},
-		{
-			"when": {
-				"OR": [
+				"OR" : [
 					{
-						"down": "wire"
+						"cable_down": "none"
 					},
 					{
-						"down": "inventory"
-					}
-				]
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_side",
-				"x": 90
-			}
-		},
-		{
-			"when": {
-				"up": "none"
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none",
-				"x": 270
-			}
-		},
-		{
-			"when": {
-				"OR": [
-					{
-						"up": "wire"
+						"cable_up": "none"
 					},
 					{
-						"up": "inventory"
+						"cable_north": "none"
+					},
+					{
+						"cable_south": "none"
+					},
+					{
+						"cable_west": "none"
+					},
+					{
+						"cable_east": "none"
 					}
 				]
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_side",
-				"x": 270
-			}
-		},
-		{
-			"when": {
-				"north": "none"
 			},
 			"apply": {
 				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none"
@@ -60,12 +29,89 @@
 		},
 		{
 			"when": {
-				"OR": [
+				"OR" : [
 					{
-						"north": "wire"
+						"cable_west": "none_seamless"
 					},
 					{
-						"north": "inventory"
+						"cable_east": "none_seamless"
+					}
+				]
+			},
+			"apply": {
+				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none_seamless_ns"
+			}
+		},
+		{
+			"when": {
+				"OR" : [
+					{
+						"cable_down": "none_seamless"
+					},
+					{
+						"cable_up": "none_seamless"
+					}
+				]
+			},
+			"apply": {
+				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none_seamless_ew"
+			}
+		},
+		{
+			"when": {
+				"OR" : [
+					{	
+						"cable_north": "none_seamless"
+					},
+					{
+						"cable_south": "none_seamless"
+					}
+				]
+			},
+			"apply": {
+				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none_seamless_ud"
+			}
+		},
+		{
+			"when": {
+				"OR": [
+					{
+						"cable_down": "cable"
+					},
+					{
+						"cable_down": "inventory"
+					}
+				]
+			},
+			"apply": {
+				"model": "matteroverdrive:block/cable/matter_conduit_heavy_side",
+				"x": 90
+			}
+		},
+		{
+			"when": {
+				"OR": [
+					{
+						"cable_up": "cable"
+					},
+					{
+						"cable_up": "inventory"
+					}
+				]
+			},
+			"apply": {
+				"model": "matteroverdrive:block/cable/matter_conduit_heavy_side",
+				"x": 270
+			}
+		},
+		{
+			"when": {
+				"OR": [
+					{
+						"cable_north": "cable"
+					},
+					{
+						"cable_north": "inventory"
 					}
 				]
 			},
@@ -75,21 +121,12 @@
 		},
 		{
 			"when": {
-				"south": "none"
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none",
-				"y": 180
-			}
-		},
-		{
-			"when": {
 				"OR": [
 					{
-						"south": "wire"
+						"cable_south": "cable"
 					},
 					{
-						"south": "inventory"
+						"cable_south": "inventory"
 					}
 				]
 			},
@@ -100,21 +137,12 @@
 		},
 		{
 			"when": {
-				"west": "none"
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none",
-				"y": 270
-			}
-		},
-		{
-			"when": {
 				"OR": [
 					{
-						"west": "wire"
+						"cable_west": "cable"
 					},
 					{
-						"west": "inventory"
+						"cable_west": "inventory"
 					}
 				]
 			},
@@ -125,21 +153,12 @@
 		},
 		{
 			"when": {
-				"east": "none"
-			},
-			"apply": {
-				"model": "matteroverdrive:block/cable/matter_conduit_heavy_none",
-				"y": 90
-			}
-		},
-		{
-			"when": {
 				"OR": [
 					{
-						"east": "wire"
+						"cable_east": "cable"
 					},
 					{
-						"east": "inventory"
+						"cable_east": "inventory"
 					}
 				]
 			},

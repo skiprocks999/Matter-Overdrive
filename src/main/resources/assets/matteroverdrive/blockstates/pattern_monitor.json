@@ -1,0 +1,57 @@
+{
+	"variants": {
+		"vertical_facing=none,facing=north": {
+			"model": "matteroverdrive:block/pattern_monitor"
+		},
+		"vertical_facing=none,facing=south": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 180
+		},
+		"vertical_facing=none,facing=west": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 270
+		},
+		"vertical_facing=none,facing=east": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 90
+		},
+		"vertical_facing=up,facing=north": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"x": 270
+		},
+		"vertical_facing=up,facing=south": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 180,
+			"x": 270
+		},
+		"vertical_facing=up,facing=west": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 270,
+			"x": 270
+		},
+		"vertical_facing=up,facing=east": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 90,
+			"x": 270
+		},
+		"vertical_facing=down,facing=north": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"x": 90
+		},
+		"vertical_facing=down,facing=south": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 180,
+			"x": 90
+		},
+		"vertical_facing=down,facing=west": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 270,
+			"x": 90
+		},
+		"vertical_facing=down,facing=east": {
+			"model": "matteroverdrive:block/pattern_monitor",
+			"y": 90,
+			"x": 90
+		}
+	}
+}

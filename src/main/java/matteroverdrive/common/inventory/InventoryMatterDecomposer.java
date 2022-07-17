@@ -34,7 +34,7 @@ public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDe
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotGeneric(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, null));
+		addSlot(new SlotGeneric(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, IconType.NONE));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG,
 				IconType.MATTER_DUST_DARK));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));

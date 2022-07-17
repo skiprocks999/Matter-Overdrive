@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
-import net.minecraft.client.gui.components.Button;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
+import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -14,27 +16,27 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
-public class ButtonGeneric extends Button {
+public class ButtonGeneric extends AbstractOverdriveButton {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
 			"textures/gui/button/buttons.png");
 	private ButtonType type;
 
-	public ButtonGeneric(int x, int y, ButtonType type, Component pMessage, OnPress pOnPress, OnTooltip pOnTooltip) {
-		super(x, y, type.width, type.height, pMessage, pOnPress, pOnTooltip);
+	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, Component message, OnPress onPress, OnTooltip onTooltip) {
+		super(gui, x, y, type.width, type.height, message, onPress, onTooltip);
 		this.type = type;
 	}
 
-	public ButtonGeneric(int x, int y, ButtonType type, OnPress pOnPress) {
-		this(x, y, type, TextComponent.EMPTY, pOnPress, Button.NO_TOOLTIP);
+	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, OnPress onPress) {
+		this(gui, x, y, type, TextComponent.EMPTY, onPress, NO_TOOLTIP);
 		this.type = type;
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
+		UtilsRendering.bindTexture(TEXTURE);
 		int x = type.xOffset;
 		int y = type.yOffset;
 
@@ -43,7 +45,7 @@ public class ButtonGeneric extends Button {
 			y = type.yOffsetHover;
 		}
 
-		this.blit(pPoseStack, this.x, this.y, x, y, type.width, type.height);
+		blit(stack, this.x, this.y, x, y, type.width, type.height);
 	}
 
 	@Override
@@ -55,7 +57,8 @@ public class ButtonGeneric extends Button {
 
 	public enum ButtonType {
 
-		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get());
+		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),
+		ORDER_ITEMS(0, 57, 20, 57, 20, 10, false, null);
 
 		public final int xOffset;
 		public final int yOffset;

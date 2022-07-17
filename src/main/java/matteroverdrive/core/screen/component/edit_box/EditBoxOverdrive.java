@@ -6,8 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.OverdriveTextureButton;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -18,13 +18,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public class EditBoxOverdrive extends EditBox {
 
-	private IScreenWrapper gui;
+	protected GenericScreen<?> gui;
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
 			"textures/gui/button/edit_box.png");
 
 	
 	private static final char[] VALID_NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'};
+	private static final char[] VALID_POSITIVE_NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	
 	public static final Predicate<String> INTEGER_BOX = (string) -> {
 		if(string == null) {
@@ -62,8 +63,32 @@ public class EditBoxOverdrive extends EditBox {
 		return false;
 	};
 	
-	public EditBoxOverdrive(int pX, int pY, int pWidth, int pHeight, IScreenWrapper gui) {
-		super(gui.getFontRenderer(), pX, pY, pWidth, pHeight, TextComponent.EMPTY);
+	public static final Predicate<String> POSITIVE_INTEGER_BOX = (string) -> {
+		if(string == null) {
+			return false;
+		}
+		if(string.length() == 0) {
+			return true;
+		}
+		boolean validChar = false;
+		for(char character : string.toCharArray()) {
+			validChar = false;
+			for(char valid : VALID_POSITIVE_NUMBERS) {
+				if(valid == character) {
+					validChar = true;
+					break;
+				}
+			}
+			if(!validChar) {
+				return false;
+			}
+		}
+		
+		return true;
+	};
+	
+	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {
+		super(gui.getFontRenderer(), x, y, width, height, TextComponent.EMPTY);
 		this.gui = gui;
 
 	}
@@ -76,7 +101,7 @@ public class EditBoxOverdrive extends EditBox {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			UtilsRendering.bindTexture(TEXTURE);
-			OverdriveTextureButton.drawButton(stack, this.x, this.y, this.width, this.height);
+			ButtonOverdrive.drawButton(stack, this.x, this.y, this.width, this.height);
 
 			int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
 			int j = this.cursorPos - this.displayPos;

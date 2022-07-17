@@ -6,16 +6,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
+import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class ButtonMenuBar extends Button {
+public class ButtonMenuBar extends AbstractOverdriveButton {
 
 	public static final int EXTEND_DISTANCE = 32;
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
@@ -24,18 +25,15 @@ public class ButtonMenuBar extends Button {
 	public boolean isExtended;
 	private boolean isPressed;
 
-	private IScreenWrapper gui;
-
-	public ButtonMenuBar(int pX, int pY, boolean inidialCondition, OnPress press, IScreenWrapper owner) {
-		super(pX, pY, 16, 143, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
+	public ButtonMenuBar(GenericScreen<?> gui, int x, int y, boolean inidialCondition, OnPress press) {
+		super(gui, x, y, 16, 143, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
 			if (bar.isExtended) {
-				bar.gui.displayTooltip(stack, UtilsText.tooltip("closemenu"), mouseX, mouseY);
+				bar.gui.renderTooltip(stack, UtilsText.tooltip("closemenu"), mouseX, mouseY);
 			} else {
-				bar.gui.displayTooltip(stack, UtilsText.tooltip("openmenu"), mouseX, mouseY);
+				bar.gui.renderTooltip(stack, UtilsText.tooltip("openmenu"), mouseX, mouseY);
 			}
 		});
-		this.gui = owner;
 		isExtended = inidialCondition;
 		if (isExtended) {
 			this.x += EXTEND_DISTANCE;
@@ -43,20 +41,18 @@ public class ButtonMenuBar extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
+		UtilsRendering.bindTexture(TEXTURE);
+		
 		if (isPressed) {
-			this.blit(pPoseStack, this.x, this.y, 16, 0, 16, 143);
+			this.blit(stack, this.x, this.y, 16, 0, 16, 143);
 		} else {
-			this.blit(pPoseStack, this.x, this.y, 0, 0, 16, 143);
+			this.blit(stack, this.x, this.y, 0, 0, 16, 143);
 		}
 		if (isExtended) {
-			this.blit(pPoseStack, this.x - EXTEND_DISTANCE, this.y, 32, 0, 32, 143);
-		}
-		if (this.isHoveredOrFocused()) {
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
+			this.blit(stack, this.x - EXTEND_DISTANCE, this.y, 32, 0, 32, 143);
 		}
 	}
 

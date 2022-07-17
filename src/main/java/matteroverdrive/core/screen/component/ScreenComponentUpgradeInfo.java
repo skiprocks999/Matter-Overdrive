@@ -1,12 +1,11 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -14,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class ScreenComponentUpgradeInfo extends ScreenComponent {
+public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 
 	private final Supplier<IUpgradableTile> tile;
 	private boolean matterPerTick = false;
@@ -22,15 +21,10 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 	private boolean customTime = false;
 	private String customTimeKey = null;
 
-	public ScreenComponentUpgradeInfo(IScreenWrapper gui, int x, int y, int[] screenNumbers,
+	public ScreenComponentUpgradeInfo(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
 			Supplier<IUpgradableTile> tile) {
-		super(new ResourceLocation(""), gui, x, y, screenNumbers);
+		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
 		this.tile = tile;
-	}
-
-	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(0, 0, 0, 0);
 	}
 	
 	public ScreenComponentUpgradeInfo setMatterPerTick() {
@@ -50,7 +44,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 	}
 	
 	@Override
-	public void renderBackground(PoseStack stack, int xAxis, int yAxis, int guiWidth, int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		IUpgradableTile owner = tile.get();
 		TranslatableComponent component;
 		int color;
@@ -67,7 +61,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 					component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
 				}
 				color = currSpeed >= owner.getDefaultSpeed() ? UtilsRendering.GREEN : UtilsRendering.RED;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -76,7 +70,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 				String formatted = UtilsText.formatPowerValue(currPowerUsage);
 				component = powerNonTick ? UtilsText.gui("usage", formatted) : UtilsText.gui("usagetick", formatted);
 				color = currPowerUsage > owner.getDefaultPowerUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -85,7 +79,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 				String formatted = UtilsText.formatMatterValue(currMatterUsage);
 				component = matterPerTick ? UtilsText.gui("usagetick", formatted) : UtilsText.gui("usage", formatted);
 				color = currMatterUsage > owner.getDefaultMatterUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -93,7 +87,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			if (owner.getDefaultFailure() > 0) {
 				component = UtilsText.gui("failure", UtilsText.formatPercentage(failureChance * 100));
 				color = failureChance > owner.getDefaultFailure() ? UtilsRendering.RED : UtilsRendering.GREEN;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -101,7 +95,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			if (owner.getDefaultRange() > 0) {
 				component = UtilsText.gui("range", range);
 				color = range >= owner.getDefaultRange() ? UtilsRendering.GREEN : UtilsRendering.RED;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -109,7 +103,7 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 			if (currPowerStorage > 0 && owner.getDefaultPowerStorage() > 0) {
 				component = UtilsText.gui("storage", UtilsText.formatPowerValue(currPowerStorage));
 				color = currPowerStorage >= owner.getDefaultPowerStorage() ? UtilsRendering.GREEN : UtilsRendering.RED;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 
@@ -118,12 +112,11 @@ public class ScreenComponentUpgradeInfo extends ScreenComponent {
 				component = UtilsText.gui("storage", UtilsText.formatMatterValue(currMatterStorage));
 				color = currMatterStorage >= owner.getDefaultMatterStorage() ? UtilsRendering.GREEN
 						: UtilsRendering.RED;
-				font.draw(stack, component, guiWidth + this.xLocation, guiHeight + this.yLocation + offset, color);
+				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 			if (owner.isMuffled(true)) {
-				font.draw(stack, UtilsText.gui("soundmuted"), guiWidth + this.xLocation,
-						guiHeight + this.yLocation + offset, UtilsRendering.GREEN);
+				font.draw(stack, UtilsText.gui("soundmuted"), this.x, this.y + offset, UtilsRendering.GREEN);
 			}
 
 		}

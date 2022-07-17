@@ -24,7 +24,7 @@ public class SlotContainer extends Slot implements IToggleableSlot {
 	}
 
 	public SlotContainer(Container pContainer, int pIndex, int pX, int pY, int[] screenNumbers, SlotType type) {
-		this(pContainer, pIndex, pX, pY, screenNumbers, type, null);
+		this(pContainer, pIndex, pX, pY, screenNumbers, type, IconType.NONE);
 	}
 
 	@Override

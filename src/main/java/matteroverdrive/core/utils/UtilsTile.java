@@ -2,7 +2,7 @@ package matteroverdrive.core.utils;
 
 import java.util.HashSet;
 
-import matteroverdrive.common.block.BlockLightableMachine;
+import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -94,7 +94,7 @@ public class UtilsTile {
 			CapabilityMatterStorage matter = tile.exposeCapability(CapabilityType.Matter);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
-			if (matter.canExtract()) {
+			if (matter.canExtract() && matter.getMatterStored() > 0) {
 				if (matter.isSided()) {
 					Direction facing = tile.getFacing();
 					HashSet<Direction> directions = matter.getOutputDirections();
@@ -164,6 +164,15 @@ public class UtilsTile {
 				}
 			}
 		}
+	}
+	
+	public static boolean isFEReciever(BlockEntity acceptor, Direction dir) {
+		if (acceptor != null) {
+			if (acceptor.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static boolean adjacentRedstoneSignal(GenericTile tile) {

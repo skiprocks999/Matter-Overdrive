@@ -7,8 +7,6 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,14 +37,14 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));
-		setTicker(new Ticker(this).tickServer(this::tickServer));
-		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientLoad).packetWriter(this::clientSave));
+		setTickable();
+		setHasMenuData();
 	}
 
-	private void tickServer(Ticker ticker) {
+	@Override
+	public void tickServer() {
 		if (canRun()) {
-			if (ticker.getTicks() % 5 == 0) {
+			if (ticks % 5 == 0) {
 				Level world = getLevel();
 				generating = world.isDay() && world.canSeeSky(getBlockPos());
 			}
@@ -60,7 +58,8 @@ public class TileSolarPanel extends GenericUpgradableTile {
 		}
 	}
 
-	private void clientSave(CompoundTag tag) {
+	@Override
+	public void getMenuData(CompoundTag tag) {
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
@@ -69,7 +68,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 		tag.putDouble("sabonus", saMultiplier);
 	}
 
-	private void clientLoad(CompoundTag tag) {
+	public void readMenuData(CompoundTag tag) {
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
 		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
 

@@ -5,6 +5,7 @@ import matteroverdrive.References;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
@@ -66,6 +67,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
 
 			addItem(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
+			addItem(DeferredRegisters.ITEM_PATTERN_DRIVE, "Pattern Drive");
+			addItem(DeferredRegisters.ITEM_MATTER_SCANNER, "Matter Scanner");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -89,16 +92,22 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
-			addBlock(DeferredRegisters.BLOCK_MULTI_SUBNODE, "Multiblock Subnode");
+			addBlock(DeferredRegisters.BLOCK_CHARGER_CHILD, "Charger Child");
 			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
 			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
 			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
 			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
 			addBlock(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
+			addBlock(DeferredRegisters.BLOCK_CHUNKLOADER, "Chunkloader");
+			addBlock(DeferredRegisters.BLOCK_MATTER_ANALYZER, "Matter Analyzer");
+			addBlock(DeferredRegisters.BLOCK_PATTERN_STORAGE, "Pattern Storage");
+			addBlock(DeferredRegisters.BLOCK_PATTERN_MONITOR, "Pattern Monitor");
+			addBlock(DeferredRegisters.BLOCK_MATTER_REPLICATOR, "Matter Replicator");
 
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
-
+			addBlock(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
+			
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
 			addTooltip("matterval", "Matter: %s");
@@ -134,6 +143,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("rangebonus", "Range: %s");
 			addTooltip("mufflerupgrade", "Mutes machine sound");
 			addTooltip("invaliddest", "Invalid Destination");
+			addTooltip("empty", "Empty");
+			addTooltip("storedpattern", "%1$s [%2$s]");
+			addTooltip("has_storage_loc" , "Bound: %s");
+			addTooltip("no_storage_loc" , "Unbound");
+			addTooltip("menutasks", "Tasks");
+			addTooltip("order", "Order");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -167,6 +182,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.INSCRIBER.id(), "Inscriber");
 			addContainer(TypeMachine.TRANSPORTER.id(), "Transporter");
 			addContainer(TypeMachine.SPACETIME_ACCELERATOR.id(), "Spacetime Accelerator");
+			addContainer(TypeMachine.CHUNKLOADER.id(), "Chunkloader");
+			addContainer(TypeMachine.PATTERN_MONITOR.id(), "Pattern Monitor");
+			addContainer(TypeMachine.PATTERN_STORAGE.id(), "Pattern Storage");
+			addContainer(TypeMachine.MATTER_ANALYZER.id(), "Matter Analyzer");
+			addContainer(TypeMachine.MATTER_REPLICATOR.id(), "Matter Replicator");
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");
@@ -183,10 +203,17 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("generic_machine", "Machine runs");
 			addSubtitle("transporter", "Transporter Build-up");
 			addSubtitle("transporter_arrive", "Transported Entity Appears");
+			addSubtitle("matter_scanner_running", "Matter Scanner scans");
+			addSubtitle("matter_scanner_beep", "Matter Scanner beeps");
+			addSubtitle("matter_scanner_fail", "Scan fails");
+			addSubtitle("matter_scanner_success", "Scan succeeds");
 			
 			addDimension("overworld", "Overworld");
 			addDimension("the_nether", "Nether");
 			addDimension("the_end", "End");
+			
+			addKeyCategory("main", "Matter Overdrive - Main");
+			addKeyLabel("togglematterscanner" , "Toggle Matter Scanner");
 		}
 	}
 
@@ -220,6 +247,14 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	
 	private void addDimension(String key, String translation) {
 		add("dimension." + References.ID + "." + key, translation);
+	}
+	
+	private void addKeyCategory(String key, String translation) {
+		add("keycategory." + References.ID + "." + key, translation);
+	}
+	
+	private void addKeyLabel(String key, String translation) {
+		add("key." + References.ID + "." + key, translation);
 	}
 
 	private static String getNameFromEnum(String baseString) {

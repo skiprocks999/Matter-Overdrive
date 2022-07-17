@@ -26,8 +26,8 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return (world, pos, blockstate, tile) -> {
-			if (tile instanceof GenericTile generic && generic.hasTicker) {
-				generic.getTicker().performTick(level);
+			if (tile instanceof GenericTile generic && generic.isTickable) {
+				generic.tick(world, generic);
 			}
 		};
 	}
@@ -40,7 +40,6 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		if (state.hasProperty(FACING)) {
-
 			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 		}
 		return super.rotate(state, rot);

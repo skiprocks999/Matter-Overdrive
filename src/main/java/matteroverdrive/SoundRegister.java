@@ -18,11 +18,18 @@ public class SoundRegister {
 	public static final RegistryObject<SoundEvent> SOUND_MACHINE_ELECTRIC = sound("machine_electric");
 	public static final RegistryObject<SoundEvent> SOUND_TRANSPORTER = sound("transporter");
 	public static final RegistryObject<SoundEvent> SOUND_TRANSPORTER_ARRIVE = sound("transporter_arrive");
+	public static final RegistryObject<SoundEvent> SOUND_MATTER_REPLICATOR = sound("matter_replicator");
 
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_EXPAND = sound("button_expand");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_SOFT0 = sound("button_soft0");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_SOFT1 = sound("button_soft1");
 	public static final RegistryObject<SoundEvent> SOUND_BUTTON_LOUD3 = sound("button_loud3");
+	
+	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_RUNNING = sound("matter_scanner_running");
+	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_BEEP = sound("matter_scanner_beep");
+	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_FAIL = sound("matter_scanner_fail");
+	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_SUCCESS = sound("matter_scanner_success");
+	
 
 	private static RegistryObject<SoundEvent> sound(String name) {
 		return SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(References.ID + ":" + name)));

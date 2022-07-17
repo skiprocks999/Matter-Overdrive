@@ -1,18 +1,28 @@
 package matteroverdrive.core.utils;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class UtilsNbt {
 
 	public static final String STORED_MATTER_VAL = "matter_val";
 	public static final String BLOCK_POS = "block_pos";
 	public static final String DIMENSION = "dimension";
+	public static final String ON = "on";
+	public static final String ITEM = "item";
+	public static final String HELD = "help";
+	public static final String PERCENTAGE = "percentage";
+	public static final String TIMER = "timer";
+	public static final String USE_TIME = "use_time";
 
 	/* COMPOUND TAG */
 	
@@ -72,6 +82,11 @@ public class UtilsNbt {
 	
 	public static ResourceKey<Level> readDimensionFromBuffer(FriendlyByteBuf buf) {
 		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(readStringFromBuffer(buf)));
+	}
+	
+	@Nullable
+	public static Item getItemFromString(String resource) {
+		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resource));
 	}
 
 }

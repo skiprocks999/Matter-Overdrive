@@ -3,19 +3,19 @@ package matteroverdrive.core.screen.component.button;
 import java.util.function.Supplier;
 
 import matteroverdrive.SoundRegister;
-import matteroverdrive.core.screen.component.utils.OverdriveTextureButton;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
-public class ButtonRedstoneMode extends OverdriveTextureButton {
+public class ButtonRedstoneMode extends ButtonOverdrive {
 
 	private Supplier<Integer> mode;
 
-	public ButtonRedstoneMode(int x, int y, OnPress pOnPress, Supplier<Integer> mode) {
-		super(x, y, 58, 20, TextComponent.EMPTY, pOnPress);
+	public ButtonRedstoneMode(GenericScreen<?> gui, int x, int y, OnPress pOnPress, Supplier<Integer> mode) {
+		super(gui, x, y, 58, 20, TextComponent.EMPTY, pOnPress);
 		this.mode = mode;
 	}
 

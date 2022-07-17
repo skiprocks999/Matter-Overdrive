@@ -4,12 +4,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.SoundRegister;
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -17,9 +17,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class ButtonMenuOption extends Button {
-
-	private IScreenWrapper gui;
+public class ButtonMenuOption extends AbstractOverdriveButton {
+	
 	private MenuButtonType type;
 	public boolean isActivated;
 	private final ResourceLocation defaultLoc;
@@ -27,14 +26,13 @@ public class ButtonMenuOption extends Button {
 	private final ResourceLocation iconLoc;
 	private final ButtonMenuBar bar;
 
-	public ButtonMenuOption(int pX, int pY, IScreenWrapper gui, OnPress pOnPress, MenuButtonType type,
+	public ButtonMenuOption(GenericScreen<?> gui, int x, int y, OnPress press, MenuButtonType type,
 			ButtonMenuBar bar, boolean isActivated) {
-		super(pX, pY, 18, 18, TextComponent.EMPTY, pOnPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, 18, 18, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuOption menuOption = (ButtonMenuOption) button;
-			menuOption.gui.displayTooltip(stack, type.tooltip, mouseX, mouseY);
+			menuOption.gui.renderTooltip(stack, type.tooltip, mouseX, mouseY);
 		});
 		this.type = type;
-		this.gui = gui;
 		this.bar = bar;
 		this.visible = bar.getIsExtended();
 		this.isActivated = isActivated;
@@ -44,35 +42,33 @@ public class ButtonMenuOption extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (bar.isExtended) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			
 			if (isActivated || isHoveredOrFocused()) {
 				SlotType slot = type.activeSlot;
 				UtilsRendering.bindTexture(activeLoc);
-				blit(pPoseStack, this.x, this.y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
+				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
 						slot.getHeight(), slot.getHeight(), slot.getWidth());
 				IconType icon = type.icon;
 				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
 				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
 				UtilsRendering.bindTexture(iconLoc);
-				blit(pPoseStack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
+				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureX(), icon.getTextureY(),
 						icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
 			} else {
 				SlotType slot = type.defaultSlot;
 				UtilsRendering.bindTexture(defaultLoc);
-				blit(pPoseStack, this.x, this.y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
+				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
 						slot.getHeight(), slot.getHeight(), slot.getWidth());
 				IconType icon = type.icon;
 				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
 				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
 				UtilsRendering.bindTexture(iconLoc);
-				blit(pPoseStack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
+				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureX(), icon.getTextureY(),
 						icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
-			}
-			if (isHoveredOrFocused()) {
-				renderToolTip(pPoseStack, pMouseX, pMouseY);
 			}
 		}
 	}
@@ -93,7 +89,8 @@ public class ButtonMenuOption extends Button {
 		HOME(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_HOME, UtilsText.tooltip("menuhome")),
 		SETTINGS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_WRENCH, UtilsText.tooltip("menusettings")),
 		UPGRADES(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_UPGRADES, UtilsText.tooltip("menuupgrades")),
-		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("menuio"));
+		IO(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_GEAR, UtilsText.tooltip("menuio")),
+		TASKS(SlotType.BIG, SlotType.BIG_DARK, IconType.PAGE_TASKS, UtilsText.tooltip("menutasks"));
 
 		public final SlotType defaultSlot;
 		public final SlotType activeSlot;

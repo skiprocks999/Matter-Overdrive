@@ -10,8 +10,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketUpdateCapabilitySides;
-import matteroverdrive.core.screen.IScreenWrapper;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
+import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIO.BlockSide;
 import matteroverdrive.core.screen.component.button.ButtonIO.IOMode;
@@ -28,11 +28,11 @@ public class WrapperIOConfig {
 	private Supplier<BlockPos> position;
 	private ButtonIO[] buttons = new ButtonIO[6];
 	private final CapabilityType type;
-	private IScreenWrapper gui;
+	public GenericScreen<?> gui;
 	private int guiWidth;
 	private int guiHeight;
 
-	public WrapperIOConfig(IScreenWrapper gui, int guiWidth, int guiHeight, Supplier<HashSet<Direction>> inputDirs,
+	public WrapperIOConfig(GenericScreen<?> gui, int guiWidth, int guiHeight, Supplier<HashSet<Direction>> inputDirs,
 			Supplier<HashSet<Direction>> outputDirs, Supplier<Boolean> input, Supplier<Boolean> output,
 			Supplier<BlockPos> pos, CapabilityType type) {
 		this.gui = gui;
@@ -47,7 +47,7 @@ public class WrapperIOConfig {
 	}
 
 	public void displayTooltip(PoseStack stack, Component tooltip, int xAxis, int yAxis) {
-		gui.displayTooltip(stack, tooltip, xAxis, yAxis);
+		gui.renderTooltip(stack, tooltip, xAxis, yAxis);
 	}
 
 	public void hideButtons() {

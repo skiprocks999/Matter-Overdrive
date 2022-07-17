@@ -19,15 +19,12 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.sound.TickableSoundTile;
+import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
-import matteroverdrive.core.tile.utils.PacketHandler;
-import matteroverdrive.core.tile.utils.Ticker;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import matteroverdrive.core.utils.misc.Scheduler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -101,15 +98,14 @@ public class TileTransporter extends GenericSoundTile {
 				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
 						exposeCapability(CapabilityType.Item), getCoordsData()),
 				getContainerName(TypeMachine.TRANSPORTER.id())));
-		setMenuPacketHandler(
-				new PacketHandler(this, true).packetReader(this::clientMenuLoad).packetWriter(this::clientMenuSave));
-		setRenderPacketHandler(
-				new PacketHandler(this, false).packetReader(this::clientTileLoad).packetWriter(this::clientTileSave));
-		setTicker(new Ticker(this).tickServer(this::tickServer).tickClient(this::tickClient));
+		setHasMenuData();
+		setHasRenderData();
+		setTickable();
 		fillLocations(LOCATIONS);
 	}
 
-	private void tickServer(Ticker ticker) {
+	@Override
+	public void tickServer() {
 		if (canRun()) {
 			UtilsTile.drainElectricSlot(this);
 			UtilsTile.drainMatterSlot(this);
@@ -148,7 +144,7 @@ public class TileTransporter extends GenericSoundTile {
 									});
 									Scheduler.schedule(1, () -> {
 										dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-									});
+									}, false);
 								}
 							}
 							setChanged();
@@ -179,11 +175,11 @@ public class TileTransporter extends GenericSoundTile {
 		}
 	}
 
-	private void tickClient(Ticker ticker) {
+	@Override
+	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			Minecraft.getInstance().getSoundManager()
-					.play(new TickableSoundTile(SoundRegister.SOUND_TRANSPORTER.get(), this));
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
 		}
 		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
 			int particlesPerTick = (int) ((clientProgress / (double) BUILD_UP_TIME) * 20);
@@ -196,7 +192,8 @@ public class TileTransporter extends GenericSoundTile {
 		}
 	}
 
-	private void clientMenuSave(CompoundTag tag) {
+	@Override
+	public void getMenuData(CompoundTag tag) {
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
@@ -217,7 +214,8 @@ public class TileTransporter extends GenericSoundTile {
 		}
 	}
 
-	private void clientMenuLoad(CompoundTag tag) {
+	@Override
+	public void readMenuData(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
@@ -239,7 +237,8 @@ public class TileTransporter extends GenericSoundTile {
 		}
 	}
 
-	private void clientTileSave(CompoundTag tag) {
+	@Override
+	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
 		tag.putBoolean("muffled", isMuffled);
 		tag.putDouble("progress", currProgress);
@@ -253,7 +252,8 @@ public class TileTransporter extends GenericSoundTile {
 		}
 	}
 
-	private void clientTileLoad(CompoundTag tag) {
+	@Override
+	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
 		clientMuffled = tag.getBoolean("muffled");
 		clientProgress = tag.getDouble("progress");
@@ -421,7 +421,7 @@ public class TileTransporter extends GenericSoundTile {
 	}
 
 	@Override
-	public int getProcessingTime() {
+	public double getProcessingTime() {
 		return BUILD_UP_TIME;
 	}
 	

@@ -1,47 +1,68 @@
 package matteroverdrive.core.screen.component;
 
-import java.awt.Rectangle;
 import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
-import matteroverdrive.core.screen.IScreenWrapper;
-import matteroverdrive.core.screen.component.utils.ScreenComponent;
+import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.resources.ResourceLocation;
 
-public class ScreenComponentProgress extends ScreenComponent {
+public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	private final DoubleSupplier progress;
 
-	private static final int WIDTH = 22;
-	private static final int HEIGHT = 16;
+	private static final int HOR_WIDTH = 22;
+	private static final int HOR_HEIGHT = 16;
+	
+	private static final int VERT_WIDTH = 16;
+	private static final int VERT_HEIGHT = 22;
 
-	private static final int BASE_X = 56;
-	private static final int BASE_Y = 0;
+	private static final int HOR_BASE_X = 56;
+	private static final int HOR_BASE_Y = 0;
+	
+	private static final int VERT_BASE_X = 100;
+	private static final int VERT_BASE_Y = 0;
+	
+	private boolean vertical = false;
+	
+	private int color = UtilsRendering.WHITE;
 
-	public ScreenComponentProgress(final DoubleSupplier progress, final IScreenWrapper gui, final int x, final int y,
+	public ScreenComponentProgress(final DoubleSupplier progress, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, HOR_WIDTH, HOR_HEIGHT, screenNumbers);
 		this.progress = progress;
 	}
-
-	@Override
-	public Rectangle getBounds(int guiWidth, int guiHeight) {
-		return new Rectangle(guiWidth + xLocation, guiHeight + yLocation, WIDTH, HEIGHT);
+	
+	public ScreenComponentProgress vertical() {
+		vertical = true;
+		this.width = VERT_WIDTH;
+		this.height = VERT_HEIGHT;
+		return this;
+	}
+	
+	public ScreenComponentProgress color(int color) {
+		this.color = color;
+		return this;
 	}
 
 	@Override
-	public void renderBackground(PoseStack stack, final int xAxis, final int yAxis, final int guiWidth,
-			final int guiHeight) {
+	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
+		UtilsRendering.color(color);
 		double progress = Math.min(1.0, this.progress.getAsDouble());
-
-		int width = (int) (progress * WIDTH);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, BASE_X, BASE_Y, WIDTH, HEIGHT);
-		gui.drawTexturedRect(stack, guiWidth + xLocation, guiHeight + yLocation, BASE_X + WIDTH, BASE_Y, width, HEIGHT);
-
+		if(vertical) {
+			int height = (int) (progress * this.height);
+			blit(stack, this.x, this.y, VERT_BASE_X, VERT_BASE_Y, this.width, this.height);
+			blit(stack, this.x, this.y, VERT_BASE_X + this.width, VERT_BASE_Y, this.width, height);
+		} else {
+			int width = (int) (progress * this.width);
+			blit(stack, this.x, this.y, HOR_BASE_X, HOR_BASE_Y, this.width, this.height);
+			blit(stack, this.x, this.y, HOR_BASE_X + this.width, HOR_BASE_Y, width, this.height);
+		}
+		UtilsRendering.resetColor();
 	}
 
 }

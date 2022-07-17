@@ -9,9 +9,9 @@ import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo;
-import matteroverdrive.core.packet.type.PacketUpdateTransporterLocationInfo.PacketType;
-import matteroverdrive.core.packet.type.PacketUpdateRedstoneMode;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
@@ -74,104 +74,21 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 
 	public ScreenTransporter(InventoryTransporter menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
-		components.add(new ScreenComponentCharge(() -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null) {
-				return transporter.clientEnergy.getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null) {
-				return transporter.clientEnergy.getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null && transporter.clientRunning) {
-				return transporter.getCurrentPowerUsage(true);
-			}
-			return 0;
-		}, this, 48, 35, new int[] { 0 }));
-		components.add(new ScreenComponentCharge(() -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null) {
-				return transporter.clientMatter.getMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null) {
-				return transporter.clientMatter.getMaxMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null && transporter.clientRunning) {
-				return transporter.getCurrentMatterUsage(true);
-			}
-			return 0;
-		}, this, 48, 94, new int[] { 0 }).setMatter());
-		components.add(new ScreenComponentIndicator(() -> {
-			TileTransporter transporter = menu.getTile();
-			if (transporter != null) {
-				return transporter.clientRunning;
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
-		components.add(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
-		components.add(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> menu.getTile()));
-		components.add(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
-				UtilsRendering.TEXT_BLUE));
-		components.add(new ScreenComponentLabel(this, 70, 54, new int[] { 4 }, UtilsText.gui("xlabel"),
-				UtilsRendering.WHITE));
-		components.add(new ScreenComponentLabel(this, 70, 74, new int[] { 4 }, UtilsText.gui("ylabel"),
-				UtilsRendering.WHITE));
-		components.add(new ScreenComponentLabel(this, 70, 94, new int[] { 4 }, UtilsText.gui("zlabel"),
-				UtilsRendering.WHITE));
-		components.add(new ScreenComponentLabel(this, 70, 111, new int[] { 4 }, () -> {
-			TileTransporter transporter = menu.getTile();
-			Component extraComponent = TextComponent.EMPTY;
-			if(transporter != null) {
-				TransporterLocationWrapper wrapper = transporter.CLIENT_LOCATIONS[editor.getCurrIndex()];
-				String key = "";
-				if(wrapper.getDimension() == null) {
-					key = transporter.getLevel().dimension().location().getPath();
-				} else {
-					key = wrapper.getDimension().location().getPath();
-				}
-				if(UtilsText.dimensionExists(key)) {
-					extraComponent = UtilsText.dimension(key);
-				} else {
-					extraComponent = new TextComponent(key);
-				}
-				
-			}
-			return UtilsText.gui("dimensionname", extraComponent);
-		}, UtilsRendering.WHITE));
 	}
 
 	@Override
 	protected void init() {
 		minecraft.keyboardHandler.setSendRepeatsToGui(true);
 		super.init();
-		int guiWidth = (width - imageWidth) / 2;
-		int guiHeight = (height - imageHeight) / 2;
-		close = new ButtonGeneric(guiWidth + 207, guiHeight + 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(guiWidth + 212, guiHeight + 33, EXTENDED, button -> {
+		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
-		}, this);
-		home = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT, this, button -> {
+		});
+		home = new ButtonMenuOption(this, 217, FIRST_HEIGHT, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -192,7 +109,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				editButtons[i].visible = true;
 			}
 		}, MenuButtonType.HOME, menu, true);
-		settings = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS, this, button -> {
+		settings = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
@@ -213,7 +130,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				editButtons[i].visible = false;
 			}
 		}, MenuButtonType.SETTINGS, menu, false);
-		upgrades = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 2, this, button -> {
+		upgrades = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 2, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -234,7 +151,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				editButtons[i].visible = false;
 			}
 		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(guiWidth + 217, guiHeight + FIRST_HEIGHT + BETWEEN_MENUS * 3, this, button -> {
+		ioconfig = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 3, button -> {
 			updateScreen(3);
 			home.isActivated = false;
 			settings.isActivated = false;
@@ -255,7 +172,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				editButtons[i].visible = false;
 			}
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(guiWidth + 48, guiHeight + 32, button -> {
+		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
 				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(transporter.getBlockPos()));
@@ -267,7 +184,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			}
 			return 0;
 		});
-		items = new ButtonIOConfig(guiWidth + 48, guiHeight + 32, button -> {
+		items = new ButtonIOConfig(this, 48, 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -279,7 +196,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			matterWrapper.hideButtons();
 			editor.updateButtons(false);
 		}, IOConfigButtonType.ITEM);
-		energy = new ButtonIOConfig(guiWidth + 48, guiHeight + 72, button -> {
+		energy = new ButtonIOConfig(this, 48, 72, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -291,7 +208,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			matterWrapper.hideButtons();
 			editor.updateButtons(false);
 		}, IOConfigButtonType.ENERGY);
-		matter = new ButtonIOConfig(guiWidth + 48, guiHeight + 112, button -> {
+		matter = new ButtonIOConfig(this, 48, 112, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
@@ -304,7 +221,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			editor.updateButtons(false);
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
 				return transporter.clientInventory.getInputDirections();
@@ -335,7 +252,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Item);
-		energyWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
 				return transporter.clientEnergy.getInputDirections();
@@ -366,7 +283,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 			}
 			return new BlockPos(0, -100, 0);
 		}, CapabilityType.Energy);
-		matterWrapper = new WrapperIOConfig(this, guiWidth + 137, guiHeight + 59, () -> {
+		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
 				return transporter.clientMatter.getInputDirections();
@@ -403,7 +320,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 		matterWrapper.initButtons();
 		
 		for(int i = 0; i < locationButtons.length; i++) {
-			locationButtons[i] = (ButtonTransporterLocation) new ButtonTransporterLocation(guiWidth + 68, guiHeight + 32 + 22 * i, i,
+			locationButtons[i] = (ButtonTransporterLocation) new ButtonTransporterLocation(this, 68, 32 + 22 * i, i,
 					button -> {
 						ButtonTransporterLocation locationButton = (ButtonTransporterLocation) button;
 						TileTransporter transporter = getMenu().getTile();
@@ -421,11 +338,11 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 								}
 							}
 						}
-					}, this, () -> getMenu().getTile()).setLeft();
+					}, () -> getMenu().getTile()).setLeft();
 		}
 		
 		for(int i = 0; i < editButtons.length; i++) {
-			editButtons[i] = (ButtonEditTransporterLocation) new ButtonEditTransporterLocation(guiWidth + 180, guiHeight + 32 + 22 * i,
+			editButtons[i] = (ButtonEditTransporterLocation) new ButtonEditTransporterLocation(this, 180, 32 + 22 * i,
 					button -> {
 						ButtonEditTransporterLocation edit = (ButtonEditTransporterLocation) button;
 						updateScreen(4);
@@ -450,31 +367,31 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 					}, i).setRight();
 		}
 	
-		editor = new WrapperTransporterLocationEditer(this, guiWidth, guiHeight, getMenu()::getTile);
+		editor = new WrapperTransporterLocationEditer(this, 0, 0, getMenu()::getTile);
 		editor.initButtons();
 
-		addRenderableWidget(close);
-		addRenderableWidget(menu);
-		addRenderableWidget(home);
-		addRenderableWidget(settings);
-		addRenderableWidget(upgrades);
-		addRenderableWidget(redstone);
-		addRenderableWidget(ioconfig);
-		addRenderableWidget(items);
-		addRenderableWidget(energy);
-		addRenderableWidget(matter);
+		addButton(close);
+		addButton(menu);
+		addButton(home);
+		addButton(settings);
+		addButton(upgrades);
+		addButton(redstone);
+		addButton(ioconfig);
+		addButton(items);
+		addButton(energy);
+		addButton(matter);
 		for (ButtonIO button : itemWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 		for (ButtonIO button : energyWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 		for (ButtonIO button : matterWrapper.getButtons()) {
-			addRenderableWidget(button);
+			addButton(button);
 		}
 		for(int i = 0; i < editButtons.length; i++) {
-			addRenderableWidget(editButtons[i]);
-			addRenderableWidget(locationButtons[i]);
+			addButton(editButtons[i]);
+			addButton(locationButtons[i]);
 		}
 		
 		editor.addRenderingData(this);
@@ -487,6 +404,88 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
 		editor.updateButtons(false);
+		
+		addScreenComponent(new ScreenComponentCharge(() -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getEnergyStored();
+			}
+			return 0;
+		}, () -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientEnergy.getMaxEnergyStored();
+			}
+			return 0;
+		}, () -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null && transporter.clientRunning) {
+				return transporter.getCurrentPowerUsage(true);
+			}
+			return 0;
+		}, this, 48, 35, new int[] { 0 }));
+		addScreenComponent(new ScreenComponentCharge(() -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getMatterStored();
+			}
+			return 0;
+		}, () -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientMatter.getMaxMatterStored();
+			}
+			return 0;
+		}, () -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null && transporter.clientRunning) {
+				return transporter.getCurrentMatterUsage(true);
+			}
+			return 0;
+		}, this, 48, 94, new int[] { 0 }).setMatter());
+		addScreenComponent(new ScreenComponentIndicator(() -> {
+			TileTransporter transporter = getMenu().getTile();
+			if (transporter != null) {
+				return transporter.clientRunning;
+			}
+			return false;
+		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
+				UtilsRendering.TEXT_BLUE));
+		addScreenComponent(new ScreenComponentLabel(this, 70, 54, new int[] { 4 }, UtilsText.gui("xlabel"),
+				UtilsRendering.WHITE));
+		addScreenComponent(new ScreenComponentLabel(this, 70, 74, new int[] { 4 }, UtilsText.gui("ylabel"),
+				UtilsRendering.WHITE));
+		addScreenComponent(new ScreenComponentLabel(this, 70, 94, new int[] { 4 }, UtilsText.gui("zlabel"),
+				UtilsRendering.WHITE));
+		addScreenComponent(new ScreenComponentLabel(this, 70, 111, new int[] { 4 }, () -> {
+			TileTransporter transporter = getMenu().getTile();
+			Component extraComponent = TextComponent.EMPTY;
+			if(transporter != null) {
+				TransporterLocationWrapper wrapper = transporter.CLIENT_LOCATIONS[editor.getCurrIndex()];
+				String key = "";
+				if(wrapper.getDimension() == null) {
+					key = transporter.getLevel().dimension().location().getPath();
+				} else {
+					key = wrapper.getDimension().location().getPath();
+				}
+				if(UtilsText.dimensionExists(key)) {
+					extraComponent = UtilsText.dimension(key);
+				} else {
+					extraComponent = new TextComponent(key);
+				}
+				
+			}
+			return UtilsText.gui("dimensionname", extraComponent);
+		}, UtilsRendering.WHITE));
 		
 	}
 	
@@ -502,7 +501,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 
 	private void updateScreen(int screenNumber) {
 		this.screenNumber = screenNumber;
-		updateSlotActivity(this.screenNumber);
+		updateComponentActivity(screenNumber);
 	}
 
 	@Override
