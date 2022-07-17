@@ -4,6 +4,6 @@
     "top": "matteroverdrive:block/decomposer_top",
     "front": "matteroverdrive:block/tank_empty",
     "side": "matteroverdrive:block/base_stripes",
-    "bottom" : "matteroverdrive:block/vent2"
+    "bottom" : "matteroverdrive:block/vent_closed"
   }
 }

@@ -137,7 +137,12 @@ public class DeferredRegisters {
 			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
 			() -> new BlockCustomGlass(0.3F, 0.3F));
-
+	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
+	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
