@@ -70,6 +70,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_PATTERN_DRIVE, "Pattern Drive");
 			addItem(DeferredRegisters.ITEM_MATTER_SCANNER, "Matter Scanner");
 
+			addItem(DeferredRegisters.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
+
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				addBlock(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");

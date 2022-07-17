@@ -224,6 +224,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive", () -> new ItemPatternDrive());
 	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner", () -> new ItemMatterScanner());
 
+	public static final RegistryObject<Item> ITEM_TRITANIUM_PLATE = ITEMS.register("tritanium_plate",
+			() -> new Item(new Item.Properties().tab(References.MAIN)));
+
 	/* TILES */
 
 	public static final RegistryObject<BlockEntityType<TileTritaniumCrate>> TILE_TRITANIUM_CRATE = TILES
