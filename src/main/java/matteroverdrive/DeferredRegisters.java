@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import matteroverdrive.common.block.*;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
@@ -155,6 +154,8 @@ public class DeferredRegisters {
 					DeferredRegisters.TILE_TRANSPORTER));
 	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(
 			TypeMachine.SPACETIME_ACCELERATOR.id(),
+			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
+					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
 			() -> new BlockCustomGlass(0.3F, 0.3F));
 	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
@@ -163,8 +164,6 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
-			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
-					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
 			TypeMatterNetworkCable.values());

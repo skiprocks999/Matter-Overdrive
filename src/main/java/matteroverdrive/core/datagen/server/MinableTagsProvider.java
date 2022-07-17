@@ -25,7 +25,7 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(DeferredRegisters.BLOCK_MATTER_RECYCLER.get()).add(DeferredRegisters.BLOCK_CHARGER.get())
 				.add(DeferredRegisters.BLOCK_MICROWAVE.get()).add(DeferredRegisters.BLOCK_TRANSPORTER.get())
 				.add(DeferredRegisters.BLOCK_VENT_OPEN.get())
-				.add(DeferredRegisters.BLOCK_VENT_CLOSED.get());
+				.add(DeferredRegisters.BLOCK_VENT_CLOSED.get())
 				.add(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR.get()).add(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.BLOCK_CHUNKLOADER.get()).add(DeferredRegisters.BLOCK_MATTER_ANALYZER.get())
 				.add(DeferredRegisters.BLOCK_PATTERN_STORAGE.get()).add(DeferredRegisters.BLOCK_PATTERN_MONITOR.get())
@@ -40,7 +40,7 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(DeferredRegisters.BLOCK_MATTER_RECYCLER.get()).add(DeferredRegisters.BLOCK_CHARGER.get())
 				.add(DeferredRegisters.BLOCK_MICROWAVE.get()).add(DeferredRegisters.BLOCK_TRANSPORTER.get())
 				.add(DeferredRegisters.BLOCK_VENT_OPEN.get())
-				.add(DeferredRegisters.BLOCK_VENT_CLOSED.get());
+				.add(DeferredRegisters.BLOCK_VENT_CLOSED.get())
 				.add(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR.get()).add(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0]))
 				.add(DeferredRegisters.BLOCK_CHUNKLOADER.get()).add(DeferredRegisters.BLOCK_MATTER_ANALYZER.get())
 				.add(DeferredRegisters.BLOCK_PATTERN_STORAGE.get()).add(DeferredRegisters.BLOCK_PATTERN_MONITOR.get())
