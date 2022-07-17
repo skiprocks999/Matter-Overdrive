@@ -41,6 +41,9 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		simpleBlock(DeferredRegisters.BLOCK_SOLAR_PANEL.get());
 		simpleBlock(DeferredRegisters.BLOCK_CHARGER_CHILD.get());
 
+		simpleBlock(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS.get());
+		simpleBlock(DeferredRegisters.BLOCK_VENT_OPEN.get());
+		simpleBlock(DeferredRegisters.BLOCK_VENT_CLOSED.get());
 	}
 
 }

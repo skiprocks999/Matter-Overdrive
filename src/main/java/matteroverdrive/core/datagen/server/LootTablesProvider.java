@@ -48,6 +48,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 		this.<TilePatternMonitor>addITable(DeferredRegisters.BLOCK_PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR);
 		this.<TileMatterReplicator>addIEMTable(DeferredRegisters.BLOCK_MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR);
 
+		this.addSilkTouchOnlyTable(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS);
 	}
 
 	private <T extends GenericTile> void addITable(RegistryObject<Block> reg,
@@ -66,6 +67,17 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
 		lootTables.put(block, itemEnergyMatterTable(block.getRegistryName().getPath(), block, tilereg.get()));
+	}
+
+	/**
+	 * Adds the block to the loottables silk touch only
+	 *
+	 * @author SeaRobber69
+	 * @param reg The block that will be added
+	 */
+	private void addSilkTouchOnlyTable(RegistryObject<Block> reg) {
+		Block block = reg.get();
+		lootTables.put(block, createSilkTouchOnlyTable(block.getRegistryName().getPath(), block));
 	}
 
 }

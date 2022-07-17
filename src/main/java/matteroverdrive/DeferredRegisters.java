@@ -3,14 +3,13 @@ package matteroverdrive;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import matteroverdrive.common.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.client.particle.vent.ParticleOptionVent;
-import matteroverdrive.common.block.BlockColored;
-import matteroverdrive.common.block.BlockOverdrive;
-import matteroverdrive.common.block.BlockTritaniumCrate;
 import matteroverdrive.common.block.cable.dualside.BlockMatterNetworkCable;
 import matteroverdrive.common.block.cable.serverside.BlockMatterConduit;
 import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
@@ -156,6 +155,14 @@ public class DeferredRegisters {
 					DeferredRegisters.TILE_TRANSPORTER));
 	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(
 			TypeMachine.SPACETIME_ACCELERATOR.id(),
+	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
+			() -> new BlockCustomGlass(0.3F, 0.3F));
+	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
+	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
 			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
 					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
@@ -177,7 +184,6 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(TypeMachine.MATTER_REPLICATOR.id(), 
 			() -> new BlockLightableMachine<TileMatterReplicator>(TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
 	
-
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",

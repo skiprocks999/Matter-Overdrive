@@ -50,6 +50,14 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 					"item/isolinear_circuit/" + circuit.id());
 		}
 
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS),
+				modLoc("block/industrial_glass"));
+
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_OPEN),
+				modLoc("block/vent_open"));
+
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_CLOSED),
+				modLoc("block/vent_closed"));
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

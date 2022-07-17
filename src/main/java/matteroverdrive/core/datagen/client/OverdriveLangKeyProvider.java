@@ -86,6 +86,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 				}
 
 			}
+			addBlock(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS, "Industrial Glass");
+			addBlock(DeferredRegisters.BLOCK_VENT_OPEN, "Vent");
+			addBlock(DeferredRegisters.BLOCK_VENT_CLOSED, "Vent");
 			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
 			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
 			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");

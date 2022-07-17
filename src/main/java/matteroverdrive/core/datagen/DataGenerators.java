@@ -27,9 +27,9 @@ public class DataGenerators {
 			generator.addProvider(new MatterValueGenerator(generator));
 		}
 		if (event.includeClient()) {
+			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new OverdriveBlockModelsProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new OverdriveItemModelsProvider(generator, event.getExistingFileHelper()));
-			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(new OverdriveLangKeyProvider(generator, "en_us"));
 		}
 	}
