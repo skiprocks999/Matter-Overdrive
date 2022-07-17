@@ -40,6 +40,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
+		simpleItem(DeferredRegisters.ITEM_TRITANIUM_PLATE, "item/tritanium_plate");
 		simpleItem(DeferredRegisters.ITEM_BASE_UPGRADE, "item/upgrade/upgrade_base");
 		for (UpgradeType type : UpgradeType.values()) {
 			simpleItem(DeferredRegisters.ITEM_UPGRADES.get(type),
