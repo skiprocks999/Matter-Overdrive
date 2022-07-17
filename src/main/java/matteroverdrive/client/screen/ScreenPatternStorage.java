@@ -1,5 +1,8 @@
 package matteroverdrive.client.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
@@ -106,7 +109,8 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null && matter.clientTilePowered) {
 				int drives = 0;
-				for(ItemStack stack : matter.getDrives(true, false)) {
+				List<ItemStack> drivesList = matter.clientInventory == null ? new ArrayList<>() : matter.clientInventory.getItems().subList(0, 6);
+				for(ItemStack stack : drivesList) {
 					if(stack.getItem() instanceof ItemPatternDrive) {
 						drives++;
 					}

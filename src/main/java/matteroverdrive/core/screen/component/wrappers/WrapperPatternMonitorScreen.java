@@ -139,11 +139,6 @@ public class WrapperPatternMonitorScreen {
 				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
-			NetworkMatter matter = monitor.getConnectedNetwork();
-			if(matter == null) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
-				return;
-			}
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
 			if(order.length() > 0) {
@@ -178,17 +173,14 @@ public class WrapperPatternMonitorScreen {
 		TilePatternMonitor monitor = screen.getMenu().getTile();
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
 		if(monitor != null) {
-			NetworkMatter matter = monitor.getConnectedNetwork();
-			if(matter != null) {
-				patterns = monitor.getStoredPatterns(true);
-				Collections.sort(patterns, new Comparator<ItemPatternWrapper>() {
-					@Override
-					public int compare(ItemPatternWrapper pattern1, ItemPatternWrapper pattern2) {
-						return pattern1.getItem().getDescription().getString()
-								.compareToIgnoreCase(pattern2.getItem().getDescription().getString());
-					}
-				});
-			}
+			patterns = monitor.getStoredPatterns(true);
+			Collections.sort(patterns, new Comparator<ItemPatternWrapper>() {
+				@Override
+				public int compare(ItemPatternWrapper pattern1, ItemPatternWrapper pattern2) {
+					return pattern1.getItem().getDescription().getString()
+							.compareToIgnoreCase(pattern2.getItem().getDescription().getString());
+				}
+			});
 		}
 		List<ItemPatternWrapper> searchedFor = new ArrayList<>();
 		if(searchContents.length() > 0) {

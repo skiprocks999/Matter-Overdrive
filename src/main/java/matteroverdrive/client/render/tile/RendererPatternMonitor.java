@@ -6,6 +6,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.ClientRegister;
+import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class RendererPatternMonitor extends AbstractTileRenderer<TilePatternMonitor> {
@@ -55,8 +57,8 @@ public class RendererPatternMonitor extends AbstractTileRenderer<TilePatternMoni
 
 	@Override
 	public void render(TilePatternMonitor tile, float ticks, PoseStack matrix, MultiBufferSource buffer, int light, int overlay) {
-		
-		if(tile.getConnectedNetwork() != null) {
+		BlockState state = tile.getBlockState();
+		if(state.hasProperty(BlockLightableMachine.LIT) && state.getValue(BlockLightableMachine.LIT)) {
 			matrix.pushPose();
 			
 			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_HOLO_GRID);
