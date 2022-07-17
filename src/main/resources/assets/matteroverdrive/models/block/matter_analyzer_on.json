@@ -3,7 +3,7 @@
 	"textures": {
 		"bottom": "matteroverdrive:block/base",
 		"top": "matteroverdrive:block/matter_analyzer/matter_analyzer_top",
-		"side": "matteroverdrive:block/vent2",
+		"side": "matteroverdrive:block/vent_closed",
 		"front": "matteroverdrive:block/matter_analyzer/matter_analyzer_front_on",
 		"back": "matteroverdrive:block/network_port",
 		"particle": "matteroverdrive:block/matter_analyzer/matter_analyzer_front"
