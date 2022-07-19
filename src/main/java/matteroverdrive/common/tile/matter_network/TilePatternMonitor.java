@@ -18,29 +18,26 @@ import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterRe
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator.MatterReplicatorDataWrapper;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketQueueReplication;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
-import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePatternMonitor extends GenericTile implements IMatterNetworkMember {
 
-	public HashMap<BlockPos, PatternStorageDataWrapper> clientPatternStorageData = new HashMap<>();
-	public HashMap<BlockPos, MatterReplicatorDataWrapper> clientMatterReplicatorData = new HashMap<>();
+	private HashMap<BlockPos, PatternStorageDataWrapper> clientPatternStorageData = new HashMap<>();
+	private HashMap<BlockPos, MatterReplicatorDataWrapper> clientMatterReplicatorData = new HashMap<>();
 	
 	public TilePatternMonitor(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_PATTERN_MONITOR.get(), pos, state);
@@ -127,25 +124,12 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	public List<ItemPatternWrapper> getStoredPatterns(boolean checkPowered){
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
 		PatternStorageDataWrapper wrapper;
-		List<ItemStack> drives;
-		CapabilityItemPatternStorage cap;
 		for(Entry<BlockPos, PatternStorageDataWrapper> entry : clientPatternStorageData.entrySet()) {
 			if(entry != null) {
 				wrapper = entry.getValue();
 				if(wrapper != null && checkPowered ? wrapper.isPowered() : true) {
-					drives = wrapper.getInventory().getItems().subList(0, 6);
-					for(int i = 0; i < 6; i++) {
-						cap = UtilsItem.getPatternStorageCap(drives.get(i));
-						if(cap != null) {
-							for(ItemPatternWrapper item : cap.getStoredPatterns()) {
-								if(item.isNotAir()) {
-									patterns.add(item);
-								}
-							}
-						}
-					}
+					patterns.addAll(wrapper.getPatterns());
 				}
-				
 			}
 		}
 		return patterns;

@@ -24,6 +24,8 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	protected ResourceLocation resource;
 	protected GenericScreen<?> gui;
 	protected int[] screenNumbers;
+	
+	protected static final ResourceLocation NO_RESOURCE = new ResourceLocation("");
 
 	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers) {

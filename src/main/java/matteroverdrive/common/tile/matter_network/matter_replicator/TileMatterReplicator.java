@@ -151,6 +151,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		
 		isRunning = true;
 		currProgress += currSpeed;
+		setChanged();
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
 		if (currState && !isRunning) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
@@ -182,6 +183,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		} else {
 			output.grow(1);
 		}
+		currentOrder = null;
+		currRecipeValue = 0;
+		
 
 	}
 	
@@ -240,6 +244,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		tag.putInt("usage", usage);
 		tag.putFloat("failure", currFailureChance);
+		tag.putDouble("sabonus", saMultiplier);
 		
 	}
 	
@@ -259,6 +264,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		clientEnergyUsage = tag.getInt("usage");
 		clientFailure = tag.getFloat("failure");
+		clientSAMultipler = tag.getDouble("sabonus");
 		
 	}
 	
@@ -280,6 +286,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		clientRunning = tag.getBoolean("running");
 		if(tag.contains("order")) {
 			clientCurrentOrder = QueuedReplication.readFromNbt(tag.getCompound("order"));
+		} else {
+			clientCurrentOrder = null;
 		}
 		clientRecipeValue = tag.getDouble("recipe");
 		clientProgress = tag.getDouble("progress");
@@ -337,6 +345,11 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	@Override
 	public int getMaxMode() {
 		return 2;
+	}
+	
+	@Override
+	public double getDefaultSpeed() {
+		return DEFAULT_SPEED;
 	}
 	
 	@Override

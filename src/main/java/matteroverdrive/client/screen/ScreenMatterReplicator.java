@@ -12,7 +12,7 @@ import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
-import matteroverdrive.core.screen.component.ScreenComponentProgress;
+import matteroverdrive.core.screen.component.ScreenComponentPatternHolder;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonIO;
@@ -311,13 +311,6 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
 		
-		addScreenComponent(new ScreenComponentProgress(() -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return (double) matter.clientProgress / matter.getProcessingTime();
-			}
-			return 0;
-		}, this, 33, 48, new int[] { 0 }));
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
@@ -356,6 +349,15 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			}
 			return 0;
 		}, this, 133, 35, new int[] { 0 }).setMatter());
+		addScreenComponent(new ScreenComponentPatternHolder(this, 5, 45, new int[] { 0 }, () -> {
+			return getMenu().getTile();
+		}, itemRenderer, () -> {
+			TileMatterReplicator matter = getMenu().getTile();
+			if (matter != null) {
+				return (double) matter.clientProgress / matter.getProcessingTime();
+			}
+			return 0;
+		}));
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {

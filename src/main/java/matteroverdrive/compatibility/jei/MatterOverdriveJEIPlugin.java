@@ -5,6 +5,7 @@ import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
 import matteroverdrive.client.screen.ScreenMatterRecycler;
+import matteroverdrive.client.screen.ScreenMatterReplicator;
 import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenPatternMonitor;
 import matteroverdrive.client.screen.ScreenPatternStorage;
@@ -15,6 +16,7 @@ import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerChar
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerInscriber;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterDecomposer;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterRecycler;
+import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterReplicator;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMicrowave;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerPatternMonitor;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerPatternStorage;
@@ -48,6 +50,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registry.addGuiContainerHandler(ScreenSpacetimeAccelerator.class, new ScreenHandlerSpacetimeAccelerator());
 		registry.addGuiContainerHandler(ScreenPatternStorage.class, new ScreenHandlerPatternStorage());
 		registry.addGuiContainerHandler(ScreenPatternMonitor.class, new ScreenHandlerPatternMonitor());
+		registry.addGuiContainerHandler(ScreenMatterReplicator.class, new ScreenHandlerMatterReplicator());
 	}
 
 }

@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.client.screen.ScreenPatternMonitor;
-import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.matter.MatterRegister;

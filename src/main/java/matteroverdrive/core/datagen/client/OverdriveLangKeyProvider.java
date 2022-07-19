@@ -151,6 +151,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("no_storage_loc" , "Unbound");
 			addTooltip("menutasks", "Tasks");
 			addTooltip("order", "Order");
+			addTooltip("orderabv", "O");
+			addTooltip("remainabv", "R");
+			addTooltip("reporder", "%1$s: %2$s, %3$s: %4$s");
+			addTooltip("noorder", "No Orders Queued");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");

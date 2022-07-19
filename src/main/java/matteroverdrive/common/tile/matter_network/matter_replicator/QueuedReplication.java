@@ -59,7 +59,7 @@ public class QueuedReplication {
 	}
 	
 	public static QueuedReplication readFromNbt(CompoundTag tag) {
-		return new QueuedReplication(ItemPatternWrapper.readFromNbt(tag.getCompound("item")), tag.getInt("ordered"), tag.getInt("remaininig"));
+		return new QueuedReplication(ItemPatternWrapper.readFromNbt(tag.getCompound("item")), tag.getInt("ordered"), tag.getInt("remaining"));
 	}
 	
 }

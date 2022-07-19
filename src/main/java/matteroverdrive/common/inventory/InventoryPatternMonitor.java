@@ -42,7 +42,7 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 	@Override
 	public void sendAdditional(TilePatternMonitor tile, ServerPlayer player) {
 		NetworkMatter network = tile.getConnectedNetwork();
-		if(network != null) {
+		if(network != null && tile.getTicks() % 2 == 0) {
 			NetworkHandler.CHANNEL.sendTo(new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}

@@ -180,17 +180,24 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	public CompoundTag getNetworkData() {
 		CompoundTag data = new CompoundTag();
 		
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-		data.put(inv.getSaveKey(), inv.serializeNBT());
+		List<ItemPatternWrapper> wrappers = getWrapperList();
+		int size = wrappers.size();
+		data.putInt("wrapcount", size);
+		for(int i = 0; i < wrappers.size(); i++) {
+			wrappers.get(i).writeToNbt(data, "pattern" + i);
+		}
+		
 		data.putBoolean("ispowered", isPowered);
 		
 		return data;
 	}
 	
 	public PatternStorageDataWrapper handleNetworkData(CompoundTag tag) {
-		CapabilityInventory inv = new CapabilityInventory();
-		inv.deserializeNBT(tag.getCompound(inv.getSaveKey()));
-		return new PatternStorageDataWrapper(inv, tag.getBoolean("ispowered"));
+		List<ItemPatternWrapper> wrappers = new ArrayList<>();
+		for(int i = 0; i < tag.getInt("wrapcount"); i++) {
+			wrappers.add(ItemPatternWrapper.readFromNbt(tag.getCompound("pattern" + i)));
+		}
+		return new PatternStorageDataWrapper(wrappers, tag.getBoolean("ispowered"));
 	}
 	
 	@Override
@@ -361,6 +368,18 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		return null;
 	}
 	
+	private List<ItemPatternWrapper> getWrapperList(){
+		List<ItemPatternWrapper> wrappers = new ArrayList<>();
+		for(ItemPatternWrapper[] arr : getWrappers()) {
+			for(ItemPatternWrapper wrapper : arr) {
+				if(wrapper != null && wrapper.isNotAir()) {
+					wrappers.add(wrapper);
+				}
+			}
+		}
+		return wrappers;
+	}
+	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
 		return (index, stack, cap) -> index < 6 && stack.getItem() instanceof ItemPatternDrive
 				|| index == 6 && stack.getItem() instanceof ItemMatterScanner 
@@ -369,16 +388,16 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 
 	public static class PatternStorageDataWrapper {
 		
-		private CapabilityInventory inv;
+		private List<ItemPatternWrapper> wrappers;
 		private boolean isPowered;
 		
-		public PatternStorageDataWrapper(CapabilityInventory inv, boolean isPowered) {
-			this.inv = inv;
+		public PatternStorageDataWrapper(List<ItemPatternWrapper> wrappers, boolean isPowered) {
+			this.wrappers = wrappers;
 			this.isPowered = isPowered;
 		}
 		
-		public CapabilityInventory getInventory() {
-			return inv;
+		public List<ItemPatternWrapper> getPatterns() {
+			return wrappers;
 		}
 		
 		public boolean isPowered() {
