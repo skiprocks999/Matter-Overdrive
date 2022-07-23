@@ -9,12 +9,15 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
+import matteroverdrive.core.matter.MatterRegister;
+import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +36,9 @@ public class ItemPatternDrive extends OverdriveItem {
 	//any item past 64 km will only get 1 scan
 	//idea is high utility for low value items and poor utility for high-value
 	//diamonds to dirt but not the other way around in other words
-	public static final double MATTER_PER_FUSE = 10000000;
+	public static final double MATTER_PER_FUSE = 1000000.0D;
+	
+	private static final String FUSED_KEY = "fused";
 	
 	public ItemPatternDrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
@@ -48,39 +53,76 @@ public class ItemPatternDrive extends OverdriveItem {
 	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, level, tooltips, advanced);
-		stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
-			if(Screen.hasShiftDown()) {
-				for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
-					if(wrapper.isNotAir()) {
-						TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
-						ChatFormatting color = ChatFormatting.RED;
-						int percentage = wrapper.getPercentage();
-						if(percentage >= 100) {
-							color = ChatFormatting.GREEN;
-						} else if (percentage < 100 && percentage > 50) {
-							color = ChatFormatting.YELLOW;
-						} else {
-							color = ChatFormatting.RED;
-						}
-						tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
+		if(isFused(stack)) {
+			tooltips.add(UtilsText.tooltip("fused").withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW));
+			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
+				if(Screen.hasShiftDown()) {
+					ItemPatternWrapper wrapper = cap.getStoredPatterns()[0];
+					TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
+					ChatFormatting color = ChatFormatting.RED;
+					int percentage = wrapper.getPercentage();
+					if(percentage >= 100) {
+						color = ChatFormatting.GREEN;
+					} else if (percentage < 100 && percentage > 50) {
+						color = ChatFormatting.YELLOW;
 					} else {
-						tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
+						color = ChatFormatting.RED;
+					}
+					tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
+					Double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
+					//datapack fuckery prevention 
+					if(value != null && value > 0) {
+						double decayFactor = getDecayFactor(value);
+						double usage = value * decayFactor;
+						ChatFormatting warning;
+						if(decayFactor <= 128) {
+							warning = ChatFormatting.GREEN;
+						} else if (decayFactor <= 4096) {
+							warning = ChatFormatting.YELLOW;
+						} else {
+							warning = ChatFormatting.RED;
+						}
+						int effectiveUses = (int) Math.floor(MATTER_PER_FUSE / usage);
+						tooltips.add(UtilsText.tooltip("effectiveuses", new TextComponent(effectiveUses + "").withStyle(warning)));
+					} else {
+						tooltips.add(UtilsText.tooltip("effectiveuses", new TextComponent("0").withStyle(ChatFormatting.RED)));
 					}
 				}
-			}
-		});
+			});
+		} else {
+			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
+				if(Screen.hasShiftDown()) {
+					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
+						if(wrapper.isNotAir()) {
+							TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
+							ChatFormatting color = ChatFormatting.RED;
+							int percentage = wrapper.getPercentage();
+							if(percentage >= 100) {
+								color = ChatFormatting.GREEN;
+							} else if (percentage < 100 && percentage > 50) {
+								color = ChatFormatting.YELLOW;
+							} else {
+								color = ChatFormatting.RED;
+							}
+							tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
+						} else {
+							tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
+						}
+					}
+				}
+			});
+		}
 	}
 	
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		// TODO Auto-generated method stub
-		return super.getBarWidth(stack);
+		return (int) ((stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY) / MATTER_PER_FUSE) * 13.0D);
 	}
 	
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		if(stack.hasTag()) {
-			return stack.getTag().getBoolean("fused");
+			return isFused(stack);
 		}
 		return super.isBarVisible(stack);
 	}
@@ -111,15 +153,23 @@ public class ItemPatternDrive extends OverdriveItem {
 		super.readShareTag(stack, nbt);
 	}
 	
+	public double getDurability(ItemStack stack) {
+		return stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY);
+	}
+	
+	public boolean isFused(ItemStack stack) {
+		return stack.getOrCreateTag().getBoolean(FUSED_KEY);
+	}
+	
 	public static double getDecayFactor(double matterValue) {
 		if(matterValue         <= 4.0D) {
 			return 1.0D;
 		} else if (matterValue <= 8.0D) {
 			return Math.pow(2, 2);           //4
 		} else if (matterValue <= 12.0D) {
-			return Math.pow(2, 7);           //64
+			return Math.pow(2, 7);           //128
 		} else if (matterValue <= 16.0D) {
-			return Math.pow(2, 12);          //1024
+			return Math.pow(2, 12);          //4096
 		} else if (matterValue <= 20.0D) {
 			return Math.pow(2, 13);
 		} else if (matterValue <= 24.0D) {
@@ -128,24 +178,15 @@ public class ItemPatternDrive extends OverdriveItem {
 			return Math.pow(2, 15);
 		} else if (matterValue <= 32.0D) {
 			return Math.pow(2, 16);
-		} else if (matterValue <= 36.0D) {
-			return Math.pow(2, 17);
-		} else if (matterValue <= 40.0D) {
-			return Math.pow(2, 18);
 		} else if (matterValue <= 44.0D) {
-			return Math.pow(2, 19);
+			return Math.pow(2, 17);
 		} else if (matterValue <= 48.0D) {
-			return Math.pow(2, 20);
-		} else if (matterValue <= 52.0D) {
-			return Math.pow(2, 21);
+			return Math.pow(2, 18);
 		} else if (matterValue <= 56.0D) {
-			return Math.pow(2, 22);
-		} else if (matterValue <= 60.0D) {
-			return Math.pow(2, 23);
+			return Math.pow(2, 19);
 		} else {
-			return 10000000.0D;
+			return 1000000.0D;
 		}
-		
 	}
 	
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)

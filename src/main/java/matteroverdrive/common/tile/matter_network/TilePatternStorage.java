@@ -381,7 +381,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index < 6 && stack.getItem() instanceof ItemPatternDrive
+		return (index, stack, cap) -> index < 6 && stack.getItem() instanceof ItemPatternDrive drive && !drive.isFused(stack)
 				|| index == 6 && stack.getItem() instanceof ItemMatterScanner 
 				|| index == 8 && UtilsCapability.hasEnergyCap(stack);
 	}

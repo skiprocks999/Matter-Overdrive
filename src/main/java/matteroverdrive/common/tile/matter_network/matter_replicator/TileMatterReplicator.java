@@ -614,7 +614,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index == 0 && stack.getItem() instanceof ItemPatternDrive
+		return (index, stack, cap) -> index == 0 && stack.getItem() instanceof ItemPatternDrive drive && drive.isFused(stack)
 				|| index == 1 && UtilsItem.compareItems(stack.getItem(), DeferredRegisters.ITEM_TRITANIUM_PLATE.get())
 				|| index == 4 && UtilsCapability.hasEnergyCap(stack)
 				|| index == 5 && UtilsCapability.hasMatterCap(stack)

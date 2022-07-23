@@ -73,7 +73,7 @@ public class WrapperPatternMonitorScreen {
 		orderQuantityBox = new EditBoxOverdrive(screen, guiWidth + x + 44, guiHeight + y + 123, 54, 15);
 		orderQuantityBox.setTextColor(UtilsRendering.WHITE);
 		orderQuantityBox.setTextColorUneditable(UtilsRendering.WHITE);
-		orderQuantityBox.setMaxLength(7);
+		orderQuantityBox.setMaxLength(4);
 		orderQuantityBox.setResponder(this::handleQuantityBar);
 		orderQuantityBox.setFilter(EditBoxOverdrive.POSITIVE_INTEGER_BOX);
 		orderQuantityBox.setValue(1 + "");

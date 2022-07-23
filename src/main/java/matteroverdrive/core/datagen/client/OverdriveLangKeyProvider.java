@@ -156,6 +156,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("remainabv", "R");
 			addTooltip("reporder", "%1$s: %2$s, %3$s: %4$s");
 			addTooltip("noorder", "No Orders Queued");
+			addTooltip("fused", "Fused");
+			addTooltip("effectiveuses", "Uses: %s");
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");

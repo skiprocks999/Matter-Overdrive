@@ -23,6 +23,7 @@ public class UtilsNbt {
 	public static final String PERCENTAGE = "percentage";
 	public static final String TIMER = "timer";
 	public static final String USE_TIME = "use_time";
+	public static final String DURABILITY = "durability";
 
 	/* COMPOUND TAG */
 	
