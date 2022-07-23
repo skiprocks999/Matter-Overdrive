@@ -17,15 +17,15 @@ public class ParticleReplicator extends TextureSheetParticle {
 
 	private float initialScale;
 	public ParticleReplicator(ClientLevel world, double posX, double posY, double posZ, double xSpeed, double ySpeed,
-			double zSpeed) {
+			double zSpeed, float gravity, float scale, int age) {
 		super(world, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
 		this.xd = 0;
 		this.zd = 0;
-		this.gravity = 1.0F;
-		this.quadSize = 0.1F;
+		this.gravity = gravity;
+		this.quadSize = scale;
 		this.initialScale = quadSize;
 		this.rCol = this.gCol = this.bCol = 1.0F;
-		this.lifetime = (int) (8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
+		this.lifetime = age;
 	}
 
 	@Override
@@ -83,18 +83,6 @@ public class ParticleReplicator extends TextureSheetParticle {
 		return (int) (f2 * f1 + (1.0F - f1));
 	}
 
-	public void setCenter(double x, double y, double z) {
-
-	}
-
-	public void setParticleMaxAge(int age) {
-		this.lifetime = age;
-	}
-
-	public void setGravity(float gravity) {
-		this.gravity = gravity;
-	}
-
 	public static class Factory implements ParticleProvider<ParticleOptionReplicator> {
 
 		private final SpriteSet spriteSet;
@@ -106,11 +94,8 @@ public class ParticleReplicator extends TextureSheetParticle {
 		@Override
 		public Particle createParticle(@Nonnull ParticleOptionReplicator type, @Nonnull ClientLevel world, double x,
 				double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			ParticleReplicator particle = new ParticleReplicator(world, x, y, z, xSpeed, ySpeed, zSpeed);
+			ParticleReplicator particle = new ParticleReplicator(world, x, y, z, xSpeed, ySpeed, zSpeed, type.gravity, type.scale, type.age);
 			particle.pickSprite(this.spriteSet);
-			particle.setCenter(type.xCenter, type.yCenter, type.zCenter);
-			particle.setGravity(type.gravity);
-			particle.setParticleMaxAge(type.age);
 			return particle;
 		}
 

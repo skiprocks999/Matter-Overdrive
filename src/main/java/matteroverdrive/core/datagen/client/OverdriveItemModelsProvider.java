@@ -59,6 +59,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_CLOSED),
 				modLoc("block/vent_closed"));
+		simpleItem(DeferredRegisters.ITEM_LEAD_PLATE, "item/lead_plate");
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

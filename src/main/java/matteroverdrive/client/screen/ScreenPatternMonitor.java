@@ -13,6 +13,7 @@ import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
+import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorOrders;
 import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,6 +30,7 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	private ButtonMenuOption tasks;
 	
 	private WrapperPatternMonitorScreen wrapper;
+	private WrapperPatternMonitorOrders ordersWrapper; 
 
 	private int screenNumber = 0;
 
@@ -36,6 +38,7 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	private static final int FIRST_HEIGHT = 40;
 	
 	public ScreenComponentVerticalSlider slider;
+	public ScreenComponentVerticalSlider ordersSlider;
 	
 	public ScreenPatternMonitor(InventoryPatternMonitor menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
@@ -46,6 +49,8 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 		super.containerTick();
 		if(screenNumber == 0) {
 			wrapper.tick();
+		} else if (screenNumber == 1) {
+			ordersWrapper.tick();
 		}
 	}
 	
@@ -63,16 +68,19 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 			updateScreen(0);
 			tasks.isActivated = false;
 			wrapper.updateButtons(true);
+			ordersWrapper.updateButtons(false);
 		}, MenuButtonType.HOME, menu, true);
 		tasks = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			wrapper.updateButtons(false);
+			ordersWrapper.updateButtons(true);
 		}, MenuButtonType.TASKS, menu, false);
 		
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0, 1 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0 }));
 		
 		wrapper = new WrapperPatternMonitorScreen(this, 53, 26);
+		ordersWrapper = new WrapperPatternMonitorOrders(this, 48, 32, new int[] { 1 } );
 		
 		addButton(close);
 		addButton(menu);
@@ -80,6 +88,9 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 		addButton(tasks);
 		
 		wrapper.initButtons(itemRenderer);
+		ordersWrapper.initButtons(itemRenderer);
+		
+		ordersWrapper.updateButtons(false);
 		
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TilePatternMonitor monitor = getMenu().getTile();
@@ -94,6 +105,11 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 		slider.setClickConsumer(wrapper.getSliderClickedConsumer());
 		slider.setDragConsumer(wrapper.getSliderDraggedConsumer());
 		addScreenComponent(slider);
+		
+		ordersSlider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 1 });
+		ordersSlider.setClickConsumer(ordersWrapper.getSliderClickedConsumer());
+		ordersSlider.setDragConsumer(ordersWrapper.getSliderDraggedConsumer());
+		addScreenComponent(ordersSlider);
 		
 	}
 
@@ -130,6 +146,8 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 		super.mouseMoved(mouseX, mouseY);
 		if(slider != null && screenNumber == 0) {
 			slider.mouseMoved(mouseX, mouseY);
+		} else if (ordersSlider != null && screenNumber == 1) {
+			ordersSlider.mouseMoved(mouseX, mouseY);
 		}
 	}
 	
@@ -137,6 +155,8 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if(slider != null && screenNumber == 0) {
 			slider.mouseClicked(mouseX, mouseY, button);
+		} else if (ordersSlider != null && screenNumber == 1) {
+			ordersSlider.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
@@ -145,6 +165,8 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
 		if(slider != null && screenNumber == 0) {
 			slider.mouseReleased(mouseX, mouseY, button);
+		} else if (ordersSlider != null && screenNumber == 1) {
+			ordersSlider.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);
 	}

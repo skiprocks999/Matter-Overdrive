@@ -48,7 +48,8 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 
 		UPGRADE_DARK("upgrade"), MATTER_DARK("matter"), MATTER_LIGHT("matter_white"), MATTER_DUST_DARK("matter_dust"),
 		ENERGY_DARK("energy"), ENERGY_LIGHT("energy_white"), BLOCK_DARK("decompose"), BLOCK_LIGHT("decompose_white"),
-		FLASHDRIVE_DARK("flash_drive"), PENCIL_DARK("pencil"), PATTERN_DRIVE_DARK("pattern_drive"), MATTER_SCANNER_DARK("matter_scanner");
+		FLASHDRIVE_DARK("flash_drive"), PENCIL_DARK("pencil"), PATTERN_DRIVE_DARK("pattern_drive"), MATTER_SCANNER_DARK("matter_scanner"),
+		SHIELDING_DARK("shielding");
 
 		private final int width;
 		private final int height;

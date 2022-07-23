@@ -143,7 +143,7 @@ public class WrapperPatternMonitorScreen {
 			if(order.length() > 0) {
 				orderVal = Integer.parseInt(order);
 			}
-			if(monitor.postOrderToNetwork(wrapper, orderVal, true)) {
+			if(monitor.postOrderToNetwork(wrapper, orderVal, true, true)) {
 				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
 			} else {
 				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));

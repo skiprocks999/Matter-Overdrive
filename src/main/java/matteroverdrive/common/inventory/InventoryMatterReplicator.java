@@ -34,6 +34,8 @@ public class InventoryMatterReplicator extends GenericInventoryTile<TileMatterRe
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 75, new int[] { 0 }, SlotType.BIG, IconType.PATTERN_DRIVE_DARK,
 				DeferredRegisters.ITEM_PATTERN_DRIVE.get()));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 78, new int[] { 2 }, SlotType.BIG, IconType.SHIELDING_DARK,
+				DeferredRegisters.ITEM_LEAD_PLATE.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, IconType.NONE));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 94, 48, new int[] { 0 }, SlotType.BIG,
 				IconType.MATTER_DUST_DARK));

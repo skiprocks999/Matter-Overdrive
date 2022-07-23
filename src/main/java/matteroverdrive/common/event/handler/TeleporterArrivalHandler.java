@@ -92,8 +92,8 @@ public class TeleporterArrivalHandler extends AbstractServerTickHandler {
 			Vector3f pos = UtilsMath.randomSpherePoint(origin.x(), origin.y(), origin.z(),
 					new Vector3d(radiusX, 0, radiusZ), random);
 			
-			world.sendParticles(new ParticleOptionReplicator().setCenter(origin.x(), origin.y(), origin.z())
-					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), 0, 0, speed, 0, 0);
+			world.sendParticles(new ParticleOptionReplicator()
+					.setGravity(gravity).setScale(0.1F).setAge(age), pos.x(), pos.y(), pos.z(), 0, 0, speed, 0, 0);
 		}
 
 	}

@@ -30,6 +30,10 @@ import net.minecraftforge.fml.common.Mod;
 public class ItemPatternDrive extends OverdriveItem {
 
 	private static final List<ItemPatternDrive> CONTAINERS = new ArrayList<>();
+	//any item past 64 km will only get 1 scan
+	//idea is high utility for low value items and poor utility for high-value
+	//diamonds to dirt but not the other way around in other words
+	public static final double MATTER_PER_FUSE = 10000000;
 	
 	public ItemPatternDrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
@@ -68,6 +72,20 @@ public class ItemPatternDrive extends OverdriveItem {
 	}
 	
 	@Override
+	public int getBarWidth(ItemStack stack) {
+		// TODO Auto-generated method stub
+		return super.getBarWidth(stack);
+	}
+	
+	@Override
+	public boolean isBarVisible(ItemStack stack) {
+		if(stack.hasTag()) {
+			return stack.getTag().getBoolean("fused");
+		}
+		return super.isBarVisible(stack);
+	}
+	
+	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		CompoundTag tag = super.getShareTag(stack);
 		if (tag == null) {
@@ -93,6 +111,42 @@ public class ItemPatternDrive extends OverdriveItem {
 		super.readShareTag(stack, nbt);
 	}
 	
+	public static double getDecayFactor(double matterValue) {
+		if(matterValue         <= 4.0D) {
+			return 1.0D;
+		} else if (matterValue <= 8.0D) {
+			return Math.pow(2, 2);           //4
+		} else if (matterValue <= 12.0D) {
+			return Math.pow(2, 7);           //64
+		} else if (matterValue <= 16.0D) {
+			return Math.pow(2, 12);          //1024
+		} else if (matterValue <= 20.0D) {
+			return Math.pow(2, 13);
+		} else if (matterValue <= 24.0D) {
+			return Math.pow(2, 14);
+		} else if (matterValue <= 28.0D) {
+			return Math.pow(2, 15);
+		} else if (matterValue <= 32.0D) {
+			return Math.pow(2, 16);
+		} else if (matterValue <= 36.0D) {
+			return Math.pow(2, 17);
+		} else if (matterValue <= 40.0D) {
+			return Math.pow(2, 18);
+		} else if (matterValue <= 44.0D) {
+			return Math.pow(2, 19);
+		} else if (matterValue <= 48.0D) {
+			return Math.pow(2, 20);
+		} else if (matterValue <= 52.0D) {
+			return Math.pow(2, 21);
+		} else if (matterValue <= 56.0D) {
+			return Math.pow(2, 22);
+		} else if (matterValue <= 60.0D) {
+			return Math.pow(2, 23);
+		} else {
+			return 10000000.0D;
+		}
+		
+	}
 	
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	private static class ColorHandler {

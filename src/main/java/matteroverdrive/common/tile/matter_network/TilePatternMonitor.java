@@ -14,6 +14,7 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage.PatternStorageDataWrapper;
+import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator.MatterReplicatorDataWrapper;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -135,7 +136,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 		return patterns;
 	}
 	
-	public boolean postOrderToNetwork(ItemPatternWrapper pattern, int count, boolean checkPowered) {
+	public boolean postOrderToNetwork(ItemPatternWrapper pattern, int count, boolean checkPowered, boolean checkFused) {
 		int smallestQueue = -1;
 		Entry<BlockPos, MatterReplicatorDataWrapper> val = null;
 		MatterReplicatorDataWrapper wrapper;
@@ -143,7 +144,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 		for(Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
 			if(entry != null) {
 				wrapper = entry.getValue();
-				if(entry != null && checkPowered ? wrapper.isPowered() : true) {
+				if(entry != null && checkPowered ? wrapper.isPowered() : true && checkFused ? !wrapper.isFused() : true) {
 					queueSize = wrapper.getOrders().size();
 					if(queueSize > smallestQueue) {
 						smallestQueue = queueSize;
@@ -161,6 +162,20 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 			return true;
 		}
 		return false;
+	}
+	
+	public List<QueuedReplication> getGlobalOrders(boolean checkPowered, boolean checkFused) {
+		List<QueuedReplication> orders = new ArrayList<>();
+		MatterReplicatorDataWrapper wrapper;
+		for(Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
+			if(entry != null) {
+				wrapper = entry.getValue();
+				if(entry != null && checkPowered ? wrapper.isPowered() : true && checkFused ? !wrapper.isFused() : true) {
+					orders.addAll(wrapper.getOrders());
+				}
+			}
+		}
+		return orders;
 	}
 
 }

@@ -12,6 +12,7 @@ import matteroverdrive.client.particle.shockwave.ParticleShockwave;
 import matteroverdrive.client.particle.vent.ParticleVent;
 import matteroverdrive.client.render.tile.RendererCharger;
 import matteroverdrive.client.render.tile.RendererInscriber;
+import matteroverdrive.client.render.tile.RendererMatterReplicator;
 import matteroverdrive.client.render.tile.RendererPatternMonitor;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
@@ -182,7 +183,8 @@ public class ClientRegister {
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
-
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MATTER_REPLICATOR.get(), RendererMatterReplicator::new);
+		
 	}
 
 	@SubscribeEvent

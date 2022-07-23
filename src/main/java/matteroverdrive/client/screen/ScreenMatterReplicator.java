@@ -14,6 +14,7 @@ import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentPatternHolder;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
+import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig;
@@ -24,6 +25,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
+import matteroverdrive.core.screen.component.wrappers.WrapperMatterReplicatorOrders;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -43,6 +45,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 	private ButtonMenuOption settings;
 	private ButtonMenuOption upgrades;
 	private ButtonMenuOption ioconfig;
+	private ButtonMenuOption orders;
 
 	private ButtonRedstoneMode redstone;
 
@@ -58,10 +61,21 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
+	
+	public ScreenComponentVerticalSlider slider;
+	public WrapperMatterReplicatorOrders queued;
 
 	
 	public ScreenMatterReplicator(InventoryMatterReplicator menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
+	}
+	
+	@Override
+	protected void containerTick() {
+		super.containerTick();
+		if(screenNumber == 4) {
+			queued.tick();
+		}
 	}
 	
 	@Override
@@ -74,12 +88,14 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			settings.visible = !settings.visible;
 			upgrades.visible = !upgrades.visible;
 			ioconfig.visible = !ioconfig.visible;
+			orders.visible = !orders.visible;
 		});
 		home = new ButtonMenuOption(this, 217, FIRST_HEIGHT, button -> {
 			updateScreen(0);
 			settings.isActivated = false;
 			upgrades.isActivated = false;
 			ioconfig.isActivated = false;
+			orders.isActivated = false;
 			redstone.visible = false;
 			items.visible = false;
 			energy.visible = false;
@@ -90,12 +106,14 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
+			queued.updateButtons(false);
 		}, MenuButtonType.HOME, menu, true);
 		settings = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS, button -> {
 			updateScreen(1);
 			home.isActivated = false;
 			upgrades.isActivated = false;
 			ioconfig.isActivated = false;
+			orders.isActivated = false;
 			redstone.visible = true;
 			items.visible = false;
 			energy.visible = false;
@@ -106,11 +124,49 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
+			queued.updateButtons(false);
 		}, MenuButtonType.SETTINGS, menu, false);
 		upgrades = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 2, button -> {
 			updateScreen(2);
 			home.isActivated = false;
 			settings.isActivated = false;
+			ioconfig.isActivated = false;
+			orders.isActivated = false;
+			redstone.visible = false;
+			items.visible = false;
+			energy.visible = false;
+			matter.visible = false;
+			items.isActivated = false;
+			energy.isActivated = false;
+			matter.isActivated = false;
+			itemWrapper.hideButtons();
+			energyWrapper.hideButtons();
+			matterWrapper.hideButtons();
+			queued.updateButtons(false);
+		}, MenuButtonType.UPGRADES, menu, false);
+		ioconfig = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 3, button -> {
+			updateScreen(3);
+			home.isActivated = false;
+			settings.isActivated = false;
+			upgrades.isActivated = false;
+			orders.isActivated = false;
+			redstone.visible = false;
+			items.visible = true;
+			energy.visible = true;
+			matter.visible = true;
+			items.isActivated = false;
+			energy.isActivated = false;
+			matter.isActivated = false;
+			itemWrapper.hideButtons();
+			energyWrapper.hideButtons();
+			matterWrapper.hideButtons();
+			queued.updateButtons(false);
+		}, MenuButtonType.IO, menu, false);
+		orders = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 4, button -> {
+			updateScreen(4);
+			home.isActivated = false;
+			settings.isActivated = false;
+			upgrades.isActivated = false;
 			ioconfig.isActivated = false;
 			redstone.visible = false;
 			items.visible = false;
@@ -122,23 +178,8 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 			matterWrapper.hideButtons();
-		}, MenuButtonType.UPGRADES, menu, false);
-		ioconfig = new ButtonMenuOption(this, 217, FIRST_HEIGHT + BETWEEN_MENUS * 3, button -> {
-			updateScreen(3);
-			home.isActivated = false;
-			settings.isActivated = false;
-			upgrades.isActivated = false;
-			redstone.visible = false;
-			items.visible = true;
-			energy.visible = true;
-			matter.visible = true;
-			items.isActivated = false;
-			energy.isActivated = false;
-			matter.isActivated = false;
-			itemWrapper.hideButtons();
-			energyWrapper.hideButtons();
-			matterWrapper.hideButtons();
-		}, MenuButtonType.IO, menu, false);
+			queued.updateButtons(true);
+		}, MenuButtonType.TASKS, menu, false);
 		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
@@ -155,6 +196,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
+			orders.isActivated = false;
 			redstone.visible = false;
 			energy.isActivated = false;
 			matter.isActivated = false;
@@ -166,6 +208,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
+			orders.isActivated = false;
 			redstone.visible = false;
 			items.isActivated = false;
 			matter.isActivated = false;
@@ -177,6 +220,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 			home.isActivated = false;
 			settings.isActivated = false;
 			upgrades.isActivated = false;
+			orders.isActivated = false;
 			redstone.visible = false;
 			items.isActivated = false;
 			energy.isActivated = false;
@@ -282,6 +326,8 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
 		matterWrapper.initButtons();
+		
+		queued = new WrapperMatterReplicatorOrders(this, 48, 32, new int[] { 4 } );
 
 		addButton(close);
 		addButton(menu);
@@ -293,6 +339,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		addButton(items);
 		addButton(energy);
 		addButton(matter);
+		addButton(orders);
 		for (ButtonIO button : itemWrapper.getButtons()) {
 			addButton(button);
 		}
@@ -302,6 +349,8 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		for (ButtonIO button : matterWrapper.getButtons()) {
 			addButton(button);
 		}
+		
+		queued.initButtons(itemRenderer);
 
 		redstone.visible = false;
 		items.visible = false;
@@ -310,6 +359,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
+		queued.updateButtons(false);
 		
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterReplicator matter = getMenu().getTile();
@@ -364,7 +414,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 				return matter.clientRunning;
 			}
 			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
@@ -375,6 +425,10 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
 				UtilsRendering.TEXT_BLUE));
+		slider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 4 });
+		slider.setClickConsumer(queued.getSliderClickedConsumer());
+		slider.setDragConsumer(queued.getSliderDraggedConsumer());
+		addScreenComponent(slider);
 	}
 
 	private void toggleBarOpen() {
@@ -389,6 +443,44 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 	@Override
 	public int getScreenNumber() {
 		return screenNumber;
+	}
+	
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+		if(queued != null && screenNumber == 4) {
+			if(delta > 0) {
+				//scroll up
+				queued.handleMouseScroll(-1);
+			} else if (delta < 0) {
+				// scroll down
+				queued.handleMouseScroll(1);
+			}
+		}
+		return super.mouseScrolled(mouseX, mouseY, delta);
+	}
+	
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		super.mouseMoved(mouseX, mouseY);
+		if(slider != null && screenNumber == 4) {
+			slider.mouseMoved(mouseX, mouseY);
+		}
+	}
+	
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		if(slider != null && screenNumber == 4) {
+			slider.mouseClicked(mouseX, mouseY, button);
+		}
+		return super.mouseClicked(mouseX, mouseY, button);
+	}
+	
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		if(slider != null && screenNumber == 4) {
+			slider.mouseReleased(mouseX, mouseY, button);
+		}
+		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
 }

@@ -459,8 +459,8 @@ public class TileTransporter extends GenericSoundTile {
 			origin.sub(pos);
 			origin.mul(speed);
 
-			getLevel().addParticle(new ParticleOptionReplicator().setCenter(origin.x(), origin.y(), origin.z())
-					.setGravity(gravity).setAge(age), pos.x(), pos.y(), pos.z(), 0, speed, 0);
+			getLevel().addParticle(new ParticleOptionReplicator()
+					.setGravity(gravity).setScale(0.1F).setAge(age), pos.x(), pos.y(), pos.z(), 0, speed, 0);
 		}
 
 	}

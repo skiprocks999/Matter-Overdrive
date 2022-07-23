@@ -226,6 +226,8 @@ public class DeferredRegisters {
 
 	public static final RegistryObject<Item> ITEM_TRITANIUM_PLATE = ITEMS.register("tritanium_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
+	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate", 
+			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(TileMatterReplicator.NEEDED_PLATES)));
 
 	/* TILES */
 

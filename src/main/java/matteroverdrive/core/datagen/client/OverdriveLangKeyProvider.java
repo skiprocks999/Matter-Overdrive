@@ -71,6 +71,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(DeferredRegisters.ITEM_MATTER_SCANNER, "Matter Scanner");
 
 			addItem(DeferredRegisters.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
+			addItem(DeferredRegisters.ITEM_LEAD_PLATE, "Lead Plating");
 
 			for (BlockColors color : BlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -178,6 +179,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("resetpos", "Reset");
 			addGuiLabel("dimensionname", "DIM: %s");
 			addGuiLabel("multiplier", "Multiplier: %s");
+			addGuiLabel("orderratio", "%1$s / %2$s");
+			addGuiLabel("replicatorqueue", "Local Orders");
+			addGuiLabel("systemqueue", "Global Orders");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");

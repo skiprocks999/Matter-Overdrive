@@ -57,5 +57,9 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 		super.stop();
 		tile.setNotPlaying();
 	}
+	
+	public void stopAbstract() {
+		super.stop();
+	}
 
 }
