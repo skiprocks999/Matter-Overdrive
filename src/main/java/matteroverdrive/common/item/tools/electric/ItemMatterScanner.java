@@ -247,7 +247,7 @@ public class ItemMatterScanner extends ItemElectric {
 				NetworkMatter network = storage.getConnectedNetwork();
 				if(network != null) {
 					int[] driveData = network.getHighestStorageLocationForItem(item, false);
-					if(driveData[0] > 0) {
+					if(driveData[0] > -1) {
 						TilePatternStorage found = network.getStorageFromIndex(driveData[0]);
 						if(found == null) {
 							spawnMatterDust(world, stack, blockLoc);

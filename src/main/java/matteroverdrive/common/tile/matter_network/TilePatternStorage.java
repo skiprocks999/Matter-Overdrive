@@ -122,37 +122,29 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CompoundTag data = new CompoundTag();
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-		data.put(energy.getSaveKey(), energy.serializeNBT());
+		tag.put(energy.getSaveKey(), energy.serializeNBT());
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-		data.put(inv.getSaveKey(), inv.serializeNBT());
+		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		
-		tag.put("data", data);
 	}
 	
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		CompoundTag data = tag.getCompound("data");
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(data.getCompound(clientEnergy.getSaveKey()));
+		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
 		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(data.getCompound(clientInventory.getSaveKey()));
+		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 	}
 	
 	@Override
 	public void getRenderData(CompoundTag tag) {
-		CompoundTag data = new CompoundTag();
-		
-		data.putBoolean("isPowered", isPowered);
-		
-		tag.put("data", data);
+		tag.putBoolean("isPowered", isPowered);
 	}
 	
 	@Override
 	public void readRenderData(CompoundTag tag) {
-		CompoundTag data = tag.getCompound("data");
-		clientTilePowered = data.getBoolean("isPowered");
+		clientTilePowered = tag.getBoolean("isPowered");
 	}
 
 	@Override

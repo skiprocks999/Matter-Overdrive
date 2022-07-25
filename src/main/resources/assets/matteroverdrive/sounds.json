@@ -55,6 +55,13 @@
 			"matteroverdrive:block/matter_replicator"
 		]
 	},
+	"matter_analyzer": {
+		"category": "blocks",
+		"subtitle": "subtitles.matteroverdrive.matter_analyzer",
+		"sounds": [
+			"matteroverdrive:block/matter_analyzer"
+		]
+	},
 	"button_expand": {
 		"category": "master",
 		"subtitle": "subtitles.matteroverdrive.button_expand",

@@ -3,6 +3,8 @@ package matteroverdrive.common.tile.matter_network;
 import javax.annotation.Nullable;
 
 import matteroverdrive.DeferredRegisters;
+import matteroverdrive.SoundRegister;
+import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.network.NetworkMatter;
@@ -10,11 +12,17 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsDirection;
+import matteroverdrive.core.utils.UtilsItem;
+import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,10 +31,28 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public static final int SLOT_COUNT = 6;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int USAGE_PER_TICK = 80;
+	private static final double PROCESSING_TIME = 800;
+	private static final int DEFAULT_SPEED = 1;
+	private static final int PERCENTAGE_PER_SCAN = 20;
 	
-	public CapabilityInventory clientNetworkInv;
+	private boolean isRunning = false;
+	private double currProgress = 0;
+	private double currSpeed = DEFAULT_SPEED;
+	private int usage = USAGE_PER_TICK;
+	private boolean isMuffled = false;
 	
-	public CapabilityInventory clientTileInv;
+	private ItemStack scannedItem = null;
+	private boolean shouldAnalyze = false;
+	
+	
+	public boolean clientPowered;
+	public boolean clientRunning = false;
+	private boolean clientMuffled;
+	private boolean clientSoundPlaying = false; 
+	public CapabilityEnergyStorage clientEnergy;
+	public int clientEnergyUsage;
+	public double clientProgress;
+	public double clientSpeed;
 	
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_ANALYZER.get(), pos, state);
@@ -43,23 +69,170 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		setHasMenuData();
 		setHasRenderData();
 	}
+	
+	@Override
+	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
+		if(!canRun()) {
+			isRunning = false;
+			currProgress = 0;
+			scannedItem = null;
+			return;
+		}
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		if(energy.getEnergyStored() < usage) {
+			isRunning = false;
+			currProgress = 0;
+			scannedItem = null;
+			return;
+		}
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		ItemStack scanned = inv.getStackInSlot(0);
+		if(scanned.isEmpty()) {
+			isRunning = false;
+			currProgress = 0;
+			scannedItem = null;
+			return;
+		}
+		
+		NetworkMatter network = getConnectedNetwork();
+		if(network == null || !hasAttachedDrives(network)) {
+			isRunning = false;
+			currProgress = 0;
+			scannedItem = null;
+			return;
+		}
+		
+		if(scannedItem == null) {
+			scannedItem = scanned;
+			//this is a very expensive call so the redundant call locations are required
+			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
+			shouldAnalyze = stored[0] != -1 ? stored[3] < 100 : false;	
+		}
+		if(!shouldAnalyze) {
+			isRunning = false;
+			currProgress = 0;
+		}
+		if(!UtilsItem.compareItems(scannedItem.getItem(), scanned.getItem())) {
+			isRunning = false;
+			currProgress = 0;
+			scannedItem = scanned;
+			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
+			shouldAnalyze = stored[0] != -1 ? stored[3] < 100 : false;	
+			return;
+		}
+		isRunning = true;
+		currProgress += currSpeed;
+		energy.removeEnergy(usage);
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
+		if (currState && !isRunning) {
+			UtilsTile.updateLit(this, Boolean.FALSE);
+		} else if (!currState && isRunning) {
+			UtilsTile.updateLit(this, Boolean.TRUE);
+		}
+		setChanged();
+		if(currProgress < PROCESSING_TIME) {
+			return;
+		}
+		int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
+		if(stored[0] > -1) {
+			TilePatternStorage drive = network.getStorageFromIndex(stored[0]);
+			if(drive != null) {
+				if(drive.storeItem(scannedItem.getItem(), PERCENTAGE_PER_SCAN, new int[] {stored[1], stored[2], stored[3]})) {
+					inv.getStackInSlot(0).shrink(1);
+					getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+				} else if(drive.storeItemFirstChance(scannedItem.getItem(), PERCENTAGE_PER_SCAN)) {
+					inv.getStackInSlot(0).shrink(1);
+					getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+				} else {
+					playFailureSound();
+				}
+			} else {
+				playFailureSound();
+			}
+		} else {
+			playFailureSound();
+		}
+		currProgress = 0;
+		shouldAnalyze = false;
+		scannedItem = null;
+		isRunning = false;
+		setChanged();
+	}
+	
+	@Override
+	public void tickClient() {
+		if (shouldPlaySound() && !clientSoundPlaying) {
+			clientSoundPlaying = true;
+			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_ANALYZER.get(), this, true);
+		}
+	}
+	
+	@Override
+	public void getMenuData(CompoundTag tag) {
+		
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		tag.put(energy.getSaveKey(), energy.serializeNBT());
+		tag.putInt("usage", usage);
+		tag.putDouble("sabonus", saMultiplier);
+		tag.putBoolean("running", isRunning);
+		tag.putDouble("progress", currProgress);
+		tag.putDouble("speed", currSpeed);
+		tag.putBoolean("muffled", isMuffled);
+		
+	}
+	
+	@Override
+	public void readMenuData(CompoundTag tag) {
+		
+		clientEnergy = new CapabilityEnergyStorage(0, false, false);
+		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
+		clientEnergyUsage = tag.getInt("usage");
+		clientSAMultipler = tag.getDouble("sabonus");
+		clientRunning = tag.getBoolean("running");
+		clientProgress = tag.getDouble("progress");
+		clientSpeed = tag.getDouble("speed");
+		clientMuffled = tag.getBoolean("muffled");
+		
+	}
+	
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+		CompoundTag data = new CompoundTag();
+		
+		data.putDouble("progress", currProgress);
+		data.putDouble("speed", currSpeed);
+		data.putInt("usage", usage);
+		data.putBoolean("muffled", isMuffled);
+		
+		tag.put("data", data);
+	}
+	
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+		CompoundTag data = tag.getCompound("data");
+		
+		currProgress = data.getDouble("progress");
+		currSpeed = data.getDouble("speed");
+		usage = data.getInt("usage");
+		isMuffled = data.getBoolean("muffled");
+	}
 
 	@Override
 	public boolean shouldPlaySound() {
-		// TODO Auto-generated method stub
-		return false;
+		return clientRunning && !clientMuffled;
 	}
 
 	@Override
 	public void setNotPlaying() {
-		// TODO Auto-generated method stub
-		
+		clientSoundPlaying = false;
 	}
 
 	@Override
 	public int getMaxMode() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 2;
 	}
 
 	@Override
@@ -83,8 +256,77 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 
 	@Override
 	public boolean isPowered(boolean client) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+	
+	@Override
+	public double getDefaultSpeed() {
+		return DEFAULT_SPEED;
+	}
+
+	@Override
+	public double getDefaultPowerStorage() {
+		return ENERGY_STORAGE;
+	}
+
+	@Override
+	public double getDefaultPowerUsage() {
+		return USAGE_PER_TICK;
+	}
+
+	@Override
+	public boolean isMuffled(boolean clientSide) {
+		return clientSide ? clientMuffled : isMuffled;
+	}
+
+	@Override
+	public double getCurrentSpeed(boolean clientSide) {
+		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
+	}
+
+	@Override
+	public double getCurrentPowerStorage(boolean clientSide) {
+		return clientSide ? clientEnergy.getMaxEnergyStored()
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+	}
+
+	@Override
+	public double getCurrentPowerUsage(boolean clientSide) {
+		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
+	}
+
+	@Override
+	public void setSpeed(double speed) {
+		currSpeed = speed;
+	}
+
+	@Override
+	public void setPowerStorage(int storage) {
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		energy.updateMaxEnergyStorage(storage);
+	}
+
+	@Override
+	public void setPowerUsage(int usage) {
+		this.usage = usage;
+	}
+
+	@Override
+	public void setMuffled(boolean muffled) {
+		isMuffled = muffled;
+	}
+
+	@Override
+	public double getProcessingTime() {
+		return PROCESSING_TIME;
+	}
+	
+	private boolean hasAttachedDrives(NetworkMatter matter) {
+		return matter.getPatternDrives() != null && matter.getPatternDrives().size() > 0;
+	}
+	
+	private void playFailureSound() {
+		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
 	}
 
 }
