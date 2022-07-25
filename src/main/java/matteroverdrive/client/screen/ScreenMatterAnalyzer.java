@@ -9,6 +9,7 @@ import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
+import matteroverdrive.core.screen.component.ScreenComponentMatterAnalyzer;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
@@ -94,6 +95,10 @@ public class ScreenMatterAnalyzer extends GenericScreen<InventoryMatterAnalyzer>
 
 		redstone.visible = false;
 		
+		addScreenComponent(new ScreenComponentMatterAnalyzer(this, 52, 33, new int[] { 0 }, () -> {
+			return getMenu().getTile();
+		}));
+		
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
@@ -112,7 +117,7 @@ public class ScreenMatterAnalyzer extends GenericScreen<InventoryMatterAnalyzer>
 				return matter.getCurrentPowerUsage(true);
 			}
 			return 0;
-		}, this, 167, 35, new int[] { 0 }));
+		}, this, 180, 35, new int[] { 0 }));
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {

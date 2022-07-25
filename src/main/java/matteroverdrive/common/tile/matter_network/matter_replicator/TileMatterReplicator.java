@@ -117,10 +117,14 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
 		removeCompletedOrders();
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
 		if(!canRun()) {
 			isRunning = false;
 			isPowered = false;
 			currProgress = 0;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		
@@ -129,6 +133,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			isRunning = false;
 			isPowered = false;
 			currProgress = 0;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		isPowered = true;
@@ -153,6 +160,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		if(orders.size() <= 0) {
 			isRunning = false;
 			currProgress = 0;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		currentOrder = orders.get(0);
@@ -163,6 +173,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			currentOrder.cancel();
 			isRunning = false;
 			currProgress = 0;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		currRecipeValue = value;
@@ -172,6 +185,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		boolean dustEmpty = dust.isEmpty();
 		if(!dustEmpty && !(UtilsNbt.readMatterVal(dust) == value && dust.getCount() < dust.getMaxStackSize())) {
 			isRunning = false;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		
@@ -179,12 +195,18 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		boolean outputEmpty = output.isEmpty();
 		if(!outputEmpty && !(ItemStack.isSame(stack, output) && output.getCount() < output.getMaxStackSize())) {
 			isRunning = false;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		
 		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
 		if(matter.getMatterStored() < currRecipeValue) {
 			isRunning = false;
+			if (currState && !isRunning) {
+				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
 			return;
 		}
 		
@@ -203,15 +225,13 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			}
 		}
 		
+		if (!currState && isRunning) {
+			UtilsTile.updateLit(this, Boolean.TRUE);
+		}
+		
 		setChanged();
 		
 		
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
-		if (currState && !isRunning) {
-			UtilsTile.updateLit(this, Boolean.FALSE);
-		} else if (!currState && isRunning) {
-			UtilsTile.updateLit(this, Boolean.TRUE);
-		}
 		
 		if(currProgress < currRecipeValue * MATTER_MULTIPLIER) {
 			return;

@@ -5,7 +5,6 @@ import java.util.Random;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.render.AbstractTileRenderer;
 import net.minecraft.client.Minecraft;
@@ -24,9 +23,12 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 	private static final int SEED = 64;
 	
 	private int simLifespan = 0;
+	
+	private final Random random;
 
 	public RendererMatterReplicator(Context context) {
 		super(context);
+		random = new Random();
 	}
 
 	@Override
@@ -46,7 +48,6 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 			
 			matrix.translate(0.5, 0.3, 0.5);
 			
-			Random random = MatterOverdrive.RANDOM;
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			
 			random.setSeed((long) (Item.getId(stack.getItem()) + stack.getDamageValue()));
