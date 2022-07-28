@@ -104,9 +104,9 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    //compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.195:api")
-    //runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.195")
-    //runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:11.1.1.239")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:11.1.1.239")
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
 }
 
 jar {

@@ -162,7 +162,7 @@ public abstract class MergeableCodecDataManager<RAW, FINE>
 	protected Map<ResourceLocation, FINE> prepare(final ResourceManager resourceManager,
 			final ProfilerFiller profiler) {
 		final Map<ResourceLocation, List<RAW>> map = Maps.newHashMap();
-
+		/*
 		for (ResourceLocation resourceLocation : resourceManager.listResources(this.folderName,
 				MergeableCodecDataManager::isStringJsonFile)) {
 			final String namespace = resourceLocation.getNamespace();
@@ -205,7 +205,7 @@ public abstract class MergeableCodecDataManager<RAW, FINE>
 
 			map.put(jsonIdentifier, unmergedRaws);
 		}
-
+	*/
 		return MergeableCodecDataManager.mapValues(map, this.merger::apply);
 	}
 

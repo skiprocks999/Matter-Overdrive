@@ -19,12 +19,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -99,10 +99,36 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager,
 			final ProfilerFiller profiler) {
 		final List<Pair<ResourceLocation, List<JsonObject>>> map = new ArrayList<>();
-		List<Resource> resources = new ArrayList<>(
-				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile).values());
+		List<Entry<ResourceLocation, Resource>> resources = new ArrayList<>(
+				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile).entrySet());
 		Collections.reverse(resources);
 		// we go in reverse, as higher priority data packs are found later in the list
+		for(Entry<ResourceLocation, Resource> entry : resources) {
+			ResourceLocation resourceLocation = entry.getKey();
+			final String namespace = resourceLocation.getNamespace();
+			final String filePath = resourceLocation.getPath();
+			final String dataPath = filePath.substring(this.folderName.length() + 1,
+					filePath.length() - JSON_EXTENSION_LENGTH);
+
+			final ResourceLocation jsonIdentifier = new ResourceLocation(namespace, dataPath);
+			final List<JsonObject> unmergedRaws = new ArrayList<>();
+			
+			
+			Resource resource = entry.getValue();
+			try (final InputStream inputStream = resource.open();
+					final Reader reader = new BufferedReader(
+							new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+				final JsonObject jsonElement = (JsonObject) GsonHelper.fromJson(GSON, reader,
+						JsonElement.class);
+				unmergedRaws.add(jsonElement);
+			} catch (RuntimeException | IOException exception) {
+				this.logger.error("Data loader for {} could not read data {} from file {} in data pack {}",
+						this.folderName, jsonIdentifier, resourceLocation, resource.sourcePackId(), exception);
+			}
+			
+			map.add(Pair.of(jsonIdentifier, unmergedRaws));
+		}
+		/*
 		for (ResourceLocation resourceLocation : resources) {
 			final String namespace = resourceLocation.getNamespace();
 			final String filePath = resourceLocation.getPath();
@@ -133,7 +159,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 			}
 			map.add(Pair.of(jsonIdentifier, unmergedRaws));
 		}
-
+	*/
 		JsonObject merged = new JsonObject();
 		map.forEach(pair -> {
 			pair.getSecond().forEach(list -> {
