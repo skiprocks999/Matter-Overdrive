@@ -63,7 +63,7 @@ public class ItemPatternWrapper {
 	
 	public void writeToNbt(CompoundTag tag, String key) {
 		CompoundTag data = new CompoundTag();
-		data.putString("item", item.getRegistryName().toString().toLowerCase());
+		data.putString("item", ForgeRegistries.ITEMS.getKey(item).toString().toLowerCase());
 		data.putInt("percentage", percentage);
 		tag.put(key, data);
 	}

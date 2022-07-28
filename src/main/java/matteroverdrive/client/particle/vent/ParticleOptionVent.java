@@ -9,6 +9,7 @@ import matteroverdrive.DeferredRegisters;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ParticleOptionVent extends ParticleType<ParticleOptionVent> implements ParticleOptions {
 
@@ -69,7 +70,7 @@ public class ParticleOptionVent extends ParticleType<ParticleOptionVent> impleme
 
 	@Override
 	public String writeToString() {
-		return getType().getRegistryName().toString() + ", scale: " + scale + ", alpha: " + alpha;
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", scale: " + scale + ", alpha: " + alpha;
 	}
 
 	@Override

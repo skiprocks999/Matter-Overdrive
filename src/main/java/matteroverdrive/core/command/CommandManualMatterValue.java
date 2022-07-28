@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CommandManualMatterValue {
 
@@ -64,7 +65,7 @@ public class CommandManualMatterValue {
 				obj = (JsonObject) GsonHelper.fromJson(GSON, Files.newBufferedReader(path), JsonElement.class);
 			}
 
-			String key = target.getItem().getRegistryName().toString();
+			String key = ForgeRegistries.ITEMS.getKey(target.getItem()).toString();
 
 			if (obj.has(key)) {
 				obj.remove(key);

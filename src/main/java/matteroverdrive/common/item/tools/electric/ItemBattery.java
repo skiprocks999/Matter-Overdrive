@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -100,8 +101,8 @@ public class ItemBattery extends ItemElectric {
 	private static class ColorHandler {
 
 		@SubscribeEvent
-		public static void registerColoredBlocks(ColorHandlerEvent.Item event) {
-			BATTERIES.forEach(item -> event.getItemColors().register((stack, index) -> {
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
+			BATTERIES.forEach(item -> event.register((stack, index) -> {
 				if (index == 1) {
 					return item.type.color;
 				} else {

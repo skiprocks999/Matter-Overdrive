@@ -9,6 +9,7 @@ import matteroverdrive.DeferredRegisters;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplicator> implements ParticleOptions {
 
@@ -83,7 +84,7 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 
 	@Override
 	public String writeToString() {
-		return getType().getRegistryName().toString() + ", gravity: " + gravity + ", scale: " + scale + ", age: " + age;
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", gravity: " + gravity + ", scale: " + scale + ", age: " + age;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -26,7 +27,7 @@ public class MatterValueGenerator implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache pCache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		JsonObject json = new JsonObject();
 		addValues(json);
 		Path path = gen.getOutputFolder().resolve(DATA_LOC);
@@ -34,7 +35,7 @@ public class MatterValueGenerator implements DataProvider {
 			String s = GSON.toJson(json);
 
 			String s1 = SHA1.hashUnencodedChars(s).toString();
-			if (!Objects.equals(pCache.getHash(path), s1) || !Files.exists(path)) {
+			if (!Objects.equals(cache.getHash(path), s1) || !Files.exists(path)) {
 				Files.createDirectories(path.getParent());
 				BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 

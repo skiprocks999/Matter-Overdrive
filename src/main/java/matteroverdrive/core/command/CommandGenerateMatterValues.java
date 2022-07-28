@@ -70,7 +70,7 @@ public class CommandGenerateMatterValues {
 		List<Pair<String, Double>> sorted = new ArrayList<>();
 		List<String> names = new ArrayList<>();
 		generatedValues.keySet().forEach(item -> {
-			names.add(item.getRegistryName().toString());
+			names.add(ForgeRegistries.ITEMS.getKey(item).toString());
 		});
 		Collections.sort(names);
 		names.forEach(string -> {

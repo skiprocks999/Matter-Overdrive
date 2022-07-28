@@ -18,14 +18,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -199,8 +197,8 @@ public class ItemPatternDrive extends OverdriveItem {
 		private static final int NONE = UtilsRendering.getRGBA(1, 35, 45, 48);
 		
 		@SubscribeEvent
-		public static void registerColoredBlocks(ColorHandlerEvent.Item event) {
-			CONTAINERS.forEach(item -> event.getItemColors().register((stack, index) -> {
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
+			CONTAINERS.forEach(item -> event.register((stack, index) -> {
 				switch(index) {
 				case 1:
 					return handleColor(0, stack);

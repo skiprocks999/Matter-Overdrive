@@ -10,7 +10,7 @@ import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
@@ -46,7 +46,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		IUpgradableTile owner = tile.get();
-		TranslatableComponent component;
+		MutableComponent component;
 		int color;
 		if (owner != null) {
 			Font font = gui.getFontRenderer();

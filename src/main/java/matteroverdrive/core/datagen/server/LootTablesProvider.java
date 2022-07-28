@@ -19,6 +19,7 @@ import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class LootTablesProvider extends AbstractLootTableProvider {
@@ -54,19 +55,19 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	private <T extends GenericTile> void addITable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemOnlyTable(block.getRegistryName().getPath(), block, tilereg.get()));
+		lootTables.put(block, itemOnlyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
 	private <T extends GenericTile> void addIETable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemAndEnergyTable(block.getRegistryName().getPath(), block, tilereg.get()));
+		lootTables.put(block, itemAndEnergyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
 	private <T extends GenericTile> void addIEMTable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemEnergyMatterTable(block.getRegistryName().getPath(), block, tilereg.get()));
+		lootTables.put(block, itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	 */
 	private void addSilkTouchOnlyTable(RegistryObject<Block> reg) {
 		Block block = reg.get();
-		lootTables.put(block, createSilkTouchOnlyTable(block.getRegistryName().getPath(), block));
+		lootTables.put(block, createSilkTouchOnlyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block));
 	}
 
 }

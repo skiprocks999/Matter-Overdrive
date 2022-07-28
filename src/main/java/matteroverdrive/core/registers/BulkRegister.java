@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import net.minecraftforge.registries.RegistryObject;
 
-public class BulkRegister<T extends IForgeRegistryEntry<T>> {
+public class BulkRegister<T> {
 
 	private final HashMap<IBulkRegistryObject, RegistryObject<T>> objects = new HashMap<>();
 

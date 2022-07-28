@@ -63,7 +63,7 @@ public class PacketUpdateTransporterLocationInfo {
 					case RESET_DESTINATION:
 						wrapper = transporter.getServerLocations()[message.destinationIndex];
 						wrapper.setDestination(new BlockPos(0, -1000, 0));
-						wrapper.setName(TransporterLocationWrapper.DEFAULT_NAME.getContents());
+						wrapper.setName(TransporterLocationWrapper.DEFAULT_NAME.getString());
 						wrapper.setDimension(null);
 						break;
 					case UPDATE_DESTINATION:

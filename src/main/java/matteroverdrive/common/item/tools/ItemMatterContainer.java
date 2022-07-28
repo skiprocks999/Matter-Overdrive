@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -161,8 +161,8 @@ public class ItemMatterContainer extends OverdriveItem {
 		private static final int BAR_COLOR = UtilsRendering.getRGBA(1, 191, 228, 230);
 		
 		@SubscribeEvent
-		public static void registerColoredBlocks(ColorHandlerEvent.Item event) {
-			CONTAINERS.forEach(item -> event.getItemColors().register((stack, index) -> {
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
+			CONTAINERS.forEach(item -> event.register((stack, index) -> {
 				if (index == 2) {
 					return BAR_COLOR;
 				} else if (index == 1) {

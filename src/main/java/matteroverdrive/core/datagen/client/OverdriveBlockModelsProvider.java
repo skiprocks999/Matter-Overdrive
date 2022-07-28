@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveBlockModelsProvider extends BlockModelProvider {
@@ -22,7 +23,7 @@ public class OverdriveBlockModelsProvider extends BlockModelProvider {
 	}
 
 	private void blockTopBottom(RegistryObject<Block> block, String top, String bottom, String side) {
-		cubeBottomTop(block.get().getRegistryName().getPath(), new ResourceLocation(References.ID, side),
+		cubeBottomTop(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), new ResourceLocation(References.ID, side),
 				new ResourceLocation(References.ID, bottom), new ResourceLocation(References.ID, top));
 	}
 

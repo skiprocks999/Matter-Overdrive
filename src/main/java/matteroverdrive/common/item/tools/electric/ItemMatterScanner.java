@@ -36,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemMatterScanner extends ItemElectric {
 
@@ -322,7 +323,7 @@ public class ItemMatterScanner extends ItemElectric {
 		Double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
 		CompoundTag tag = stack.getOrCreateTag();
 		if(value != null) {
-			tag.putString(UtilsNbt.ITEM, state.getBlock().asItem().getRegistryName().toString().toLowerCase());
+			tag.putString(UtilsNbt.ITEM, ForgeRegistries.ITEMS.getKey(state.getBlock().asItem()).toString().toLowerCase());
 			tag.putDouble(UtilsNbt.STORED_MATTER_VAL, value);
 			tag.put(RAY_TRACE_POS, NbtUtils.writeBlockPos(pos));
 			tag.putInt(UtilsNbt.USE_TIME, (int) (BASE_SCAN_TIME + Math.ceil(value)));

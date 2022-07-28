@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveItemModelsProvider extends ItemModelProvider {
@@ -63,7 +64,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	}
 
 	private String blockPath(RegistryObject<Block> block) {
-		return block.get().getRegistryName().getPath();
+		return ForgeRegistries.BLOCKS.getKey(block.get()).getPath();
 	}
 
 	private void modSlab(String name, String side, String bottom, String top) {
@@ -72,12 +73,12 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	}
 
 	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
-		singleTexture(item.get().getRegistryName().getPath(), new ResourceLocation("item/generated"), "layer0",
+		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"), "layer0",
 				new ResourceLocation(References.ID, textureLoc));
 	}
 
 	private void simpleBlock(RegistryObject<Block> block, String textureLoc) {
-		cubeAll(block.get().getRegistryName().getPath(), new ResourceLocation(References.ID, textureLoc));
+		cubeAll(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), new ResourceLocation(References.ID, textureLoc));
 	}
 
 }

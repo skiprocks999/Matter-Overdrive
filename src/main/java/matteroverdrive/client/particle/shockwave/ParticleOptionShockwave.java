@@ -9,6 +9,7 @@ import matteroverdrive.DeferredRegisters;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwave> implements ParticleOptions {
 
@@ -90,7 +91,7 @@ public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwav
 
 	@Override
 	public String writeToString() {
-		return getType().getRegistryName().toString() + ", maxScale: " + maxScale + ", r: " + r + ", g: " + g
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", maxScale: " + maxScale + ", r: " + r + ", g: " + g
 				+ ", b: " + b + ", a: " + a;
 	}
 
