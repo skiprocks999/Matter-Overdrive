@@ -17,13 +17,9 @@ public class KeyBinds {
 	private static final String CATEGORY_MAIN = "keycategory.matteroverdrive.main";
 
 	// KEYS
-	public static KeyMapping toggleMatterScanner;
+	public static final KeyMapping TOGGLE_MATTER_SCANNER = registerKey("togglematterscanner", CATEGORY_MAIN, InputConstants.KEY_O);
 
 	private KeyBinds() {
-	}
-
-	public static void registerKeys() {
-		toggleMatterScanner = registerKey("togglematterscanner", CATEGORY_MAIN, InputConstants.KEY_O);
 	}
 
 	private static KeyMapping registerKey(String name, String category, int keyCode) {
@@ -32,7 +28,7 @@ public class KeyBinds {
 	
 	@SubscribeEvent
 	public static void registerKeys(RegisterKeyMappingsEvent event) {
-		event.register(toggleMatterScanner);
+		event.register(TOGGLE_MATTER_SCANNER);
 	}
 
 }

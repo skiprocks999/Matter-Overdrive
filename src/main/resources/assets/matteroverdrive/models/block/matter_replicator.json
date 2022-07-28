@@ -2,7 +2,7 @@
 	"parent" : "block/cube",
 	"loader": "forge:obj",
 	"model": "matteroverdrive:models/block/matter_replicator.obj",
-	"flip-v": true,
+	"flip_v": true,
 	"textures": {
 		"bottom": "matteroverdrive:block/base",
 		"back" : "matteroverdrive:block/network_port",

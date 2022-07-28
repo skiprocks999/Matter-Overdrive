@@ -6,7 +6,6 @@ import java.util.List;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.client.keys.KeyBinds;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
 import matteroverdrive.client.particle.vent.ParticleVent;
@@ -169,7 +168,6 @@ public class ClientRegister {
 					return 0;
 		});
 		
-		KeyBinds.registerKeys();
 		ClientEventHandler.init();
 
 	}

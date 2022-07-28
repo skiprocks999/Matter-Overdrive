@@ -1,7 +1,7 @@
 {
 	"loader": "forge:obj",
 	"model": "matteroverdrive:models/item/omni_tool.obj",
-	"flip-v": true,
+	"flip_v": true,
 	"textures": {
 		"texture0": "matteroverdrive:item/omni_tool"
 	},

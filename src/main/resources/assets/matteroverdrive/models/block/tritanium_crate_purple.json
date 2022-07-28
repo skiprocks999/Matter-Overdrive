@@ -2,7 +2,7 @@
 	"parent" : "block/cube",
 	"loader": "forge:obj",
 	"model": "matteroverdrive:models/block/tritanium_crate_purple.obj",
-	"flip-v": true,
+	"flip_v": true,
 	"textures": {
 		"texture0": "matteroverdrive:block/crate/tritanium_crate_purple",
 		"particle" : "#texture0"

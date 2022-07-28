@@ -20,7 +20,7 @@ public class KeyHandlerMatterScanner extends AbstractKeyPressHandler {
 	public void handleKeyPress(Minecraft minecraft, int scanCode, int key, int action) {
 		Player player = minecraft.player;
 		
-		if (KeyBinds.toggleMatterScanner.matches(key, scanCode) && KeyBinds.toggleMatterScanner.isDown()) {
+		if (KeyBinds.TOGGLE_MATTER_SCANNER.matches(key, scanCode) && KeyBinds.TOGGLE_MATTER_SCANNER.isDown()) {
 			ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
 			if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
 				handleScannerToggle(stack, InteractionHand.MAIN_HAND, player.getUUID());
