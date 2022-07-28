@@ -17,6 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
@@ -58,7 +59,7 @@ public class ItemPatternDrive extends OverdriveItem {
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
 				if(Screen.hasShiftDown()) {
 					ItemPatternWrapper wrapper = cap.getStoredPatterns()[0];
-					TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
+					MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 					ChatFormatting color = ChatFormatting.RED;
 					int percentage = wrapper.getPercentage();
 					if(percentage >= 100) {
@@ -83,9 +84,9 @@ public class ItemPatternDrive extends OverdriveItem {
 							warning = ChatFormatting.RED;
 						}
 						int effectiveUses = (int) Math.floor(MATTER_PER_FUSE / usage);
-						tooltips.add(UtilsText.tooltip("effectiveuses", new TextComponent(effectiveUses + "").withStyle(warning)));
+						tooltips.add(UtilsText.tooltip("effectiveuses", Component.literal(effectiveUses + "").withStyle(warning)));
 					} else {
-						tooltips.add(UtilsText.tooltip("effectiveuses", new TextComponent("0").withStyle(ChatFormatting.RED)));
+						tooltips.add(UtilsText.tooltip("effectiveuses", Component.literal("0").withStyle(ChatFormatting.RED)));
 					}
 				}
 			});
@@ -94,7 +95,7 @@ public class ItemPatternDrive extends OverdriveItem {
 				if(Screen.hasShiftDown()) {
 					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
 						if(wrapper.isNotAir()) {
-							TranslatableComponent name = new TranslatableComponent(wrapper.getItem().getDescriptionId());
+							MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 							ChatFormatting color = ChatFormatting.RED;
 							int percentage = wrapper.getPercentage();
 							if(percentage >= 100) {

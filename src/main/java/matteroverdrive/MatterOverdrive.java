@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -80,11 +79,6 @@ public class MatterOverdrive {
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		MatterOverdriveCapabilities.register(event);
-	}
-
-	@SubscribeEvent
-	public static void registerRecipeSerialziers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-
 	}
 
 	@SubscribeEvent

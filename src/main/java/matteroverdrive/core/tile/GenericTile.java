@@ -16,8 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -149,8 +148,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		}
 	}
 
-	public TranslatableComponent getContainerName(String name) {
-		return new TranslatableComponent("container." + name);
+	public MutableComponent getContainerName(String name) {
+		return Component.translatable("container." + name);
 	}
 
 	public Direction getFacing() {
@@ -174,7 +173,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	// TODO allow translations
 	public Component getName() {
-		return new TextComponent(References.ID + ".default.tile.name");
+		return Component.literal(References.ID + ".default.tile.name");
 	}
 
 	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {

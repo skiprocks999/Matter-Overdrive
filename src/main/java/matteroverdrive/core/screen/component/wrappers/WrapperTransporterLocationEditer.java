@@ -21,7 +21,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -44,8 +44,8 @@ public class WrapperTransporterLocationEditer {
 	private int xOffset;
 	private int yOffset;
 	
-	private static final TextComponent PLUS = new TextComponent("+");
-	private static final TextComponent MINUS = new TextComponent("-");
+	private static final Component PLUS = Component.literal("+");
+	private static final Component MINUS = Component.literal("-");
 
 	public WrapperTransporterLocationEditer(GenericScreen<?> gui, int xOffset, int yOffset, Supplier<TileTransporter> transporterSupplier) {
 		this.gui = gui;
@@ -65,7 +65,7 @@ public class WrapperTransporterLocationEditer {
 		int guiHeight = gui.getYPos();
 
 		nameBox = new EditBoxSuppliableName(gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
-			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getName().getContents();
+			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getName().getString();
 		});
 		nameBox.setTextColor(UtilsRendering.WHITE);
 		nameBox.setTextColorUneditable(UtilsRendering.WHITE);

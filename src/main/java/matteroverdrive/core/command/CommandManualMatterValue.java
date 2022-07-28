@@ -20,7 +20,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import matteroverdrive.References;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
@@ -48,7 +48,7 @@ public class CommandManualMatterValue {
 			ItemStack target = player.getItemInHand(InteractionHand.MAIN_HAND);
 
 			if (target.isEmpty()) {
-				source.sendFailure(new TranslatableComponent("command.matteroverdrive.mainhandempty"));
+				source.sendFailure(Component.translatable("command.matteroverdrive.mainhandempty"));
 				return 0;
 			}
 
@@ -110,10 +110,10 @@ public class CommandManualMatterValue {
 				bufferedwriter.close();
 			}
 
-			source.sendSuccess(new TranslatableComponent("command.matteroverdrive.assignedvalue", value, key), true);
+			source.sendSuccess(Component.translatable("command.matteroverdrive.assignedvalue", value, key), true);
 
 		} catch (Exception e) {
-			source.sendFailure(new TranslatableComponent("command.matteroverdrive.manualfailed"));
+			source.sendFailure(Component.translatable("command.matteroverdrive.manualfailed"));
 		}
 
 		return 0;

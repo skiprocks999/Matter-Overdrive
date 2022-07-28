@@ -32,6 +32,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 
 	public static final Map<Direction, EnumProperty<CableConnectionType>> DIRECTION_TO_PROPERTY_MAP = Util

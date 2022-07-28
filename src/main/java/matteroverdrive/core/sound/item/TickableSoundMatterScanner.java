@@ -7,6 +7,7 @@ import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.utils.UtilsWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +23,7 @@ public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
 	private static final float MAX_DISTANCE = 10.0F;
 	
 	public TickableSoundMatterScanner(InteractionHand hand, UUID id) {
-		super(SoundRegister.SOUND_MATTER_SCANNER_RUNNING.get(), SoundSource.PLAYERS);
+		super(SoundRegister.SOUND_MATTER_SCANNER_RUNNING.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
 		this.hand = hand;
 		this.id = id;
 		this.volume = 0.5F;

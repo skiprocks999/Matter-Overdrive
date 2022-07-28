@@ -12,7 +12,7 @@ import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ButtonTransporterLocation extends ButtonHoldPress {
 
@@ -24,12 +24,12 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 
 	public ButtonTransporterLocation(GenericScreen<?> gui, int x, int y, int index, OnPress onPress, 
 			Supplier<TileTransporter> transporter) {
-		super(gui, x, y, WIDTH, HEIGHT, TextComponent.EMPTY, onPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonTransporterLocation loc = (ButtonTransporterLocation) button;
 			TileTransporter transport = loc.transporter.get();
 			TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[loc.index];
 			if (transport.validDestination(wrapper).getFirst()) {
-				loc.gui.renderTooltip(stack, new TextComponent(wrapper.getDestination().toShortString()), mouseX, mouseY);
+				loc.gui.renderTooltip(stack, Component.literal(wrapper.getDestination().toShortString()), mouseX, mouseY);
 			} else {
 				loc.gui.renderTooltip(stack, UtilsText.tooltip("invaliddest"), mouseX, mouseY);
 			}

@@ -13,7 +13,7 @@ import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -84,7 +84,7 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 		if (upgradeSlotTypes != null && Screen.hasControlDown()) {
 			List<FormattedCharSequence> components = new ArrayList<>();
 			for (UpgradeType upgrade : upgradeSlotTypes) {
-				components.add(new TranslatableComponent(
+				components.add(Component.translatable(
 						DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
 								.getVisualOrderText());
 			}

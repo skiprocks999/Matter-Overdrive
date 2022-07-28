@@ -41,7 +41,7 @@ public class ItemMatterContainer extends OverdriveItem {
 
 	@Override
 	public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
-		if (allowdedIn(category)) {
+		if (allowedIn(category)) {
 			items.add(new ItemStack(this));
 			if(container != ContainerType.CREATIVE) {
 				ItemStack filled = new ItemStack(this);

@@ -8,14 +8,13 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class ButtonRedstoneMode extends ButtonOverdrive {
 
 	private Supplier<Integer> mode;
 
 	public ButtonRedstoneMode(GenericScreen<?> gui, int x, int y, OnPress pOnPress, Supplier<Integer> mode) {
-		super(gui, x, y, 58, 20, TextComponent.EMPTY, pOnPress);
+		super(gui, x, y, 58, 20, Component.empty(), pOnPress);
 		this.mode = mode;
 	}
 

@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -94,7 +93,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			text = val == null
 					? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter"))
-					: UtilsText.tooltip("matterval", new TextComponent(UtilsText.formatMatterValue(val)));
+					: UtilsText.tooltip("matterval", Component.literal(UtilsText.formatMatterValue(val)));
 			
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 3.5D, 13.0D, 0.75);
 			
@@ -108,7 +107,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			translateToPos(matrix, pos, cam);
 			
-			text = new TextComponent(UtilsText.SINGLE_DECIMAL.format(scannerStatus.percent) + "%");
+			text = Component.literal(UtilsText.SINGLE_DECIMAL.format(scannerStatus.percent) + "%");
 			
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
 			

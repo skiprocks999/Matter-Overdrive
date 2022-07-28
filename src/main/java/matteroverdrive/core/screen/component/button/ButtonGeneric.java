@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -28,7 +27,7 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 	}
 
 	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, OnPress onPress) {
-		this(gui, x, y, type, TextComponent.EMPTY, onPress, NO_TOOLTIP);
+		this(gui, x, y, type, Component.empty(), onPress, NO_TOOLTIP);
 		this.type = type;
 	}
 

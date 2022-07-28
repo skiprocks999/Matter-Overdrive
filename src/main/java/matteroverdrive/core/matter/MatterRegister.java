@@ -99,7 +99,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager,
 			final ProfilerFiller profiler) {
 		final List<Pair<ResourceLocation, List<JsonObject>>> map = new ArrayList<>();
-
 		List<ResourceLocation> resources = new ArrayList<>(
 				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile));
 		Collections.reverse(resources);
@@ -152,8 +151,8 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		return combined;
 	}
 
-	private static boolean isStringJsonFile(final String filename) {
-		return filename.endsWith(JSON_EXTENSION);
+	private static boolean isStringJsonFile(final ResourceLocation filename) {
+		return filename.toString().endsWith(JSON_EXTENSION);
 	}
 
 	@Override

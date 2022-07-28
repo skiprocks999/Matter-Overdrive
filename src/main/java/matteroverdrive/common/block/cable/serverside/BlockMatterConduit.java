@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BlockMatterConduit extends AbstractCableBlock {
 
 	public static final HashSet<Block> PIPESET = new HashSet<>();

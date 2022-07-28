@@ -22,7 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+import net.minecraftforge.client.event.InputEvent.Key;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -52,7 +52,7 @@ public class ClientEventHandler {
 		List<Component> tooltips = event.getToolTip();
 		ItemStack item = event.getItemStack();
 		//Note player can be null
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		
 		for(AbstractTooltipHandler handler : TOOLTIP_HANDLERS) {
 			handler.handleTooltips(tooltips, item, player);
@@ -60,7 +60,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void handleKeyPressEvents(KeyInputEvent event) {
+	public static void handleKeyPressEvents(Key event) {
 
 		Minecraft minecraft = Minecraft.getInstance();
 		int key = event.getKey();

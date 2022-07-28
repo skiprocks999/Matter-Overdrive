@@ -10,7 +10,6 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,7 +27,7 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 			double val = UtilsNbt.readMatterVal(stack);
 			return val > 0
 					? UtilsText.tooltip("potmatterval",
-							new TextComponent(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
+							Component.literal(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.LIGHT_PURPLE))
 							.withStyle(ChatFormatting.BLUE)
 					: UtilsText.tooltip("potmatterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 							.withStyle(ChatFormatting.BLUE);
@@ -37,7 +36,7 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 			return val > 0
 					? UtilsText
 							.tooltip("matterval",
-									new TextComponent(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
+									Component.literal(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
 							.withStyle(ChatFormatting.BLUE)
 					: UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 							.withStyle(ChatFormatting.BLUE);
@@ -48,7 +47,7 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 							.withStyle(ChatFormatting.BLUE)
 					: UtilsText
 							.tooltip("matterval",
-									new TextComponent(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
+									Component.literal(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD))
 							.withStyle(ChatFormatting.BLUE);
 		}
 

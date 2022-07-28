@@ -10,9 +10,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -58,13 +57,13 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 		super.appendHoverText(stack, world, tooltips, advanced);
 		if(stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 			CompoundTag tag = stack.getTag();
-			tooltips.add(new TextComponent(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString()).withStyle(ChatFormatting.GRAY));
-			BaseComponent name;
+			tooltips.add(Component.literal(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString()).withStyle(ChatFormatting.GRAY));
+			MutableComponent name;
 			String key = UtilsNbt.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION)).location().getPath();
 			if(UtilsText.dimensionExists(key)) {
 				name = UtilsText.dimension(key);
 			} else {
-				name = new TextComponent(key);
+				name = Component.literal(key);
 			}
 			tooltips.add(name.withStyle(ChatFormatting.GRAY));
 		}

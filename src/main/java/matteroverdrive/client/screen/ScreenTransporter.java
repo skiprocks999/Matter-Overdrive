@@ -36,7 +36,6 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
@@ -468,7 +467,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				UtilsRendering.WHITE));
 		addScreenComponent(new ScreenComponentLabel(this, 70, 111, new int[] { 4 }, () -> {
 			TileTransporter transporter = getMenu().getTile();
-			Component extraComponent = TextComponent.EMPTY;
+			Component extraComponent = Component.empty();
 			if(transporter != null) {
 				TransporterLocationWrapper wrapper = transporter.CLIENT_LOCATIONS[editor.getCurrIndex()];
 				String key = "";
@@ -480,7 +479,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				if(UtilsText.dimensionExists(key)) {
 					extraComponent = UtilsText.dimension(key);
 				} else {
-					extraComponent = new TextComponent(key);
+					extraComponent = Component.literal(key);
 				}
 				
 			}

@@ -9,7 +9,7 @@ import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -41,7 +41,7 @@ public class ScreenComponentQueuedOrder extends OverdriveScreenComponent {
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if(order != null) {
 			itemRenderer.renderGuiItem(new ItemStack(order.getItem()), x + 2, y + 2);
-			TranslatableComponent order = UtilsText.gui("orderratio", this.order.getRemaining(), this.order.getOrderedCount());
+			MutableComponent order = UtilsText.gui("orderratio", this.order.getRemaining(), this.order.getOrderedCount());
 			gui.getFontRenderer().draw(stack, order, x + 22, y + 6.5F, UtilsRendering.WHITE);
 		}
 	}

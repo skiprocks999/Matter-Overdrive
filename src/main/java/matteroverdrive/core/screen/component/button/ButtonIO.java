@@ -15,8 +15,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonIO extends AbstractOverdriveButton {
@@ -45,7 +45,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 
 	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, WrapperIOConfig owner,
 			Supplier<Boolean> canInput, Supplier<Boolean> canOutput) {
-		super(owner.gui, x, Y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {
+		super(owner.gui, x, Y, WIDTH, HEIGHT, Component.empty(), button -> {
 		}, (button, stack, mouseX, mouseY) -> {
 			ButtonIO io = (ButtonIO) button;
 			owner.displayTooltip(stack, UtilsText.tooltip("io", io.mode.name, io.side.name), mouseX, mouseY);
@@ -174,7 +174,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 	public enum IOMode {
 		INPUT, OUTPUT, NONE;
 
-		public final TranslatableComponent name;
+		public final MutableComponent name;
 
 		private IOMode() {
 			name = UtilsText.tooltip("io" + this.toString().toLowerCase());
@@ -185,7 +185,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 		TOP(Direction.UP), BOTTOM(Direction.DOWN), LEFT(Direction.EAST), RIGHT(Direction.WEST), FRONT(Direction.SOUTH),
 		BACK(Direction.NORTH);
 
-		public final TranslatableComponent name;
+		public final MutableComponent name;
 		public final Direction mappedDir;
 
 		private BlockSide(Direction dir) {

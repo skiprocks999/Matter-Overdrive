@@ -8,6 +8,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BlockOverdrive extends Block {
 
 	private boolean useLootTable;

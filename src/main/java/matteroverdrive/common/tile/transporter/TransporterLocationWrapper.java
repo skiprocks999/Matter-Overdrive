@@ -6,16 +6,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
 public class TransporterLocationWrapper {
 
-	public static final TranslatableComponent DEFAULT_NAME = UtilsText.gui("unknown");
+	public static final MutableComponent DEFAULT_NAME = UtilsText.gui("unknown");
 
-	private TextComponent customName;
+	private MutableComponent customName;
 	private boolean hasCustomName;
 
 	private BlockPos destination = new BlockPos(0, -1000, 0);
@@ -46,7 +45,7 @@ public class TransporterLocationWrapper {
 			hasCustomName = false;
 		}
 		hasCustomName = true;
-		customName = new TextComponent(name);
+		customName = Component.literal(name);
 	}
 	
 	public ResourceKey<Level> getDimension() {
@@ -62,7 +61,7 @@ public class TransporterLocationWrapper {
 		tag.put("destination", NbtUtils.writeBlockPos(destination));
 		tag.putBoolean("hasCustom", hasCustomName);
 		if (hasCustomName) {
-			tag.putString("custom", customName.getContents());
+			tag.putString("custom", customName.getString());
 		}
 		if(dimension != null) {
 			tag.put(UtilsNbt.DIMENSION, UtilsNbt.writeDimensionToTag(dimension));
@@ -74,7 +73,7 @@ public class TransporterLocationWrapper {
 		destination = NbtUtils.readBlockPos(data.getCompound("destination"));
 		hasCustomName = data.getBoolean("hasCustom");
 		if (hasCustomName) {
-			customName = new TextComponent(data.getString("custom"));
+			customName = Component.literal(data.getString("custom"));
 		}
 		if(data.contains("ownerid")) {
 			dimension = UtilsNbt.readDimensionFromTag(data.getCompound(UtilsNbt.DIMENSION));

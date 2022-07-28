@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class GenericMachineBlock extends WaterloggableEntityBlock {
 
 	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;

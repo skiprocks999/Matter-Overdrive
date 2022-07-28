@@ -14,8 +14,8 @@ import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
@@ -41,12 +41,12 @@ public class ButtonItemPattern extends ButtonHoldPress {
 	
 	public ButtonItemPattern(GenericScreen<?> gui, int x, int y, OnPress onPress, ItemRenderer renderer, 
 			int row, int col, WrapperPatternMonitorScreen parent) {
-		super(gui, x, y, 22, 22, TextComponent.EMPTY, onPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, 22, 22, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonItemPattern pattern = (ButtonItemPattern) button;
 			if(pattern.wrapper != null) {
 				Item item = pattern.wrapper.getItem();
 				int percentage = pattern.wrapper.getPercentage();
-				TranslatableComponent name = new TranslatableComponent(item.getDescriptionId());
+				MutableComponent name = Component.translatable(item.getDescriptionId());
 				ChatFormatting color = ChatFormatting.RED;
 				if(percentage >= 100) {
 					color = ChatFormatting.GREEN;
@@ -62,7 +62,7 @@ public class ButtonItemPattern extends ButtonHoldPress {
 						.withStyle(ChatFormatting.BLUE).getVisualOrderText()
 				: UtilsText
 						.tooltip("matterval",
-								new TextComponent(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD)).
+								Component.literal(UtilsText.formatMatterValue(val)).withStyle(ChatFormatting.GOLD)).
 						withStyle(ChatFormatting.GRAY).getVisualOrderText());
 				pattern.gui.renderTooltip(stack, tooltips, mouseX, mouseY);
 			}

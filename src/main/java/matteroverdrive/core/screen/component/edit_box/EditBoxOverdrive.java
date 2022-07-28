@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class EditBoxOverdrive extends EditBox {
@@ -88,7 +88,7 @@ public class EditBoxOverdrive extends EditBox {
 	};
 	
 	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {
-		super(gui.getFontRenderer(), x, y, width, height, TextComponent.EMPTY);
+		super(gui.getFontRenderer(), x, y, width, height, Component.empty());
 		this.gui = gui;
 
 	}

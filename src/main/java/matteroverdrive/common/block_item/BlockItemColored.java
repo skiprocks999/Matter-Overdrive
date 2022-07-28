@@ -7,9 +7,11 @@ import matteroverdrive.References;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class BlockItemColored extends BlockItem {
 
@@ -31,7 +33,7 @@ public class BlockItemColored extends BlockItem {
 	private static class ColorHandler {
 
 		@SubscribeEvent
-		public static void registerColoredBlocks(ColorHandlerEvent.Item event) {
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
 			BLOCK_ITEMS.forEach(item -> event.getItemColors().register((stack, index) -> item.getColor(), item));
 		}
 	}

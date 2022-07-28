@@ -16,8 +16,8 @@ import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
@@ -81,7 +81,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 			if(order != null) {
 				Item item = order.getItem();
 				int percentage = order.getPercentage();
-				TranslatableComponent name = new TranslatableComponent(item.getDescriptionId());
+				MutableComponent name = Component.translatable(item.getDescriptionId());
 				ChatFormatting color = ChatFormatting.RED;
 				if(percentage >= 100) {
 					color = ChatFormatting.GREEN;
@@ -93,9 +93,9 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 				
 				tooltips.add(UtilsText.tooltip("storedpattern", name.withStyle(color), UtilsText.SINGLE_DECIMAL.format(percentage) + "%").getVisualOrderText());
 				tooltips.add(UtilsText.tooltip("reporder", UtilsText.tooltip("orderabv").withStyle(ChatFormatting.AQUA), 
-						new TextComponent(order.getOrderedCount() + "").withStyle(ChatFormatting.BOLD), 
+						Component.literal(order.getOrderedCount() + "").withStyle(ChatFormatting.BOLD), 
 						UtilsText.tooltip("remainabv").withStyle(ChatFormatting.GOLD),
-						new TextComponent(order.getRemaining() + "").withStyle(ChatFormatting.BOLD)).getVisualOrderText());
+						Component.literal(order.getRemaining() + "").withStyle(ChatFormatting.BOLD)).getVisualOrderText());
 			} else {
 				tooltips.add(UtilsText.tooltip("noorder").getVisualOrderText());
 			}

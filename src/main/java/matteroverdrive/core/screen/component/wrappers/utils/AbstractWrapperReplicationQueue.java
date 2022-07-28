@@ -15,7 +15,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
 public abstract class AbstractWrapperReplicationQueue {
@@ -174,7 +174,7 @@ public abstract class AbstractWrapperReplicationQueue {
 	
 	public abstract List<QueuedReplication> getOrders();
 	
-	public abstract TranslatableComponent getCatagoryName();
+	public abstract MutableComponent getCatagoryName();
 	
 	public void handleOrderCancel(int buttonIndex, QueuedReplication order) {
 		if(order != null) {

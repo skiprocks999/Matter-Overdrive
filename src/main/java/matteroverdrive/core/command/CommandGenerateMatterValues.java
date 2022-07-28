@@ -21,7 +21,7 @@ import matteroverdrive.References;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -40,7 +40,7 @@ public class CommandGenerateMatterValues {
 
 	private static int generateMatterFile(CommandSourceStack source) {
 
-		source.sendSuccess(new TranslatableComponent("command.matteroverdrive.startmattercalc"), true);
+		source.sendSuccess(Component.translatable("command.matteroverdrive.startmattercalc"), true);
 
 		RecipeManager manager = source.getRecipeManager();
 		HashMap<Item, Double> generatedValues = new HashMap<>();
@@ -119,7 +119,7 @@ public class CommandGenerateMatterValues {
 			e.printStackTrace();
 		}
 
-		source.sendSuccess(new TranslatableComponent("command.matteroverdrive.endmattercalc"), true);
+		source.sendSuccess(Component.translatable("command.matteroverdrive.endmattercalc"), true);
 		return 1;
 	}
 

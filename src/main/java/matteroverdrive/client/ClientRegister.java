@@ -41,8 +41,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.ModelEvent.RegisterGeometryLoaders;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -188,13 +188,13 @@ public class ClientRegister {
 	}
 
 	@SubscribeEvent
-	public static void onModelEvent(ModelRegistryEvent event) {
+	public static void onModelEvent(RegisterGeometryLoaders event) {
 		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
 		ForgeModelBakery.addSpecialModel(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent
-	public static void registerParticles(ParticleFactoryRegisterEvent event) {
+	public static void registerParticles(RegisterParticleProvidersEvent event) {
 		ParticleEngine engine = Minecraft.getInstance().particleEngine;
 		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
 		engine.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);

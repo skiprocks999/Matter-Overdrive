@@ -4,6 +4,7 @@ import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -23,7 +24,7 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 	}
 
 	public TickableSoundTile(SoundEvent event, GenericSoundTile tile, float volume, float pitch, boolean repeat) {
-		super(event, SoundSource.BLOCKS);
+		super(event, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
 		this.tile = tile;
 		this.volume = 0.5F;
 		this.pitch = 1.0F;

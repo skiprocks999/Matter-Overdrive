@@ -4,7 +4,9 @@ import java.text.DecimalFormat;
 
 import matteroverdrive.References;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 
 public class UtilsText {
 
@@ -85,20 +87,20 @@ public class UtilsText {
 		return FORMAT.format(val / Math.pow(1000, base));
 	}
 
-	public static TranslatableComponent tooltip(String key, Object... additional) {
+	public static MutableComponent tooltip(String key, Object... additional) {
 		return translated(TOOLTIP_BASE, key, additional);
 	}
 
-	public static TranslatableComponent gui(String key, Object... additional) {
+	public static MutableComponent gui(String key, Object... additional) {
 		return translated(GUI_BASE, key, additional);
 	}
 	
-	public static TranslatableComponent dimension(String key, Object... additional) {
+	public static MutableComponent dimension(String key, Object... additional) {
 		return translated(DIMENSION_BASE, key, additional);
 	}
 
-	public static TranslatableComponent translated(String base, String key, Object... additional) {
-		return new TranslatableComponent(base + "." + References.ID + "." + key, additional);
+	public static MutableComponent translated(String base, String key, Object... additional) {
+		return Component.translatable(base + "." + References.ID + "." + key, additional);
 	}
 	
 	public static boolean guiExists(String key) {

@@ -9,9 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockColored extends BlockOverdrive {
 
@@ -38,7 +40,7 @@ public class BlockColored extends BlockOverdrive {
 	private static class ColorHandler {
 
 		@SubscribeEvent
-		public static void registerColoredBlocks(ColorHandlerEvent.Block event) {
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Block event) {
 			BLOCKS.forEach(block -> event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(),
 					block));
 		}

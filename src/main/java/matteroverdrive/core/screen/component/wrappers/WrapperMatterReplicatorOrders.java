@@ -9,11 +9,11 @@ import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterRe
 import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
 import matteroverdrive.core.screen.component.wrappers.utils.AbstractWrapperReplicationQueue;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 public class WrapperMatterReplicatorOrders extends AbstractWrapperReplicationQueue {
 	
-	private static final TranslatableComponent TITLE = UtilsText.gui("replicatorqueue");
+	private static final MutableComponent TITLE = UtilsText.gui("replicatorqueue");
 	
 	public WrapperMatterReplicatorOrders(ScreenMatterReplicator screen, int x, int y, int[] screenNumbers) {
 		super(screen, x, y, screenNumbers);
@@ -35,7 +35,7 @@ public class WrapperMatterReplicatorOrders extends AbstractWrapperReplicationQue
 	}
 
 	@Override
-	public TranslatableComponent getCatagoryName() {
+	public MutableComponent getCatagoryName() {
 		return TITLE;
 	}
 

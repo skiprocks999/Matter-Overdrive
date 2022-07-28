@@ -26,8 +26,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
@@ -50,10 +50,10 @@ public class WrapperPatternMonitorScreen {
 	
 	private String searchContents = "";
 	
-	private static final TextComponent PLUS = new TextComponent("+");
-	private static final TextComponent MINUS = new TextComponent("-");
+	private static final Component PLUS = Component.literal("+");
+	private static final Component MINUS = Component.literal("-");
 	
-	private static final TranslatableComponent ORDER = UtilsText.tooltip("order");
+	private static final MutableComponent ORDER = UtilsText.tooltip("order");
 	
 	public WrapperPatternMonitorScreen(ScreenPatternMonitor screen, int x, int y) {
 		this.screen = screen;
@@ -120,7 +120,7 @@ public class WrapperPatternMonitorScreen {
 			orderVal = Mth.clamp(orderVal -= inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
-		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, TextComponent.EMPTY,(button) -> {
+		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, Component.empty(),(button) -> {
 			Minecraft minecraft = Minecraft.getInstance();
 			ItemPatternWrapper wrapper = selectedItem.getPattern();
 			if(wrapper == null || wrapper.isAir()) {

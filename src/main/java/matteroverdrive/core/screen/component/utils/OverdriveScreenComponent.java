@@ -8,7 +8,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -29,7 +28,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 
 	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers) {
-		super(x, y, width, height, TextComponent.EMPTY);
+		super(x, y, width, height, Component.empty());
 		this.resource = resource;
 		this.gui = gui;
 		this.screenNumbers = screenNumbers;

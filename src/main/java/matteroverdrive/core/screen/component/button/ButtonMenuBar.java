@@ -13,7 +13,7 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonMenuBar extends AbstractOverdriveButton {
@@ -26,7 +26,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 	private boolean isPressed;
 
 	public ButtonMenuBar(GenericScreen<?> gui, int x, int y, boolean inidialCondition, OnPress press) {
-		super(gui, x, y, 16, 143, TextComponent.EMPTY, press, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, 16, 143, Component.empty(), press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
 			if (bar.isExtended) {
 				bar.gui.renderTooltip(stack, UtilsText.tooltip("closemenu"), mouseX, mouseY);
