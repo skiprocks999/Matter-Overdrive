@@ -20,17 +20,16 @@ public class DataGenerators {
 	public static void gatherData(GatherDataEvent event) {
 
 		DataGenerator generator = event.getGenerator();
-
 		if (event.includeServer()) {
-			generator.addProvider(new MinableTagsProvider(generator, event.getExistingFileHelper()));
-			generator.addProvider(new LootTablesProvider(generator));
-			generator.addProvider(new MatterValueGenerator(generator));
+			generator.addProvider(true, new MinableTagsProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(true, new LootTablesProvider(generator));
+			generator.addProvider(true, new MatterValueGenerator(generator));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
-			generator.addProvider(new OverdriveBlockModelsProvider(generator, event.getExistingFileHelper()));
-			generator.addProvider(new OverdriveItemModelsProvider(generator, event.getExistingFileHelper()));
-			generator.addProvider(new OverdriveLangKeyProvider(generator, "en_us"));
+			generator.addProvider(true, new OverdriveBlockStateProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(true, new OverdriveBlockModelsProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(true, new OverdriveItemModelsProvider(generator, event.getExistingFileHelper()));
+			generator.addProvider(true, new OverdriveLangKeyProvider(generator, "en_us"));
 		}
 	}
 

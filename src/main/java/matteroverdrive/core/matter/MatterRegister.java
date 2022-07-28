@@ -99,8 +99,8 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected Map<ResourceLocation, JsonObject> prepare(final ResourceManager resourceManager,
 			final ProfilerFiller profiler) {
 		final List<Pair<ResourceLocation, List<JsonObject>>> map = new ArrayList<>();
-		List<ResourceLocation> resources = new ArrayList<>(
-				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile));
+		List<Resource> resources = new ArrayList<>(
+				resourceManager.listResources(this.folderName, MatterRegister::isStringJsonFile).values());
 		Collections.reverse(resources);
 		// we go in reverse, as higher priority data packs are found later in the list
 		for (ResourceLocation resourceLocation : resources) {

@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,7 +12,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.tags.ItemTags;
 
 public class MatterValueGenerator implements DataProvider {
@@ -32,31 +30,28 @@ public class MatterValueGenerator implements DataProvider {
 		addValues(json);
 		Path path = gen.getOutputFolder().resolve(DATA_LOC);
 		try {
-			String s = GSON.toJson(json);
+		String s = GSON.toJson(json);
+			Files.createDirectories(path.getParent());
+			BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 
-			String s1 = SHA1.hashUnencodedChars(s).toString();
-			if (!Objects.equals(cache.getHash(path), s1) || !Files.exists(path)) {
-				Files.createDirectories(path.getParent());
-				BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
-
-				try {
-					bufferedwriter.write(s);
-				} catch (Throwable throwable1) {
-					if (bufferedwriter != null) {
-						try {
-							bufferedwriter.close();
-						} catch (Throwable throwable) {
-							throwable1.addSuppressed(throwable);
-						}
-					}
-
-					throw throwable1;
-				}
-
+			try {
+				bufferedwriter.write(s);
+			} catch (Throwable throwable1) {
 				if (bufferedwriter != null) {
-					bufferedwriter.close();
+					try {
+						bufferedwriter.close();
+					} catch (Throwable throwable) {
+						throwable1.addSuppressed(throwable);
+					}
 				}
+
+				throw throwable1;
 			}
+
+			if (bufferedwriter != null) {
+				bufferedwriter.close();
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

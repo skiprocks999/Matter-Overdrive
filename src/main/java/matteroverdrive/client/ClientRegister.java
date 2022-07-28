@@ -32,19 +32,16 @@ import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.utils.UtilsNbt;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelEvent.RegisterGeometryLoaders;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -188,17 +185,16 @@ public class ClientRegister {
 	}
 
 	@SubscribeEvent
-	public static void onModelEvent(RegisterGeometryLoaders event) {
-		ForgeModelBakery.addSpecialModel(MODEL_CHARGER);
-		ForgeModelBakery.addSpecialModel(MODEL_MATTER_REPLICATOR_INTERIOR);
+	public static void onModelEvent(ModelEvent.RegisterAdditional event) {
+		event.register(MODEL_CHARGER);
+		event.register(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent
 	public static void registerParticles(RegisterParticleProvidersEvent event) {
-		ParticleEngine engine = Minecraft.getInstance().particleEngine;
-		engine.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
-		engine.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
-		engine.register(DeferredRegisters.PARTICLE_VENT.get(), ParticleVent.Factory::new);
+		event.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
+		event.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
+		event.register(DeferredRegisters.PARTICLE_VENT.get(), ParticleVent.Factory::new);
 	}
 
 	private static ResourceLocation blockModel(String path) {

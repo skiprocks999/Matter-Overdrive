@@ -3,7 +3,6 @@ package matteroverdrive.common.recipe;
 import matteroverdrive.References;
 import matteroverdrive.common.recipe.item2item.Item2ItemRecipeTypes;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -17,7 +16,7 @@ public class RecipeInit {
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister
 			.create(ForgeRegistries.RECIPE_SERIALIZERS, References.ID);
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister
-			.create(Registry.RECIPE_TYPE.key(), References.ID);
+			.create(ForgeRegistries.RECIPE_TYPES, References.ID);
 	/* RECIPE TYPES */
 
 	// Item2Item
@@ -35,7 +34,7 @@ public class RecipeInit {
 	public static class CustomRecipeType<T extends Recipe<?>> implements RecipeType<T> {
 		@Override
 		public String toString() {
-			return Registry.RECIPE_TYPE.getKey(this).toString();
+			return ForgeRegistries.RECIPE_TYPES.getKey(this).toString();
 		}
 	}
 

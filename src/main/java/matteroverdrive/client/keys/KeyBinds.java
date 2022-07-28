@@ -4,8 +4,13 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.References;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
+@EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class KeyBinds {
 
 	// Category
@@ -22,9 +27,12 @@ public class KeyBinds {
 	}
 
 	private static KeyMapping registerKey(String name, String category, int keyCode) {
-		final var key = new KeyMapping("key." + References.ID + "." + name, keyCode, category);
-		ClientRegistry.registerKeyBinding(key);
-		return key;
+		return new KeyMapping("key." + References.ID + "." + name, keyCode, category);
+	}
+	
+	@SubscribeEvent
+	public static void registerKeys(RegisterKeyMappingsEvent event) {
+		event.register(toggleMatterScanner);
 	}
 
 }
