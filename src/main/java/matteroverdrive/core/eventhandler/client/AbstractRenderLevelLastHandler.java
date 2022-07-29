@@ -12,6 +12,6 @@ public abstract class AbstractRenderLevelLastHandler {
 		
 	}
 	
-	public abstract void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix, Matrix4f projMatrix, float partialTick, long startNano);
+	public abstract void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix, Matrix4f projMatrix, float partialTick, int startNano);
 
 }

@@ -52,7 +52,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 	
 	@Override
 	public void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix, Matrix4f projMatrix,
-			float partialTick, long startNano) {
+			float partialTick, int startNano) {
 
 		Player player = minecraft.player;
 		BlockHitResult trace = Item.getPlayerPOVHitResult(player.level, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
