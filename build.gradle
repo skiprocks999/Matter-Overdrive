@@ -16,38 +16,56 @@ plugins {
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
-
+apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 libsDirName = "../output"
 distsDirName = "../output"
 
-def	version_minor="0"
-def	version_revision='0'
-def	minecraft_version='1.19'
-def	version_build='0'
-def	version_major='0'
+version = "$project.minecraft_version-$project.major_version.$project.minor_version.$project.patch_version-$project.revision_version"
+group = project.modId
+archivesBaseName = project.modId
 
-version = minecraft_version+'-'+version_major+'.'+version_minor+'.'+version_revision+'-'+version_build
-group = 'matteroverdrive' 
-archivesBaseName = 'matteroverdrive'
+java.toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = JvmVendorSpec.ADOPTOPENJDK
+}
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+def version_properties = [
+        "loader_version"    : loaderVersion,
+        "license"           : license,
+        "issue_tracker_url" : issueTrackerURL,
+        "mod_id"            : modId,
+        "version"           : "$project.major_version.$project.minor_version.$project.patch_version-$project.revision_version",
+        "mod_name"          : modName,
+        "display_url"       : displayURL,
+        "forge_version"     : forge_version,
+        "description"       : modDesc
+]
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+processResources {
+    outputs.upToDateWhen { false }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    from(sourceSets.main.resources) {
+        include "META-INF/mods.toml"
+        expand version_properties
+    }
+    into "$buildDir/resources/main/"
+}
+
 minecraft {
-    mappings channel: 'official', version: project.minecraft_version
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    mappings channel: project.mappings_type, version: project.mappings_version
+    if (project.modTransformer) {
+        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
     runs {
         client {
             workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
             property 'forge.logging.console.level', 'debug'
-
+            property 'forge.enabledGameTestNamespaces', 'epos'
             mods {
-                matteroverdrivetng {
+                matteroverdrive {
                     source sourceSets.main
                 }
             }
@@ -55,13 +73,21 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
             property 'forge.logging.console.level', 'debug'
-
+            property 'forge.enabledGameTestNamespaces', 'epos'
             mods {
-                matteroverdrivetng {
+                matteroverdrive {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        gameTestServer {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', 'matteroverdrive'
+            mods {
+                epos {
                     source sourceSets.main
                 }
             }
@@ -69,15 +95,10 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
             property 'forge.logging.console.level', 'debug'
-
             args '--mod', 'matteroverdrive', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
             mods {
-                matteroverdrivetng {
+                matteroverdrive {
                     source sourceSets.main
                 }
             }
@@ -90,34 +111,42 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     mavenCentral()
     maven {
-	name = "Progwml6 maven"
-	url = "https://dvs1.progwml6.com/files/maven/"
+	    name = "Progwml6 maven"
+	    url = "https://dvs1.progwml6.com/files/maven/"
     }
-
     maven {
-	name = "ModMaven"
-	url = "https://modmaven.k-4u.nl"
+	    name = "ModMaven"
+	    url = "https://modmaven.k-4u.nl"
     }
-    maven { url 'https://modmaven.dev/' }
+    maven {
+        name = "Mekanism"
+        url = "https://modmaven.dev/"
+    }
 }
 
 dependencies {
+    // Minecraft & Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:11.1.1.239")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:11.1.1.239")
-    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
+    // JEI
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+    // Mekanism
+    runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 }
 
 jar {
     manifest {
+        finalizedBy "reobfJar"
         attributes([
-                "Specification-Title"     : "matteroverdrive",
-                "Specification-Vendor"    : "examplemodsareus",
-                "Specification-Version"   : "1", 
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
+                "Specification-Title"     : project.modName,
+                "Specification-Vendor"    : project.modName,
+                "Specification-Version"   : "${major_version}-${minor_version}-${patch_version}",
+                "Implementation-Title"    : project.modName,
+                "Implementation-Version"  : 0,
+                "Implementation-Vendor"   : project.modName,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
