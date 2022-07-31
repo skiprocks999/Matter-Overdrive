@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.item.ItemUpgrade;
@@ -15,7 +15,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.sound.SoundBarrierMethods;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.old.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;

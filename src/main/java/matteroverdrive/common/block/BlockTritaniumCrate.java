@@ -6,11 +6,11 @@ import java.util.List;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
-import matteroverdrive.core.block.WaterloggableEntityBlock;
+import matteroverdrive.core.block.old.WaterloggableEntityBlock;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -32,8 +32,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockTritaniumCrate extends WaterloggableEntityBlock {
 

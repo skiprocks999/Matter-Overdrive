@@ -3,7 +3,7 @@ package matteroverdrive.core.inventory;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.slot.SlotContainer;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;

@@ -1,6 +1,6 @@
 package matteroverdrive.core.sound.tile;
 
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.old.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;

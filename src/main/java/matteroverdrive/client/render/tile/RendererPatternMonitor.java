@@ -6,7 +6,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.ClientRegister;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockLightableMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;

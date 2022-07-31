@@ -122,11 +122,20 @@ repositories {
         name = "Mekanism"
         url = "https://modmaven.dev/"
     }
+    maven {
+        name = "Titanium"
+        url  = "https://maven.blamejared.com/"
+    }
 }
 
 dependencies {
     // Minecraft & Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // Titanium
+    implementation fg.deobf(project.dependencies.create("com.hrznstudio:titanium:${titanium_version}") {
+        transitive = false
+    })
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")

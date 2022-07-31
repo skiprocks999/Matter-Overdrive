@@ -8,7 +8,7 @@ import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

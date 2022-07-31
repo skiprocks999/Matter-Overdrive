@@ -5,7 +5,7 @@ import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.registers.IBulkRegistryObject;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;

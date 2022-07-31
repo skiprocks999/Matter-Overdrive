@@ -10,7 +10,7 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -10,7 +10,7 @@ import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.sound.item.TickableSoundMatterScanner;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

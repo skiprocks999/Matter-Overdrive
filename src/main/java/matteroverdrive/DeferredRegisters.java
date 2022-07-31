@@ -12,9 +12,9 @@ import matteroverdrive.client.particle.vent.ParticleOptionVent;
 import matteroverdrive.common.block.cable.dualside.BlockMatterNetworkCable;
 import matteroverdrive.common.block.cable.serverside.BlockMatterConduit;
 import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
-import matteroverdrive.common.block.machine.BlockMachine;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
-import matteroverdrive.common.block.machine.variants.BlockVerticalMachine;
+import matteroverdrive.common.block.machine.old.BlockMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockLightableMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockVerticalMachine;
 import matteroverdrive.common.block.charger.BlockAndroidChargerChild;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
@@ -134,11 +134,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
-	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child",
-			() -> new BlockAndroidChargerChild());
-	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
-			() -> new BlockAndroidChargerParent<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
-					DeferredRegisters.TILE_CHARGER));
+	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child", BlockAndroidChargerChild::new);
+	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));

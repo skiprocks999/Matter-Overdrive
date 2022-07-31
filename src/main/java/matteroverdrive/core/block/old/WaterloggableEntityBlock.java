@@ -1,4 +1,4 @@
-package matteroverdrive.core.block;
+package matteroverdrive.core.block.old;
 
 import javax.annotation.Nullable;
 
@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class WaterloggableEntityBlock extends GenericEntityBlock {
 

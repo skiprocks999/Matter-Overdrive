@@ -6,7 +6,7 @@ import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.core.tile.types.old.GenericUpgradableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

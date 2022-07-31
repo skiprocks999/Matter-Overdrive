@@ -6,7 +6,7 @@ import matteroverdrive.common.inventory.InventoryChunkloader;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.core.tile.types.old.GenericUpgradableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;

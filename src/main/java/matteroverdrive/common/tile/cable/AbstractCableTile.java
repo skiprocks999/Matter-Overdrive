@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.core.network.AbstractCableNetwork;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

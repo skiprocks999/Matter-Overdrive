@@ -21,7 +21,7 @@ import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternS
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
-import matteroverdrive.core.tile.types.GenericRedstoneTile;
+import matteroverdrive.core.tile.types.old.GenericRedstoneTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;

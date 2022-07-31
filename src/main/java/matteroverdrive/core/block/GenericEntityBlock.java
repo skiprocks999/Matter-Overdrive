@@ -1,70 +1,66 @@
 package matteroverdrive.core.block;
 
-import matteroverdrive.core.tile.GenericTile;
-import net.minecraft.core.BlockPos;
+import com.hrznstudio.titanium.block.BasicTileBlock;
+import com.hrznstudio.titanium.block.tile.BasicTile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+public abstract class GenericEntityBlock<T extends BasicTile<T>> extends BasicTileBlock<T> {
 
-public abstract class GenericEntityBlock extends BaseEntityBlock {
+  /**
+   * Default Constructor for GenericEntityBlock.
+   *
+   * @param properties The blocks BlockBehaviour Properties.
+   * @param name The "name" of the block (IE. "charger_block")
+   * @param tileClass The BlockEntity Class for the block.
+   */
+  protected GenericEntityBlock(Properties properties, String name, Class<T> tileClass) {
+    super(name, properties, tileClass);
+  }
 
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+  /**
+   * You might be wondering why we do nothing here.
+   * Well see the {@link BaseEntityBlock#getTicker(Level, BlockState, BlockEntityType)} method is being overridden and
+   * handled on the {@link BasicTileBlock} super class.
+   * See: {@link BasicTileBlock#getTicker(Level, BlockState, BlockEntityType)}
+   *
+   * @param level The {@link Level} of the current {@link Block} being queried.
+   * @param blockState The current {@link BlockState} of the {@link Block} being queried.
+   * @param blockEntityType The {@link BlockEntityType} being supplied.
+   * @param <R> The {@link BlockEntity} class definition.
+   * @return Returns the {@link BlockEntityTicker} for the {@link BlockEntity}.
+   * HOWEVER: We handle our {@link BlockEntityTicker} ticking on the actual {@link BlockEntity} itself.
+   */
+  @Nullable
+  @Override
+  public <R extends BlockEntity> BlockEntityTicker<R> getTicker(Level level, BlockState blockState, BlockEntityType<R> blockEntityType) {
+    return super.getTicker(level, blockState, blockEntityType);
+  }
 
-	protected GenericEntityBlock(Properties properties) {
-		super(properties);
-	}
-
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-			BlockEntityType<T> type) {
-		return (world, pos, blockstate, tile) -> {
-			if (tile instanceof GenericTile generic && generic.isTickable) {
-				generic.tick(world, generic);
-			}
-		};
-	}
-
-	@Override
-	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.MODEL;
-	}
-
-	@Override
-	public BlockState rotate(BlockState state, Rotation rot) {
-		if (state.hasProperty(FACING)) {
-			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
-		}
-		return super.rotate(state, rot);
-	}
-
-	@Override
-	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		if (state.hasProperty(FACING)) {
-			return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-		}
-		return super.mirror(state, mirrorIn);
-	}
-
-	@Override
-	public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean moving) {
-		super.onRemove(oldState, level, pos, newState, moving);
-		if (!level.isClientSide && newState.hasProperty(FACING)
-				&& oldState.getValue(FACING) != newState.getValue(FACING)) {
-			BlockEntity entity = level.getBlockEntity(pos);
-			if (entity != null && entity instanceof GenericTile tile) {
-				tile.refreshCapabilities();
-			}
-		}
-	}
+  /**
+   * Override this to change the RenderShape if we need a TESR.
+   * INVISIBLE: {@link RenderShape#INVISIBLE} = No Rendering
+   * MODEL: {@link RenderShape#MODEL} = Model-based Rendering
+   * ENTITYBLOCK_ANIMATED: {@link RenderShape#ENTITYBLOCK_ANIMATED} = Model + TESR
+   *
+   * We are provided the {@link BlockState} of the block for use to decide if the blocks RenderShape needs to change.
+   * Potential optimisation would be if we add animations to the blocks that only if a "running" state is active.
+   * To use {@link RenderShape#ENTITYBLOCK_ANIMATED} otherwise use {@link RenderShape#MODEL}
+   * @param state The state of the block.
+   * @return returns the {@link RenderShape} of the block, using the state as a variable for the shape.
+   */
+  @Override
+  @SuppressWarnings({"deprecation"})
+  public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+    return RenderShape.MODEL;
+  }
 
 }

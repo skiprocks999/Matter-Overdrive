@@ -5,7 +5,7 @@ import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

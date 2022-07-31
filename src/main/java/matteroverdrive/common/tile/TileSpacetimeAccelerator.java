@@ -8,7 +8,7 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.core.tile.types.old.GenericUpgradableTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.UtilsWorld;

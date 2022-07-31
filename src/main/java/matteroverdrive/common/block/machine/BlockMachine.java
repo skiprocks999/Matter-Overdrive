@@ -1,84 +1,74 @@
 package matteroverdrive.common.block.machine;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.hrznstudio.titanium.block.tile.BasicTile;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
-import matteroverdrive.core.capability.types.CapabilityType;
-import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.block.state.StateVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
+import java.util.Optional;
 
-	public TypeMachine type;
-	private RegistryObject<BlockEntityType<T>> blockEntityType;
+public class BlockMachine<T extends BasicTile<T>> extends GenericMachineBlock<T> {
 
-	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
-			RegistryObject<BlockEntityType<T>> entity) {
-		super(supplier);
-		this.type = type;
-		this.blockEntityType = entity;
-	}
+  public TypeMachine type;
+  private final BlockEntityType.BlockEntitySupplier<T> supplier;
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if (type.hasCustomAABB) {
-			return type.getShape(state.getValue(FACING));
-		}
-		return super.getShape(state, level, pos, context);
-	}
+  public BlockMachine(String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
+    this(StateVariables.Defaults.waterloggableFourway, name, tileClass, supplier, type);
+  }
 
-	@Override
-	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
-		ItemStack stack = super.getCloneItemStack(level, pPos, pState);
-		level.getBlockEntity(pPos, blockEntityType.get()).ifPresent(crate -> {
-			crate.saveToItem(stack);
-		});
-		return stack;
-	}
+  public BlockMachine(StateVariables stateVariables, String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
+    super(stateVariables, name, tileClass);
+    this.type = type;
+    this.supplier = supplier;
+  }
 
-	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof GenericTile generic) {
-			CapabilityInventory inv = generic.exposeCapability(CapabilityType.Item);
-			if (MatterOverdriveConfig.machines_drop_items.get()) {
-				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
-				return Arrays.asList(new ItemStack(this));
-			}
-		}
-		return super.getDrops(state, builder);
-	}
+  public BlockMachine(Properties properties, StateVariables stateVariables, String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
+    super(properties, stateVariables, name, tileClass);
+    this.type = type;
+    this.supplier = supplier;
+  }
 
-	@Override
-	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-		return type.isRedstoneConnected;
-	}
-	
-	@Override
-	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-		switch(type) {
-		case TRANSPORTER:
-			return 15;
-		default: 
-			return super.getLightEmission(state, level, pos);	
-		}
-	}
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    if (type.hasCustomAABB) {
+      return type.getShape(state.getValue(this.getRotationType().getProperties()[0]));
+    }
+    return super.getShape(state, level, pos, context);
+  }
+
+  @Override
+  public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    Optional<T> tile = getTile(level, pos);
+    ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+    tile.ifPresent(t -> t.saveToItem(stack));
+    return super.getCloneItemStack(state, target, level, pos, player);
+  }
+
+  @Override
+  public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+    return type.isRedstoneConnected;
+  }
+
+  @Override
+  public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+    return type == TypeMachine.TRANSPORTER ? 15 : super.getLightEmission(state, level, pos);
+  }
+
+  @Override
+  public BlockEntityType.BlockEntitySupplier<?> getTileEntityFactory() {
+    return supplier;
+  }
 
 }

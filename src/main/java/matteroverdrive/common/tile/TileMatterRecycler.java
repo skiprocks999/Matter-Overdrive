@@ -2,14 +2,14 @@ package matteroverdrive.common.tile;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.sound.SoundBarrierMethods;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.old.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;

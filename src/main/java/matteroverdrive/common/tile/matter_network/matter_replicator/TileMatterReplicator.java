@@ -12,7 +12,7 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
+import matteroverdrive.common.block.machine.old.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.common.item.ItemPatternDrive;
@@ -27,7 +27,7 @@ import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPattern
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.old.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;

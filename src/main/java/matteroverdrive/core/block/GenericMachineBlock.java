@@ -1,93 +1,80 @@
 package matteroverdrive.core.block;
 
-import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.CapabilityType;
-import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
-import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.utils.UtilsCapability;
+import com.hrznstudio.titanium.block.BasicTileBlock;
+import com.hrznstudio.titanium.block.tile.BasicTile;
+import matteroverdrive.core.block.state.StateVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+public abstract class GenericMachineBlock<T extends BasicTile<T>> extends GenericStateVariableBlock<T> {
 
-public class GenericMachineBlock extends WaterloggableEntityBlock {
+  // Defaults
+  /**
+   * Default Machine Block Properties
+   */
+  private static final Properties defaultMachineProperties = Properties.of(Material.METAL)
+          .strength(3.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops();
 
-	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
+  /**
+   * Constructor that doesn't use the "Default Machine Properties"
+   * Note: This also does not provide a default StateVariable config!
+   *
+   * @param properties The blocks BlockBehaviour Properties.
+   * @param stateVariables The state variables for the block.
+   * @param name The "name" of the block (IE. "charger_block")
+   * @param tileClass The BlockEntity Class for the block.
+   */
+  protected GenericMachineBlock(Properties properties, StateVariables stateVariables, String name, Class<T> tileClass) {
+    super(properties, stateVariables, name, tileClass);
+  }
 
-	protected GenericMachineBlock(BlockEntitySupplier<BlockEntity> supplier) {
-		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion()
-				.requiresCorrectToolForDrops());
-		blockEntitySupplier = supplier;
-		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
-	}
+  /**
+   * Constructor that uses the "Default Machine Properties"
+   * Note: This does not provide a default StateVariable config!
+   *
+   * @param stateVariables The state variables for the block.
+   * @param name The "name" of the block (IE. "charger_block")
+   * @param tileClass The BlockEntity Class for the block.
+   */
+  protected GenericMachineBlock(StateVariables stateVariables, String name, Class<T> tileClass) {
+    super(defaultMachineProperties, stateVariables, name, tileClass);
+  }
 
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
-	}
+  /**
+   * So you might be looking at this in the future asking where the old handling code went?
+   * Well I'll tell you! to consolidate behaviour and handling, this code now exists **ON** the BlockEntity itself.
+   * See the BlockEntity's implementation of {@link BasicTile#onActivated(Player, InteractionHand, Direction, double, double, double)}
+   * Also see {@link BasicTileBlock#use(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)}
+   * For where it's calling the #onActivated on the Tile!
+   */
+  @Override
+  public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray) {
+    if (level.isClientSide()) return InteractionResult.SUCCESS;
+    return super.use(state, level, pos, player, hand, ray);
+  }
 
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(FACING);
-	}
-
-	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-			BlockHitResult hit) {
-		if (level.isClientSide) {
-			return InteractionResult.SUCCESS;
-		}
-		BlockEntity tile = level.getBlockEntity(pos);
-		if (tile instanceof GenericTile generic && generic != null) {
-			ItemStack stack = player.getItemInHand(hand);
-			if (UtilsCapability.hasMatterCap(stack)) {
-				if (generic.hasCapability(CapabilityType.Matter)) {
-					CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.Matter);
-					ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
-							.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
-					if (storage.canReceive() && matter.canExtract()) {
-						double accepted = storage.receiveMatter(matter.getMatterStored(), true);
-						storage.receiveMatter(accepted, false);
-						matter.extractMatter(accepted, false);
-						return InteractionResult.CONSUME;
-					}
-					if (storage.canExtract() && matter.canReceive()) {
-						double accepted = matter.receiveMatter(storage.getMatterStored(), true);
-						matter.receiveMatter(accepted, false);
-						storage.extractMatter(accepted, false);
-						return InteractionResult.CONSUME;
-					}
-				}
-			}
-			if (generic.hasMenu) {
-				player.openMenu(generic.getMenuProvider());
-			}
-			player.awardStat(Stats.INTERACT_WITH_FURNACE);
-			return InteractionResult.CONSUME;
-		}
-		return InteractionResult.FAIL;
-	}
-
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return blockEntitySupplier.create(pos, state);
-	}
-
+  /**
+   * So this method gets overriden in {@link BasicTileBlock#newBlockEntity(BlockPos, BlockState)}
+   * Which defaults to a new method called {@link BasicTileBlock#getTileEntityFactory()}
+   * This method is what gets overriden on new blocks and where we provide the BlockEntity creation!
+   *
+   * @param pos The position of the block where the BlockEntity is created.
+   * @param state The state of the block which is creating the BlockEntity.
+   * @return Returns the new BlockEntity instance.
+   */
+  @Nullable
+  @Override
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return super.newBlockEntity(pos, state);
+  }
 }

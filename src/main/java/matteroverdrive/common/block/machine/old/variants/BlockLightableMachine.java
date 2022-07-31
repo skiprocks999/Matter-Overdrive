@@ -1,8 +1,8 @@
-package matteroverdrive.common.block.machine.variants;
+package matteroverdrive.common.block.machine.old.variants;
 
-import matteroverdrive.common.block.machine.BlockMachine;
+import matteroverdrive.common.block.machine.old.BlockMachine;
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.old.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;

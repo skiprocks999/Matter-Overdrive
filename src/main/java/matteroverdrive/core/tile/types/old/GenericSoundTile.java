@@ -1,4 +1,4 @@
-package matteroverdrive.core.tile.types;
+package matteroverdrive.core.tile.types.old;
 
 import matteroverdrive.core.sound.tile.ITickingSoundTile;
 import net.minecraft.core.BlockPos;

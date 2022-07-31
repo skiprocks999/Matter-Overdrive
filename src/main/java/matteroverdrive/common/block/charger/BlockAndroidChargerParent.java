@@ -5,7 +5,8 @@ import matteroverdrive.common.block.machine.BlockMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.common.tile.TileCharger;
+import matteroverdrive.core.block.GenericStateVariableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,17 +16,13 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.RegistryObject;
 
-public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachine<T> {
+public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 
-	public BlockAndroidChargerParent(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
-			RegistryObject<BlockEntityType<T>> entity) {
-		super(supplier, type, entity);
+
+	public BlockAndroidChargerParent() {
+		super("charger_parent", TileCharger.class, TileCharger::new, TypeMachine.CHARGER);
 	}
 
 	@Override
@@ -44,13 +41,17 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
 		if(!world.isClientSide) {
-			Direction facing = state.getValue(FACING);
+			Direction facing = state.getValue(getRotationProperty());
 			BlockState middle = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
+			if (middle.getBlock() instanceof GenericStateVariableBlock<?> variableBlock) {
+				middle = middle.setValue(variableBlock.getRotationProperty(), facing);
+				middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
+			}
 			BlockState top = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
-			middle = middle.setValue(BlockAndroidChargerChild.FACING, facing);
-			middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
-			top = top.setValue(BlockAndroidChargerChild.FACING, facing);
-			top = top.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.TOP);
+			if (top.getBlock() instanceof GenericStateVariableBlock<?> variableBlock) {
+				top = top.setValue(variableBlock.getRotationProperty(), facing);
+				top = top.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.TOP);
+			}
 			world.setBlockAndUpdate(pos.offset(0, 1, 0), middle);
 			world.setBlockAndUpdate(pos.offset(0, 2, 0), top);
 		}
@@ -59,7 +60,7 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
 		
-		if(!newState.hasProperty(FACING) && !level.isClientSide) {
+		if(!newState.hasProperty(getRotationProperty()) && !level.isClientSide) {
 			level.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.offset(0, 2, 0), Blocks.AIR.defaultBlockState());
 		}
@@ -69,15 +70,19 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
-		if (state.hasProperty(FACING)) {
+		if (state.hasProperty(getRotationProperty())) {
 			BlockPos first = pos.offset(0, 1, 0);
 			BlockPos second = pos.offset(0, 2, 0);
 			BlockState firstState = level.getBlockState(first);
+			if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable) {
+				level.setBlock(first, firstState.setValue(variable.getRotationProperty(), rot.rotate(firstState.getValue(getRotationProperty()))), 3);
+
+			}
 			BlockState secondState = level.getBlockState(second);
-			level.setBlock(first, firstState.setValue(BlockAndroidChargerChild.FACING, rot.rotate(firstState.getValue(BlockAndroidChargerParent.FACING))), 3);
-			level.setBlock(second, secondState.setValue(BlockAndroidChargerChild.FACING, rot.rotate(secondState.getValue(BlockAndroidChargerChild.FACING))), 3);
-		
-			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+			if (secondState.getBlock() instanceof GenericStateVariableBlock<?> variable) {
+				level.setBlock(second, secondState.setValue(variable.getRotationProperty(), rot.rotate(secondState.getValue(getRotationProperty()))), 3);
+			}
+			return state.setValue(getRotationProperty(), rot.rotate(state.getValue(getRotationProperty())));
 		}
 		return super.rotate(state, level, pos, rot);
 	}
