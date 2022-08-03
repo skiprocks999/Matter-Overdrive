@@ -3,6 +3,8 @@ package matteroverdrive.core.packet;
 import java.util.Optional;
 
 import matteroverdrive.References;
+import matteroverdrive.core.component.util.property.message.UpdateClientContainerPropertiesMessage;
+import matteroverdrive.core.component.util.property.message.UpdateServerContainerPropertyMessage;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMNData;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
 import matteroverdrive.core.packet.type.clientbound.PacketPlayMatterScannerSound;
@@ -15,8 +17,10 @@ import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
@@ -67,6 +71,14 @@ public class NetworkHandler {
 				PacketPlayMatterScannerSound::encode, PacketPlayMatterScannerSound::decode,
 				PacketPlayMatterScannerSound::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		
+	}
+
+	public static void sendUpdateClientContainerProperties(ServerPlayer playerEntity, UpdateClientContainerPropertiesMessage message) {
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> playerEntity), message);
+	}
+
+	public static void sendUpdateServerContainerProperties(UpdateServerContainerPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
 }

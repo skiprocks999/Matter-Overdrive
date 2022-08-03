@@ -28,9 +28,9 @@ public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		BlockState middle = world.getBlockState(pos.offset(0, 1, 0));
-		if(middle.isAir() || middle.getFluidState() != null && !middle.getFluidState().isEmpty()) {
+		if(middle.isAir() || middle.getFluidState().isEmpty() && !middle.getFluidState().isEmpty()) {
 			BlockState top = world.getBlockState(pos.offset(0, 2, 0));
-			if(top.isAir() || top.getFluidState() != null && !top.getFluidState().isEmpty()) {
+			if(top.isAir() || top.getFluidState().isEmpty() && !top.getFluidState().isEmpty()) {
 				return super.canSurvive(state, world, pos);
 			}
 		}

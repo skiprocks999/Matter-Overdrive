@@ -181,6 +181,11 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	@Override
+	public void setMatterStored(double matterStored) {
+		this.currStorage = matterStored;
+	}
+
+	@Override
 	public double getMatterStored() {
 		return currStorage;
 	}

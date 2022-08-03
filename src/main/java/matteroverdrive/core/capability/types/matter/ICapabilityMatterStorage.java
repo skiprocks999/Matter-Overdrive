@@ -17,6 +17,8 @@ public interface ICapabilityMatterStorage {
 
 	double getMatterStored();
 
+	void setMatterStored(double matterStored);
+
 	double getMaxMatterStored();
 
 	boolean canExtract();

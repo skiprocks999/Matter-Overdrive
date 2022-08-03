@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
@@ -113,7 +114,7 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
   public @NotNull BlockState updateShape(BlockState state, @NotNull Direction direction,
                                          @NotNull BlockState neighborState, @NotNull LevelAccessor level,
                                          @NotNull BlockPos currentPos, @NotNull BlockPos neighborPos) {
-    if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+    if (getProperty(state, BlockStateProperties.WATERLOGGED) != null) {
       level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
     }
     return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
@@ -128,7 +129,7 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
   @SuppressWarnings("deprecation")
   @Override
   public @NotNull FluidState getFluidState(BlockState state) {
-    return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    return getProperty(state, BlockStateProperties.WATERLOGGED) != null ? Fluids.WATER.getSource(false) : super.getFluidState(state);
   }
 
   /**
@@ -171,14 +172,18 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
    */
   @Override
   public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-    if (state.hasProperty(BlockStateProperties.LIT)) {
-      return state.getValue(BlockStateProperties.LIT) ? 15 : super.getLightEmission(state, level, pos);
-    }
-    return super.getLightEmission(state, level, pos);
+    return getProperty(state, BlockStateProperties.LIT) != null ? 15 : super.getLightEmission(state, level, pos);
   }
 
   public DirectionProperty getRotationProperty() {
     return getRotationType().getProperties()[0];
   }
 
+  @Nullable
+  public <U extends Comparable<U>> U getProperty(BlockState state, Property<U> property) {
+    if (state.hasProperty(property)) {
+      return state.getValue(property);
+    }
+    return null;
+  }
 }

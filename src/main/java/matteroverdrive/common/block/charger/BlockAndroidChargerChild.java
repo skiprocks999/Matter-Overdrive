@@ -1,9 +1,6 @@
 package matteroverdrive.common.block.charger;
 
-import java.util.List;
-
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.machine.BlockMachine;
 import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
@@ -25,23 +22,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	
@@ -169,20 +165,19 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 	
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(@NotNull Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(getRotationProperty());
 		builder.add(OverdriveBlockStates.CHARGER_POS);
 	}
 	
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
+	public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
 		BlockState state = super.getStateForPlacement(context);
 		if (state != null) {
 			state.setValue(getRotationProperty(), context.getHorizontalDirection().getOpposite()).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM);
 			return state;
 		}
-		return state;
+		return null;
 	}
 
 	@Override
@@ -208,33 +203,34 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
 		return DeferredRegisters.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getVisualShape(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		return Shapes.empty();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(@NotNull BlockState state, @NotNull BlockState adjacentBlockState, @NotNull Direction side) {
 		return true;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
+	public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
 		return 1.0f;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
@@ -256,13 +252,13 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean isSignalSource(BlockState state) {
+	public boolean isSignalSource(@NotNull BlockState state) {
 		return TypeMachine.CHARGER.isRedstoneConnected;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public int getDirectSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
+	public int getDirectSignal(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction side) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
@@ -282,7 +278,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
+	public int getSignal(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction side) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
@@ -301,7 +297,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, BlockState newState, boolean isMoving) {
 		if(!newState.hasProperty(OverdriveBlockStates.CHARGER_POS)) {
 			ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 			switch (loc) {
@@ -352,7 +348,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {}
+	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> items) {}
 	
 	
 
