@@ -9,9 +9,8 @@ import com.hrznstudio.titanium.network.messages.ButtonClickNetworkMessage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
-import matteroverdrive.core.component.addons.MatterComponent;
+import matteroverdrive.core.component.addons.MatterStorageComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -149,7 +148,7 @@ public class MatterScreenAddon extends BasicScreenAddon {
                         Minecraft.getInstance().player.blockPosition()
                 ));
         CompoundTag tag = new CompoundTag();
-        if (storage instanceof MatterComponent<?> component) {
+        if (storage instanceof MatterStorageComponent<?> component) {
           tag.putString("Name", component.getName());
         } else tag.putBoolean("Invalid", true);
         carried.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(storageCap -> {

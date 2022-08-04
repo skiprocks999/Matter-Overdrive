@@ -85,6 +85,26 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 	}
 
 	@Override
+	public Double setCurrentMemberStorage(Double amount) {
+		if (!connected.isEmpty()) {
+			for(BlockEntity receiver : connected) {
+				if (dirsPerConnectionMap.containsKey(receiver)) {
+					for (Direction connection : dirsPerConnectionMap.get(receiver)) {
+						LazyOptional<ICapabilityMatterStorage> lazy = receiver.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
+						if (lazy.isPresent()) {
+							ICapabilityMatterStorage matter = lazy.resolve().get();
+							if (matter.canReceive() && amount <= matter.getMaxMatterStored()) {
+								matter.setMatterStored(amount);
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public Double getCurrentMemberStorage() {
 		double stored = 0;
 		if (!connected.isEmpty()) {

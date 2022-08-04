@@ -137,20 +137,44 @@ public class StateVariables {
   }
 
   public static class Defaults {
+
+    public static void init() {}
+
     // No Rotation
+
+    /**
+     * Default Machine (No States)
+     */
     public static final StateVariables defaultMachine = StateVariables.getBuilder().build();
+
+    /**
+     * Default Machine /w LIT state
+     */
     public static final StateVariables litMachine = StateVariables.copy(defaultMachine)
             .canBeLit().build();
+
+    /**
+     * Default Machine /w Waterloggable state
+     */
     public static final StateVariables waterloggableMachine = StateVariables.copy(defaultMachine)
             .canBeWaterlogged().build();
+
+    /**
+     * Default Machine /w LIT & Waterloggable states
+     */
     public static final StateVariables waterloggableLit = StateVariables.copy(waterloggableMachine)
             .canBeLit().build();
 
     // With Rotations;
+
+    /**
+     * Defaults with Four-Way & Six-Way Rotations
+     */
     public static final StateVariables defaultFourWay = StateVariables.copy(defaultMachine)
             .withRotationType(RotatableBlock.RotationType.FOUR_WAY).build();
     public static final StateVariables defaultSixWay = StateVariables.copy(defaultMachine)
             .withRotationType(RotatableBlock.RotationType.SIX_WAY).build();
+
     public static final StateVariables litFourWay = StateVariables.copy(litMachine)
             .withRotationType(RotatableBlock.RotationType.FOUR_WAY).build();
     public static final StateVariables litSixWay = StateVariables.copy(litMachine)
@@ -159,6 +183,7 @@ public class StateVariables {
             .withRotationType(RotatableBlock.RotationType.FOUR_WAY).build();
     public static final StateVariables waterloggableSixway = StateVariables.copy(waterloggableMachine)
             .withRotationType(RotatableBlock.RotationType.SIX_WAY).build();
+
     public static final StateVariables waterloggableLitFourway = StateVariables.copy(waterloggableLit)
             .withRotationType(RotatableBlock.RotationType.FOUR_WAY).build();
     public static final StateVariables waterloggableLitSixway = StateVariables.copy(waterloggableLit)

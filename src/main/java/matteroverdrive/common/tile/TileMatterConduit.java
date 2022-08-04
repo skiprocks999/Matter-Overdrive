@@ -60,6 +60,13 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 				}
 
 				@Override
+				public void setMatterStored(double matterStored) {
+					if (network != null) {
+						network.setCurrentMemberStorage(matterStored);
+					}
+				}
+
+				@Override
 				public double getMaxMatterStored() {
 					if(network != null) {
 						return network.getTotalMemberStorage();

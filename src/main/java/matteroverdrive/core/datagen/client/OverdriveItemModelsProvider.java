@@ -77,7 +77,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 				new ResourceLocation(References.ID, textureLoc));
 	}
 
-	private void simpleBlock(RegistryObject<Block> block, String textureLoc) {
+	private void simpleBlock(RegistryObject<? extends Block> block, String textureLoc) {
 		cubeAll(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), new ResourceLocation(References.ID, textureLoc));
 	}
 

@@ -3,6 +3,7 @@ package matteroverdrive;
 import java.util.Random;
 
 import matteroverdrive.common.block.BlockCustomGlass;
+import matteroverdrive.core.block.state.StateVariables;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +48,7 @@ public class MatterOverdrive {
 
 	public MatterOverdrive() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		StateVariables.Defaults.init();
 		SoundRegister.SOUNDS.register(bus);
 		OverdriveBlockStates.init();
 		DeferredRegisters.BLOCKS.register(bus);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.hrznstudio.titanium.client.screen.container.BasicAddonScreen;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
@@ -13,7 +14,6 @@ import matteroverdrive.client.render.tile.RendererCharger;
 import matteroverdrive.client.render.tile.RendererInscriber;
 import matteroverdrive.client.render.tile.RendererMatterReplicator;
 import matteroverdrive.client.render.tile.RendererPatternMonitor;
-import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterAnalyzer;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
@@ -30,6 +30,7 @@ import matteroverdrive.client.screen.ScreenTritaniumCrate;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.component.container.MatterOverdriveAddonContainer;
 import matteroverdrive.core.utils.UtilsNbt;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -79,7 +80,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
-		MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
+		//MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
 		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
@@ -89,6 +90,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
 		MenuScreens.register(DeferredRegisters.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
+		MenuScreens.register(MatterOverdriveAddonContainer.TYPE, BasicAddonScreen::new);
 
 		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -175,6 +177,7 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 
+		//event.registerBlockEntityRenderer(DeferredRegisters.OLD_TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);

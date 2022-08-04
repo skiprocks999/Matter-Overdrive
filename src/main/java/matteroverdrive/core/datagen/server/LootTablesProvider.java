@@ -1,7 +1,6 @@
 package matteroverdrive.core.datagen.server;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterRecycler;
@@ -39,7 +38,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 				DeferredRegisters.TILE_MATTER_DECOMPOSER);
 		this.<TileMatterRecycler>addIETable(DeferredRegisters.BLOCK_MATTER_RECYCLER,
 				DeferredRegisters.TILE_MATTER_RECYCLER);
-		this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.TILE_CHARGER);
+		//this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.OLD_TILE_CHARGER);
 		this.<TileMicrowave>addIETable(DeferredRegisters.BLOCK_MICROWAVE, DeferredRegisters.TILE_MICROWAVE);
 		this.<TileTransporter>addIETable(DeferredRegisters.BLOCK_TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER);
 		this.<TileSpacetimeAccelerator>addIEMTable(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR);
@@ -58,7 +57,7 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 		lootTables.put(block, itemOnlyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
-	private <T extends GenericTile> void addIETable(RegistryObject<Block> reg,
+	private <T extends GenericTile> void addIETable(RegistryObject<? extends Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
 		lootTables.put(block, itemAndEnergyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));

@@ -3,7 +3,9 @@ package matteroverdrive;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.hrznstudio.titanium.block.BasicTileBlock;
 import matteroverdrive.common.block.*;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
@@ -21,7 +23,6 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.block_item.BlockItemColored;
-import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
@@ -46,7 +47,6 @@ import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
-import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileInscriber;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.common.tile.TileMatterDecomposer;
@@ -134,8 +134,11 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
-	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child", BlockAndroidChargerChild::new);
-	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+	//public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child", BlockAndroidChargerChild::new);
+	//public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+
+	public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = BLOCKS.register("charger_child", BlockAndroidChargerChild::new);
+	public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = BLOCKS.register(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
@@ -240,9 +243,13 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterRecycler>> TILE_MATTER_RECYCLER = TILES.register(
 			TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockEntityType<>(TileMatterRecycler::new, Sets.newHashSet(BLOCK_MATTER_RECYCLER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileCharger>> TILE_CHARGER = TILES.register(
-			TypeMachine.CHARGER.id(),
-			() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
+	//public static final RegistryObject<BlockEntityType<TileCharger>> OLD_TILE_CHARGER = TILES.register(
+	//		TypeMachine.CHARGER.id(),
+	//		() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
+	public static final RegistryObject<BlockEntityType<matteroverdrive.common.tile.TileCharger>> TILE_CHARGER = TILES.register(
+					TypeMachine.CHARGER.id(),
+					() -> new BlockEntityType<>(matteroverdrive.common.tile.TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
+
 	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(
 			TypeMachine.MICROWAVE.id(),
 			() -> new BlockEntityType<>(TileMicrowave::new, Sets.newHashSet(BLOCK_MICROWAVE.get()), null));
@@ -287,8 +294,8 @@ public class DeferredRegisters {
 			.register(TypeMachine.MATTER_DECOMPOSER.id(), () -> new MenuType<>(InventoryMatterDecomposer::new));
 	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
 			.register(TypeMachine.MATTER_RECYCLER.id(), () -> new MenuType<>(InventoryMatterRecycler::new));
-	public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
-			.register(TypeMachine.CHARGER.id(), () -> new MenuType<>(InventoryCharger::new));
+	//public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
+	//		.register(TypeMachine.CHARGER.id(), () -> new MenuType<>(InventoryCharger::new));
 	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS
 			.register(TypeMachine.MICROWAVE.id(), () -> new MenuType<>(InventoryMicrowave::new));
 	public static final RegistryObject<MenuType<InventoryInscriber>> MENU_INSCRIBER = CONTAINERS

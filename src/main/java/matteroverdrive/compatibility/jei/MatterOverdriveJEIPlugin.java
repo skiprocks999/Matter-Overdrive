@@ -1,7 +1,6 @@
 package matteroverdrive.compatibility.jei;
 
 import matteroverdrive.References;
-import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterAnalyzer;
 import matteroverdrive.client.screen.ScreenMatterDecomposer;
@@ -13,7 +12,6 @@ import matteroverdrive.client.screen.ScreenPatternStorage;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
-import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerCharger;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerInscriber;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterAnalyzer;
 import matteroverdrive.compatibility.jei.screen_handlers.types.ScreenHandlerMatterDecomposer;
@@ -42,7 +40,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
-		registry.addGuiContainerHandler(ScreenCharger.class, new ScreenHandlerCharger());
+		//registry.addGuiContainerHandler(ScreenCharger.class, new ScreenHandlerCharger());
 		registry.addGuiContainerHandler(ScreenInscriber.class, new ScreenHandlerInscriber());
 		registry.addGuiContainerHandler(ScreenMatterDecomposer.class, new ScreenHandlerMatterDecomposer());
 		registry.addGuiContainerHandler(ScreenMatterRecycler.class, new ScreenHandlerMatterRecycler());

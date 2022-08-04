@@ -6,31 +6,27 @@ import com.hrznstudio.titanium.api.client.IScreenAddonProvider;
 import com.hrznstudio.titanium.component.IComponentHarness;
 import com.hrznstudio.titanium.container.addon.IContainerAddon;
 import com.hrznstudio.titanium.container.addon.IContainerAddonProvider;
-import com.hrznstudio.titanium.container.addon.IntReferenceHolderAddon;
-import com.hrznstudio.titanium.container.referenceholder.FunctionReferenceHolder;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
-import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.component.addons.matter.MatterContainerAddon;
 import matteroverdrive.core.component.addons.matter.MatterScreenAddon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
-import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatterComponent<T extends IComponentHarness>
+public class MatterStorageComponent<T extends IComponentHarness>
         extends CapabilityMatterStorage
         implements IScreenAddonProvider, IContainerAddonProvider, INBTSerializable<CompoundTag> {
 
   private final int posX;
   private final int posY;
-  private String name;
+  private final String name;
   private T componentHarness;
   private Action action;
 
-  public MatterComponent(double maxStorage, int posX, int posY, String name, Action defaultAction) {
+  public MatterStorageComponent(double maxStorage, Action defaultAction, int posX, int posY, String name) {
     super(maxStorage, defaultAction.canFill(), defaultAction.canDrain());
     this.posX = posX;
     this.posY = posY;
@@ -38,7 +34,7 @@ public class MatterComponent<T extends IComponentHarness>
     this.action = defaultAction;
   }
 
-  public MatterComponent<T> setComponentHarness(T componentHarness) {
+  public MatterStorageComponent<T> setComponentHarness(T componentHarness) {
     this.componentHarness = componentHarness;
     return this;
   }
@@ -49,12 +45,30 @@ public class MatterComponent<T extends IComponentHarness>
 
   @Override
   public double receiveMatter(double maxReceive, boolean simulate) {
-    return super.receiveMatter(maxReceive, simulate);
+    double amount = super.receiveMatter(maxReceive, simulate);
+    if (!simulate && amount > 0D) {
+      this.update();
+    }
+    return amount;
   }
 
   @Override
   public double extractMatter(double maxExtract, boolean simulate) {
-    return super.extractMatter(maxExtract, simulate);
+    double amount = super.extractMatter(maxExtract, simulate);
+    if (!simulate && amount > 0) {
+      this.update();
+    }
+    return amount;
+  }
+
+  @Override
+  public void setMatterStored(double matterStored) {
+    if (matterStored > this.getMaxMatterStored()) {
+      this.currStorage = this.getMaxMatterStored();
+    } else {
+      this.currStorage = Math.max(matterStored, 0);
+    }
+    this.update();
   }
 
   @Override
@@ -83,8 +97,22 @@ public class MatterComponent<T extends IComponentHarness>
     return addons;
   }
 
+  private void update() {
+    if (this.componentHarness != null) {
+      this.componentHarness.markComponentForUpdate(true);
+    }
+  }
+
   public String getName() {
     return name;
+  }
+
+  public int getX() {
+    return posX;
+  }
+
+  public int getY() {
+    return posY;
   }
 
   public enum Action {

@@ -36,7 +36,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private boolean hasOutput = false;
 
 	private double maxStorage = 0;
-	private double currStorage = 0;
+	protected double currStorage = 0;
 
 	private LazyOptional<ICapabilityMatterStorage> holder = LazyOptional.of(() -> this);
 

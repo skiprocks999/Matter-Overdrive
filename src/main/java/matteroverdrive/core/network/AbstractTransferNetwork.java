@@ -38,7 +38,9 @@ public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork
 	public abstract EMIT emitToConnected(EMIT transfer, ArrayList<BlockEntity> ignored, boolean debug);
 	
 	public abstract EMIT extractFromConnected(EMIT amount, boolean simulate);
-	
+
+	public abstract EMIT setCurrentMemberStorage(EMIT amount);
+
 	public abstract EMIT getCurrentMemberStorage();
 	
 	public abstract EMIT getTotalMemberStorage();
