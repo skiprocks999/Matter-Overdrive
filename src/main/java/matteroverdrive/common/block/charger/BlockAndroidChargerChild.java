@@ -7,7 +7,7 @@ import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.core.block.GenericStateVariableBlock;
-import matteroverdrive.core.block.state.StateVariables;
+import matteroverdrive.core.block.state.OverdriveBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -143,8 +143,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	public BlockAndroidChargerChild() {
-		super(Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL).isRedstoneConductor((state, level, pos) -> false).noOcclusion(),
-						StateVariables.Defaults.waterloggableFourway,
+		super(OverdriveBlockProperties.Defaults.waterloggableFourway(Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL).isRedstoneConductor((state, level, pos) -> false).noOcclusion()),
 						"charger_child", TileCharger.class, TileCharger::new, TypeMachine.CHARGER);
 		registerDefaultState(getStateDefinition().any()
 						.setValue(BlockStateProperties.WATERLOGGED, false)

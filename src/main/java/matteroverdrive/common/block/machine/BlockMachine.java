@@ -3,7 +3,7 @@ package matteroverdrive.common.block.machine;
 import com.hrznstudio.titanium.block.tile.BasicTile;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
-import matteroverdrive.core.block.state.StateVariables;
+import matteroverdrive.core.block.state.OverdriveBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -24,17 +24,11 @@ public class BlockMachine<T extends BasicTile<T>> extends GenericMachineBlock<T>
   private final BlockEntityType.BlockEntitySupplier<T> supplier;
 
   public BlockMachine(String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
-    this(StateVariables.Defaults.waterloggableFourway, name, tileClass, supplier, type);
+    this(OverdriveBlockProperties.Defaults.waterloggableFourway(DEFAULT_MACHINE_PROPERTIES), name, tileClass, supplier, type);
   }
 
-  public BlockMachine(StateVariables stateVariables, String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
-    super(stateVariables, name, tileClass);
-    this.type = type;
-    this.supplier = supplier;
-  }
-
-  public BlockMachine(Properties properties, StateVariables stateVariables, String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
-    super(properties, stateVariables, name, tileClass);
+  public BlockMachine(OverdriveBlockProperties properties, String name, Class<T> tileClass, BlockEntityType.BlockEntitySupplier<T> supplier, TypeMachine type) {
+    super(properties, name, tileClass);
     this.type = type;
     this.supplier = supplier;
   }

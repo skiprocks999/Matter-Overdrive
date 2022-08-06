@@ -3,9 +3,7 @@ package matteroverdrive;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.hrznstudio.titanium.block.BasicTileBlock;
 import matteroverdrive.common.block.*;
-import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
@@ -134,11 +132,11 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
-	//public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child", BlockAndroidChargerChild::new);
-	//public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+	public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = registerBlockNew("charger_child", BlockAndroidChargerChild::new);
+	public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = registerBlockNew(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 
-	public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = BLOCKS.register("charger_child", BlockAndroidChargerChild::new);
-	public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = BLOCKS.register(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+	//public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = BLOCKS.register("charger_child", BlockAndroidChargerChild::new);
+	//public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = BLOCKS.register(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
@@ -333,6 +331,17 @@ public class DeferredRegisters {
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier,
 			net.minecraft.world.item.Item.Properties properties) {
 		RegistryObject<Block> block = BLOCKS.register(name, supplier);
+		ITEMS.register(name, () -> new BlockItem(block.get(), properties));
+		return block;
+	}
+	
+	private static <T extends Block> RegistryObject<T> registerBlockNew(String name, Supplier<T> supplier) {
+		return registerBlockNew(name, supplier, new Item.Properties().tab(References.MAIN));
+	}
+
+	private static <T extends Block> RegistryObject<T> registerBlockNew(String name, Supplier<T> supplier,
+			net.minecraft.world.item.Item.Properties properties) {
+		RegistryObject<T> block = BLOCKS.register(name, supplier);
 		ITEMS.register(name, () -> new BlockItem(block.get(), properties));
 		return block;
 	}

@@ -3,7 +3,7 @@ package matteroverdrive.core.block;
 import com.hrznstudio.titanium.block.RotatableBlock.RotationType;
 import com.hrznstudio.titanium.block.RotationHandler;
 import com.hrznstudio.titanium.block.tile.BasicTile;
-import matteroverdrive.core.block.state.StateVariables;
+import matteroverdrive.core.block.state.OverdriveBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,26 +26,20 @@ import org.jetbrains.annotations.Nullable;
 public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends GenericEntityBlock<T> {
 
   /**
-   * The immutable {@link StateVariables} object for the block.
-   */
-  private final StateVariables stateVariables;
-
-  /**
    * Default Constructor for GenericStateVariableBlock.
    *
    * @param properties The blocks BlockBehaviour Properties.
-   * @param stateVariables The state variables for the block.
    * @param name The "name" of the block (IE. "charger_block")
    * @param tileClass The BlockEntity Class for the block.
    */
-  protected GenericStateVariableBlock(Properties properties, StateVariables stateVariables, String name, Class<T> tileClass) {
+  protected GenericStateVariableBlock(OverdriveBlockProperties properties, String name, Class<T> tileClass) {
     super(properties, name, tileClass);
-    this.stateVariables = stateVariables;
     BlockState defaultState = getStateDefinition().any();
-    if (stateVariables.canBeWaterlogged()) {
+    OverdriveBlockProperties stateProperties = (OverdriveBlockProperties)this.properties;
+    if (stateProperties.canBeWaterlogged()) {
       defaultState.setValue(BlockStateProperties.WATERLOGGED, false);
     }
-    if (stateVariables.canBeLit()) {
+    if (stateProperties.canBeLit()) {
       defaultState.setValue(BlockStateProperties.LIT, false);
     }
     registerDefaultState(defaultState);
@@ -54,21 +48,22 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
   /**
    * Creates our default {@link StateDefinition}.
    * In our case:
-   * - If the value of the local {@link StateVariables#canBeWaterlogged()} is true then it adds the {@link BlockStateProperties#WATERLOGGED} property.
-   * - If our {@link StateVariables#getRotationType()} )'s "property" list isn't null then we can add the associated properties of our {@link RotationType}.
+   * - If the value of the local {@link OverdriveBlockProperties#canBeWaterlogged()} is true then it adds the {@link BlockStateProperties#WATERLOGGED} property.
+   * - If our {@link OverdriveBlockProperties#getRotationType()} )'s "property" list isn't null then we can add the associated properties of our {@link RotationType}.
    *
    * @param builder The passed in {@link StateDefinition.Builder} for adding the properties to.
    */
   @Override
   protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
     super.createBlockStateDefinition(builder);
-    if (this.stateVariables.canBeWaterlogged()) {
+    OverdriveBlockProperties stateProperties = (OverdriveBlockProperties)this.properties;
+    if (stateProperties.canBeWaterlogged()) {
       builder.add(BlockStateProperties.WATERLOGGED);
     }
-    if (this.stateVariables.getRotationType().getProperties().length > 0) {
-      builder.add(this.stateVariables.getRotationType().getProperties());
+    if (stateProperties.getRotationType().getProperties().length > 0) {
+      builder.add(stateProperties.getRotationType().getProperties());
     }
-    if (this.stateVariables.canBeLit()) {
+    if (stateProperties.canBeLit()) {
       builder.add(BlockStateProperties.LIT);
     }
   }
@@ -79,7 +74,7 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
    * @return returns the blocks {@link RotationType}.
    */
   public RotationType getRotationType() {
-    return stateVariables.getRotationType();
+    return ((OverdriveBlockProperties)this.properties).getRotationType();
   }
 
   /**

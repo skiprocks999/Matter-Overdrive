@@ -2,7 +2,7 @@ package matteroverdrive.core.block;
 
 import com.hrznstudio.titanium.block.BasicTileBlock;
 import com.hrznstudio.titanium.block.tile.BasicTile;
-import matteroverdrive.core.block.state.StateVariables;
+import matteroverdrive.core.block.state.OverdriveBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +22,7 @@ public abstract class GenericMachineBlock<T extends BasicTile<T>> extends Generi
   /**
    * Default Machine Block Properties
    */
-  private static final Properties defaultMachineProperties = Properties.of(Material.METAL)
+  public static final Properties DEFAULT_MACHINE_PROPERTIES = Properties.of(Material.METAL)
           .strength(3.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops();
 
   /**
@@ -34,20 +34,8 @@ public abstract class GenericMachineBlock<T extends BasicTile<T>> extends Generi
    * @param name The "name" of the block (IE. "charger_block")
    * @param tileClass The BlockEntity Class for the block.
    */
-  protected GenericMachineBlock(Properties properties, StateVariables stateVariables, String name, Class<T> tileClass) {
-    super(properties, stateVariables, name, tileClass);
-  }
-
-  /**
-   * Constructor that uses the "Default Machine Properties"
-   * Note: This does not provide a default StateVariable config!
-   *
-   * @param stateVariables The state variables for the block.
-   * @param name The "name" of the block (IE. "charger_block")
-   * @param tileClass The BlockEntity Class for the block.
-   */
-  protected GenericMachineBlock(StateVariables stateVariables, String name, Class<T> tileClass) {
-    super(defaultMachineProperties, stateVariables, name, tileClass);
+  protected GenericMachineBlock(OverdriveBlockProperties properties, String name, Class<T> tileClass) {
+    super(properties, name, tileClass);
   }
 
   /**
