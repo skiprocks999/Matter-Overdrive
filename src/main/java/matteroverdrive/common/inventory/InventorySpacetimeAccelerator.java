@@ -16,13 +16,15 @@ public class InventorySpacetimeAccelerator extends GenericInventoryTile<TileSpac
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MATTER_STORAGE, UpgradeType.RANGE };
-	
-	public InventorySpacetimeAccelerator(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
+
+	public InventorySpacetimeAccelerator(int id, Inventory playerinv, CapabilityInventory invcap,
+			ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventorySpacetimeAccelerator(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileSpacetimeAccelerator.SLOT_COUNT, true, true), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileSpacetimeAccelerator.SLOT_COUNT, true, true),
+				new SimpleContainerData(3));
 	}
 
 	@Override

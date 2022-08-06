@@ -17,7 +17,8 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdriveRecipe> implements RecipeSerializer<T> {
+public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdriveRecipe>
+		implements RecipeSerializer<T> {
 
 	private static final String COUNT = "count";
 	private static final String ITEM_INPUTS = "iteminputs";

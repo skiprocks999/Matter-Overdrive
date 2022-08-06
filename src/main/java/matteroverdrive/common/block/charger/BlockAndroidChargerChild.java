@@ -200,13 +200,11 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		};
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
 		return DeferredRegisters.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public @NotNull VoxelShape getVisualShape(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		return Shapes.empty();

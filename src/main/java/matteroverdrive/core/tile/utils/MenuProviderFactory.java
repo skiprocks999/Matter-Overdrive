@@ -8,5 +8,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 @FunctionalInterface
 public interface MenuProviderFactory {
-  AbstractContainerMenu build(MenuProvider provider, BlockPos pos, ContainerLevelAccess access, Inventory playerInventory, int menuId);
+	AbstractContainerMenu build(MenuProvider provider, BlockPos pos, ContainerLevelAccess access,
+			Inventory playerInventory, int menuId);
 }

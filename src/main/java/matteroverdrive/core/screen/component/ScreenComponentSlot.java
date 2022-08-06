@@ -29,31 +29,31 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	public ScreenComponentSlot(final SlotType type, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height, 
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height,
 				screenNumbers);
 		this.type = type;
 	}
 
 	public ScreenComponentSlot(final SlotType type, final IconType icon, final GenericScreen<?> gui, final int x,
 			final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height, 
+		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height,
 				screenNumbers);
 		this.type = type;
 		this.icon = icon;
 	}
-	
+
 	@Override
 	public void initScreenSize() {
 		super.initScreenSize();
 		if (icon != IconType.NONE) {
 			int widthOffset;
-			if(isMainSlot()) {
+			if (isMainSlot()) {
 				widthOffset = (int) ((22 - icon.getTextWidth()) / 2);
 			} else {
 				widthOffset = (int) ((type.getWidth() - icon.getTextWidth()) / 2);
 			}
 			int heightOffset = (int) ((type.getHeight() - icon.getTextHeight()) / 2);
-			this.iconComp = new ScreenComponentIcon(icon, gui, this.x + widthOffset + type.getXOffset(), 
+			this.iconComp = new ScreenComponentIcon(icon, gui, this.x + widthOffset + type.getXOffset(),
 					this.y + heightOffset + type.getYOffset(), this.screenNumbers);
 		}
 	}
@@ -65,13 +65,12 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		if(type != SlotType.NONE) {
+		if (type != SlotType.NONE) {
 			UtilsRendering.bindTexture(resource);
 			UtilsRendering.color(color);
-			blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(),
-					type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight(), type.getWidth(),
-					type.getHeight());
-			
+			blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(), type.getTextureX(), type.getTextureY(),
+					type.getWidth(), type.getHeight(), type.getWidth(), type.getHeight());
+
 			UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 			if (iconComp != null) {
 				iconComp.renderBackground(stack, mouseX, mouseY, partialTicks);
@@ -84,22 +83,22 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 		if (upgradeSlotTypes != null && Screen.hasControlDown()) {
 			List<FormattedCharSequence> components = new ArrayList<>();
 			for (UpgradeType upgrade : upgradeSlotTypes) {
-				components.add(Component.translatable(
-						DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
+				components.add(
+						Component.translatable(DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
 								.getVisualOrderText());
 			}
 			gui.renderTooltip(stack, components, mouseX, mouseY);
 		}
 	}
-	
+
 	private boolean isMainSlot() {
 		return type == SlotType.MAIN || type == SlotType.MAIN_ACTIVE || type == SlotType.MAIN_DARK;
 	}
 
 	public enum SlotType {
-		NONE(""), SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2), BIG_DARK(22, 22, 0, 0, "slot_big_dark", -2, -2),
-		HOLO("slot_holo"), HOLO_BG("slot_holo_with_bg"), MAIN(37, 22, 0, 0, "slot_big_main", -2, -2),
-		MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", -2, -2),
+		NONE(""), SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2),
+		BIG_DARK(22, 22, 0, 0, "slot_big_dark", -2, -2), HOLO("slot_holo"), HOLO_BG("slot_holo_with_bg"),
+		MAIN(37, 22, 0, 0, "slot_big_main", -2, -2), MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", -2, -2),
 		MAIN_ACTIVE(37, 22, 0, 0, "slot_big_main_active", -2, -2), VANILLA("slot_vanilla");
 
 		private final int width;

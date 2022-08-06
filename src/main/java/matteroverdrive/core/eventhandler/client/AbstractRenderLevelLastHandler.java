@@ -7,11 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 
 public abstract class AbstractRenderLevelLastHandler {
-	
+
 	public AbstractRenderLevelLastHandler() {
-		
+
 	}
-	
-	public abstract void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix, Matrix4f projMatrix, float partialTick, int startNano);
+
+	public abstract void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix,
+			Matrix4f projMatrix, float partialTick, int startNano);
 
 }

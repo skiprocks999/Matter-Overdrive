@@ -40,7 +40,8 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
-		//registry.addGuiContainerHandler(ScreenCharger.class, new ScreenHandlerCharger());
+		// registry.addGuiContainerHandler(ScreenCharger.class, new
+		// ScreenHandlerCharger());
 		registry.addGuiContainerHandler(ScreenInscriber.class, new ScreenHandlerInscriber());
 		registry.addGuiContainerHandler(ScreenMatterDecomposer.class, new ScreenHandlerMatterDecomposer());
 		registry.addGuiContainerHandler(ScreenMatterRecycler.class, new ScreenHandlerMatterRecycler());

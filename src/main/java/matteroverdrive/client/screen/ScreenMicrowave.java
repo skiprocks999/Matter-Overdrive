@@ -242,7 +242,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 		energy.visible = false;
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
-		
+
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
@@ -284,7 +284,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
-		
+
 	}
 
 	private void toggleBarOpen() {

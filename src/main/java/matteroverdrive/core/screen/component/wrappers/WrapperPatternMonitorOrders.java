@@ -14,20 +14,20 @@ import net.minecraft.network.chat.MutableComponent;
 public class WrapperPatternMonitorOrders extends AbstractWrapperReplicationQueue {
 
 	private static final MutableComponent TITLE = UtilsText.gui("systemqueue");
-	
+
 	public WrapperPatternMonitorOrders(ScreenPatternMonitor screen, int x, int y, int[] screenNumbers) {
 		super(screen, x, y, screenNumbers);
 	}
 
 	@Override
 	public ScreenComponentVerticalSlider getSlider() {
-		return ((ScreenPatternMonitor)screen).ordersSlider;
+		return ((ScreenPatternMonitor) screen).ordersSlider;
 	}
 
 	@Override
 	public List<QueuedReplication> getOrders() {
-		TilePatternMonitor tile = ((ScreenPatternMonitor)screen).getMenu().getTile();
-		if(tile != null) {
+		TilePatternMonitor tile = ((ScreenPatternMonitor) screen).getMenu().getTile();
+		if (tile != null) {
 			return tile.getGlobalOrders(true, true);
 		}
 		return new ArrayList<>();

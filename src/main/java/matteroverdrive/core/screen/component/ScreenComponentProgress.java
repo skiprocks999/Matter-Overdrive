@@ -16,33 +16,34 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	private static final int HOR_WIDTH = 22;
 	private static final int HOR_HEIGHT = 16;
-	
+
 	private static final int VERT_WIDTH = 16;
 	private static final int VERT_HEIGHT = 22;
 
 	private static final int HOR_BASE_X = 56;
 	private static final int HOR_BASE_Y = 0;
-	
+
 	private static final int VERT_BASE_X = 100;
 	private static final int VERT_BASE_Y = 0;
-	
+
 	private boolean vertical = false;
-	
+
 	private int color = UtilsRendering.WHITE;
 
 	public ScreenComponentProgress(final DoubleSupplier progress, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, HOR_WIDTH, HOR_HEIGHT, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, HOR_WIDTH,
+				HOR_HEIGHT, screenNumbers);
 		this.progress = progress;
 	}
-	
+
 	public ScreenComponentProgress vertical() {
 		vertical = true;
 		this.width = VERT_WIDTH;
 		this.height = VERT_HEIGHT;
 		return this;
 	}
-	
+
 	public ScreenComponentProgress color(int color) {
 		this.color = color;
 		return this;
@@ -53,7 +54,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 		UtilsRendering.bindTexture(resource);
 		UtilsRendering.color(color);
 		double progress = Math.min(1.0, this.progress.getAsDouble());
-		if(vertical) {
+		if (vertical) {
 			int height = (int) (progress * this.height);
 			blit(stack, this.x, this.y, VERT_BASE_X, VERT_BASE_Y, this.width, this.height);
 			blit(stack, this.x, this.y, VERT_BASE_X + this.width, VERT_BASE_Y, this.width, height);

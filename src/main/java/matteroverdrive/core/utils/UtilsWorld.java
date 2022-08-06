@@ -24,39 +24,40 @@ public class UtilsWorld {
 		return Mth.sqrt((float) (Mth.square(a.getX() - b.getX()) + Mth.square(a.getY() - b.getY())
 				+ Mth.square(a.getZ() - b.getZ())));
 	}
-	
-	public static List<BlockEntity> getSurroundingBlockEntities(Level world, AABB aabb){
+
+	public static List<BlockEntity> getSurroundingBlockEntities(Level world, AABB aabb) {
 		List<BlockEntity> entities = new ArrayList<>();
 		BlockPos.betweenClosedStream(aabb).forEach(pos -> {
 			BlockEntity tile = world.getBlockEntity(pos);
-			if(tile != null) {
+			if (tile != null) {
 				entities.add(tile);
 			}
 		});
 		return entities;
 	}
-	
-	public static List<IUpgradableTile> getSurroundingUpgradableTiles(Level world, AABB aabb){
+
+	public static List<IUpgradableTile> getSurroundingUpgradableTiles(Level world, AABB aabb) {
 		List<IUpgradableTile> entities = new ArrayList<>();
 		BlockPos.betweenClosedStream(aabb).forEach(pos -> {
 			BlockEntity tile = world.getBlockEntity(pos);
-			if(tile != null && tile instanceof IUpgradableTile upgrade) {
+			if (tile != null && tile instanceof IUpgradableTile upgrade) {
 				entities.add(upgrade);
 			}
 		});
 		return entities;
 	}
-	
+
 	@Nullable
 	public static BlockPos getPosFromTraceNoFluid(Player player) {
 		Level world = player.level;
-		BlockHitResult trace = Item.getPlayerPOVHitResult(world, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
-		if(trace.getType() != Type.MISS && trace.getType() != Type.ENTITY) {
+		BlockHitResult trace = Item.getPlayerPOVHitResult(world, player,
+				net.minecraft.world.level.ClipContext.Fluid.ANY);
+		if (trace.getType() != Type.MISS && trace.getType() != Type.ENTITY) {
 			return trace.getBlockPos();
 		}
 		return null;
 	}
-	
+
 	public static boolean isNotFluid(BlockState state) {
 		return state.getFluidState().getType().isSame(Fluids.EMPTY);
 	}

@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
-	
+
 	public TileMatterNetworkCable(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_NETWORK_CABLE.get(), pos, state);
 	}
@@ -36,7 +36,7 @@ public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
 	public boolean isValidConnection(BlockEntity entity, Direction dir) {
 		return entity instanceof IMatterNetworkMember;
 	}
-	
+
 	@Override
 	public AbstractCableNetwork getNetwork(boolean createIfNull) {
 		if (network == null && createIfNull) {

@@ -16,41 +16,39 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 
 public class MatterOverdriveAddonContainer extends BasicAddonContainer implements IPropertyManaged {
-  @ObjectHolder(registryName = "minecraft:menu", value = "matteroverdrive:addon_container")
-  public static MenuType<MatterOverdriveAddonContainer> TYPE;
+	@ObjectHolder(registryName = "minecraft:menu", value = "matteroverdrive:addon_container")
+	public static MenuType<MatterOverdriveAddonContainer> TYPE;
 
-  private final PropertyManager propertyManager;
+	private final PropertyManager propertyManager;
 
-  public MatterOverdriveAddonContainer(Object provider, LocatorInstance locatorInstance, ContainerLevelAccess worldPosCallable, Inventory playerInventory, int containerId) {
-    super(provider, locatorInstance, TYPE, worldPosCallable, playerInventory, containerId);
-    this.propertyManager = new PropertyManager((short) containerId);
-    if (this.getProvider() instanceof IContainerAddonProvider addonProvider) {
-      addonProvider.getContainerAddons()
-              .stream()
-              .map(IFactory::create)
-              .forEach(addon -> {
-                if (addon instanceof PropertyHolderAddon propHolder) {
-                  propHolder.getProperties().forEach(propertyManager::addTrackedProperty);
-                }
-              });
-    }
-  }
+	public MatterOverdriveAddonContainer(Object provider, LocatorInstance locatorInstance,
+			ContainerLevelAccess worldPosCallable, Inventory playerInventory, int containerId) {
+		super(provider, locatorInstance, TYPE, worldPosCallable, playerInventory, containerId);
+		this.propertyManager = new PropertyManager((short) containerId);
+		if (this.getProvider() instanceof IContainerAddonProvider addonProvider) {
+			addonProvider.getContainerAddons().stream().map(IFactory::create).forEach(addon -> {
+				if (addon instanceof PropertyHolderAddon propHolder) {
+					propHolder.getProperties().forEach(propertyManager::addTrackedProperty);
+				}
+			});
+		}
+	}
 
-  @Override
-  public void addSlotListener(@NotNull ContainerListener listener) {
-    super.addSlotListener(listener);
-    this.propertyManager.sendChanges(Collections.singletonList(listener), true);
-  }
+	@Override
+	public void addSlotListener(@NotNull ContainerListener listener) {
+		super.addSlotListener(listener);
+		this.propertyManager.sendChanges(Collections.singletonList(listener), true);
+	}
 
-  @Override
-  public void broadcastChanges() {
-    super.broadcastChanges();
-    this.getPropertyManager().sendChanges(this.containerListeners, false);
-  }
+	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		this.getPropertyManager().sendChanges(this.containerListeners, false);
+	}
 
-  @Override
-  public PropertyManager getPropertyManager() {
-    return this.propertyManager;
-  }
+	@Override
+	public PropertyManager getPropertyManager() {
+		return this.propertyManager;
+	}
 
 }

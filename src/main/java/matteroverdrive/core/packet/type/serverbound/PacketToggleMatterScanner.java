@@ -16,24 +16,24 @@ public class PacketToggleMatterScanner {
 
 	private final UUID id;
 	private final InteractionHand hand;
-	
+
 	public PacketToggleMatterScanner(UUID id, InteractionHand hand) {
 		this.id = id;
 		this.hand = hand;
 	}
-	
+
 	public static void handle(PacketToggleMatterScanner message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = context.get().getSender().getLevel();
-			if(world != null) {
+			if (world != null) {
 				Player player = world.getPlayerByUUID(message.id);
-				if(player != null) {
+				if (player != null) {
 					ItemStack stack = player.getItemInHand(message.hand);
-					if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner scanner) {
+					if (!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner scanner) {
 						boolean newMode = !stack.getOrCreateTag().getBoolean(UtilsNbt.ON);
 						stack.getOrCreateTag().putBoolean(UtilsNbt.ON, newMode);
-						if(!newMode) {
+						if (!newMode) {
 							scanner.setNotHolding(stack);
 						}
 					}
@@ -41,7 +41,7 @@ public class PacketToggleMatterScanner {
 			}
 		});
 	}
-	
+
 	public static void encode(PacketToggleMatterScanner pkt, FriendlyByteBuf buf) {
 		buf.writeUUID(pkt.id);
 		buf.writeEnum(pkt.hand);
@@ -50,5 +50,5 @@ public class PacketToggleMatterScanner {
 	public static PacketToggleMatterScanner decode(FriendlyByteBuf buf) {
 		return new PacketToggleMatterScanner(buf.readUUID(), buf.readEnum(InteractionHand.class));
 	}
-	
+
 }

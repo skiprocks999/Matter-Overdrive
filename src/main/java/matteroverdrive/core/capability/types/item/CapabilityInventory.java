@@ -264,9 +264,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
-		
-		int[] vals = new int[] {inputs, outputs, byproducts, energySlot, matterSlot, upgrades};
-		
+
+		int[] vals = new int[] { inputs, outputs, byproducts, energySlot, matterSlot, upgrades };
+
 		tag.putIntArray("sizes", vals);
 
 		return tag;

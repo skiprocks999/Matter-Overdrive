@@ -18,7 +18,7 @@ public class TransporterLocationWrapper {
 	private boolean hasCustomName;
 
 	private BlockPos destination = new BlockPos(0, -1000, 0);
-	
+
 	private ResourceKey<Level> dimension;
 
 	public TransporterLocationWrapper() {
@@ -35,7 +35,7 @@ public class TransporterLocationWrapper {
 	public BlockPos getDestination() {
 		return destination;
 	}
-	
+
 	public void setDestination(BlockPos pos) {
 		destination = pos;
 	}
@@ -47,11 +47,11 @@ public class TransporterLocationWrapper {
 		hasCustomName = true;
 		customName = Component.literal(name);
 	}
-	
+
 	public ResourceKey<Level> getDimension() {
 		return dimension;
 	}
-	
+
 	public void setDimension(ResourceKey<Level> dimension) {
 		this.dimension = dimension;
 	}
@@ -63,7 +63,7 @@ public class TransporterLocationWrapper {
 		if (hasCustomName) {
 			tag.putString("custom", customName.getString());
 		}
-		if(dimension != null) {
+		if (dimension != null) {
 			tag.put(UtilsNbt.DIMENSION, UtilsNbt.writeDimensionToTag(dimension));
 		}
 		parent.put(key, tag);
@@ -75,7 +75,7 @@ public class TransporterLocationWrapper {
 		if (hasCustomName) {
 			customName = Component.literal(data.getString("custom"));
 		}
-		if(data.contains("ownerid")) {
+		if (data.contains("ownerid")) {
 			dimension = UtilsNbt.readDimensionFromTag(data.getCompound(UtilsNbt.DIMENSION));
 		}
 	}

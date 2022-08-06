@@ -242,7 +242,7 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 		energy.visible = false;
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
-		
+
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
@@ -284,7 +284,7 @@ public class ScreenMatterRecycler extends GenericScreen<InventoryMatterRecycler>
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
-		
+
 	}
 
 	private void toggleBarOpen() {

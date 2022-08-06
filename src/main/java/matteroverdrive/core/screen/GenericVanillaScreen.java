@@ -11,7 +11,8 @@ import net.minecraft.world.entity.player.Inventory;
 
 public abstract class GenericVanillaScreen<T extends GenericInventory> extends GenericScreen<T> {
 
-	protected static final ResourceLocation VANILLA_BG = new ResourceLocation(References.ID + ":textures/gui/base/base_vanilla.png");
+	protected static final ResourceLocation VANILLA_BG = new ResourceLocation(
+			References.ID + ":textures/gui/base/base_vanilla.png");
 
 	public GenericVanillaScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
 		super(pMenu, pPlayerInventory, pTitle);

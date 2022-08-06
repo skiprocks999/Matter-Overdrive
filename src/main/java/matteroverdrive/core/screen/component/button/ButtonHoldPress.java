@@ -12,12 +12,13 @@ public class ButtonHoldPress extends ButtonOverdrive {
 
 	public boolean isActivated = false;
 
-	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress) {
+	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+			OnPress onPress) {
 		super(gui, x, y, width, height, message, onPress);
 	}
 
-	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress,
-			OnTooltip pOnTooltip) {
+	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+			OnPress onPress, OnTooltip pOnTooltip) {
 		super(gui, x, y, width, height, message, onPress, pOnTooltip);
 	}
 
@@ -38,7 +39,7 @@ public class ButtonHoldPress extends ButtonOverdrive {
 		}
 
 		drawButton(stack, this.x, this.y, this.width, this.height);
-		
+
 	}
 
 	@Override

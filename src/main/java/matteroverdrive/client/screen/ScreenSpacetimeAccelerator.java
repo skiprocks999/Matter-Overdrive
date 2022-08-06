@@ -34,17 +34,16 @@ public class ScreenSpacetimeAccelerator extends GenericScreen<InventorySpacetime
 	private ButtonMenuOption upgrades;
 
 	private ButtonRedstoneMode redstone;
-	
+
 	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
 
-	
 	public ScreenSpacetimeAccelerator(InventorySpacetimeAccelerator menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -85,16 +84,16 @@ public class ScreenSpacetimeAccelerator extends GenericScreen<InventorySpacetime
 			}
 			return 0;
 		});
-		
+
 		addButton(close);
 		addButton(menu);
 		addButton(home);
 		addButton(settings);
 		addButton(upgrades);
 		addButton(redstone);
-		
+
 		redstone.visible = false;
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
@@ -145,14 +144,14 @@ public class ScreenSpacetimeAccelerator extends GenericScreen<InventorySpacetime
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile())
 				.setCustomTimeKey("multiplier").setMatterPerTick());
-		
+
 	}
 
 	@Override
 	public int getScreenNumber() {
 		return screenNumber;
 	}
-	
+
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
 	}

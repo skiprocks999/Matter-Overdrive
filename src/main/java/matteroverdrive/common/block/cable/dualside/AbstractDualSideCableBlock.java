@@ -16,13 +16,13 @@ public abstract class AbstractDualSideCableBlock extends AbstractCableBlock {
 	public AbstractDualSideCableBlock(Properties properties, ICableType type) {
 		super(properties, type);
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		BlockEntity tile = worldIn.getBlockEntity(pos);
 		if (checkCableClass(tile)) {
-			((AbstractCableTile<?>)tile).refreshNetwork();
+			((AbstractCableTile<?>) tile).refreshNetwork();
 		}
 	}
 
@@ -31,7 +31,7 @@ public abstract class AbstractDualSideCableBlock extends AbstractCableBlock {
 		super.onNeighborChange(state, world, pos, neighbor);
 		BlockEntity tile = world.getBlockEntity(pos);
 		if (checkCableClass(tile)) {
-			((AbstractCableTile<?>)tile).refreshNetwork();
+			((AbstractCableTile<?>) tile).refreshNetwork();
 		}
 	}
 

@@ -38,15 +38,21 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 				DeferredRegisters.TILE_MATTER_DECOMPOSER);
 		this.<TileMatterRecycler>addIETable(DeferredRegisters.BLOCK_MATTER_RECYCLER,
 				DeferredRegisters.TILE_MATTER_RECYCLER);
-		//this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.OLD_TILE_CHARGER);
+		// this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER,
+		// DeferredRegisters.OLD_TILE_CHARGER);
 		this.<TileMicrowave>addIETable(DeferredRegisters.BLOCK_MICROWAVE, DeferredRegisters.TILE_MICROWAVE);
 		this.<TileTransporter>addIETable(DeferredRegisters.BLOCK_TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER);
-		this.<TileSpacetimeAccelerator>addIEMTable(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR);
+		this.<TileSpacetimeAccelerator>addIEMTable(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR,
+				DeferredRegisters.TILE_SPACETIME_ACCELERATOR);
 		this.<TileChunkloader>addIEMTable(DeferredRegisters.BLOCK_CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER);
-		this.<TileMatterAnalyzer>addIETable(DeferredRegisters.BLOCK_MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER);
-		this.<TilePatternStorage>addIETable(DeferredRegisters.BLOCK_PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE);
-		this.<TilePatternMonitor>addITable(DeferredRegisters.BLOCK_PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR);
-		this.<TileMatterReplicator>addIEMTable(DeferredRegisters.BLOCK_MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR);
+		this.<TileMatterAnalyzer>addIETable(DeferredRegisters.BLOCK_MATTER_ANALYZER,
+				DeferredRegisters.TILE_MATTER_ANALYZER);
+		this.<TilePatternStorage>addIETable(DeferredRegisters.BLOCK_PATTERN_STORAGE,
+				DeferredRegisters.TILE_PATTERN_STORAGE);
+		this.<TilePatternMonitor>addITable(DeferredRegisters.BLOCK_PATTERN_MONITOR,
+				DeferredRegisters.TILE_PATTERN_MONITOR);
+		this.<TileMatterReplicator>addIEMTable(DeferredRegisters.BLOCK_MATTER_REPLICATOR,
+				DeferredRegisters.TILE_MATTER_REPLICATOR);
 
 		this.addSilkTouchOnlyTable(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS);
 	}
@@ -66,7 +72,8 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	private <T extends GenericTile> void addIEMTable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
+		lootTables.put(block,
+				itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
 	/**

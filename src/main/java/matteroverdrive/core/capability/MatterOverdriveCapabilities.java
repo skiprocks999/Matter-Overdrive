@@ -14,9 +14,14 @@ public class MatterOverdriveCapabilities {
 	public static final Capability<ICapabilityMatterStorage> MATTER_STORAGE = CapabilityManager
 			.get(new CapabilityToken<>() {
 			});
-	public static final Capability<ICapabilityEntityData> ENTITY_DATA = CapabilityManager.get(new CapabilityToken<>() {});
-	public static final Capability<ICapabilityOverworldData> OVERWORLD_DATA = CapabilityManager.get(new CapabilityToken<>() {});
-	public static final Capability<ICapabilityItemPatternStorage> STORED_PATTERNS = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<ICapabilityEntityData> ENTITY_DATA = CapabilityManager.get(new CapabilityToken<>() {
+	});
+	public static final Capability<ICapabilityOverworldData> OVERWORLD_DATA = CapabilityManager
+			.get(new CapabilityToken<>() {
+			});
+	public static final Capability<ICapabilityItemPatternStorage> STORED_PATTERNS = CapabilityManager
+			.get(new CapabilityToken<>() {
+			});
 
 	public static void register(RegisterCapabilitiesEvent event) {
 		event.register(ICapabilityMatterStorage.class);
@@ -26,4 +31,3 @@ public class MatterOverdriveCapabilities {
 	}
 
 }
-	

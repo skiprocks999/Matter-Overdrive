@@ -91,7 +91,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		addButton(redstone);
 
 		redstone.visible = false;
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
@@ -122,7 +122,7 @@ public class ScreenSolarPanel extends GenericScreen<InventorySolarPanel> {
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
-		
+
 	}
 
 	private void toggleBarOpen() {

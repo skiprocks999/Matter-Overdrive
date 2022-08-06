@@ -132,11 +132,16 @@ public class DeferredRegisters {
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
 					DeferredRegisters.TILE_MATTER_RECYCLER));
-	public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = registerBlockNew("charger_child", BlockAndroidChargerChild::new);
-	public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = registerBlockNew(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+	public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = registerBlockNew("charger_child",
+			BlockAndroidChargerChild::new);
+	public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = registerBlockNew(
+			TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 
-	//public static final RegistryObject<BlockAndroidChargerChild> BLOCK_CHARGER_CHILD = BLOCKS.register("charger_child", BlockAndroidChargerChild::new);
-	//public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER = BLOCKS.register(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
+	// public static final RegistryObject<BlockAndroidChargerChild>
+	// BLOCK_CHARGER_CHILD = BLOCKS.register("charger_child",
+	// BlockAndroidChargerChild::new);
+	// public static final RegistryObject<BlockAndroidChargerParent> BLOCK_CHARGER =
+	// BLOCKS.register(TypeMachine.CHARGER.id(), BlockAndroidChargerParent::new);
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
 			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
 					DeferredRegisters.TILE_MICROWAVE));
@@ -165,22 +170,23 @@ public class DeferredRegisters {
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
 			TypeMatterNetworkCable.values());
-	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(
-			TypeMachine.CHUNKLOADER.id(),
-			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new,
-					TypeMachine.CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER));
-	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(
-			TypeMachine.MATTER_ANALYZER.id(),
-			() -> new BlockLightableMachine<TileMatterAnalyzer>(TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER));
-	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(
-			TypeMachine.PATTERN_STORAGE.id(),
-			() -> new BlockMachine<TilePatternStorage>(TilePatternStorage::new, TypeMachine.PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE));
-	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(
-			TypeMachine.PATTERN_MONITOR.id(),
-			() -> new BlockVerticalMachine<TilePatternMonitor>(TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR));
-	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(TypeMachine.MATTER_REPLICATOR.id(), 
-			() -> new BlockLightableMachine<TileMatterReplicator>(TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
-	
+	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(TypeMachine.CHUNKLOADER.id(),
+			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new, TypeMachine.CHUNKLOADER,
+					DeferredRegisters.TILE_CHUNKLOADER));
+	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(TypeMachine.MATTER_ANALYZER.id(),
+			() -> new BlockLightableMachine<TileMatterAnalyzer>(TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER,
+					DeferredRegisters.TILE_MATTER_ANALYZER));
+	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(TypeMachine.PATTERN_STORAGE.id(),
+			() -> new BlockMachine<TilePatternStorage>(TilePatternStorage::new, TypeMachine.PATTERN_STORAGE,
+					DeferredRegisters.TILE_PATTERN_STORAGE));
+	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(TypeMachine.PATTERN_MONITOR.id(),
+			() -> new BlockVerticalMachine<TilePatternMonitor>(TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR,
+					DeferredRegisters.TILE_PATTERN_MONITOR));
+	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(
+			TypeMachine.MATTER_REPLICATOR.id(),
+			() -> new BlockLightableMachine<TileMatterReplicator>(TileMatterReplicator::new,
+					TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
+
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
@@ -219,12 +225,14 @@ public class DeferredRegisters {
 			TypeIsolinearCircuit.values());
 	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive",
 			() -> new ItemTransporterFlashdrive());
-	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive", () -> new ItemPatternDrive());
-	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner", () -> new ItemMatterScanner());
+	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive",
+			() -> new ItemPatternDrive());
+	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner",
+			() -> new ItemMatterScanner());
 
 	public static final RegistryObject<Item> ITEM_TRITANIUM_PLATE = ITEMS.register("tritanium_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
-	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate", 
+	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(TileMatterReplicator.NEEDED_PLATES)));
 
 	/* TILES */
@@ -241,12 +249,15 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterRecycler>> TILE_MATTER_RECYCLER = TILES.register(
 			TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockEntityType<>(TileMatterRecycler::new, Sets.newHashSet(BLOCK_MATTER_RECYCLER.get()), null));
-	//public static final RegistryObject<BlockEntityType<TileCharger>> OLD_TILE_CHARGER = TILES.register(
-	//		TypeMachine.CHARGER.id(),
-	//		() -> new BlockEntityType<>(TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
-	public static final RegistryObject<BlockEntityType<matteroverdrive.common.tile.TileCharger>> TILE_CHARGER = TILES.register(
-					TypeMachine.CHARGER.id(),
-					() -> new BlockEntityType<>(matteroverdrive.common.tile.TileCharger::new, Sets.newHashSet(BLOCK_CHARGER.get()), null));
+	// public static final RegistryObject<BlockEntityType<TileCharger>>
+	// OLD_TILE_CHARGER = TILES.register(
+	// TypeMachine.CHARGER.id(),
+	// () -> new BlockEntityType<>(TileCharger::new,
+	// Sets.newHashSet(BLOCK_CHARGER.get()), null));
+	public static final RegistryObject<BlockEntityType<matteroverdrive.common.tile.TileCharger>> TILE_CHARGER = TILES
+			.register(TypeMachine.CHARGER.id(),
+					() -> new BlockEntityType<>(matteroverdrive.common.tile.TileCharger::new,
+							Sets.newHashSet(BLOCK_CHARGER.get()), null));
 
 	public static final RegistryObject<BlockEntityType<TileMicrowave>> TILE_MICROWAVE = TILES.register(
 			TypeMachine.MICROWAVE.id(),
@@ -266,21 +277,21 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterNetworkCable>> TILE_MATTER_NETWORK_CABLE = TILES
 			.register("network_cable", () -> new BlockEntityType<>(TileMatterNetworkCable::new,
 					Sets.newHashSet(BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0])), null));
-	public static final RegistryObject<BlockEntityType<TileChunkloader>> TILE_CHUNKLOADER = TILES
-			.register(TypeMachine.CHUNKLOADER.id(),
-				() -> new BlockEntityType<>(TileChunkloader::new, Sets.newHashSet(BLOCK_CHUNKLOADER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMatterAnalyzer>> TILE_MATTER_ANALYZER = TILES
-			.register(TypeMachine.MATTER_ANALYZER.id(),
-					() -> new BlockEntityType<>(TileMatterAnalyzer::new, Sets.newHashSet(BLOCK_MATTER_ANALYZER.get()), null));
-	public static final RegistryObject<BlockEntityType<TilePatternStorage>> TILE_PATTERN_STORAGE = TILES
-			.register(TypeMachine.PATTERN_STORAGE.id(), 
-					() -> new BlockEntityType<>(TilePatternStorage::new, Sets.newHashSet(BLOCK_PATTERN_STORAGE.get()), null));
-	public static final RegistryObject<BlockEntityType<TilePatternMonitor>> TILE_PATTERN_MONITOR = TILES
-			.register(TypeMachine.PATTERN_MONITOR.id(), 
-					() -> new BlockEntityType<>(TilePatternMonitor::new, Sets.newHashSet(BLOCK_PATTERN_MONITOR.get()), null));
+	public static final RegistryObject<BlockEntityType<TileChunkloader>> TILE_CHUNKLOADER = TILES.register(
+			TypeMachine.CHUNKLOADER.id(),
+			() -> new BlockEntityType<>(TileChunkloader::new, Sets.newHashSet(BLOCK_CHUNKLOADER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterAnalyzer>> TILE_MATTER_ANALYZER = TILES.register(
+			TypeMachine.MATTER_ANALYZER.id(),
+			() -> new BlockEntityType<>(TileMatterAnalyzer::new, Sets.newHashSet(BLOCK_MATTER_ANALYZER.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternStorage>> TILE_PATTERN_STORAGE = TILES.register(
+			TypeMachine.PATTERN_STORAGE.id(),
+			() -> new BlockEntityType<>(TilePatternStorage::new, Sets.newHashSet(BLOCK_PATTERN_STORAGE.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternMonitor>> TILE_PATTERN_MONITOR = TILES.register(
+			TypeMachine.PATTERN_MONITOR.id(),
+			() -> new BlockEntityType<>(TilePatternMonitor::new, Sets.newHashSet(BLOCK_PATTERN_MONITOR.get()), null));
 	public static final RegistryObject<BlockEntityType<TileMatterReplicator>> TILE_MATTER_REPLICATOR = TILES
-			.register(TypeMachine.MATTER_REPLICATOR.id(), 
-					() -> new BlockEntityType<>(TileMatterReplicator::new, Sets.newHashSet(BLOCK_MATTER_REPLICATOR.get()), null));
+			.register(TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockEntityType<>(TileMatterReplicator::new,
+					Sets.newHashSet(BLOCK_MATTER_REPLICATOR.get()), null));
 
 	/* MENUS */
 
@@ -292,8 +303,10 @@ public class DeferredRegisters {
 			.register(TypeMachine.MATTER_DECOMPOSER.id(), () -> new MenuType<>(InventoryMatterDecomposer::new));
 	public static final RegistryObject<MenuType<InventoryMatterRecycler>> MENU_MATTER_RECYCLER = CONTAINERS
 			.register(TypeMachine.MATTER_RECYCLER.id(), () -> new MenuType<>(InventoryMatterRecycler::new));
-	//public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER = CONTAINERS
-	//		.register(TypeMachine.CHARGER.id(), () -> new MenuType<>(InventoryCharger::new));
+	// public static final RegistryObject<MenuType<InventoryCharger>> MENU_CHARGER =
+	// CONTAINERS
+	// .register(TypeMachine.CHARGER.id(), () -> new
+	// MenuType<>(InventoryCharger::new));
 	public static final RegistryObject<MenuType<InventoryMicrowave>> MENU_MICROWAVE = CONTAINERS
 			.register(TypeMachine.MICROWAVE.id(), () -> new MenuType<>(InventoryMicrowave::new));
 	public static final RegistryObject<MenuType<InventoryInscriber>> MENU_INSCRIBER = CONTAINERS
@@ -319,7 +332,7 @@ public class DeferredRegisters {
 			() -> new ParticleOptionReplicator());
 	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave",
 			() -> new ParticleOptionShockwave());
-	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent", 
+	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent",
 			() -> new ParticleOptionVent());
 
 	// Functional Methods
@@ -334,7 +347,7 @@ public class DeferredRegisters {
 		ITEMS.register(name, () -> new BlockItem(block.get(), properties));
 		return block;
 	}
-	
+
 	private static <T extends Block> RegistryObject<T> registerBlockNew(String name, Supplier<T> supplier) {
 		return registerBlockNew(name, supplier, new Item.Properties().tab(References.MAIN));
 	}

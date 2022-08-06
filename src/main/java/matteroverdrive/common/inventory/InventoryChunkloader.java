@@ -18,9 +18,10 @@ public class InventoryChunkloader extends GenericInventoryTile<TileChunkloader> 
 	public InventoryChunkloader(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(DeferredRegisters.MENU_CHUNKLOADER.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryChunkloader(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileChunkloader.SLOT_COUNT, true, true), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileChunkloader.SLOT_COUNT, true, true),
+				new SimpleContainerData(3));
 	}
 
 	@Override

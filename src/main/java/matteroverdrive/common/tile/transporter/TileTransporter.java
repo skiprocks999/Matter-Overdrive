@@ -64,7 +64,7 @@ public class TileTransporter extends GenericSoundTile {
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private int currDestination = -1;
 	private List<Entity> currEntities = new ArrayList<>();
-	
+
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
 	public int clientEnergyUsage;
@@ -110,15 +110,15 @@ public class TileTransporter extends GenericSoundTile {
 			UtilsTile.drainElectricSlot(this);
 			UtilsTile.drainMatterSlot(this);
 			if (cooldownTimer >= COOLDOWN) {
-				List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class,
-						new AABB(getBlockPos().above()));
+				List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 				if (entitiesAbove.size() > 0 && currDestination >= 0) {
 					TransporterLocationWrapper curLoc = LOCATIONS[currDestination];
 					Pair<Boolean, Integer> validData = validDestination(curLoc);
 					if (validData.getFirst()) {
 						CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 						CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
-						if (energy.getEnergyStored() >= getCurrentPowerUsage(false) && matter.getMatterStored() >= getCurrentMatterUsage(false)) {
+						if (energy.getEnergyStored() >= getCurrentPowerUsage(false)
+								&& matter.getMatterStored() >= getCurrentMatterUsage(false)) {
 							int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
 									: entitiesAbove.size();
 							energy.removeEnergy((int) getCurrentPowerUsage(false));
@@ -140,10 +140,13 @@ public class TileTransporter extends GenericSoundTile {
 										h.setTransporterTimer(70);
 									});
 									level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
-										h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
+										h.addActiveTransport(
+												new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 									});
 									Scheduler.schedule(1, () -> {
-										dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+										dim.playSound(null, curLoc.getDestination(),
+												SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F,
+												1.0F);
 									}, false);
 								}
 							}
@@ -342,7 +345,7 @@ public class TileTransporter extends GenericSoundTile {
 	public double getDefaultPowerUsage() {
 		return USAGE_PER_TICK;
 	}
-	
+
 	public static int getDefaultRaduis() {
 		return DEFAULT_RADUIS;
 	}
@@ -378,7 +381,7 @@ public class TileTransporter extends GenericSoundTile {
 	public double getCurrentMatterUsage(boolean clientSide) {
 		return clientSide ? clientMatterUsage * clientSAMultipler : matterUsage * saMultiplier;
 	}
-	
+
 	@Override
 	public double getCurrentRange(boolean clientSide) {
 		return clientSide ? clientRadius : radius;
@@ -415,7 +418,7 @@ public class TileTransporter extends GenericSoundTile {
 	public void setMuffled(boolean muffled) {
 		isMuffled = muffled;
 	}
-	
+
 	public void setRadius(int radius) {
 		this.radius = radius;
 	}
@@ -424,7 +427,7 @@ public class TileTransporter extends GenericSoundTile {
 	public double getProcessingTime() {
 		return BUILD_UP_TIME;
 	}
-	
+
 	@Override
 	public void setAcceleratorMultiplier(double multiplier) {
 		saMultiplier = multiplier;
@@ -459,8 +462,8 @@ public class TileTransporter extends GenericSoundTile {
 			origin.sub(pos);
 			origin.mul(speed);
 
-			getLevel().addParticle(new ParticleOptionReplicator()
-					.setGravity(gravity).setScale(0.1F).setAge(age), pos.x(), pos.y(), pos.z(), 0, speed, 0);
+			getLevel().addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.1F).setAge(age),
+					pos.x(), pos.y(), pos.z(), 0, speed, 0);
 		}
 
 	}
@@ -476,16 +479,16 @@ public class TileTransporter extends GenericSoundTile {
 	public TransporterLocationWrapper[] getServerLocations() {
 		return LOCATIONS;
 	}
-	
+
 	private void fillLocations(TransporterLocationWrapper[] holder) {
-		for(int i = 0; i < holder.length; i++) {
+		for (int i = 0; i < holder.length; i++) {
 			holder[i] = new TransporterLocationWrapper();
 		}
 	}
-	
+
 	private ServerLevel handleDimensionChange(Entity entity) {
 		ResourceKey<Level> dim = LOCATIONS[currDestination].getDimension();
-		if(dim != null) {
+		if (dim != null) {
 			ServerLevel level = ServerLifecycleHooks.getCurrentServer().getLevel(dim);
 			entity.changeDimension(level, MANAGER);
 			return level;

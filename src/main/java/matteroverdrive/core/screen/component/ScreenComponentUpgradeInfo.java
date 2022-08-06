@@ -26,23 +26,23 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
 		this.tile = tile;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setMatterPerTick() {
 		matterPerTick = true;
 		return this;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setPowerNonTick() {
 		powerNonTick = true;
 		return this;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setCustomTimeKey(String key) {
 		customTime = true;
 		customTimeKey = key;
 		return this;
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		IUpgradableTile owner = tile.get();
@@ -55,7 +55,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			double currSpeed = owner.getCurrentSpeed(true);
 			double operatingTime = owner.getProcessingTime();
 			if (currSpeed > 0 && owner.getDefaultSpeed() > 0) {
-				if(customTime) {
+				if (customTime) {
 					component = UtilsText.gui(customTimeKey, currSpeed);
 				} else {
 					component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));

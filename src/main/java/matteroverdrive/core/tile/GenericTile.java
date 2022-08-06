@@ -31,39 +31,40 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+public abstract class GenericTile<T extends MachineTile<T>> extends MachineTile<T>
+		implements Nameable, IUpgradableTile {
 
-public abstract class GenericTile<T extends MachineTile<T>> extends MachineTile<T> implements Nameable, IUpgradableTile {
+	private MenuProviderFactory menuFactory = ((provider, blockPos, access, playerInventory,
+			menuId) -> new BasicAddonContainer(provider, new TileEntityLocatorInstance(blockPos), access,
+					playerInventory, menuId));
 
-  private MenuProviderFactory menuFactory = ((provider, blockPos, access, playerInventory, menuId) ->
-          new BasicAddonContainer(provider, new TileEntityLocatorInstance(blockPos), access, playerInventory, menuId));
+	public GenericTile(BasicTileBlock<T> base, BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+		super(base, blockEntityType, pos, state);
+	}
 
-  public GenericTile(BasicTileBlock<T> base, BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
-    super(base, blockEntityType, pos, state);
-  }
+	@Override
+	public InteractionResult onActivated(@NotNull Player player, @NotNull InteractionHand hand,
+			@NotNull Direction facing, double hitX, double hitY, double hitZ) {
+		InteractionResult result = super.onActivated(player, hand, facing, hitX, hitY, hitZ);
+		if (result == InteractionResult.PASS) {
+			this.openGui(player);
+			return InteractionResult.SUCCESS;
+		}
+		return result;
+	}
 
-  @Override
-  public InteractionResult onActivated(@NotNull Player player, @NotNull InteractionHand hand, @NotNull Direction facing, double hitX, double hitY, double hitZ) {
-    InteractionResult result = super.onActivated(player, hand, facing, hitX, hitY, hitZ);
-    if (result == InteractionResult.PASS) {
-      this.openGui(player);
-      return InteractionResult.SUCCESS;
-    }
-    return result;
-  }
+	@Nullable
+	@Override
+	public AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory, @NotNull Player player) {
+		if (this.level != null) {
+			return this.menuFactory.build(this, this.worldPosition,
+					ContainerLevelAccess.create(this.level, this.worldPosition), playerInventory, menuId);
+		}
+		return null;
+	}
 
-  @Nullable
-  @Override
-  public AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory, @NotNull Player player) {
-    if (this.level != null) {
-      return this.menuFactory.build(this, this.worldPosition, ContainerLevelAccess.create(this.level, this.worldPosition), playerInventory, menuId);
-    }
-    return null;
-  }
-
-  public void setMenuFactory(MenuProviderFactory menuFactory) {
-    this.menuFactory = menuFactory;
-  }
-
-
+	public void setMenuFactory(MenuProviderFactory menuFactory) {
+		this.menuFactory = menuFactory;
+	}
 
 }

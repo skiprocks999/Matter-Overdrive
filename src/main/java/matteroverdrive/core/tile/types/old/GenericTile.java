@@ -37,10 +37,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	private MenuProvider menu;
 
 	public boolean isTickable = false;
-	
+
 	public boolean hasMenuData = false;
 	public boolean hasRenderData = false;
-	
+
 	protected long ticks = 0;
 
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -59,11 +59,11 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void setTickable() {
 		isTickable = true;
 	}
-	
+
 	public void setHasMenuData() {
 		hasMenuData = true;
 	}
-	
+
 	public void setHasRenderData() {
 		hasRenderData = true;
 	}
@@ -183,12 +183,12 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
 	}
-	
+
 	@Override
 	public long getTicks() {
 		return ticks;
 	}
-	
+
 	public void incrementTicks() {
 		ticks++;
 	};

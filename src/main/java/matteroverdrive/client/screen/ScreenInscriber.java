@@ -242,7 +242,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 		energy.visible = false;
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
-		
+
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {

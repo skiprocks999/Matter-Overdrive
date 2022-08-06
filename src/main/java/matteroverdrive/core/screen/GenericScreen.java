@@ -38,7 +38,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		super(menu, playerinventory, title);
 		setScreenParams();
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -111,18 +111,18 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 			}
 		}
 	}
-	
+
 	public void addScreenComponent(OverdriveScreenComponent component) {
 		component.initScreenSize();
 		components.add(component);
 		addRenderableOnly(component);
 	}
-	
+
 	public void addButton(AbstractOverdriveButton button) {
 		button.initScreenSize();
 		addRenderableWidget(button);
 	}
-	
+
 	public void addEditBox(EditBoxOverdrive box) {
 		addRenderableWidget(box);
 	}

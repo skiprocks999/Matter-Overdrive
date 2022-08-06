@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IPropertyHolder {
 
-  List<Property<?>> getProperties();
+	List<Property<?>> getProperties();
 
 }

@@ -26,23 +26,23 @@ public class RendererCharger extends AbstractTileRenderer<TileCharger> {
 
 		Direction facing = charger.getFacingDirection();
 		switch (facing) {
-			case NORTH -> {
-				stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
-				stack.translate(0, 0.5, 1.0);
-			}
-			case SOUTH -> {
-				stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
-				stack.translate(1, 0.5, 0);
-			}
-			case EAST -> stack.translate(1.0, 0.5, 1.0);
-			case WEST -> {
-				stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
-				stack.translate(0, 0.5, 0);
-			}
-			default -> {
-			}
+		case NORTH -> {
+			stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90.0F, true));
+			stack.translate(0, 0.5, 1.0);
 		}
-	
+		case SOUTH -> {
+			stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 270.0F, true));
+			stack.translate(1, 0.5, 0);
+		}
+		case EAST -> stack.translate(1.0, 0.5, 1.0);
+		case WEST -> {
+			stack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180.0F, true));
+			stack.translate(0, 0.5, 0);
+		}
+		default -> {
+		}
+		}
+
 		BakedModel ibakedmodel = UtilsRendering.getBakedModel(ClientRegister.MODEL_CHARGER);
 		UtilsRendering.renderModel(ibakedmodel, charger, RenderType.solid(), stack, source, light, overlay);
 

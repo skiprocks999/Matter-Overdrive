@@ -18,43 +18,44 @@ import net.minecraft.world.item.Item;
 
 public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 
-	private static final ResourceLocation SCREEN = new ResourceLocation(References.ID + ":textures/gui/misc/screen.png");
+	private static final ResourceLocation SCREEN = new ResourceLocation(
+			References.ID + ":textures/gui/misc/screen.png");
 	private static final ResourceLocation WHITE = new ResourceLocation("forge:textures/white.png");
-	
+
 	private static final int NUM_BARS = 26;
-	
+
 	private final Supplier<TileMatterAnalyzer> supplier;
 	private final Random random;
-	
+
 	private float[] values = new float[NUM_BARS];
-	
-	public ScreenComponentMatterAnalyzer(GenericScreen<?> gui, int x, int y, int[] screenNumbers, 
+
+	public ScreenComponentMatterAnalyzer(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
 			Supplier<TileMatterAnalyzer> supplier) {
 		super(SCREEN, gui, x, y, 118, 48, screenNumbers);
 		this.supplier = supplier;
 		random = new Random();
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource);
 		blit(stack, x, y, width, height, 0, 0, width, height, width, height);
 	}
-	
+
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileMatterAnalyzer analyzer = supplier.get();
-		if(analyzer != null && analyzer.clientRunning) {
+		if (analyzer != null && analyzer.clientRunning) {
 			int color = UtilsRendering.TITLE_BLUE;
-			
+
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			UtilsRendering.bindTexture(WHITE);
 			UtilsRendering.color(color);
-			
+
 			int seed = Item.getId(analyzer.clientScannedItem.getItem());
 			random.setSeed((long) seed);
 			int progress = (int) Math.ceil(26.0D * (analyzer.clientProgress / analyzer.getProcessingTime()));
-			
+
 			int marginsTop = 8;
 			int marginsLeft = 7;
 			int maxHeight = 32;
@@ -77,13 +78,13 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 					int y2 = maxHeight - height + marginsTop + y;
 					fill(stack, x1, y1, x2, y2, color);
 					fill(stack, x1, y2 - 1, x2, y2 - 2, color);
-				} 
+				}
 
 				values[i] = UtilsMath.lerpF(values[i], newValue, 0.05f);
 			}
-			
+
 			UtilsRendering.color(UtilsRendering.WHITE);
-			
+
 		}
 	}
 

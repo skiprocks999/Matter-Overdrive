@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 
-
 	public BlockAndroidChargerParent() {
 		super("charger_parent", TileCharger.class, TileCharger::new, TypeMachine.CHARGER);
 	}
@@ -28,9 +27,9 @@ public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		BlockState middle = world.getBlockState(pos.offset(0, 1, 0));
-		if(middle.isAir() || middle.getFluidState().isEmpty() && !middle.getFluidState().isEmpty()) {
+		if (middle.isAir() || middle.getFluidState().isEmpty() && !middle.getFluidState().isEmpty()) {
 			BlockState top = world.getBlockState(pos.offset(0, 2, 0));
-			if(top.isAir() || top.getFluidState().isEmpty() && !top.getFluidState().isEmpty()) {
+			if (top.isAir() || top.getFluidState().isEmpty() && !top.getFluidState().isEmpty()) {
 				return super.canSurvive(state, world, pos);
 			}
 		}
@@ -40,7 +39,7 @@ public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
-		if(!world.isClientSide) {
+		if (!world.isClientSide) {
 			Direction facing = state.getValue(getRotationProperty());
 			BlockState middle = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
 			if (middle.getBlock() instanceof GenericStateVariableBlock<?> variableBlock) {
@@ -59,15 +58,15 @@ public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
-		
-		if(!newState.hasProperty(getRotationProperty()) && !level.isClientSide) {
+
+		if (!newState.hasProperty(getRotationProperty()) && !level.isClientSide) {
 			level.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.offset(0, 2, 0), Blocks.AIR.defaultBlockState());
 		}
-		
+
 		super.onRemove(state, level, pos, newState, moving);
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
 		if (state.hasProperty(getRotationProperty())) {
@@ -75,12 +74,14 @@ public class BlockAndroidChargerParent extends BlockMachine<TileCharger> {
 			BlockPos second = pos.offset(0, 2, 0);
 			BlockState firstState = level.getBlockState(first);
 			if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable) {
-				level.setBlock(first, firstState.setValue(variable.getRotationProperty(), rot.rotate(firstState.getValue(getRotationProperty()))), 3);
+				level.setBlock(first, firstState.setValue(variable.getRotationProperty(),
+						rot.rotate(firstState.getValue(getRotationProperty()))), 3);
 
 			}
 			BlockState secondState = level.getBlockState(second);
 			if (secondState.getBlock() instanceof GenericStateVariableBlock<?> variable) {
-				level.setBlock(second, secondState.setValue(variable.getRotationProperty(), rot.rotate(secondState.getValue(getRotationProperty()))), 3);
+				level.setBlock(second, secondState.setValue(variable.getRotationProperty(),
+						rot.rotate(secondState.getValue(getRotationProperty()))), 3);
 			}
 			return state.setValue(getRotationProperty(), rot.rotate(state.getValue(getRotationProperty())));
 		}

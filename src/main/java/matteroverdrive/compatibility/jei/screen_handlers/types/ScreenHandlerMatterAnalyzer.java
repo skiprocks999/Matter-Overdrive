@@ -16,5 +16,5 @@ public class ScreenHandlerMatterAnalyzer extends AbstractScreenHandler<ScreenMat
 		}
 		return rectangles;
 	}
-	
+
 }

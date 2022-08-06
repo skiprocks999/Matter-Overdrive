@@ -20,12 +20,12 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 	public static final Codec<ParticleOptionReplicator> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(Codec.FLOAT.fieldOf("gravity").forGetter(instance0 -> {
 			return instance0.gravity;
-		}),Codec.FLOAT.fieldOf("scale").forGetter(instance0 -> {
+		}), Codec.FLOAT.fieldOf("scale").forGetter(instance0 -> {
 			return instance0.scale;
 		}), Codec.INT.fieldOf("age").forGetter(instance0 -> {
 			return instance0.age;
-		})).apply(instance, (gravity, scale, age) -> new ParticleOptionReplicator()
-				.setGravity(gravity).setScale(scale).setAge(age));
+		})).apply(instance, (gravity, scale, age) -> new ParticleOptionReplicator().setGravity(gravity).setScale(scale)
+				.setAge(age));
 	});
 
 	public static final ParticleOptions.Deserializer<ParticleOptionReplicator> DESERIALIZER = new ParticleOptions.Deserializer<ParticleOptionReplicator>() {
@@ -46,8 +46,8 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 		@Override
 		public ParticleOptionReplicator fromNetwork(ParticleType<ParticleOptionReplicator> type,
 				FriendlyByteBuf buffer) {
-			return new ParticleOptionReplicator()
-					.setGravity(buffer.readFloat()).setScale(buffer.readFloat()).setAge(buffer.readInt());
+			return new ParticleOptionReplicator().setGravity(buffer.readFloat()).setScale(buffer.readFloat())
+					.setAge(buffer.readInt());
 		}
 	};
 
@@ -64,7 +64,7 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 		this.age = age;
 		return this;
 	}
-	
+
 	public ParticleOptionReplicator setScale(float scale) {
 		this.scale = scale;
 		return this;
@@ -84,7 +84,8 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", gravity: " + gravity + ", scale: " + scale + ", age: " + age;
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", gravity: " + gravity + ", scale: "
+				+ scale + ", age: " + age;
 	}
 
 	@Override

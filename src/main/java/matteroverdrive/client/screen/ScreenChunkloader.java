@@ -36,7 +36,7 @@ public class ScreenChunkloader extends GenericScreen<InventoryChunkloader> {
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenChunkloader(InventoryChunkloader menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
@@ -91,7 +91,7 @@ public class ScreenChunkloader extends GenericScreen<InventoryChunkloader> {
 		addButton(redstone);
 
 		redstone.visible = false;
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
@@ -122,7 +122,7 @@ public class ScreenChunkloader extends GenericScreen<InventoryChunkloader> {
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
-		
+
 	}
 
 	private void toggleBarOpen() {

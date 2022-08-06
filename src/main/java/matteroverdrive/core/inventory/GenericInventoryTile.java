@@ -49,9 +49,9 @@ public abstract class GenericInventoryTile<T extends GenericTile> extends Generi
 			sendAdditional(tile, server);
 		}
 	}
-	
+
 	public void sendAdditional(T tile, ServerPlayer player) {
-		
+
 	}
 
 }

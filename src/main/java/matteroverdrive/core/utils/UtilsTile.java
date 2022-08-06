@@ -133,14 +133,14 @@ public class UtilsTile {
 			}
 		}
 	}
-	
+
 	public static void drainMatterSlot(GenericTile tile) {
 		CapabilityInventory inv = tile.exposeCapability(CapabilityType.Item);
 		CapabilityMatterStorage energy = tile.exposeCapability(CapabilityType.Matter);
 		for (ItemStack stack : inv.getMatterItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
-				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve()
-						.get();
+				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
+						.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
 				if (storage.canExtract()) {
 					double accepted = energy.receiveMatter(storage.getMatterStored(), true);
 					energy.receiveMatter(accepted, false);
@@ -165,7 +165,7 @@ public class UtilsTile {
 			}
 		}
 	}
-	
+
 	public static boolean isFEReciever(BlockEntity acceptor, Direction dir) {
 		if (acceptor != null) {
 			if (acceptor.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {

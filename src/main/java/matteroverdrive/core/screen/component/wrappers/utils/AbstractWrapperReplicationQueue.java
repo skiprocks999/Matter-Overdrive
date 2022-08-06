@@ -29,48 +29,48 @@ public abstract class AbstractWrapperReplicationQueue {
 	private int lastRowCount = 0;
 	protected final GenericScreen<?> screen;
 	private ScreenComponentLabel label;
-	
+
 	public AbstractWrapperReplicationQueue(GenericScreen<?> screen, int x, int y, int[] screenNumbers) {
 		this.screen = screen;
 		this.x = x;
 		this.y = y;
 		this.screenNumbers = screenNumbers;
 	}
-	
+
 	public void initButtons(ItemRenderer renderer) {
-		
+
 		label = new ScreenComponentLabel(screen, x, y, screenNumbers, getCatagoryName(), UtilsRendering.TEXT_BLUE);
-		
+
 		int xOff = -2;
 		int yOff = 10;
-		
-		for(int i = 0; i < 6; i++) {
+
+		for (int i = 0; i < 6; i++) {
 			final int index = i;
 			orders[i] = new ScreenComponentQueuedOrder(screen, x + xOff, y + yOff + i * 21, screenNumbers, renderer);
-			cancelButtons[i] = new ButtonGeneric(screen, x + xOff + 143, y +  + yOff + 5 + i * 21, ButtonType.CLOSE_RED, button -> {
-				handleOrderCancel(index, orders[index].getOrder());
-			});
+			cancelButtons[i] = new ButtonGeneric(screen, x + xOff + 143, y + +yOff + 5 + i * 21, ButtonType.CLOSE_RED,
+					button -> {
+						handleOrderCancel(index, orders[index].getOrder());
+					});
 		}
-		
+
 		screen.addScreenComponent(label);
-		
-		for(int i = 0; i < 6; i++) {
+
+		for (int i = 0; i < 6; i++) {
 			screen.addScreenComponent(orders[i]);
 			screen.addButton(cancelButtons[i]);
 		}
-		
-		
+
 	}
-	
+
 	public void tick() {
 		List<QueuedReplication> orders = getOrders();
 		lastRowCount = orders.size();
 		ScreenComponentQueuedOrder component;
 		int index;
-		for(int i = 0; i < 6; i++) {
+		for (int i = 0; i < 6; i++) {
 			component = this.orders[i];
 			index = topRowIndex + i;
-			if(index < orders.size()) {
+			if (index < orders.size()) {
 				component.setOrder(orders.get(index));
 			} else {
 				component.setOrder(null);
@@ -78,11 +78,11 @@ public abstract class AbstractWrapperReplicationQueue {
 			component.visible = component.isFilled();
 			cancelButtons[i].visible = component.visible;
 		}
-		
+
 		ScreenComponentVerticalSlider slider = getSlider();
-		if(lastRowCount > 6) {
+		if (lastRowCount > 6) {
 			slider.updateActive(true);
-			if(!slider.isSliderHeld()) {
+			if (!slider.isSliderHeld()) {
 				int moveRoom = slider.getHeight() - 15 - 4;
 				double moved = (double) topRowIndex / (double) (lastRowCount - 6.0D);
 				slider.setSliderYOffset((int) ((double) moveRoom * moved));
@@ -92,30 +92,31 @@ public abstract class AbstractWrapperReplicationQueue {
 			slider.setSliderYOffset(0);
 			topRowIndex = 0;
 		}
-		
+
 	}
-	
+
 	public void updateButtons(boolean visible) {
 		ScreenComponentQueuedOrder order;
 		boolean vis;
-		for(int i = 0; i < 6; i++) {
+		for (int i = 0; i < 6; i++) {
 			order = orders[i];
-			vis = order.isFilled() && visible;;
+			vis = order.isFilled() && visible;
+			;
 			order.visible = vis;
 			cancelButtons[i].visible = vis;
 		}
 		label.visible = visible;
 	}
-	
-	//pos for down, neg for up
+
+	// pos for down, neg for up
 	public void handleMouseScroll(int dir) {
-		if(Screen.hasControlDown()) {
-			dir*= 4;
+		if (Screen.hasControlDown()) {
+			dir *= 4;
 		}
 		int lastRowIndex = lastRowCount - 1;
-		if(lastRowCount > 6) {
-			//check in case something borked
-			if(topRowIndex >= lastRowCount) {
+		if (lastRowCount > 6) {
+			// check in case something borked
+			if (topRowIndex >= lastRowCount) {
 				topRowIndex = lastRowIndex - 5;
 			}
 			topRowIndex = Mth.clamp(topRowIndex += dir, 0, lastRowIndex - 5);
@@ -123,15 +124,15 @@ public abstract class AbstractWrapperReplicationQueue {
 			topRowIndex = 0;
 		}
 	}
-	
+
 	public Consumer<Integer> getSliderClickedConsumer() {
 		return (mouseY) -> {
 			ScreenComponentVerticalSlider slider = getSlider();
-			if(slider.isSliderActive()) {
+			if (slider.isSliderActive()) {
 				int sliderY = slider.y;
 				int sliderHeight = slider.getHeight();
 				int mouseHeight = mouseY - sliderY;
-				if(mouseHeight >= sliderHeight - 4 - 15) {
+				if (mouseHeight >= sliderHeight - 4 - 15) {
 					topRowIndex = lastRowCount - 6;
 					slider.setSliderYOffset(sliderHeight - 4 - 15);
 				} else if (mouseHeight <= 2) {
@@ -147,14 +148,14 @@ public abstract class AbstractWrapperReplicationQueue {
 			}
 		};
 	}
-	
-	public Consumer<Integer> getSliderDraggedConsumer(){
+
+	public Consumer<Integer> getSliderDraggedConsumer() {
 		return (mouseY) -> {
 			ScreenComponentVerticalSlider slider = getSlider();
-			if(slider.isSliderActive()) {
+			if (slider.isSliderActive()) {
 				int sliderY = slider.y;
 				int sliderHeight = slider.getHeight();
-				if(mouseY <= sliderY + 2) {
+				if (mouseY <= sliderY + 2) {
 					topRowIndex = 0;
 					slider.setSliderYOffset(0);
 				} else if (mouseY >= sliderY + sliderHeight - 4 - 15) {
@@ -169,17 +170,17 @@ public abstract class AbstractWrapperReplicationQueue {
 			}
 		};
 	}
-	
+
 	public abstract ScreenComponentVerticalSlider getSlider();
-	
+
 	public abstract List<QueuedReplication> getOrders();
-	
+
 	public abstract MutableComponent getCatagoryName();
-	
+
 	public void handleOrderCancel(int buttonIndex, QueuedReplication order) {
-		if(order != null) {
+		if (order != null) {
 			NetworkHandler.CHANNEL.sendToServer(new PacketCancelReplication(order.getOwnerPos(), order.getQueuePos()));
-		}	
+		}
 	}
-	
+
 }

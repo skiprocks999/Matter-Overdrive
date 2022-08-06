@@ -18,7 +18,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonMenuOption extends AbstractOverdriveButton {
-	
+
 	private MenuButtonType type;
 	public boolean isActivated;
 	private final ResourceLocation defaultLoc;
@@ -26,8 +26,8 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 	private final ResourceLocation iconLoc;
 	private final ButtonMenuBar bar;
 
-	public ButtonMenuOption(GenericScreen<?> gui, int x, int y, OnPress press, MenuButtonType type,
-			ButtonMenuBar bar, boolean isActivated) {
+	public ButtonMenuOption(GenericScreen<?> gui, int x, int y, OnPress press, MenuButtonType type, ButtonMenuBar bar,
+			boolean isActivated) {
 		super(gui, x, y, 18, 18, Component.empty(), press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuOption menuOption = (ButtonMenuOption) button;
 			menuOption.gui.renderTooltip(stack, type.tooltip, mouseX, mouseY);
@@ -46,12 +46,12 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 		if (bar.isExtended) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			
+
 			if (isActivated || isHoveredOrFocused()) {
 				SlotType slot = type.activeSlot;
 				UtilsRendering.bindTexture(activeLoc);
-				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
-						slot.getHeight(), slot.getHeight(), slot.getWidth());
+				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(), slot.getHeight(),
+						slot.getHeight(), slot.getWidth());
 				IconType icon = type.icon;
 				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
 				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
@@ -61,8 +61,8 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 			} else {
 				SlotType slot = type.defaultSlot;
 				UtilsRendering.bindTexture(defaultLoc);
-				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(),
-						slot.getHeight(), slot.getHeight(), slot.getWidth());
+				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(), slot.getHeight(),
+						slot.getHeight(), slot.getWidth());
 				IconType icon = type.icon;
 				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
 				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
@@ -97,8 +97,7 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 		public final IconType icon;
 		public final MutableComponent tooltip;
 
-		private MenuButtonType(SlotType defaultSlot, SlotType activeSlot, IconType icon,
-				MutableComponent tooltip) {
+		private MenuButtonType(SlotType defaultSlot, SlotType activeSlot, IconType icon, MutableComponent tooltip) {
 			this.defaultSlot = defaultSlot;
 			this.activeSlot = activeSlot;
 			this.icon = icon;

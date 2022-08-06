@@ -109,8 +109,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
-			addBlock(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
-			
+			addBlock(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR),
+					"Network Cable");
+
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
 			addTooltip("matterval", "Matter: %s");
@@ -148,8 +149,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("invaliddest", "Invalid Destination");
 			addTooltip("empty", "Empty");
 			addTooltip("storedpattern", "%1$s [%2$s]");
-			addTooltip("has_storage_loc" , "Bound: %s");
-			addTooltip("no_storage_loc" , "Unbound");
+			addTooltip("has_storage_loc", "Bound: %s");
+			addTooltip("no_storage_loc", "Unbound");
 			addTooltip("menutasks", "Tasks");
 			addTooltip("order", "Order");
 			addTooltip("orderabv", "O");
@@ -219,13 +220,13 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addSubtitle("matter_scanner_beep", "Matter Scanner beeps");
 			addSubtitle("matter_scanner_fail", "Scan fails");
 			addSubtitle("matter_scanner_success", "Scan succeeds");
-			
+
 			addDimension("overworld", "Overworld");
 			addDimension("the_nether", "Nether");
 			addDimension("the_end", "End");
-			
+
 			addKeyCategory("main", "Matter Overdrive - Main");
-			addKeyLabel("togglematterscanner" , "Toggle Matter Scanner");
+			addKeyLabel("togglematterscanner", "Toggle Matter Scanner");
 		}
 	}
 
@@ -256,15 +257,15 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	private void addGuiLabel(String key, String translation) {
 		add("gui." + References.ID + "." + key, translation);
 	}
-	
+
 	private void addDimension(String key, String translation) {
 		add("dimension." + References.ID + "." + key, translation);
 	}
-	
+
 	private void addKeyCategory(String key, String translation) {
 		add("keycategory." + References.ID + "." + key, translation);
 	}
-	
+
 	private void addKeyLabel(String key, String translation) {
 		add("key." + References.ID + "." + key, translation);
 	}

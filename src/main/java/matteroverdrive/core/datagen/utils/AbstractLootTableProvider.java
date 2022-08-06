@@ -101,26 +101,24 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 	 * Creates a silk touch and fortune loottable for a block
 	 *
 	 * @author SeaRobber69
-	 * @param name Name of the block
-	 * @param block The block that will be added
+	 * @param name     Name of the block
+	 * @param block    The block that will be added
 	 * @param lootItem The alternative item that is dropped when silk is not used
-	 * @param min The minimum amount dropped
-	 * @param max The maximum amount dropped
+	 * @param min      The minimum amount dropped
+	 * @param max      The maximum amount dropped
 	 */
-	protected LootTable.Builder createSilkTouchAndFortuneTable(String name, Block block, Item lootItem, float min, float max) {
-		LootPool.Builder builder = LootPool.lootPool()
-				.name(name)
-				.setRolls(ConstantValue.exactly(1))
+	protected LootTable.Builder createSilkTouchAndFortuneTable(String name, Block block, Item lootItem, float min,
+			float max) {
+		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
 				.add(AlternativesEntry.alternatives(
-								LootItem.lootTableItem(block)
-										.when(MatchTool.toolMatches(ItemPredicate.Builder.item()
-												.hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))))),
-								LootItem.lootTableItem(lootItem)
-										.apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))
-										.apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1))
-										.apply(ApplyExplosionDecay.explosionDecay())
-						)
-				);
+						LootItem.lootTableItem(block)
+								.when(MatchTool.toolMatches(ItemPredicate.Builder.item()
+										.hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH,
+												MinMaxBounds.Ints.atLeast(1))))),
+						LootItem.lootTableItem(lootItem)
+								.apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))
+								.apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1))
+								.apply(ApplyExplosionDecay.explosionDecay())));
 		return LootTable.lootTable().withPool(builder);
 	}
 
@@ -128,21 +126,18 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 	 * Creates a silk touch only loottable for a block
 	 *
 	 * @author SeaRobber69
-	 * @param name Name of the block
+	 * @param name  Name of the block
 	 * @param block The block that will be added
 	 */
 	protected LootTable.Builder createSilkTouchOnlyTable(String name, Block block) {
-		LootPool.Builder builder = LootPool.lootPool()
-				.name(name)
-				.setRolls(ConstantValue.exactly(1))
-				.add(LootItem.lootTableItem(block)
-						.when(MatchTool.toolMatches(ItemPredicate.Builder.item()
-								.hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1)))))
+		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(
+				LootItem.lootTableItem(block).when(MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(
+						new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1)))))
 
-				);
+		);
 		return LootTable.lootTable().withPool(builder);
 	}
-	
+
 	@Override
 	public void run(CachedOutput cache) {
 		addTables();
@@ -151,7 +146,7 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 		for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
 			tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootContextParamSets.BLOCK).build());
 		}
-		
+
 		writeTables(cache, tables);
 	}
 

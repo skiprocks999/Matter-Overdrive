@@ -61,23 +61,22 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenComponentVerticalSlider slider;
 	public WrapperMatterReplicatorOrders queued;
 
-	
 	public ScreenMatterReplicator(InventoryMatterReplicator menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();
-		if(screenNumber == 4) {
+		if (screenNumber == 4) {
 			queued.tick();
 		}
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -326,8 +325,8 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
 		matterWrapper.initButtons();
-		
-		queued = new WrapperMatterReplicatorOrders(this, 48, 32, new int[] { 4 } );
+
+		queued = new WrapperMatterReplicatorOrders(this, 48, 32, new int[] { 4 });
 
 		addButton(close);
 		addButton(menu);
@@ -349,7 +348,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		for (ButtonIO button : matterWrapper.getButtons()) {
 			addButton(button);
 		}
-		
+
 		queued.initButtons(itemRenderer);
 
 		redstone.visible = false;
@@ -360,7 +359,7 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
 		queued.updateButtons(false);
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
@@ -444,12 +443,12 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 	public int getScreenNumber() {
 		return screenNumber;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if(queued != null && screenNumber == 4) {
-			if(delta > 0) {
-				//scroll up
+		if (queued != null && screenNumber == 4) {
+			if (delta > 0) {
+				// scroll up
 				queued.handleMouseScroll(-1);
 			} else if (delta < 0) {
 				// scroll down
@@ -458,26 +457,26 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
 		super.mouseMoved(mouseX, mouseY);
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseMoved(mouseX, mouseY);
 		}
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);

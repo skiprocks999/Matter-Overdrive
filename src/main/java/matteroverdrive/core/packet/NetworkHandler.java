@@ -32,9 +32,9 @@ public class NetworkHandler {
 			PROTOCOL_VERSION::equals);
 
 	public static void init() {
-		
+
 		/* SERVER-BOUND */
-		
+
 		CHANNEL.registerMessage(disc++, PacketUpdateRedstoneMode.class, PacketUpdateRedstoneMode::encode,
 				PacketUpdateRedstoneMode::decode, PacketUpdateRedstoneMode::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
@@ -53,9 +53,9 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketCancelReplication.class, PacketCancelReplication::encode,
 				PacketCancelReplication::decode, PacketCancelReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		
+
 		/* CLIENT-BOUND */
-		
+
 		CHANNEL.registerMessage(disc++, PacketUpdateTile.class, PacketUpdateTile::encode, PacketUpdateTile::decode,
 				PacketUpdateTile::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
@@ -64,16 +64,16 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketSyncClientEntityCapability.class,
 				PacketSyncClientEntityCapability::encode, PacketSyncClientEntityCapability::decode,
 				PacketSyncClientEntityCapability::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketClientMNData.class,
-				PacketClientMNData::encode, PacketClientMNData::decode,
-				PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class,
-				PacketPlayMatterScannerSound::encode, PacketPlayMatterScannerSound::decode,
-				PacketPlayMatterScannerSound::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		
+		CHANNEL.registerMessage(disc++, PacketClientMNData.class, PacketClientMNData::encode,
+				PacketClientMNData::decode, PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class, PacketPlayMatterScannerSound::encode,
+				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle,
+				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
 	}
 
-	public static void sendUpdateClientContainerProperties(ServerPlayer playerEntity, UpdateClientContainerPropertiesMessage message) {
+	public static void sendUpdateClientContainerProperties(ServerPlayer playerEntity,
+			UpdateClientContainerPropertiesMessage message) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> playerEntity), message);
 	}
 

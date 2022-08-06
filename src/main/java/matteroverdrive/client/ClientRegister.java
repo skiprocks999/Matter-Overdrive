@@ -58,29 +58,34 @@ public class ClientRegister {
 	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
 	/* TEXTURES */
-	
+
 	public static final HashMap<ResourceLocation, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
 	private static final List<ResourceLocation> CUSTOM_BLOCK_TEXTURES = new ArrayList<>();
-	
+
 	private static final String CUSTOM_LOC = References.ID + ":atlas/";
-	
+
 	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
-	//rotating matricies is a pain in the ass fight me
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_90 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_90");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_180 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_180");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_270 = new ResourceLocation(CUSTOM_LOC + "pattern_monitor_holo_270");
+	// rotating matricies is a pain in the ass fight me
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(
+			CUSTOM_LOC + "pattern_monitor_holo");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_90 = new ResourceLocation(
+			CUSTOM_LOC + "pattern_monitor_holo_90");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_180 = new ResourceLocation(
+			CUSTOM_LOC + "pattern_monitor_holo_180");
+	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_270 = new ResourceLocation(
+			CUSTOM_LOC + "pattern_monitor_holo_270");
 	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
 	public static final ResourceLocation TEXTURE_HOLO_GLOW = new ResourceLocation(CUSTOM_LOC + "holo_monitor_glow");
 	public static final ResourceLocation TEXTURE_CONNECTION_ICON = new ResourceLocation(CUSTOM_LOC + "connection_icon");
-	
+
 	public static void init() {
 
 		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
 		MenuScreens.register(DeferredRegisters.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
 		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
-		//MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
+		// MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(),
+		// ScreenCharger::new);
 		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
 		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
 		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
@@ -132,29 +137,31 @@ public class ClientRegister {
 						return 0;
 					}).orElse(0);
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR).get(), CHARGE, (stack, world, entity, call) -> {
-			return stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).map(m -> {
-				double chargeRatio = m.getMaxMatterStored() > 0 ? m.getMatterStored() / m.getMaxMatterStored() : 0.0;
-				if (chargeRatio >= 0.875) {
-					return 8;
-				} else if (chargeRatio >= 0.75) {
-					return 7;
-				} else if (chargeRatio >= 0.625) {
-					return 6;
-				} else if (chargeRatio >= 0.5) {
-					return 5;
-				} else if (chargeRatio > 0.375) {
-					return 4;
-				} else if (chargeRatio >= 0.25) {
-					return 3;
-				} else if (chargeRatio >= 0.125) {
-					return 2;
-				} else if (chargeRatio > 0) {
-					return 1;
-				}
-				return 0;
-			}).orElse(0);
-		});
+		ItemProperties.register(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR).get(), CHARGE,
+				(stack, world, entity, call) -> {
+					return stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).map(m -> {
+						double chargeRatio = m.getMaxMatterStored() > 0 ? m.getMatterStored() / m.getMaxMatterStored()
+								: 0.0;
+						if (chargeRatio >= 0.875) {
+							return 8;
+						} else if (chargeRatio >= 0.75) {
+							return 7;
+						} else if (chargeRatio >= 0.625) {
+							return 6;
+						} else if (chargeRatio >= 0.5) {
+							return 5;
+						} else if (chargeRatio > 0.375) {
+							return 4;
+						} else if (chargeRatio >= 0.25) {
+							return 3;
+						} else if (chargeRatio >= 0.125) {
+							return 2;
+						} else if (chargeRatio > 0) {
+							return 1;
+						}
+						return 0;
+					}).orElse(0);
+				});
 		ItemProperties.register(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE,
 				(stack, world, entity, call) -> {
 					if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
@@ -162,14 +169,13 @@ public class ClientRegister {
 					}
 					return 0;
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_MATTER_SCANNER.get(), CHARGE, 
-				(stack, world, entity, call) -> {
-					if(stack.hasTag() && stack.getTag().getBoolean("on")) {
-						return 1;
-					}
-					return 0;
+		ItemProperties.register(DeferredRegisters.ITEM_MATTER_SCANNER.get(), CHARGE, (stack, world, entity, call) -> {
+			if (stack.hasTag() && stack.getTag().getBoolean("on")) {
+				return 1;
+			}
+			return 0;
 		});
-		
+
 		ClientEventHandler.init();
 
 	}
@@ -177,12 +183,14 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 
-		//event.registerBlockEntityRenderer(DeferredRegisters.OLD_TILE_CHARGER.get(), RendererCharger::new);
+		// event.registerBlockEntityRenderer(DeferredRegisters.OLD_TILE_CHARGER.get(),
+		// RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MATTER_REPLICATOR.get(), RendererMatterReplicator::new);
-		
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MATTER_REPLICATOR.get(),
+				RendererMatterReplicator::new);
+
 	}
 
 	@SubscribeEvent
@@ -201,7 +209,7 @@ public class ClientRegister {
 	private static ResourceLocation blockModel(String path) {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
-	
+
 	static {
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
 		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
@@ -228,6 +236,5 @@ public class ClientRegister {
 			}
 		}
 	}
-
 
 }

@@ -114,7 +114,8 @@ public class UtilsMatter {
 		Scheduler.schedule(1, () -> {
 			BlockState conduitState = conduit.getBlockState();
 			BlockPos conduitPos = conduit.getBlockPos();
-			BlockState updatedState = ((AbstractCableBlock)conduitState.getBlock()).handleConnectionUpdate(conduitState, conduitPos, world);
+			BlockState updatedState = ((AbstractCableBlock) conduitState.getBlock())
+					.handleConnectionUpdate(conduitState, conduitPos, world);
 			conduit.refreshNetworkIfChange();
 			world.setBlockAndUpdate(conduitPos, updatedState);
 		}, false);

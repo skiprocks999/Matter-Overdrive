@@ -17,7 +17,7 @@ public class PacketUpdateTile {
 
 	public PacketUpdateTile(BlockPos pos, IUpdatableTile tile, boolean isGui) {
 		CompoundTag data = new CompoundTag();
-		if(isGui) {
+		if (isGui) {
 			tile.getMenuData(data);
 		} else {
 			tile.getRenderData(data);

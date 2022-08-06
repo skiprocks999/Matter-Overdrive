@@ -32,49 +32,51 @@ import net.minecraftforge.fml.common.Mod;
 public class ItemPatternDrive extends OverdriveItem {
 
 	private static final List<ItemPatternDrive> CONTAINERS = new ArrayList<>();
-	//any item past 64 km will only get 1 scan
-	//idea is high utility for low value items and poor utility for high-value
-	//diamonds to dirt but not the other way around in other words
+	// any item past 64 km will only get 1 scan
+	// idea is high utility for low value items and poor utility for high-value
+	// diamonds to dirt but not the other way around in other words
 	public static final double MATTER_PER_FUSE = 1000000.0D;
-	
+
 	private static final String FUSED_KEY = "fused";
-	
+
 	public ItemPatternDrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
 		CONTAINERS.add(this);
 	}
-	
+
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
 		return new CapabilityItemPatternStorage();
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, level, tooltips, advanced);
-		if(isFused(stack)) {
+		if (isFused(stack)) {
 			tooltips.add(UtilsText.tooltip("fused").withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW));
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
-				if(Screen.hasShiftDown()) {
+				if (Screen.hasShiftDown()) {
 					ItemPatternWrapper wrapper = cap.getStoredPatterns()[0];
 					MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 					ChatFormatting color = ChatFormatting.RED;
 					int percentage = wrapper.getPercentage();
-					if(percentage >= 100) {
+					if (percentage >= 100) {
 						color = ChatFormatting.GREEN;
 					} else if (percentage < 100 && percentage > 50) {
 						color = ChatFormatting.YELLOW;
 					} else {
 						color = ChatFormatting.RED;
 					}
-					tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
+					tooltips.add(
+							UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%")
+									.withStyle(color));
 					Double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
-					//datapack fuckery prevention 
-					if(value != null && value > 0) {
+					// datapack fuckery prevention
+					if (value != null && value > 0) {
 						double decayFactor = getDecayFactor(value);
 						double usage = value * decayFactor;
 						ChatFormatting warning;
-						if(decayFactor <= 128) {
+						if (decayFactor <= 128) {
 							warning = ChatFormatting.GREEN;
 						} else if (decayFactor <= 4096) {
 							warning = ChatFormatting.YELLOW;
@@ -82,28 +84,32 @@ public class ItemPatternDrive extends OverdriveItem {
 							warning = ChatFormatting.RED;
 						}
 						int effectiveUses = (int) Math.floor(MATTER_PER_FUSE / usage);
-						tooltips.add(UtilsText.tooltip("effectiveuses", Component.literal(effectiveUses + "").withStyle(warning)));
+						tooltips.add(UtilsText.tooltip("effectiveuses",
+								Component.literal(effectiveUses + "").withStyle(warning)));
 					} else {
-						tooltips.add(UtilsText.tooltip("effectiveuses", Component.literal("0").withStyle(ChatFormatting.RED)));
+						tooltips.add(UtilsText.tooltip("effectiveuses",
+								Component.literal("0").withStyle(ChatFormatting.RED)));
 					}
 				}
 			});
 		} else {
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
-				if(Screen.hasShiftDown()) {
-					for(ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
-						if(wrapper.isNotAir()) {
+				if (Screen.hasShiftDown()) {
+					for (ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
+						if (wrapper.isNotAir()) {
 							MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 							ChatFormatting color = ChatFormatting.RED;
 							int percentage = wrapper.getPercentage();
-							if(percentage >= 100) {
+							if (percentage >= 100) {
 								color = ChatFormatting.GREEN;
 							} else if (percentage < 100 && percentage > 50) {
 								color = ChatFormatting.YELLOW;
 							} else {
 								color = ChatFormatting.RED;
 							}
-							tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
+							tooltips.add(UtilsText
+									.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%")
+									.withStyle(color));
 						} else {
 							tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
 						}
@@ -112,34 +118,35 @@ public class ItemPatternDrive extends OverdriveItem {
 			});
 		}
 	}
-	
+
 	@Override
 	public int getBarWidth(ItemStack stack) {
 		return (int) ((stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY) / MATTER_PER_FUSE) * 13.0D);
 	}
-	
+
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		if(stack.hasTag()) {
+		if (stack.hasTag()) {
 			return isFused(stack);
 		}
 		return super.isBarVisible(stack);
 	}
-	
+
 	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		CompoundTag tag = super.getShareTag(stack);
 		if (tag == null) {
 			tag = new CompoundTag();
 		}
-		LazyOptional<ICapabilityItemPatternStorage> lazyOp = stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
-		if(lazyOp.isPresent()) {
+		LazyOptional<ICapabilityItemPatternStorage> lazyOp = stack
+				.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
+		if (lazyOp.isPresent()) {
 			CapabilityItemPatternStorage storage = (CapabilityItemPatternStorage) lazyOp.resolve().get();
 			tag.put("stored_patterns", storage.serializeNBT());
 		}
 		return tag;
 	}
-	
+
 	@Override
 	public void readShareTag(ItemStack stack, CompoundTag nbt) {
 		if (nbt != null) {
@@ -151,24 +158,24 @@ public class ItemPatternDrive extends OverdriveItem {
 		}
 		super.readShareTag(stack, nbt);
 	}
-	
+
 	public double getDurability(ItemStack stack) {
 		return stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY);
 	}
-	
+
 	public boolean isFused(ItemStack stack) {
 		return stack.getOrCreateTag().getBoolean(FUSED_KEY);
 	}
-	
+
 	public static double getDecayFactor(double matterValue) {
-		if(matterValue         <= 4.0D) {
+		if (matterValue <= 4.0D) {
 			return 1.0D;
 		} else if (matterValue <= 8.0D) {
-			return Math.pow(2, 2);           //4
+			return Math.pow(2, 2); // 4
 		} else if (matterValue <= 12.0D) {
-			return Math.pow(2, 7);           //128
+			return Math.pow(2, 7); // 128
 		} else if (matterValue <= 16.0D) {
-			return Math.pow(2, 12);          //4096
+			return Math.pow(2, 12); // 4096
 		} else if (matterValue <= 20.0D) {
 			return Math.pow(2, 13);
 		} else if (matterValue <= 24.0D) {
@@ -187,7 +194,7 @@ public class ItemPatternDrive extends OverdriveItem {
 			return 1000000.0D;
 		}
 	}
-	
+
 	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	private static class ColorHandler {
 
@@ -195,11 +202,11 @@ public class ItemPatternDrive extends OverdriveItem {
 		private static final int YELLOW = UtilsRendering.getRGBA(1, 255, 255, 0);
 		private static final int GREEN = UtilsRendering.getRGBA(0, 0, 255, 0);
 		private static final int NONE = UtilsRendering.getRGBA(1, 35, 45, 48);
-		
+
 		@SubscribeEvent
 		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
 			CONTAINERS.forEach(item -> event.register((stack, index) -> {
-				switch(index) {
+				switch (index) {
 				case 1:
 					return handleColor(0, stack);
 				case 2:
@@ -211,15 +218,16 @@ public class ItemPatternDrive extends OverdriveItem {
 				}
 			}, item));
 		}
-		
+
 		private static int handleColor(int index, ItemStack stack) {
-			LazyOptional<ICapabilityItemPatternStorage> lazyOp = stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
-			if(lazyOp.isPresent()) {
+			LazyOptional<ICapabilityItemPatternStorage> lazyOp = stack
+					.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
+			if (lazyOp.isPresent()) {
 				ICapabilityItemPatternStorage storage = lazyOp.resolve().get();
 				ItemPatternWrapper pattern = storage.getStoredPatterns()[index];
-				if(pattern.isNotAir()) {
+				if (pattern.isNotAir()) {
 					int percentage = pattern.getPercentage();
-					if(percentage >= 100) {
+					if (percentage >= 100) {
 						return GREEN;
 					} else if (percentage < 100 && percentage > 50) {
 						return YELLOW;

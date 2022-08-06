@@ -7,14 +7,13 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-
 public class UtilsText {
 
 	public static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 	public static final DecimalFormat MIN_FORMAT = new DecimalFormat("0.#");
 	public static final DecimalFormat SINGLE_DECIMAL = new DecimalFormat("0.0");
-	
-	public static final String GUI_BASE =  "gui";
+
+	public static final String GUI_BASE = "gui";
 	public static final String TOOLTIP_BASE = "tooltip";
 	public static final String DIMENSION_BASE = "dimension";
 
@@ -94,7 +93,7 @@ public class UtilsText {
 	public static MutableComponent gui(String key, Object... additional) {
 		return translated(GUI_BASE, key, additional);
 	}
-	
+
 	public static MutableComponent dimension(String key, Object... additional) {
 		return translated(DIMENSION_BASE, key, additional);
 	}
@@ -102,19 +101,19 @@ public class UtilsText {
 	public static MutableComponent translated(String base, String key, Object... additional) {
 		return Component.translatable(base + "." + References.ID + "." + key, additional);
 	}
-	
+
 	public static boolean guiExists(String key) {
 		return translationExists(GUI_BASE, key);
 	}
-	
+
 	public static boolean tooltipExists(String key) {
 		return translationExists(TOOLTIP_BASE, key);
 	}
-	
+
 	public static boolean dimensionExists(String key) {
 		return translationExists(DIMENSION_BASE, key);
 	}
-	
+
 	public static boolean translationExists(String base, String key) {
 		return I18n.exists(base + "." + References.ID + "." + key);
 	}

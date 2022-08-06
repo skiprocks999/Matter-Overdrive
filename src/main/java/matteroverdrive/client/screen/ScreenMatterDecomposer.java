@@ -309,7 +309,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
-		
+
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
@@ -372,7 +372,7 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
 				UtilsRendering.TEXT_BLUE));
-		
+
 	}
 
 	private void toggleBarOpen() {

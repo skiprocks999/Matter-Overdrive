@@ -12,18 +12,17 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * 
- * Extension of AbstractWidget class designed for custom GUI component
- * rendering
+ * Extension of AbstractWidget class designed for custom GUI component rendering
  * 
  * @author skip999
  *
  */
 public abstract class OverdriveScreenComponent extends AbstractWidget {
-	
+
 	protected ResourceLocation resource;
 	protected GenericScreen<?> gui;
 	protected int[] screenNumbers;
-	
+
 	protected static final ResourceLocation NO_RESOURCE = new ResourceLocation("");
 
 	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
@@ -33,7 +32,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 		this.gui = gui;
 		this.screenNumbers = screenNumbers;
 	}
-	
+
 	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers, Component component) {
 		super(x, y, width, height, component);
@@ -41,7 +40,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 		this.gui = gui;
 		this.screenNumbers = screenNumbers;
 	}
-	
+
 	public void initScreenSize() {
 		this.x += gui.getXPos();
 		this.y += gui.getYPos();
@@ -50,15 +49,15 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	@Override
 	public final void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
-			
+
 			this.isHovered = isPointInRegion(mouseX, mouseY);
 			renderBackground(stack, mouseX, mouseY, partialTicks);
 			renderForeground(stack, mouseX, mouseY, partialTicks);
-			
+
 			if (isHoveredOrFocused()) {
 				renderTooltip(stack, mouseX, mouseY, partialTicks);
 			}
-			
+
 		}
 	}
 
@@ -81,10 +80,10 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	@Override
 	protected final void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
 	}
-	
+
 	@Override
 	public final void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-		
+
 	}
 
 	public void renderScaledText(PoseStack stack, String text, int x, int y, int color, int maxX) {
@@ -121,12 +120,12 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 		visible = isVisible;
 
 	}
-	
+
 	@Override
 	protected boolean clicked(double mouseX, double mouseY) {
 		return this.active && this.visible && isPointInRegion((int) mouseX, (int) mouseY);
 	}
-	
+
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
 		return clicked(mouseX, mouseY);
@@ -136,7 +135,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
 
 	}
-	
+
 	@Override
 	public void playDownSound(SoundManager pHandler) {
 	}

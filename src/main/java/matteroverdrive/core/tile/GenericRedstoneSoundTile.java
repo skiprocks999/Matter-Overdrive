@@ -19,50 +19,52 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public abstract class GenericRedstoneSoundTile<T extends MachineTile<T>> extends GenericTile<T> implements IRedstoneReader, ITickingSoundTile {
+public abstract class GenericRedstoneSoundTile<T extends MachineTile<T>> extends GenericTile<T>
+		implements IRedstoneReader, ITickingSoundTile {
 
-  @Save
-  private final RedstoneManager<RedstoneAction> redstoneManager;
+	@Save
+	private final RedstoneManager<RedstoneAction> redstoneManager;
 
-  @Save
-  private boolean shouldPlaySound = false;
+	@Save
+	private boolean shouldPlaySound = false;
 
-  public GenericRedstoneSoundTile(BasicTileBlock<T> base, BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
-    super(base, blockEntityType, pos, state);
-    this.redstoneManager = new RedstoneManager<>(RedstoneAction.IGNORE, false);
-  }
+	public GenericRedstoneSoundTile(BasicTileBlock<T> base, BlockEntityType<?> blockEntityType, BlockPos pos,
+			BlockState state) {
+		super(base, blockEntityType, pos, state);
+		this.redstoneManager = new RedstoneManager<>(RedstoneAction.IGNORE, false);
+	}
 
-  @Override
-  public void onNeighborChanged(@Nonnull Block blockIn, @Nonnull BlockPos fromPos) {
-    super.onNeighborChanged(blockIn, fromPos);
-    if (this.redstoneManager != null) {
-      this.redstoneManager.setLastRedstoneState(this.getEnvironmentValue(false, null).isReceivingRedstone());
-    }
-  }
+	@Override
+	public void onNeighborChanged(@Nonnull Block blockIn, @Nonnull BlockPos fromPos) {
+		super.onNeighborChanged(blockIn, fromPos);
+		if (this.redstoneManager != null) {
+			this.redstoneManager.setLastRedstoneState(this.getEnvironmentValue(false, null).isReceivingRedstone());
+		}
+	}
 
-  @Nonnull
-  @Override
-  public IRedstoneState getEnvironmentValue(boolean strongPower, @Nullable Direction direction) {
-    if (strongPower && this.level != null) {
-      if (direction == null) {
-        return this.level.hasNeighborSignal(this.worldPosition) ? RedstoneState.ON : RedstoneState.OFF;
-      }
-      return this.level.hasSignal(this.worldPosition, direction) ? RedstoneState.ON : RedstoneState.OFF;
-    } else {
-      return Objects.requireNonNull(this.level).getBestNeighborSignal(this.worldPosition) > 0 ? RedstoneState.ON : RedstoneState.OFF;
-    }
-  }
+	@Nonnull
+	@Override
+	public IRedstoneState getEnvironmentValue(boolean strongPower, @Nullable Direction direction) {
+		if (strongPower && this.level != null) {
+			if (direction == null) {
+				return this.level.hasNeighborSignal(this.worldPosition) ? RedstoneState.ON : RedstoneState.OFF;
+			}
+			return this.level.hasSignal(this.worldPosition, direction) ? RedstoneState.ON : RedstoneState.OFF;
+		} else {
+			return Objects.requireNonNull(this.level).getBestNeighborSignal(this.worldPosition) > 0 ? RedstoneState.ON
+					: RedstoneState.OFF;
+		}
+	}
 
-  @Override
-  public boolean shouldPlaySound() {
-    return this.shouldPlaySound;
-  }
+	@Override
+	public boolean shouldPlaySound() {
+		return this.shouldPlaySound;
+	}
 
-  @Override
-  public void setNotPlaying() {
-    this.shouldPlaySound = false;
-    this.markForUpdate();
-  }
-
+	@Override
+	public void setNotPlaying() {
+		this.shouldPlaySound = false;
+		this.markForUpdate();
+	}
 
 }

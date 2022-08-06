@@ -10,21 +10,21 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PropertyHolderAddon implements IContainerAddon, IPropertyHolder {
-  private final List<Property<?>> properties;
+	private final List<Property<?>> properties;
 
-  public PropertyHolderAddon() {
-    this.properties = new ArrayList<>();
-  }
+	public PropertyHolderAddon() {
+		this.properties = new ArrayList<>();
+	}
 
-  @Override
-  public List<Property<?>> getProperties() {
-    return properties;
-  }
+	@Override
+	public List<Property<?>> getProperties() {
+		return properties;
+	}
 
-  public <T> Property<T> addProperty(PropertyType<T> property, Supplier<T> getter, Consumer<T> setter) {
-    Property<T> prop = property.create(getter, setter);
-    this.properties.add(prop);
-    return prop;
-  }
+	public <T> Property<T> addProperty(PropertyType<T> property, Supplier<T> getter, Consumer<T> setter) {
+		Property<T> prop = property.create(getter, setter);
+		this.properties.add(prop);
+		return prop;
+	}
 
 }

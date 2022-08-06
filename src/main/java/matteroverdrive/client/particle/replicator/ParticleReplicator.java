@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 public class ParticleReplicator extends TextureSheetParticle {
 
 	private float initialScale;
+
 	public ParticleReplicator(ClientLevel world, double posX, double posY, double posZ, double xSpeed, double ySpeed,
 			double zSpeed, float gravity, float scale, int age) {
 		super(world, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
@@ -94,7 +95,8 @@ public class ParticleReplicator extends TextureSheetParticle {
 		@Override
 		public Particle createParticle(@Nonnull ParticleOptionReplicator type, @Nonnull ClientLevel world, double x,
 				double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			ParticleReplicator particle = new ParticleReplicator(world, x, y, z, xSpeed, ySpeed, zSpeed, type.gravity, type.scale, type.age);
+			ParticleReplicator particle = new ParticleReplicator(world, x, y, z, xSpeed, ySpeed, zSpeed, type.gravity,
+					type.scale, type.age);
 			particle.pickSprite(this.spriteSet);
 			return particle;
 		}

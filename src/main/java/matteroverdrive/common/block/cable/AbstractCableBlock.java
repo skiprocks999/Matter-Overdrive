@@ -43,7 +43,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 				map.put(Direction.UP, OverdriveBlockStates.CABLE_UP);
 				map.put(Direction.DOWN, OverdriveBlockStates.CABLE_DOWN);
 			});
-	
+
 	public static final Map<EnumProperty<CableConnectionType>, Direction> PROPERTY_TO_DIRECTION_MAP = Util
 			.make(Maps.newHashMap(), map -> {
 				map.put(OverdriveBlockStates.CABLE_NORTH, Direction.NORTH);
@@ -55,21 +55,21 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 			});
 
 	protected final VoxelShape center;
-	
+
 	protected final Map<Direction, VoxelShape> DIRECTION_TO_SHAPE_MAP;
-	
+
 	protected HashMap<HashSet<Direction>, VoxelShape> shapestates = new HashMap<>();
-	
+
 	protected final ICableType type;
-	
+
 	public AbstractCableBlock(Properties properties, ICableType type) {
 		super(properties);
-		
+
 		this.type = type;
-		
+
 		double bottom = 8 - type.getWidth();
 		double top = 8 + type.getWidth();
-		
+
 		DIRECTION_TO_SHAPE_MAP = Util.make(Maps.newEnumMap(Direction.class), map -> {
 			map.put(Direction.NORTH, Block.box(bottom, bottom, 0, top, top, top));
 			map.put(Direction.EAST, Block.box(bottom, bottom, bottom, 16, top, top));
@@ -78,19 +78,18 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 			map.put(Direction.UP, Block.box(bottom, bottom, bottom, top, 16, top));
 			map.put(Direction.DOWN, Block.box(bottom, 0, bottom, top, top, top));
 		});
-		
+
 		center = Block.box(bottom, bottom, bottom, top, top, top);
-		
-		registerDefaultState(stateDefinition.any()
-				.setValue(OverdriveBlockStates.CABLE_UP, CableConnectionType.IGNORED)
+
+		registerDefaultState(stateDefinition.any().setValue(OverdriveBlockStates.CABLE_UP, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_SOUTH, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_EAST, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_WEST, CableConnectionType.IGNORED));
-		
+
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
@@ -101,14 +100,14 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		builder.add(OverdriveBlockStates.CABLE_SOUTH);
 		builder.add(OverdriveBlockStates.CABLE_WEST);
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (!worldIn.isClientSide) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
 			if (checkCableClass(tile)) {
-				((AbstractCableTile<?>)tile).refreshNetwork();
+				((AbstractCableTile<?>) tile).refreshNetwork();
 			}
 		}
 	}
@@ -119,11 +118,11 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 		if (!world.isClientSide()) {
 			BlockEntity tile = world.getBlockEntity(pos);
 			if (checkCableClass(tile)) {
-				((AbstractCableTile<?>)tile).refreshNetwork();
+				((AbstractCableTile<?>) tile).refreshNetwork();
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
@@ -131,31 +130,31 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		
+
 		VoxelShape shape = center;
-		
+
 		HashSet<Direction> checkedDirs = new HashSet<>();
-		for(EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
+		for (EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
 			CableConnectionType type = state.getValue(checkState);
 			if (type == CableConnectionType.CABLE || type == CableConnectionType.INVENTORY) {
 				checkedDirs.add(PROPERTY_TO_DIRECTION_MAP.get(checkState));
 			}
 		}
-		
+
 		if (shapestates.containsKey(checkedDirs)) {
 			return shapestates.get(checkedDirs);
 		}
-		
+
 		for (Direction dir : checkedDirs) {
 			shape = Shapes.or(shape, DIRECTION_TO_SHAPE_MAP.get(dir));
 		}
-		
+
 		shapestates.put(checkedDirs, shape);
-		
+
 		if (shape == null) {
 			return Shapes.empty();
 		}
-		
+
 		return shape;
 	}
 
@@ -164,109 +163,117 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 			ItemStack stack) {
 		worldIn.setBlockAndUpdate(pos, handleConnectionUpdate(stateIn, pos, worldIn));
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world,
 			BlockPos currentPos, BlockPos facingPos) {
-		
+
 		if (stateIn.getValue(BlockStateProperties.WATERLOGGED) == Boolean.TRUE) {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
-		
-		if(shouldntChange(stateIn, facingState, facing, world.getBlockEntity(facingPos))) {
+
+		if (shouldntChange(stateIn, facingState, facing, world.getBlockEntity(facingPos))) {
 			return stateIn;
 		}
-		
+
 		return handleConnectionUpdate(stateIn, currentPos, world);
 	}
-	
-	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing, BlockEntity facingTile) {
-		
+
+	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing,
+			BlockEntity facingTile) {
+
 		EnumProperty<CableConnectionType> thisProperty = DIRECTION_TO_PROPERTY_MAP.get(facing);
 		EnumProperty<CableConnectionType> facingProperty = DIRECTION_TO_PROPERTY_MAP.get(facing.getOpposite());
-		
+
 		CableConnectionType thisType = thisState.getValue(thisProperty);
-		
-		//do not combine!
-		if(changedState.hasProperty(facingProperty)) {
+
+		// do not combine!
+		if (changedState.hasProperty(facingProperty)) {
 			return thisType == changedState.getValue(facingProperty);
 		} else {
-			if(thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE || thisType == CableConnectionType.NONE_SEAMLESS) {
+			if (thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE
+					|| thisType == CableConnectionType.NONE_SEAMLESS) {
 				return !isValidConnection(facingTile, facing.getOpposite());
 			}
 			return false;
 		}
 	}
-	
+
 	public BlockState handleConnectionUpdate(BlockState startingState, BlockPos pos, LevelAccessor world) {
-		
+
 		HashSet<Direction> dirsUsed = new HashSet<>();
 		HashSet<Direction> inventory = new HashSet<>();
 		HashSet<Direction> cable = new HashSet<>();
-		
-		for(EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
+
+		for (EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
 			startingState = startingState.setValue(checkState, CableConnectionType.IGNORED);
 		}
-		
+
 		sortDirections(dirsUsed, inventory, cable, world, pos);
-		
+
 		boolean shouldntSkip = true;
-		
-		if(dirsUsed.size() > 2 || dirsUsed.size() < 2) {
-			for(EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
+
+		if (dirsUsed.size() > 2 || dirsUsed.size() < 2) {
+			for (EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
 				startingState = startingState.setValue(checkState, CableConnectionType.NONE);
 			}
 			shouldntSkip = false;
 		}
-		
-		if(shouldntSkip) {
+
+		if (shouldntSkip) {
 			boolean notFound = true;
-			//each pair has it's seamless stored on a unique pair for OR operator
-			if(dirsUsed.contains(Direction.NORTH) && dirsUsed.contains(Direction.SOUTH)) {
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_EAST, CableConnectionType.NONE_SEAMLESS);
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_WEST, CableConnectionType.NONE_SEAMLESS);
+			// each pair has it's seamless stored on a unique pair for OR operator
+			if (dirsUsed.contains(Direction.NORTH) && dirsUsed.contains(Direction.SOUTH)) {
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_EAST,
+						CableConnectionType.NONE_SEAMLESS);
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_WEST,
+						CableConnectionType.NONE_SEAMLESS);
 				notFound = false;
 			}
-			
-			if(dirsUsed.contains(Direction.EAST) && dirsUsed.contains(Direction.WEST)) {
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_UP, CableConnectionType.NONE_SEAMLESS);
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.NONE_SEAMLESS);
+
+			if (dirsUsed.contains(Direction.EAST) && dirsUsed.contains(Direction.WEST)) {
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_UP,
+						CableConnectionType.NONE_SEAMLESS);
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_DOWN,
+						CableConnectionType.NONE_SEAMLESS);
 				notFound = false;
 			}
-			
-			if(dirsUsed.contains(Direction.UP) && dirsUsed.contains(Direction.DOWN)) {
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.NONE_SEAMLESS);
-				startingState = startingState.setValue(OverdriveBlockStates.CABLE_SOUTH, CableConnectionType.NONE_SEAMLESS);
+
+			if (dirsUsed.contains(Direction.UP) && dirsUsed.contains(Direction.DOWN)) {
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_NORTH,
+						CableConnectionType.NONE_SEAMLESS);
+				startingState = startingState.setValue(OverdriveBlockStates.CABLE_SOUTH,
+						CableConnectionType.NONE_SEAMLESS);
 				notFound = false;
 			}
-			
-			if(notFound) {
-				for(EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
+
+			if (notFound) {
+				for (EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
 					startingState = startingState.setValue(checkState, CableConnectionType.NONE);
 				}
 			}
 		}
-		
-		for(Direction dir : inventory) {
+
+		for (Direction dir : inventory) {
 			startingState = startingState.setValue(DIRECTION_TO_PROPERTY_MAP.get(dir), CableConnectionType.INVENTORY);
 		}
-		
-		for(Direction dir : cable) {
+
+		for (Direction dir : cable) {
 			startingState = startingState.setValue(DIRECTION_TO_PROPERTY_MAP.get(dir), CableConnectionType.CABLE);
 		}
-		
+
 		return startingState;
 	}
-	
+
 	public ICableType getCableType() {
 		return type;
 	}
-	
+
 	public abstract boolean checkCableClass(BlockEntity entity);
-	
-	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable, 
-			LevelAccessor world, BlockPos pos);
-	
+
+	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory,
+			HashSet<Direction> cable, LevelAccessor world, BlockPos pos);
+
 	public abstract boolean isValidConnection(BlockEntity facingTile, Direction facing);
 
 }

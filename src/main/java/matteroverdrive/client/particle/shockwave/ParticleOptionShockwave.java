@@ -30,7 +30,8 @@ public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwav
 			return instance0.b;
 		}), Codec.INT.fieldOf("a").forGetter(instance0 -> {
 			return instance0.a;
-		})).apply(instance, (maxScale, r, g, b, a) -> new ParticleOptionShockwave().setMaxScale(maxScale).setColor(r, g, b, a));
+		})).apply(instance,
+				(maxScale, r, g, b, a) -> new ParticleOptionShockwave().setMaxScale(maxScale).setColor(r, g, b, a));
 	});
 
 	public static final ParticleOptions.Deserializer<ParticleOptionShockwave> DESERIALIZER = new ParticleOptions.Deserializer<ParticleOptionShockwave>() {
@@ -48,25 +49,25 @@ public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwav
 			int b = reader.readInt();
 			reader.expect(' ');
 			int a = reader.readInt();
-			return new ParticleOptionShockwave().setMaxScale(maxScale).setColor(r, g, b ,a);
+			return new ParticleOptionShockwave().setMaxScale(maxScale).setColor(r, g, b, a);
 		}
 
 		@Override
-		public ParticleOptionShockwave fromNetwork(ParticleType<ParticleOptionShockwave> type,
-				FriendlyByteBuf buffer) {
-			return new ParticleOptionShockwave().setMaxScale(buffer.readFloat()).setColor(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt());
+		public ParticleOptionShockwave fromNetwork(ParticleType<ParticleOptionShockwave> type, FriendlyByteBuf buffer) {
+			return new ParticleOptionShockwave().setMaxScale(buffer.readFloat()).setColor(buffer.readInt(),
+					buffer.readInt(), buffer.readInt(), buffer.readInt());
 		}
 	};
-	
+
 	public ParticleOptionShockwave() {
 		super(false, DESERIALIZER);
 	}
-	
+
 	public ParticleOptionShockwave setMaxScale(float scale) {
 		this.maxScale = scale;
 		return this;
 	}
-	
+
 	public ParticleOptionShockwave setColor(int r, int g, int b, int a) {
 		this.r = r;
 		this.g = g;
@@ -91,8 +92,8 @@ public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwav
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", maxScale: " + maxScale + ", r: " + r + ", g: " + g
-				+ ", b: " + b + ", a: " + a;
+		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString() + ", maxScale: " + maxScale + ", r: " + r
+				+ ", g: " + g + ", b: " + b + ", a: " + a;
 	}
 
 	@Override

@@ -14,24 +14,22 @@ import net.minecraftforge.common.util.LazyOptional;
 public class CapabilityOverworldData implements ICapabilityOverworldData, ICapabilitySerializable<CompoundTag> {
 
 	private final LazyOptional<ICapabilityOverworldData> lazyOptional = LazyOptional.of(() -> this);
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if(cap == MatterOverdriveCapabilities.OVERWORLD_DATA) {
+		if (cap == MatterOverdriveCapabilities.OVERWORLD_DATA) {
 			return lazyOptional.cast();
 		}
 		return LazyOptional.empty();
 	}
-	
-	
+
 	private List<ActiveTransportDataWrapper> transportData = new ArrayList<>();
-	
 
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("transportsize", transportData.size());
-		for(int i = 0; i < transportData.size(); i++) {
+		for (int i = 0; i < transportData.size(); i++) {
 			transportData.get(i).serializeNbt(tag, "transportdata" + i);
 		}
 		return tag;
@@ -40,7 +38,7 @@ public class CapabilityOverworldData implements ICapabilityOverworldData, ICapab
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		int size = nbt.getInt("transportsize");
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			transportData.add(ActiveTransportDataWrapper.deserializeNbt(nbt.getCompound("transportdata" + i)));
 		}
 	}

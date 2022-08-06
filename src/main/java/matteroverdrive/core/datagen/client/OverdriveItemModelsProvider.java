@@ -37,7 +37,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
 		simpleBlock(DeferredRegisters.BLOCK_CHARGER_CHILD, "block/charger_child");
 		withExistingParent(blockPath(DeferredRegisters.BLOCK_TRANSPORTER), modLoc("block/transporter"));
-		withExistingParent(blockPath(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR),
+				modLoc("block/spacetime_accelerator"));
 
 		simpleItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(DeferredRegisters.ITEM_MATTER_DUST, "item/matter_dust");
@@ -52,14 +53,11 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 					"item/isolinear_circuit/" + circuit.id());
 		}
 
-		withExistingParent(blockPath(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS),
-				modLoc("block/industrial_glass"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS), modLoc("block/industrial_glass"));
 
-		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_OPEN),
-				modLoc("block/vent_open"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_OPEN), modLoc("block/vent_open"));
 
-		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_CLOSED),
-				modLoc("block/vent_closed"));
+		withExistingParent(blockPath(DeferredRegisters.BLOCK_VENT_CLOSED), modLoc("block/vent_closed"));
 		simpleItem(DeferredRegisters.ITEM_LEAD_PLATE, "item/lead_plate");
 	}
 
@@ -73,8 +71,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	}
 
 	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
-		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"), "layer0",
-				new ResourceLocation(References.ID, textureLoc));
+		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"),
+				"layer0", new ResourceLocation(References.ID, textureLoc));
 	}
 
 	private void simpleBlock(RegistryObject<? extends Block> block, String textureLoc) {

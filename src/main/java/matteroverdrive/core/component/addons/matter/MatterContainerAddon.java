@@ -10,29 +10,34 @@ import matteroverdrive.core.component.util.property.PropertyTypes;
 
 public class MatterContainerAddon extends PropertyHolderAddon {
 
-  private final Property<Double> matter;
+	private final Property<Double> matter;
 
-  public MatterContainerAddon(IComponentHarness harness) {
-    this.matter = addProperty(PropertyTypes.DOUBLE, () -> this.getStoredMatter(harness), (amount) -> this.setStoredMatter(harness, amount));
-  }
+	public MatterContainerAddon(IComponentHarness harness) {
+		this.matter = addProperty(PropertyTypes.DOUBLE, () -> this.getStoredMatter(harness),
+				(amount) -> this.setStoredMatter(harness, amount));
+	}
 
-  public Property<Double> getMatter() {
-    return matter;
-  }
+	public Property<Double> getMatter() {
+		return matter;
+	}
 
-  private double getStoredMatter(IComponentHarness harness) {
-    if (harness instanceof BasicTile<?> tile && tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
-      this.matter.set(tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).map(ICapabilityMatterStorage::getMatterStored).orElse(0D));
-      return this.matter.get();
-    }
-    return 0;
-  }
+	private double getStoredMatter(IComponentHarness harness) {
+		if (harness instanceof BasicTile<?> tile
+				&& tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
+			this.matter.set(tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
+					.map(ICapabilityMatterStorage::getMatterStored).orElse(0D));
+			return this.matter.get();
+		}
+		return 0;
+	}
 
-  private void setStoredMatter(IComponentHarness harness, double amount) {
-    if (harness instanceof BasicTile<?> tile && tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
-      this.matter.set(amount);
-      tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(storage -> storage.setMatterStored(amount));
-    }
-  }
+	private void setStoredMatter(IComponentHarness harness, double amount) {
+		if (harness instanceof BasicTile<?> tile
+				&& tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
+			this.matter.set(amount);
+			tile.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
+					.ifPresent(storage -> storage.setMatterStored(amount));
+		}
+	}
 
 }

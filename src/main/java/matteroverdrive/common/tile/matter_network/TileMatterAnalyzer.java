@@ -38,48 +38,45 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	private static final double PROCESSING_TIME = 800;
 	private static final int DEFAULT_SPEED = 1;
 	private static final int PERCENTAGE_PER_SCAN = 20;
-	
+
 	private boolean isRunning = false;
 	private double currProgress = 0;
 	private double currSpeed = DEFAULT_SPEED;
 	private int usage = USAGE_PER_TICK;
 	private boolean isMuffled = false;
-	
+
 	private ItemStack scannedItem = null;
 	private boolean shouldAnalyze = false;
-	
-	
+
 	public boolean clientPowered;
 	public boolean clientRunning = false;
 	private boolean clientMuffled;
-	private boolean clientSoundPlaying = false; 
+	private boolean clientSoundPlaying = false;
 	public CapabilityEnergyStorage clientEnergy;
 	public int clientEnergyUsage;
 	public double clientProgress;
 	public double clientSpeed;
 	public ItemStack clientScannedItem = ItemStack.EMPTY;
-	
+
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
 		super(DeferredRegisters.TILE_MATTER_ANALYZER.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1)
-				.setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES)
-				.setValidator(getValidator()));
+		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setUpgrades(4)
+				.setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES).setValidator(getValidator()));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
-						getContainerName(TypeMachine.MATTER_ANALYZER.id())));
+		setMenuProvider(new SimpleMenuProvider(
+				(id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),
+						exposeCapability(CapabilityType.Item), getCoordsData()),
+				getContainerName(TypeMachine.MATTER_ANALYZER.id())));
 		setTickable();
 		setHasMenuData();
 		setHasRenderData();
 	}
-	
+
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
-		if(!canRun()) {
+		if (!canRun()) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = null;
@@ -89,7 +86,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			return;
 		}
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-		if(energy.getEnergyStored() < usage) {
+		if (energy.getEnergyStored() < usage) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = null;
@@ -100,7 +97,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		}
 		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
 		ItemStack scanned = inv.getStackInSlot(0);
-		if(scanned.isEmpty()) {
+		if (scanned.isEmpty()) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = null;
@@ -110,7 +107,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
-		if(network == null || !hasAttachedDrives(network)) {
+		if (network == null || !hasAttachedDrives(network)) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = null;
@@ -119,20 +116,20 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			}
 			return;
 		}
-		
-		if(scannedItem == null) {
+
+		if (scannedItem == null) {
 			scannedItem = scanned.copy();
-			//this is a very expensive call so the redundant call locations are required
+			// this is a very expensive call so the redundant call locations are required
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
 			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			if (val == null || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
 			}
-			
+
 		}
-		if(!shouldAnalyze) {
+		if (!shouldAnalyze) {
 			isRunning = false;
 			currProgress = 0;
 			if (currState && !isRunning) {
@@ -140,13 +137,13 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			}
 			return;
 		}
-		if(!UtilsItem.compareItems(scannedItem.getItem(), scanned.getItem())) {
+		if (!UtilsItem.compareItems(scannedItem.getItem(), scanned.getItem())) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = scanned;
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
 			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			if (val == null || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -163,38 +160,39 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		setChanged();
-		if(currProgress < PROCESSING_TIME) {
+		if (currProgress < PROCESSING_TIME) {
 			return;
 		}
 		int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
 		boolean successFlag = false;
-		if(stored[0] > -1) {
+		if (stored[0] > -1) {
 			TilePatternStorage drive = network.getStorageFromIndex(stored[0]);
-			if(drive != null) {
-				if(drive.storeItem(scannedItem.getItem(), PERCENTAGE_PER_SCAN, new int[] {stored[1], stored[2], stored[3]})) {
+			if (drive != null) {
+				if (drive.storeItem(scannedItem.getItem(), PERCENTAGE_PER_SCAN,
+						new int[] { stored[1], stored[2], stored[3] })) {
 					successFlag = true;
-				} else if(drive.storeItemFirstChance(scannedItem.getItem(), PERCENTAGE_PER_SCAN)) {
+				} else if (drive.storeItemFirstChance(scannedItem.getItem(), PERCENTAGE_PER_SCAN)) {
 					successFlag = true;
-				} 
-			} 
-		} else if(network.storeItemFirstChance(scannedItem.getItem(), PERCENTAGE_PER_SCAN, true)){
+				}
+			}
+		} else if (network.storeItemFirstChance(scannedItem.getItem(), PERCENTAGE_PER_SCAN, true)) {
 			successFlag = true;
-		} 
-		
-		if(successFlag) {
+		}
+
+		if (successFlag) {
 			scanned.shrink(1);
 			playSuccessSound();
 		} else {
 			playFailureSound();
 		}
-		
+
 		currProgress = 0;
 		shouldAnalyze = false;
 		scannedItem = null;
 		isRunning = false;
 		setChanged();
 	}
-	
+
 	@Override
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
@@ -202,10 +200,10 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_ANALYZER.get(), this, true);
 		}
 	}
-	
+
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		
+
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 		tag.putInt("usage", usage);
@@ -214,17 +212,17 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		tag.putDouble("progress", currProgress);
 		tag.putDouble("speed", currSpeed);
 		tag.putBoolean("muffled", isMuffled);
-		if(scannedItem != null && !scannedItem.isEmpty()) {
+		if (scannedItem != null && !scannedItem.isEmpty()) {
 			CompoundTag item = new CompoundTag();
 			scannedItem.save(item);
 			tag.put("item", item);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		
+
 		clientEnergy = new CapabilityEnergyStorage(0, false, false);
 		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
 		clientEnergyUsage = tag.getInt("usage");
@@ -233,32 +231,32 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		clientProgress = tag.getDouble("progress");
 		clientSpeed = tag.getDouble("speed");
 		clientMuffled = tag.getBoolean("muffled");
-		if(tag.contains("item")) {
+		if (tag.contains("item")) {
 			clientScannedItem = ItemStack.of(tag.getCompound("item"));
 		} else {
 			clientScannedItem = ItemStack.EMPTY;
 		}
-		
+
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		CompoundTag data = new CompoundTag();
-		
+
 		data.putDouble("progress", currProgress);
 		data.putDouble("speed", currSpeed);
 		data.putInt("usage", usage);
 		data.putBoolean("muffled", isMuffled);
-		
+
 		tag.put("data", data);
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
 		CompoundTag data = tag.getCompound("data");
-		
+
 		currProgress = data.getDouble("progress");
 		currSpeed = data.getDouble("speed");
 		usage = data.getInt("usage");
@@ -287,13 +285,13 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		Direction relative = UtilsDirection.getRelativeSide(back, handleEastWest(facing));
 		return relative == face;
 	}
-	
+
 	@Override
 	@Nullable
 	public NetworkMatter getConnectedNetwork() {
 		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
-		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
+		if (entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);
 		}
 		return null;
@@ -303,7 +301,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public boolean isPowered(boolean client) {
 		return true;
 	}
-	
+
 	@Override
 	public double getDefaultSpeed() {
 		return DEFAULT_SPEED;
@@ -365,19 +363,21 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public double getProcessingTime() {
 		return PROCESSING_TIME;
 	}
-	
+
 	private boolean hasAttachedDrives(NetworkMatter matter) {
 		return matter.getPatternDrives() != null && matter.getPatternDrives().size() > 0;
 	}
-	
+
 	private void playFailureSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS,
+				0.5F, 1.0F);
 	}
-	
+
 	private void playSuccessSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS,
+				0.5F, 1.0F);
 	}
-	
+
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
 		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) != null
 				|| index == 1 && UtilsCapability.hasEnergyCap(stack)

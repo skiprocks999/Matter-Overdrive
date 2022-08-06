@@ -68,7 +68,7 @@ public class MatterOverdrive {
 
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		DefaultGeneratorConsumers.init();
-		
+
 		ServerEventHandler.init();
 
 	}

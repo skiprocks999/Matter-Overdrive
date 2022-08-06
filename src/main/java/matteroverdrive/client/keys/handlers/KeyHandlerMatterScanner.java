@@ -19,24 +19,24 @@ public class KeyHandlerMatterScanner extends AbstractKeyPressHandler {
 	@Override
 	public void handleKeyPress(Minecraft minecraft, int scanCode, int key, int action) {
 		Player player = minecraft.player;
-		
+
 		if (KeyBinds.TOGGLE_MATTER_SCANNER.matches(key, scanCode) && KeyBinds.TOGGLE_MATTER_SCANNER.isDown()) {
 			ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-			if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
+			if (!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
 				handleScannerToggle(stack, InteractionHand.MAIN_HAND, player.getUUID());
 			} else {
 				stack = player.getItemInHand(InteractionHand.OFF_HAND);
-				if(!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
+				if (!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner) {
 					handleScannerToggle(stack, InteractionHand.OFF_HAND, player.getUUID());
 				}
 			}
-			
+
 		}
 	}
-	
+
 	private void handleScannerToggle(ItemStack stack, InteractionHand hand, UUID uuid) {
 		CapabilityEnergyStorage storage = UtilsItem.getEnergyStorageCap(stack);
-		if(storage != null && storage.getEnergyStored() > 0) {
+		if (storage != null && storage.getEnergyStored() > 0) {
 			NetworkHandler.CHANNEL.sendToServer(new PacketToggleMatterScanner(uuid, hand));
 		}
 	}

@@ -40,11 +40,11 @@ public class ScreenMatterAnalyzer extends GenericScreen<InventoryMatterAnalyzer>
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenMatterAnalyzer(InventoryMatterAnalyzer menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -94,11 +94,11 @@ public class ScreenMatterAnalyzer extends GenericScreen<InventoryMatterAnalyzer>
 		addButton(redstone);
 
 		redstone.visible = false;
-		
+
 		addScreenComponent(new ScreenComponentMatterAnalyzer(this, 52, 33, new int[] { 0 }, () -> {
 			return getMenu().getTile();
 		}));
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
@@ -129,7 +129,7 @@ public class ScreenMatterAnalyzer extends GenericScreen<InventoryMatterAnalyzer>
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
-		
+
 	}
 
 	private void toggleBarOpen() {

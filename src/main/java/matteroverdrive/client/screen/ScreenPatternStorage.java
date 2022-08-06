@@ -44,11 +44,11 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenPatternStorage(InventoryPatternStorage menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -68,7 +68,7 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 			home.isActivated = false;
 			redstone.visible = true;
 		}, MenuButtonType.SETTINGS, menu, false);
-		
+
 		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
@@ -81,18 +81,19 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 			}
 			return 0;
 		});
-		
+
 		addButton(close);
 		addButton(menu);
 		addButton(home);
 		addButton(settings);
 		addButton(redstone);
-		
+
 		redstone.visible = false;
-		
-		addScreenComponent(new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, UtilsRendering.GUI_STANDARD));
+
+		addScreenComponent(
+				new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, UtilsRendering.GUI_STANDARD));
 		addScreenComponent(new ScreenComponentProgress(() -> 0, this, 8, 61, new int[] { 0 }).vertical());
-		
+
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
@@ -109,9 +110,10 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null && matter.clientTilePowered) {
 				int drives = 0;
-				List<ItemStack> drivesList = matter.clientInventory == null ? new ArrayList<>() : matter.clientInventory.getItems().subList(0, 6);
-				for(ItemStack stack : drivesList) {
-					if(stack.getItem() instanceof ItemPatternDrive) {
+				List<ItemStack> drivesList = matter.clientInventory == null ? new ArrayList<>()
+						: matter.clientInventory.getItems().subList(0, 6);
+				for (ItemStack stack : drivesList) {
+					if (stack.getItem() instanceof ItemPatternDrive) {
 						drives++;
 					}
 				}
@@ -128,9 +130,8 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 				return inscriber.clientTilePowered;
 			}
 			return false;
-		}, this, 6, 159, new int[] { 0, 1}));
-		
-		
+		}, this, 6, 159, new int[] { 0, 1 }));
+
 	}
 
 	private void toggleBarOpen() {

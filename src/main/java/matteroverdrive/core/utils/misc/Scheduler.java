@@ -32,7 +32,7 @@ public class Scheduler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
 		if (!scheduledClient.isEmpty()) {
@@ -50,7 +50,7 @@ public class Scheduler {
 	}
 
 	public static void schedule(int timeUntil, Runnable run, boolean client) {
-		if(client) {
+		if (client) {
 			scheduledClient.put(run, timeUntil);
 		} else {
 			scheduledServer.put(run, timeUntil);
