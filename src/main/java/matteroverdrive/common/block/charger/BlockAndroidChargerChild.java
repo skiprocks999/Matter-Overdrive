@@ -40,21 +40,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
-	
+
 	private static VoxelShape MIDDLE_E;
 	private static VoxelShape MIDDLE_W;
 	private static VoxelShape MIDDLE_N;
 	private static VoxelShape MIDDLE_S;
-	
+
 	private static final VoxelShape TOP_EW = Shapes.box(0.0D, 0.0D, 0.09375D, 1.0D, 0.3125D, 0.90625D);
 	private static final VoxelShape TOP_NS = Shapes.box(0.09375D, 0.0D, 0.0D, 0.90625D, 0.3125D, 1.0D);
-	
+
 	static {
 		MIDDLE_E = Shapes.box(0.0D, 0.9D, 0.09375D, 1.0D, 1.0D, 0.90625D);
-		
+
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.09375D, 0D, 0.29375D, 0.5D, 0.75D, 0.70625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.65625, 0D, 0.40625D, 0.84375, 0.875D, 0.59375D));
-		
+
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.0D, 0.5D, 0.09375D, 0.0625D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.0625D, 0.525D, 0.09375D, 0.125D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.125D, 0.55D, 0.09375D, 0.1875D, 0.9D, 0.90625D));
@@ -71,13 +71,12 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.8125D, 0.825D, 0.09375D, 0.875D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.875D, 0.85D, 0.09375D, 0.9375D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.9375D, 0.875D, 0.09375D, 1.0D, 0.9D, 0.90625D));
-		
-		
+
 		MIDDLE_W = Shapes.box(0.0D, 0.9D, 0.09375D, 1.0D, 1.0D, 0.90625D);
-		
+
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.5D, 0.0D, 0.29375D, 0.90625D, 0.75D, 0.70625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.15625D, 0.0D, 0.40625D, 0.34375D, 1.0D, 0.59375D));
-		
+
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.0D, 0.875D, 0.09375D, 0.0625D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.0625D, 0.85D, 0.09375D, 0.125D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.125D, 0.825D, 0.09375D, 0.1875D, 0.9D, 0.90625D));
@@ -94,15 +93,14 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.8125D, 0.55D, 0.09375D, 0.875D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.875D, 0.525D, 0.09375D, 0.9375D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.9375D, 0.5D, 0.09375D, 1.0D, 0.9D, 0.90625D));
-		
-		
+
 		MIDDLE_N = Shapes.box(0.09375D, 0.9D, 0.0D, 0.90625D, 1.0D, 1.0D);
-		
+
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.29375D, 0.0D, 0.5D, 0.70625D, 0.75D, 0.90625D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.40625D, 0.0D, 0.15625D, 0.59375D, 1.0D, 0.34375D));
-		
+
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.875D, 0.0D, 0.90625D, 0.9D, 0.0625D));
-		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.85D,0.0625D, 0.90625D, 0.9D, 0.125D));
+		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.85D, 0.0625D, 0.90625D, 0.9D, 0.125D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.825D, 0.125D, 0.90625D, 0.9D, 0.1875D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.8D, 0.1875D, 0.90625D, 0.9D, 0.25D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.775D, 0.25D, 0.90625D, 0.9D, 0.3125D));
@@ -117,15 +115,14 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.55D, 0.8125D, 0.90625D, 0.9D, 0.875D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.525D, 0.875D, 0.90625D, 0.9D, 0.9375D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.5D, 0.9375D, 0.90625D, 0.9D, 1.0D));
-		
-		
+
 		MIDDLE_S = Shapes.box(0.09375D, 0.9D, 0.0D, 0.90625D, 1.0D, 1.0D);
-		
+
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.29375D, 0D, 0.09375D, 0.70625D, 0.75D, 0.5D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.40625D, 0D, 0.65625, 0.59375D, 0.875D, 0.84375));
-		
+
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.5D, 0.0D, 0.90625D, 0.9D, 0.0625D));
-		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.525D,0.0625D, 0.90625D, 0.9D, 0.125D));
+		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.525D, 0.0625D, 0.90625D, 0.9D, 0.125D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.55D, 0.125D, 0.90625D, 0.9D, 0.1875D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.575D, 0.1875D, 0.90625D, 0.9D, 0.25D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.6D, 0.25D, 0.90625D, 0.9D, 0.3125D));
@@ -143,12 +140,12 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	public BlockAndroidChargerChild() {
-		super(OverdriveBlockProperties.Defaults.waterloggableFourway(Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL).isRedstoneConductor((state, level, pos) -> false).noOcclusion()),
-						"charger_child", TileCharger.class, TileCharger::new, TypeMachine.CHARGER);
-		registerDefaultState(getStateDefinition().any()
-						.setValue(BlockStateProperties.WATERLOGGED, false)
-						.setValue(getRotationProperty(), Direction.NORTH)
-						.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM));
+		super(OverdriveBlockProperties.Defaults.waterloggableFourway(Properties.of(Material.GLASS).strength(3.5F)
+				.sound(SoundType.METAL).isRedstoneConductor((state, level, pos) -> false).noOcclusion()),
+				"charger_child", TileCharger.class, TileCharger::new, TypeMachine.CHARGER);
+		registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.WATERLOGGED, false)
+				.setValue(getRotationProperty(), Direction.NORTH)
+				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM));
 	}
 
 	/**
@@ -162,18 +159,19 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return null;
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(@NotNull Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(OverdriveBlockStates.CHARGER_POS);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
 		BlockState state = super.getStateForPlacement(context);
 		if (state != null) {
-			state.setValue(getRotationProperty(), context.getHorizontalDirection().getOpposite()).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM);
+			state.setValue(getRotationProperty(), context.getHorizontalDirection().getOpposite())
+					.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM);
 			return state;
 		}
 		return null;
@@ -184,56 +182,58 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		Direction facing = state.getValue(getRotationProperty());
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		return switch (loc) {
-			case MIDDLE -> switch (facing) {
-				case EAST -> MIDDLE_E;
-				case WEST -> MIDDLE_W;
-				case NORTH -> MIDDLE_N;
-				case SOUTH -> MIDDLE_S;
-				default -> super.getShape(state, worldIn, pos, context);
-			};
-			case TOP -> switch (facing) {
-				case EAST, WEST -> TOP_EW;
-				case NORTH, SOUTH -> TOP_NS;
-				default -> super.getShape(state, worldIn, pos, context);
-			};
+		case MIDDLE -> switch (facing) {
+			case EAST -> MIDDLE_E;
+			case WEST -> MIDDLE_W;
+			case NORTH -> MIDDLE_N;
+			case SOUTH -> MIDDLE_S;
 			default -> super.getShape(state, worldIn, pos, context);
+			};
+		case TOP -> switch (facing) {
+			case EAST, WEST -> TOP_EW;
+			case NORTH, SOUTH -> TOP_NS;
+			default -> super.getShape(state, worldIn, pos, context);
+			};
+		default -> super.getShape(state, worldIn, pos, context);
 		};
 	}
-	
+
 	@Override
 	public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootContext.@NotNull Builder builder) {
 		return DeferredRegisters.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
 	}
 
 	@Override
-	public @NotNull VoxelShape getVisualShape(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+	public @NotNull VoxelShape getVisualShape(@NotNull BlockState state, @NotNull BlockGetter reader,
+			@NotNull BlockPos pos, @NotNull CollisionContext context) {
 		return Shapes.empty();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public boolean skipRendering(@NotNull BlockState state, @NotNull BlockState adjacentBlockState, @NotNull Direction side) {
+	public boolean skipRendering(@NotNull BlockState state, @NotNull BlockState adjacentBlockState,
+			@NotNull Direction side) {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
 		return 1.0f;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
+	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader,
+			@NotNull BlockPos pos) {
 		return true;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+			BlockHitResult hit) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -247,7 +247,6 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isSignalSource(@NotNull BlockState state) {
 		return TypeMachine.CHARGER.isRedstoneConnected;
@@ -255,11 +254,12 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public int getDirectSignal(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction side) {
+	public int getDirectSignal(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos,
+			@NotNull Direction side) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -279,7 +279,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -294,23 +294,24 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	@Override
-	public void onRemove(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, BlockState newState, boolean isMoving) {
-		if(!newState.hasProperty(OverdriveBlockStates.CHARGER_POS)) {
+	public void onRemove(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, BlockState newState,
+			boolean isMoving) {
+		if (!newState.hasProperty(OverdriveBlockStates.CHARGER_POS)) {
 			ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 			switch (loc) {
-				case MIDDLE -> {
-					world.setBlockAndUpdate(pos.offset(0, -1, 0), Blocks.AIR.defaultBlockState());
-					world.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
-				}
-				case TOP -> {
-					world.setBlockAndUpdate(pos.offset(0, -1, 0), Blocks.AIR.defaultBlockState());
-					world.setBlockAndUpdate(pos.offset(0, -2, 0), Blocks.AIR.defaultBlockState());
-				}
+			case MIDDLE -> {
+				world.setBlockAndUpdate(pos.offset(0, -1, 0), Blocks.AIR.defaultBlockState());
+				world.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
+			}
+			case TOP -> {
+				world.setBlockAndUpdate(pos.offset(0, -1, 0), Blocks.AIR.defaultBlockState());
+				world.setBlockAndUpdate(pos.offset(0, -2, 0), Blocks.AIR.defaultBlockState());
+			}
 			}
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
 		if (state.hasProperty(getRotationProperty())) {
@@ -320,24 +321,28 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 			BlockState firstState;
 			BlockState secondState;
 			switch (loc) {
-				case MIDDLE -> {
-					first = pos.offset(0, -1, 0);
-					second = pos.offset(0, 1, 0);
-					firstState = level.getBlockState(first);
-					secondState = level.getBlockState(second);
-					if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable)
-						level.setBlock(first, firstState.setValue(variable.getRotationProperty(), rot.rotate(firstState.getValue(variable.getRotationProperty()))), 3);
-					level.setBlock(second, secondState.setValue(getRotationProperty(), rot.rotate(secondState.getValue(getRotationProperty()))), 3);
-				}
-				case TOP -> {
-					first = pos.offset(0, -2, 0);
-					second = pos.offset(0, -1, 0);
-					firstState = level.getBlockState(first);
-					secondState = level.getBlockState(second);
-					if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable)
-						level.setBlock(first, firstState.setValue(variable.getRotationProperty(), rot.rotate(firstState.getValue(variable.getRotationProperty()))), 3);
-					level.setBlock(second, secondState.setValue(getRotationProperty(), rot.rotate(secondState.getValue(getRotationProperty()))), 3);
-				}
+			case MIDDLE -> {
+				first = pos.offset(0, -1, 0);
+				second = pos.offset(0, 1, 0);
+				firstState = level.getBlockState(first);
+				secondState = level.getBlockState(second);
+				if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable)
+					level.setBlock(first, firstState.setValue(variable.getRotationProperty(),
+							rot.rotate(firstState.getValue(variable.getRotationProperty()))), 3);
+				level.setBlock(second, secondState.setValue(getRotationProperty(),
+						rot.rotate(secondState.getValue(getRotationProperty()))), 3);
+			}
+			case TOP -> {
+				first = pos.offset(0, -2, 0);
+				second = pos.offset(0, -1, 0);
+				firstState = level.getBlockState(first);
+				secondState = level.getBlockState(second);
+				if (firstState.getBlock() instanceof GenericStateVariableBlock<?> variable)
+					level.setBlock(first, firstState.setValue(variable.getRotationProperty(),
+							rot.rotate(firstState.getValue(variable.getRotationProperty()))), 3);
+				level.setBlock(second, secondState.setValue(getRotationProperty(),
+						rot.rotate(secondState.getValue(getRotationProperty()))), 3);
+			}
 			}
 			return state.setValue(getRotationProperty(), rot.rotate(state.getValue(getRotationProperty())));
 		}
@@ -345,8 +350,7 @@ public class BlockAndroidChargerChild extends BlockMachine<TileCharger> {
 	}
 
 	@Override
-	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> items) {}
-	
-	
+	public void fillItemCategory(@NotNull CreativeModeTab tab, @NotNull NonNullList<ItemStack> items) {
+	}
 
 }
