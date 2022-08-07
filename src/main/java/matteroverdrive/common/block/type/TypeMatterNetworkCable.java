@@ -4,7 +4,7 @@ import matteroverdrive.common.block.cable.ICableType;
 
 public enum TypeMatterNetworkCable implements ICableType {
 
-	REGULAR(2.5);
+	REGULAR(5);
 
 	public final double width;
 

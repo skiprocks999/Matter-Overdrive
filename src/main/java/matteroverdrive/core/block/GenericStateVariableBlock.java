@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
@@ -93,8 +92,7 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
 	public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
 		BlockState stateWithRotation = this.getRotationType().getHandler().getStateForPlacement(this, context);
 		FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-		return fluidState.getType() == Fluids.WATER ? stateWithRotation.setValue(BlockStateProperties.WATERLOGGED, true)
-				: stateWithRotation;
+		return stateWithRotation.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 	}
 
 	/**
@@ -115,7 +113,7 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
 	public @NotNull BlockState updateShape(BlockState state, @NotNull Direction direction,
 			@NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos,
 			@NotNull BlockPos neighborPos) {
-		if (getProperty(state, BlockStateProperties.WATERLOGGED) != null) {
+		if(state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
 			level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
 		return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
@@ -131,8 +129,10 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
 	@SuppressWarnings("deprecation")
 	@Override
 	public @NotNull FluidState getFluidState(BlockState state) {
-		return getProperty(state, BlockStateProperties.WATERLOGGED) != null ? Fluids.WATER.getSource(false)
-				: super.getFluidState(state);
+		if(state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
+			return Fluids.WATER.getSource(false);
+		}
+		return super.getFluidState(state);
 	}
 
 	/**
@@ -178,18 +178,14 @@ public abstract class GenericStateVariableBlock<T extends BasicTile<T>> extends 
 	 */
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-		return getProperty(state, BlockStateProperties.LIT) != null ? 15 : super.getLightEmission(state, level, pos);
+		if(state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) {
+			return 15;
+		}
+		return super.getLightEmission(state, level, pos);
 	}
 
 	public DirectionProperty getRotationProperty() {
 		return getRotationType().getProperties()[0];
 	}
 
-	@Nullable
-	public <U extends Comparable<U>> U getProperty(BlockState state, Property<U> property) {
-		if (state.hasProperty(property)) {
-			return state.getValue(property);
-		}
-		return null;
-	}
 }
