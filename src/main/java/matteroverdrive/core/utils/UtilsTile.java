@@ -2,7 +2,6 @@ package matteroverdrive.core.utils;
 
 import java.util.HashSet;
 
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -15,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -182,7 +182,7 @@ public class UtilsTile {
 	public static void updateLit(GenericTile tile, Boolean value) {
 		Level world = tile.getLevel();
 		BlockPos pos = tile.getBlockPos();
-		world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(BlockLightableMachine.LIT, value));
+		world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(BlockStateProperties.LIT, value));
 	}
 
 }

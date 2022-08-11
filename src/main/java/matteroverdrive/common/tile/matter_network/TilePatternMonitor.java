@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 
 import matteroverdrive.DeferredRegisters;
-import matteroverdrive.common.block.states.OverdriveBlockStates;
-import matteroverdrive.common.block.states.OverdriveBlockStates.VerticalFacing;
+import matteroverdrive.common.block.OverdriveBlockStates;
+import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.network.NetworkMatter;

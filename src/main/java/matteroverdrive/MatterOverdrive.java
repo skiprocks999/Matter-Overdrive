@@ -3,6 +3,7 @@ package matteroverdrive;
 import java.util.Random;
 
 import matteroverdrive.common.block.BlockCustomGlass;
+import matteroverdrive.common.block.OverdriveBlockStates;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
@@ -12,17 +13,14 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import matteroverdrive.client.ClientRegister;
-import matteroverdrive.common.block.states.OverdriveBlockStates;
 import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.recipe.RecipeInit;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,6 +45,7 @@ public class MatterOverdrive {
 
 	public MatterOverdrive() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		OverdriveBlockProperties.Defaults.init();
 		SoundRegister.SOUNDS.register(bus);
 		OverdriveBlockStates.init();
 		DeferredRegisters.BLOCKS.register(bus);

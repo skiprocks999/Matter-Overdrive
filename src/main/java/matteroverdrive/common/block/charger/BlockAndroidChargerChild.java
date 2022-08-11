@@ -2,11 +2,12 @@ package matteroverdrive.common.block.charger;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.BlockOverdrive;
-import matteroverdrive.common.block.states.OverdriveBlockStates;
-import matteroverdrive.common.block.states.OverdriveBlockStates.ChargerBlockPos;
-import matteroverdrive.common.block.type.TypeMachine;
+import matteroverdrive.common.block.OverdriveBlockStates;
+import matteroverdrive.common.block.OverdriveBlockStates.ChargerBlockPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -21,13 +22,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -36,8 +38,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockAndroidChargerChild extends BlockOverdrive {
-
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 	
 	private static VoxelShape MIDDLE_E;
 	private static VoxelShape MIDDLE_W;
@@ -144,26 +144,30 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	public BlockAndroidChargerChild() {
 		super(BlockBehaviour.Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL)
 				.isRedstoneConductor((a, b, c) -> false).noOcclusion(), false);
-		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM));
+		registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.FACING, Direction.NORTH).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
+				.setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 	
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(FACING);
+		builder.add(BlockStateProperties.FACING);
 		builder.add(OverdriveBlockStates.CHARGER_POS);
+		builder.add(BlockStateProperties.WATERLOGGED);
 	}
 	
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context)
-				.setValue(FACING, context.getHorizontalDirection().getOpposite())
-				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM);
+				.setValue(BlockStateProperties.FACING, context.getHorizontalDirection().getOpposite())
+				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
+				.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		Direction facing = state.getValue(FACING);
+		Direction facing = state.getValue(BlockStateProperties.FACING);
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		switch(loc) {
 		case MIDDLE:
@@ -239,11 +243,6 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	}
 
 	@Override
-	public boolean isSignalSource(BlockState state) {
-		return TypeMachine.CHARGER.isRedstoneConnected;
-	}
-
-	@Override
 	public int getDirectSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
@@ -301,7 +300,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
-		if (state.hasProperty(FACING)) {
+		if (state.hasProperty(BlockStateProperties.FACING)) {
 			ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 			BlockPos first;
 			BlockPos second;
@@ -313,19 +312,19 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 				second = pos.offset(0, 1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(BlockAndroidChargerParent.FACING, rot.rotate(firstState.getValue(BlockAndroidChargerParent.FACING))), 3);
-				level.setBlock(second, secondState.setValue(FACING, rot.rotate(secondState.getValue(FACING))), 3);
+				level.setBlock(first, firstState.setValue(BlockStateProperties.FACING, rot.rotate(firstState.getValue(BlockStateProperties.FACING))), 3);
+				level.setBlock(second, secondState.setValue(BlockStateProperties.FACING, rot.rotate(secondState.getValue(BlockStateProperties.FACING))), 3);
 				break;
 			case TOP:
 				first = pos.offset(0, -2, 0);
 				second = pos.offset(0, -1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(BlockAndroidChargerParent.FACING, rot.rotate(firstState.getValue(BlockAndroidChargerParent.FACING))), 3);
-				level.setBlock(second, secondState.setValue(FACING, rot.rotate(secondState.getValue(FACING))), 3);
+				level.setBlock(first, firstState.setValue(BlockStateProperties.FACING, rot.rotate(firstState.getValue(BlockStateProperties.FACING))), 3);
+				level.setBlock(second, secondState.setValue(BlockStateProperties.FACING, rot.rotate(secondState.getValue(BlockStateProperties.FACING))), 3);
 				break;
 			}
-			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+			return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
 		}
 		return super.rotate(state, level, pos, rot);
 	}
@@ -334,6 +333,22 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
 	}
 	
+	@Override
+	public BlockState updateShape(BlockState state, @NotNull Direction direction,
+			@NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos,
+			@NotNull BlockPos neighborPos) {
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
+			level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		}
+		return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+	}
 	
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
+			return Fluids.WATER.getSource(false);
+		}
+		return super.getFluidState(state);
+	}
 
 }

@@ -2,7 +2,6 @@ package matteroverdrive.common.tile;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -19,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TileMatterRecycler extends GenericSoundTile {
 
@@ -111,7 +111,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 		}
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if (currState && !running) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
 		} else if (!currState && running) {

@@ -9,12 +9,9 @@ import org.apache.commons.compress.utils.Sets;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.client.particle.vent.ParticleOptionVent;
-import matteroverdrive.common.block.cable.dualside.BlockMatterNetworkCable;
-import matteroverdrive.common.block.cable.serverside.BlockMatterConduit;
+import matteroverdrive.common.block.cable.types.BlockMatterConduit;
+import matteroverdrive.common.block.cable.types.BlockMatterNetworkCable;
 import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
-import matteroverdrive.common.block.machine.BlockMachine;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
-import matteroverdrive.common.block.machine.variants.BlockVerticalMachine;
 import matteroverdrive.common.block.charger.BlockAndroidChargerChild;
 import matteroverdrive.common.block.type.BlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
@@ -63,6 +60,8 @@ import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.transporter.TileTransporter;
+import matteroverdrive.core.block.GenericMachineBlock;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import net.minecraft.core.particles.ParticleType;
@@ -121,41 +120,58 @@ public class DeferredRegisters {
 					((BlockColors) color).color),
 			BlockColors.values());
 	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(
-			crate -> registerBlock(((CrateColors) crate).id(), () -> new BlockTritaniumCrate(
-					Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())),
+			crate -> registerBlock(((CrateColors) crate).id(),
+					() -> new BlockTritaniumCrate(OverdriveBlockProperties.from(Properties.of(Material.STONE)
+							.requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion()).setCanBeWaterlogged())),
 			TileTritaniumCrate.CrateColors.values());
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.SOLAR_PANEL.id(),
-			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.SOLAR_PANEL,
-					DeferredRegisters.TILE_SOLAR_PANEL));
+			() -> new BlockMachine<TileSolarPanel>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
+							.redstoneConnectivity().setCanBeWaterlogged(),
+					TileSolarPanel::new, TypeMachine.SOLAR_PANEL, DeferredRegisters.TILE_SOLAR_PANEL));
 	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(
 			TypeMachine.MATTER_DECOMPOSER.id(),
-			() -> new BlockLightableMachine<TileMatterDecomposer>(TileMatterDecomposer::new,
-					TypeMachine.MATTER_DECOMPOSER, DeferredRegisters.TILE_MATTER_DECOMPOSER));
+			() -> new BlockMachine<TileMatterDecomposer>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setCanBeLit().setHasFacing(false),
+					TileMatterDecomposer::new, TypeMachine.MATTER_DECOMPOSER,
+					DeferredRegisters.TILE_MATTER_DECOMPOSER));
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
-			() -> new BlockLightableMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
-					DeferredRegisters.TILE_MATTER_RECYCLER));
+			() -> new BlockMachine<TileMatterRecycler>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setCanBeLit().setHasFacing(false),
+					TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER, DeferredRegisters.TILE_MATTER_RECYCLER));
 	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child",
 			() -> new BlockAndroidChargerChild());
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
 			() -> new BlockAndroidChargerParent<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
 					DeferredRegisters.TILE_CHARGER));
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
-			() -> new BlockLightableMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
-					DeferredRegisters.TILE_MICROWAVE));
+			() -> new BlockMachine<TileMicrowave>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setCanBeLit().setHasFacing(false).setCanBeWaterlogged(),
+					TileMicrowave::new, TypeMachine.MICROWAVE, DeferredRegisters.TILE_MICROWAVE));
 	public static final RegistryObject<Block> BLOCK_INSCRIBER = registerBlock(TypeMachine.INSCRIBER.id(),
-			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER,
-					DeferredRegisters.TILE_INSCRIBER));
+			() -> new BlockMachine<TileInscriber>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setHasFacing(false),
+					TileInscriber::new, TypeMachine.INSCRIBER, DeferredRegisters.TILE_INSCRIBER));
 	public static final BulkRegister<Block> BLOCK_MATTER_CONDUITS = bulkBlock(
 			conduit -> registerBlock(((TypeMatterConduit) conduit).id(),
 					() -> new BlockMatterConduit((TypeMatterConduit) conduit)),
 			TypeMatterConduit.values());
 	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
-			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER,
-					DeferredRegisters.TILE_TRANSPORTER));
+			() -> new BlockMachine<TileTransporter>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setAlwaysLit(),
+					TileTransporter::new, TypeMachine.TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER));
 	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(
 			TypeMachine.SPACETIME_ACCELERATOR.id(),
-			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
-					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+			() -> new BlockMachine<TileSpacetimeAccelerator>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setHasFacing(false).setCanBeWaterlogged(),
+					TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR,
+					DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
 	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
 			() -> new BlockCustomGlass(0.3F, 0.3F));
 	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
@@ -167,22 +183,34 @@ public class DeferredRegisters {
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
 			TypeMatterNetworkCable.values());
-	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(
-			TypeMachine.CHUNKLOADER.id(),
-			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new,
-					TypeMachine.CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER));
-	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(
-			TypeMachine.MATTER_ANALYZER.id(),
-			() -> new BlockLightableMachine<TileMatterAnalyzer>(TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER));
-	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(
-			TypeMachine.PATTERN_STORAGE.id(),
-			() -> new BlockMachine<TilePatternStorage>(TilePatternStorage::new, TypeMachine.PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE));
-	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(
-			TypeMachine.PATTERN_MONITOR.id(),
-			() -> new BlockVerticalMachine<TilePatternMonitor>(TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR));
-	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(TypeMachine.MATTER_REPLICATOR.id(), 
-			() -> new BlockLightableMachine<TileMatterReplicator>(TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
-	
+	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(TypeMachine.CHUNKLOADER.id(),
+			() -> new BlockMachine<TileChunkloader>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
+							.redstoneConnectivity(),
+					TileChunkloader::new, TypeMachine.CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER));
+	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(TypeMachine.MATTER_ANALYZER.id(),
+			() -> new BlockMachine<TileMatterAnalyzer>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setCanBeLit().setCanBeWaterlogged(),
+					TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER));
+	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(TypeMachine.PATTERN_STORAGE.id(),
+			() -> new BlockMachine<TilePatternStorage>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
+							.redstoneConnectivity().setCanBeWaterlogged(),
+					TilePatternStorage::new, TypeMachine.PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE));
+	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(TypeMachine.PATTERN_MONITOR.id(),
+			() -> new BlockMachine<TilePatternMonitor>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
+							.setCanBeLit().setHasFacing(true).setCanBeWaterlogged(),
+					TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR));
+	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(
+			TypeMachine.MATTER_REPLICATOR.id(),
+			() -> new BlockMachine<TileMatterReplicator>(
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
+							.setCanBeLit().setCanBeWaterlogged(),
+					TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR,
+					DeferredRegisters.TILE_MATTER_REPLICATOR));
+
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
@@ -221,12 +249,14 @@ public class DeferredRegisters {
 			TypeIsolinearCircuit.values());
 	public static final RegistryObject<Item> ITEM_TRANSPORTER_FLASHDRIVE = ITEMS.register("transporter_flashdrive",
 			() -> new ItemTransporterFlashdrive());
-	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive", () -> new ItemPatternDrive());
-	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner", () -> new ItemMatterScanner());
+	public static final RegistryObject<Item> ITEM_PATTERN_DRIVE = ITEMS.register("pattern_drive",
+			() -> new ItemPatternDrive());
+	public static final RegistryObject<Item> ITEM_MATTER_SCANNER = ITEMS.register("matter_scanner",
+			() -> new ItemMatterScanner());
 
 	public static final RegistryObject<Item> ITEM_TRITANIUM_PLATE = ITEMS.register("tritanium_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
-	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate", 
+	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(TileMatterReplicator.NEEDED_PLATES)));
 
 	/* TILES */
@@ -264,21 +294,21 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileMatterNetworkCable>> TILE_MATTER_NETWORK_CABLE = TILES
 			.register("network_cable", () -> new BlockEntityType<>(TileMatterNetworkCable::new,
 					Sets.newHashSet(BLOCK_MATTER_NETWORK_CABLES.getObjectsAsArray(new Block[0])), null));
-	public static final RegistryObject<BlockEntityType<TileChunkloader>> TILE_CHUNKLOADER = TILES
-			.register(TypeMachine.CHUNKLOADER.id(),
-				() -> new BlockEntityType<>(TileChunkloader::new, Sets.newHashSet(BLOCK_CHUNKLOADER.get()), null));
-	public static final RegistryObject<BlockEntityType<TileMatterAnalyzer>> TILE_MATTER_ANALYZER = TILES
-			.register(TypeMachine.MATTER_ANALYZER.id(),
-					() -> new BlockEntityType<>(TileMatterAnalyzer::new, Sets.newHashSet(BLOCK_MATTER_ANALYZER.get()), null));
-	public static final RegistryObject<BlockEntityType<TilePatternStorage>> TILE_PATTERN_STORAGE = TILES
-			.register(TypeMachine.PATTERN_STORAGE.id(), 
-					() -> new BlockEntityType<>(TilePatternStorage::new, Sets.newHashSet(BLOCK_PATTERN_STORAGE.get()), null));
-	public static final RegistryObject<BlockEntityType<TilePatternMonitor>> TILE_PATTERN_MONITOR = TILES
-			.register(TypeMachine.PATTERN_MONITOR.id(), 
-					() -> new BlockEntityType<>(TilePatternMonitor::new, Sets.newHashSet(BLOCK_PATTERN_MONITOR.get()), null));
+	public static final RegistryObject<BlockEntityType<TileChunkloader>> TILE_CHUNKLOADER = TILES.register(
+			TypeMachine.CHUNKLOADER.id(),
+			() -> new BlockEntityType<>(TileChunkloader::new, Sets.newHashSet(BLOCK_CHUNKLOADER.get()), null));
+	public static final RegistryObject<BlockEntityType<TileMatterAnalyzer>> TILE_MATTER_ANALYZER = TILES.register(
+			TypeMachine.MATTER_ANALYZER.id(),
+			() -> new BlockEntityType<>(TileMatterAnalyzer::new, Sets.newHashSet(BLOCK_MATTER_ANALYZER.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternStorage>> TILE_PATTERN_STORAGE = TILES.register(
+			TypeMachine.PATTERN_STORAGE.id(),
+			() -> new BlockEntityType<>(TilePatternStorage::new, Sets.newHashSet(BLOCK_PATTERN_STORAGE.get()), null));
+	public static final RegistryObject<BlockEntityType<TilePatternMonitor>> TILE_PATTERN_MONITOR = TILES.register(
+			TypeMachine.PATTERN_MONITOR.id(),
+			() -> new BlockEntityType<>(TilePatternMonitor::new, Sets.newHashSet(BLOCK_PATTERN_MONITOR.get()), null));
 	public static final RegistryObject<BlockEntityType<TileMatterReplicator>> TILE_MATTER_REPLICATOR = TILES
-			.register(TypeMachine.MATTER_REPLICATOR.id(), 
-					() -> new BlockEntityType<>(TileMatterReplicator::new, Sets.newHashSet(BLOCK_MATTER_REPLICATOR.get()), null));
+			.register(TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockEntityType<>(TileMatterReplicator::new,
+					Sets.newHashSet(BLOCK_MATTER_REPLICATOR.get()), null));
 
 	/* MENUS */
 
@@ -317,7 +347,7 @@ public class DeferredRegisters {
 			() -> new ParticleOptionReplicator());
 	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave",
 			() -> new ParticleOptionShockwave());
-	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent", 
+	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent",
 			() -> new ParticleOptionVent());
 
 	// Functional Methods

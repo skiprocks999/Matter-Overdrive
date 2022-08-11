@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.item.ItemUpgrade;
@@ -28,6 +27,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.TriPredicate;
 
 public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetworkMember {
@@ -78,7 +78,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if(!canRun()) {
 			isRunning = false;
 			currProgress = 0;

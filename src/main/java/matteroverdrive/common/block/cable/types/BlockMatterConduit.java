@@ -1,29 +1,25 @@
-package matteroverdrive.common.block.cable.serverside;
+package matteroverdrive.common.block.cable.types;
 
 import java.util.HashSet;
 
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.tile.TileMatterConduit;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockMatterConduit extends AbstractCableBlock {
 
 	public static final HashSet<Block> PIPESET = new HashSet<>();
 
 	public BlockMatterConduit(TypeMatterConduit type) {
-		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.15f).dynamicShape(), type);
-		
+		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 		PIPESET.add(this);
 	}
 	
