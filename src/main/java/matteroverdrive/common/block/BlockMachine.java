@@ -1,10 +1,12 @@
-package matteroverdrive.common.block.machine;
+package matteroverdrive.common.block;
 
 import java.util.Arrays;
 import java.util.List;
 
+import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -29,9 +32,9 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	public TypeMachine type;
 	private RegistryObject<BlockEntityType<T>> blockEntityType;
 
-	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
+	public BlockMachine(OverdriveBlockProperties properties, BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
 			RegistryObject<BlockEntityType<T>> entity) {
-		super(supplier);
+		super(properties, supplier);
 		this.type = type;
 		this.blockEntityType = entity;
 	}
@@ -39,7 +42,15 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		if (type.hasCustomAABB) {
-			return type.getShape(state.getValue(FACING));
+			OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			if(stateProperties.isOmniDirectional()) {
+				VerticalFacing vertical = state.getValue(OverdriveBlockStates.VERTICAL_FACING);
+				if(vertical.mapped != null) {
+					facing = vertical.mapped;
+				}
+			}
+			return type.getShape(facing);
 		}
 		return super.getShape(state, level, pos, context);
 	}
@@ -64,21 +75,6 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 			}
 		}
 		return super.getDrops(state, builder);
-	}
-
-	@Override
-	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-		return type.isRedstoneConnected;
-	}
-	
-	@Override
-	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-		switch(type) {
-		case TRANSPORTER:
-			return 15;
-		default: 
-			return super.getLightEmission(state, level, pos);	
-		}
 	}
 
 }

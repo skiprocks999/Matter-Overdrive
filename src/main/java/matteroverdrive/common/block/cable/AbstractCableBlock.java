@@ -8,10 +8,11 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
-import matteroverdrive.common.block.states.OverdriveBlockStates;
-import matteroverdrive.common.block.states.OverdriveBlockStates.CableConnectionType;
+import matteroverdrive.common.block.OverdriveBlockStates;
+import matteroverdrive.common.block.OverdriveBlockStates.CableConnectionType;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
-import matteroverdrive.core.block.WaterloggableEntityBlock;
+import matteroverdrive.core.block.GenericEntityBlock;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,19 +23,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
+public abstract class AbstractCableBlock extends GenericEntityBlock {
 
 	public static final Map<Direction, EnumProperty<CableConnectionType>> DIRECTION_TO_PROPERTY_MAP = Util
 			.make(Maps.newEnumMap(Direction.class), map -> {
@@ -55,6 +56,8 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 				map.put(OverdriveBlockStates.CABLE_UP, Direction.UP);
 				map.put(OverdriveBlockStates.CABLE_DOWN, Direction.DOWN);
 			});
+	
+	public static final Properties DEFUALT_CABLE_PROPERTIES = Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.15f).dynamicShape();
 
 	protected final VoxelShape center;
 	
@@ -64,7 +67,7 @@ public abstract class AbstractCableBlock extends WaterloggableEntityBlock {
 	
 	protected final ICableType type;
 	
-	public AbstractCableBlock(Properties properties, ICableType type) {
+	public AbstractCableBlock(OverdriveBlockProperties properties, ICableType type) {
 		super(properties);
 		
 		this.type = type;

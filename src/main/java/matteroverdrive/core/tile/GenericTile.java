@@ -5,7 +5,6 @@ import java.util.List;
 
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade;
-import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
@@ -155,8 +155,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public Direction getFacing() {
 		Level world = getLevel();
 		BlockState state = world.getBlockState(getBlockPos());
-		if (state.hasProperty(GenericEntityBlock.FACING)) {
-			return state.getValue(GenericEntityBlock.FACING);
+		if (state.hasProperty(BlockStateProperties.FACING)) {
+			return state.getValue(BlockStateProperties.FACING);
 		}
 
 		return Direction.UP;

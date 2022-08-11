@@ -1,25 +1,22 @@
-package matteroverdrive.common.block.cable.dualside;
+package matteroverdrive.common.block.cable.types;
 
 import java.util.HashSet;
 
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
+import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockMatterNetworkCable extends AbstractCableBlock {
 	
 	public BlockMatterNetworkCable(TypeMatterNetworkCable type) {
-		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(0.15f).dynamicShape(), type);
+		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 	}
 	
 	@Override

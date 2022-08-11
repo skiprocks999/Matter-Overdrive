@@ -90,22 +90,25 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     mavenCentral()
     maven {
-	name = "Progwml6 maven"
-	url = "https://dvs1.progwml6.com/files/maven/"
+	    name = "Progwml6 maven"
+	    url = "https://dvs1.progwml6.com/files/maven/"
     }
-
     maven {
-	name = "ModMaven"
-	url = "https://modmaven.k-4u.nl"
+	    name = "ModMaven"
+	    url = "https://modmaven.k-4u.nl"
     }
-    maven { url 'https://modmaven.dev/' }
+    maven {
+        name = "Mekanism"
+        url = "https://modmaven.dev/"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:11.1.1.239")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:11.1.1.239")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
 }
 

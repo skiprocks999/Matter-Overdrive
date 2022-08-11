@@ -7,45 +7,29 @@ import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+public class GenericMachineBlock extends GenericEntityBlock {
 
-public class GenericMachineBlock extends WaterloggableEntityBlock {
-
+	public static final Properties DEFAULT_MACHINE_PROPERTIES = Properties.of(Material.METAL).strength(3.5F)
+			.sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops();
+	
 	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
 
-	protected GenericMachineBlock(BlockEntitySupplier<BlockEntity> supplier) {
-		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).noOcclusion()
-				.requiresCorrectToolForDrops());
+	protected GenericMachineBlock(OverdriveBlockProperties properties, BlockEntitySupplier<BlockEntity> supplier) {
+		super(properties);
 		blockEntitySupplier = supplier;
-		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
-	}
-
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(FACING);
 	}
 
 	@Override

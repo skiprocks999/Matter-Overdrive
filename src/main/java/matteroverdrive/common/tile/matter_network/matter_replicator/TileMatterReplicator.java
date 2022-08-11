@@ -12,7 +12,6 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
-import matteroverdrive.common.block.machine.variants.BlockLightableMachine;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.common.item.ItemPatternDrive;
@@ -46,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
@@ -117,7 +117,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
 		removeCompletedOrders();
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockLightableMachine.LIT);
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if(!canRun()) {
 			isRunning = false;
 			isPowered = false;
