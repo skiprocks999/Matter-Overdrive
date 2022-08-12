@@ -14,9 +14,13 @@ import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
+import matteroverdrive.core.property.message.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
@@ -49,6 +53,15 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketCancelReplication.class, PacketCancelReplication::encode,
 				PacketCancelReplication::decode, PacketCancelReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, UpdateServerContainerPropertyMessage.class, UpdateServerContainerPropertyMessage::encode,
+						UpdateServerContainerPropertyMessage::decode, UpdateServerContainerPropertyMessage::consume,
+						Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, UpdateServerEntityPropertyMessage.class, UpdateServerEntityPropertyMessage::encode,
+						UpdateServerEntityPropertyMessage::decode, UpdateServerEntityPropertyMessage::consume,
+						Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		CHANNEL.registerMessage(disc++, UpdateServerBlockEntityPropertyMessage.class, UpdateServerBlockEntityPropertyMessage::encode,
+						UpdateServerBlockEntityPropertyMessage::decode, UpdateServerBlockEntityPropertyMessage::consume,
+						Optional.of(NetworkDirection.PLAY_TO_SERVER));
 		
 		/* CLIENT-BOUND */
 		
@@ -66,7 +79,39 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class,
 				PacketPlayMatterScannerSound::encode, PacketPlayMatterScannerSound::decode,
 				PacketPlayMatterScannerSound::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		
+		CHANNEL.registerMessage(disc++, UpdateClientContainerPropertyMessage.class,
+						UpdateClientContainerPropertyMessage::encode, UpdateClientContainerPropertyMessage::decode,
+						UpdateClientContainerPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, UpdateClientEntityPropertyMessage.class,
+						UpdateClientEntityPropertyMessage::encode, UpdateClientEntityPropertyMessage::decode,
+						UpdateClientEntityPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, UpdateClientBlockEntityPropertyMessage.class,
+						UpdateClientBlockEntityPropertyMessage::encode, UpdateClientBlockEntityPropertyMessage::decode,
+						UpdateClientBlockEntityPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+	}
+
+	public static void sendUpdateClientContainerProperties(ServerPlayer player, UpdateClientContainerPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+	}
+
+	public static void sendUpdateServerContainerProperties(UpdateServerContainerPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
+	}
+
+	public static void sendUpdateClientEntityProperties(Entity entity, UpdateClientEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+	}
+
+	public static void sendUpdateServerEntityProperties(UpdateServerEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.noArg(), message);
+	}
+
+	public static void sendUpdateClientBlockEntityProperties(UpdateClientBlockEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.PLAYER.noArg(), message);
+	}
+
+	public static void sendUpdateServerBlockEntityProperties(UpdateServerBlockEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.PLAYER.noArg(), message);
 	}
 
 }
