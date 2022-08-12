@@ -5,7 +5,6 @@ import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;
-import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,14 +19,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachine<T> {
 
 	public BlockAndroidChargerParent(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
 			RegistryObject<BlockEntityType<T>> entity) {
-		super(OverdriveBlockProperties.from(DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity().setHasFacing(true).setCanBeWaterlogged(), supplier, type, entity);
+		super(supplier, type, entity);
 	}
 
 	@Override
@@ -46,12 +44,12 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
 		if(!world.isClientSide) {
-			Direction facing = state.getValue(BlockStateProperties.FACING);
+			Direction facing = state.getValue(FACING);
 			BlockState middle = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
 			BlockState top = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
-			middle = middle.setValue(BlockStateProperties.FACING, facing);
+			middle = middle.setValue(FACING, facing);
 			middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
-			top = top.setValue(BlockStateProperties.FACING, facing);
+			top = top.setValue(FACING, facing);
 			top = top.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.TOP);
 			world.setBlockAndUpdate(pos.offset(0, 1, 0), middle);
 			world.setBlockAndUpdate(pos.offset(0, 2, 0), top);
@@ -61,7 +59,7 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
 		
-		if(!newState.hasProperty(BlockStateProperties.FACING) && !level.isClientSide) {
+		if(!newState.hasProperty(FACING) && !level.isClientSide) {
 			level.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.offset(0, 2, 0), Blocks.AIR.defaultBlockState());
 		}
@@ -71,15 +69,15 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
-		if (state.hasProperty(BlockStateProperties.FACING)) {
+		if (state.hasProperty(FACING)) {
 			BlockPos first = pos.offset(0, 1, 0);
 			BlockPos second = pos.offset(0, 2, 0);
 			BlockState firstState = level.getBlockState(first);
 			BlockState secondState = level.getBlockState(second);
-			level.setBlock(first, firstState.setValue(BlockStateProperties.FACING, rot.rotate(firstState.getValue(BlockStateProperties.FACING))), 3);
-			level.setBlock(second, secondState.setValue(BlockStateProperties.FACING, rot.rotate(secondState.getValue(BlockStateProperties.FACING))), 3);
+			level.setBlock(first, firstState.setValue(FACING, rot.rotate(firstState.getValue(FACING))), 3);
+			level.setBlock(second, secondState.setValue(FACING, rot.rotate(secondState.getValue(FACING))), 3);
 		
-			return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
+			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 		}
 		return super.rotate(state, level, pos, rot);
 	}

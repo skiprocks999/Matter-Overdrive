@@ -60,7 +60,6 @@ import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.transporter.TileTransporter;
-import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
@@ -119,97 +118,91 @@ public class DeferredRegisters {
 							((BlockColors) color).color, false),
 					((BlockColors) color).color),
 			BlockColors.values());
-	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(
-			crate -> registerBlock(((CrateColors) crate).id(),
-					() -> new BlockTritaniumCrate(OverdriveBlockProperties.from(Properties.of(Material.STONE)
-							.requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion()).setCanBeWaterlogged())),
+	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(crate -> registerBlock(
+			((CrateColors) crate).id(),
+			() -> new BlockTritaniumCrate(OverdriveBlockProperties
+					.from(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F).noOcclusion())
+					.setCanBeWaterlogged().setHasFacing(false))),
 			TileTritaniumCrate.CrateColors.values());
+
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.SOLAR_PANEL.id(),
-			() -> new BlockMachine<TileSolarPanel>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-							.redstoneConnectivity().setCanBeWaterlogged(),
-					TileSolarPanel::new, TypeMachine.SOLAR_PANEL, DeferredRegisters.TILE_SOLAR_PANEL));
+			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.SOLAR_PANEL,
+					DeferredRegisters.TILE_SOLAR_PANEL));
+
 	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(
-			TypeMachine.MATTER_DECOMPOSER.id(),
-			() -> new BlockMachine<TileMatterDecomposer>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setCanBeLit().setHasFacing(false),
+			TypeMachine.MATTER_DECOMPOSER.id(), () -> new BlockMachine<TileMatterDecomposer>(
+
 					TileMatterDecomposer::new, TypeMachine.MATTER_DECOMPOSER,
 					DeferredRegisters.TILE_MATTER_DECOMPOSER));
+
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
 			() -> new BlockMachine<TileMatterRecycler>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setCanBeLit().setHasFacing(false),
+
 					TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER, DeferredRegisters.TILE_MATTER_RECYCLER));
+
 	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child",
 			() -> new BlockAndroidChargerChild());
+
 	public static final RegistryObject<Block> BLOCK_CHARGER = registerBlock(TypeMachine.CHARGER.id(),
 			() -> new BlockAndroidChargerParent<TileCharger>(TileCharger::new, TypeMachine.CHARGER,
 					DeferredRegisters.TILE_CHARGER));
+
 	public static final RegistryObject<Block> BLOCK_MICROWAVE = registerBlock(TypeMachine.MICROWAVE.id(),
-			() -> new BlockMachine<TileMicrowave>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setCanBeLit().setHasFacing(false).setCanBeWaterlogged(),
-					TileMicrowave::new, TypeMachine.MICROWAVE, DeferredRegisters.TILE_MICROWAVE));
+			() -> new BlockMachine<TileMicrowave>(TileMicrowave::new, TypeMachine.MICROWAVE,
+					DeferredRegisters.TILE_MICROWAVE));
+
 	public static final RegistryObject<Block> BLOCK_INSCRIBER = registerBlock(TypeMachine.INSCRIBER.id(),
-			() -> new BlockMachine<TileInscriber>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setHasFacing(false),
-					TileInscriber::new, TypeMachine.INSCRIBER, DeferredRegisters.TILE_INSCRIBER));
+			() -> new BlockMachine<TileInscriber>(TileInscriber::new, TypeMachine.INSCRIBER,
+					DeferredRegisters.TILE_INSCRIBER));
+
 	public static final BulkRegister<Block> BLOCK_MATTER_CONDUITS = bulkBlock(
 			conduit -> registerBlock(((TypeMatterConduit) conduit).id(),
 					() -> new BlockMatterConduit((TypeMatterConduit) conduit)),
 			TypeMatterConduit.values());
+
 	public static final RegistryObject<Block> BLOCK_TRANSPORTER = registerBlock(TypeMachine.TRANSPORTER.id(),
-			() -> new BlockMachine<TileTransporter>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setAlwaysLit(),
-					TileTransporter::new, TypeMachine.TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER));
+			() -> new BlockMachine<TileTransporter>(TileTransporter::new, TypeMachine.TRANSPORTER,
+					DeferredRegisters.TILE_TRANSPORTER));
+
 	public static final RegistryObject<Block> BLOCK_SPACETIME_ACCELERATOR = registerBlock(
 			TypeMachine.SPACETIME_ACCELERATOR.id(),
-			() -> new BlockMachine<TileSpacetimeAccelerator>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setHasFacing(false).setCanBeWaterlogged(),
-					TileSpacetimeAccelerator::new, TypeMachine.SPACETIME_ACCELERATOR,
-					DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
+					TypeMachine.SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR));
+
 	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
 			() -> new BlockCustomGlass(0.3F, 0.3F));
+
 	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
+
 	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
+
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),
 			TypeMatterNetworkCable.values());
+
 	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(TypeMachine.CHUNKLOADER.id(),
-			() -> new BlockMachine<TileChunkloader>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-							.redstoneConnectivity(),
-					TileChunkloader::new, TypeMachine.CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER));
+			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new, TypeMachine.CHUNKLOADER,
+					DeferredRegisters.TILE_CHUNKLOADER));
+
 	public static final RegistryObject<Block> BLOCK_MATTER_ANALYZER = registerBlock(TypeMachine.MATTER_ANALYZER.id(),
-			() -> new BlockMachine<TileMatterAnalyzer>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setCanBeLit().setCanBeWaterlogged(),
-					TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER));
+			() -> new BlockMachine<TileMatterAnalyzer>(TileMatterAnalyzer::new, TypeMachine.MATTER_ANALYZER,
+					DeferredRegisters.TILE_MATTER_ANALYZER));
+
 	public static final RegistryObject<Block> BLOCK_PATTERN_STORAGE = registerBlock(TypeMachine.PATTERN_STORAGE.id(),
-			() -> new BlockMachine<TilePatternStorage>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-							.redstoneConnectivity().setCanBeWaterlogged(),
-					TilePatternStorage::new, TypeMachine.PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE));
+			() -> new BlockMachine<TilePatternStorage>(TilePatternStorage::new, TypeMachine.PATTERN_STORAGE,
+					DeferredRegisters.TILE_PATTERN_STORAGE));
+
 	public static final RegistryObject<Block> BLOCK_PATTERN_MONITOR = registerBlock(TypeMachine.PATTERN_MONITOR.id(),
-			() -> new BlockMachine<TilePatternMonitor>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-							.setCanBeLit().setHasFacing(true).setCanBeWaterlogged(),
-					TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR));
+			() -> new BlockMachine<TilePatternMonitor>(TilePatternMonitor::new, TypeMachine.PATTERN_MONITOR,
+					DeferredRegisters.TILE_PATTERN_MONITOR));
+
 	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(
-			TypeMachine.MATTER_REPLICATOR.id(),
-			() -> new BlockMachine<TileMatterReplicator>(
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-							.setCanBeLit().setCanBeWaterlogged(),
-					TileMatterReplicator::new, TypeMachine.MATTER_REPLICATOR,
-					DeferredRegisters.TILE_MATTER_REPLICATOR));
+			TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockMachine<TileMatterReplicator>(TileMatterReplicator::new,
+					TypeMachine.MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR));
 
 	/* ITEMS */
 

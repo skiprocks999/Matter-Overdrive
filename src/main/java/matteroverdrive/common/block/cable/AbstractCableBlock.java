@@ -86,7 +86,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 		
 		center = Block.box(bottom, bottom, bottom, top, top, top);
 		
-		registerDefaultState(stateDefinition.any()
+		registerDefaultState(getStateDefinition().any()
 				.setValue(OverdriveBlockStates.CABLE_UP, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.IGNORED)
 				.setValue(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.IGNORED)

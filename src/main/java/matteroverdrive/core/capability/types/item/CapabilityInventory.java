@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
@@ -99,7 +99,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			changed = true;
 		}
 		if (changed) {
-			initialFacing = initialState.getValue(BlockStateProperties.FACING);
+			initialFacing = initialState.getValue(GenericEntityBlock.FACING);
 			refreshCapability();
 		}
 		return this;

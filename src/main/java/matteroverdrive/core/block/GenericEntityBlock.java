@@ -23,11 +23,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 public abstract class GenericEntityBlock extends BaseEntityBlock {
 
+	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+	
 	protected GenericEntityBlock(OverdriveBlockProperties properties) {
 		super(properties);
 		
@@ -40,7 +43,7 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			defaultState.setValue(BlockStateProperties.LIT, false);
 		}
 		if(stateProperties.hasFacing()) {
-			defaultState.setValue(BlockStateProperties.FACING, Direction.NORTH);
+			defaultState.setValue(FACING, Direction.NORTH);
 		}
 		if(stateProperties.isOmniDirectional()) {
 			defaultState.setValue(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.NONE);
@@ -59,7 +62,7 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			builder.add(BlockStateProperties.LIT);
 		}
 		if(stateProperties.hasFacing()) {
-			builder.add(BlockStateProperties.FACING);
+			builder.add(FACING);
 		}
 		if(stateProperties.isOmniDirectional()) {
 			builder.add(OverdriveBlockStates.VERTICAL_FACING);
@@ -87,7 +90,7 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 				}
 				superState = superState.setValue(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.fromDirection(vertical));
 			} 
-			superState = superState.setValue(BlockStateProperties.FACING, context.getHorizontalDirection().getOpposite());
+			superState = superState.setValue(FACING, context.getHorizontalDirection().getOpposite());
 		}
 		return superState;
 	}
@@ -109,16 +112,16 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		if (state.hasProperty(BlockStateProperties.FACING)) {
-			return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
+		if (state.hasProperty(FACING)) {
+			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 		}
 		return super.rotate(state, rot);
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		if (state.hasProperty(BlockStateProperties.FACING)) {
-			return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.FACING)));
+		if (state.hasProperty(FACING)) {
+			return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 		}
 		return super.mirror(state, mirrorIn);
 	}
@@ -136,8 +139,8 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	@Override
 	public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean moving) {
 		super.onRemove(oldState, level, pos, newState, moving);
-		if (!level.isClientSide && newState.hasProperty(BlockStateProperties.FACING)
-				&& oldState.getValue(BlockStateProperties.FACING) != newState.getValue(BlockStateProperties.FACING)) {
+		if (!level.isClientSide && newState.hasProperty(FACING)
+				&& oldState.getValue(FACING) != newState.getValue(FACING)) {
 			BlockEntity entity = level.getBlockEntity(pos);
 			if (entity != null && entity instanceof GenericTile tile) {
 				tile.refreshCapabilities();
