@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.ChargerBlockPos;
+import matteroverdrive.core.block.GenericEntityBlock;
+import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -144,14 +145,14 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	public BlockAndroidChargerChild() {
 		super(BlockBehaviour.Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL)
 				.isRedstoneConductor((a, b, c) -> false).noOcclusion(), false);
-		registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.FACING, Direction.NORTH).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
+		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
 				.setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 	
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(BlockStateProperties.FACING);
+		builder.add(GenericEntityBlock.FACING);
 		builder.add(OverdriveBlockStates.CHARGER_POS);
 		builder.add(BlockStateProperties.WATERLOGGED);
 	}
@@ -160,14 +161,14 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context)
-				.setValue(BlockStateProperties.FACING, context.getHorizontalDirection().getOpposite())
+				.setValue(GenericEntityBlock.FACING, context.getHorizontalDirection().getOpposite())
 				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
 				.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		Direction facing = state.getValue(BlockStateProperties.FACING);
+		Direction facing = state.getValue(GenericEntityBlock.FACING);
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		switch(loc) {
 		case MIDDLE:
@@ -199,7 +200,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-		return DeferredRegisters.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
+		return BlockRegistry.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
 	}
 
 	@Override
@@ -300,7 +301,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
-		if (state.hasProperty(BlockStateProperties.FACING)) {
+		if (state.hasProperty(GenericEntityBlock.FACING)) {
 			ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 			BlockPos first;
 			BlockPos second;
@@ -312,19 +313,19 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 				second = pos.offset(0, 1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(BlockStateProperties.FACING, rot.rotate(firstState.getValue(BlockStateProperties.FACING))), 3);
-				level.setBlock(second, secondState.setValue(BlockStateProperties.FACING, rot.rotate(secondState.getValue(BlockStateProperties.FACING))), 3);
+				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING, rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING, rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
 				break;
 			case TOP:
 				first = pos.offset(0, -2, 0);
 				second = pos.offset(0, -1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(BlockStateProperties.FACING, rot.rotate(firstState.getValue(BlockStateProperties.FACING))), 3);
-				level.setBlock(second, secondState.setValue(BlockStateProperties.FACING, rot.rotate(secondState.getValue(BlockStateProperties.FACING))), 3);
+				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING, rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING, rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
 				break;
 			}
-			return state.setValue(BlockStateProperties.FACING, rot.rotate(state.getValue(BlockStateProperties.FACING)));
+			return state.setValue(GenericEntityBlock.FACING, rot.rotate(state.getValue(GenericEntityBlock.FACING)));
 		}
 		return super.rotate(state, level, pos, rot);
 	}

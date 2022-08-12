@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -17,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -77,7 +77,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			changed = true;
 		}
 		if (changed) {
-			initialFacing = initialState.getValue(BlockStateProperties.FACING);
+			initialFacing = initialState.getValue(GenericEntityBlock.FACING);
 			refreshCapability();
 		}
 		return this;

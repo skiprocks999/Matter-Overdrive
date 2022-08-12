@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Vector3f;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
@@ -33,6 +32,8 @@ import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +97,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public ItemStack outputItem = ItemStack.EMPTY;
 	
 	public TileMatterReplicator(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_REPLICATOR.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_REPLICATOR.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
 				.setValidator(getValidator()));
@@ -243,7 +244,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		
 		if(roll() < getCurrentFailure(false) / progToFloat) {
 			if(dustEmpty) {
-				ItemStack newDust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
+				ItemStack newDust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 				UtilsNbt.writeMatterVal(newDust, currRecipeValue);
 				inv.setStackInSlot(3, newDust.copy());
 			} else {
@@ -635,7 +636,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
 		return (index, stack, cap) -> index == 0 && stack.getItem() instanceof ItemPatternDrive drive && drive.isFused(stack)
-				|| index == 1 && UtilsItem.compareItems(stack.getItem(), DeferredRegisters.ITEM_TRITANIUM_PLATE.get())
+				|| index == 1 && UtilsItem.compareItems(stack.getItem(), ItemRegistry.ITEM_TRITANIUM_PLATE.get())
 				|| index == 4 && UtilsCapability.hasEnergyCap(stack)
 				|| index == 5 && UtilsCapability.hasMatterCap(stack)
 				|| index > 5 && stack.getItem() instanceof ItemUpgrade;

@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,11 +38,21 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 		this.blockEntityType = entity;
 	}
 
+	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
+		super(type.properties, supplier);
+		this.type = type;
+		this.blockEntityType = entity;
+	}
+
+	
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		if (type.hasCustomAABB) {
+			if(type.singleShape) {
+				return type.omniShape;
+			} 
 			OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
-			Direction facing = state.getValue(BlockStateProperties.FACING);
+			Direction facing = state.getValue(FACING);
 			if(stateProperties.isOmniDirectional()) {
 				VerticalFacing vertical = state.getValue(OverdriveBlockStates.VERTICAL_FACING);
 				if(vertical.mapped != null) {

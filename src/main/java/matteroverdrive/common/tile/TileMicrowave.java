@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMicrowave;
@@ -11,6 +10,7 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -50,7 +50,7 @@ public class TileMicrowave extends GenericSoundTile {
 	private SmokingRecipe cachedRecipe;
 
 	public TileMicrowave(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MICROWAVE.get(), pos, state);
+		super(TileRegistry.TILE_MICROWAVE.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },

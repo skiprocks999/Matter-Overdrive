@@ -1,12 +1,12 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryChunkloader;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
@@ -26,7 +26,7 @@ public class TileChunkloader extends GenericUpgradableTile {
 	public CapabilityEnergyStorage clientEnergy;
 	
 	public TileChunkloader(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_CHUNKLOADER.get(), pos, state);
+		super(TileRegistry.TILE_CHUNKLOADER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setEnergySlots(1).setUpgrades(4).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryChunkloader.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this));

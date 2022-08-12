@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import matteroverdrive.DeferredRegisters;
+import matteroverdrive.registry.ParticleRegistry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -72,7 +72,7 @@ public class ParticleOptionReplicator extends ParticleType<ParticleOptionReplica
 
 	@Override
 	public ParticleType<ParticleOptionReplicator> getType() {
-		return DeferredRegisters.PARTICLE_REPLICATOR.get();
+		return ParticleRegistry.PARTICLE_REPLICATOR.get();
 	}
 
 	@Override

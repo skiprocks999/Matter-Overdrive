@@ -1,12 +1,12 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryCharger;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +34,7 @@ public class TileCharger extends GenericUpgradableTile {
 	public CapabilityEnergyStorage clientEnergy;
 
 	public TileCharger(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_CHARGER.get(), pos, state);
+		super(TileRegistry.TILE_CHARGER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)

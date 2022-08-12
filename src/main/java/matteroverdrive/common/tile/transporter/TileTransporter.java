@@ -8,7 +8,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
@@ -25,6 +24,7 @@ import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.misc.EntityDataWrapper;
 import matteroverdrive.core.utils.misc.Scheduler;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -85,7 +85,7 @@ public class TileTransporter extends GenericSoundTile {
 	public CapabilityMatterStorage clientMatter;
 
 	public TileTransporter(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_TRANSPORTER.get(), pos, state);
+		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })

@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -10,6 +9,7 @@ import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -21,7 +21,7 @@ public class InventoryMatterAnalyzer extends GenericInventoryTile<TileMatterAnal
 	
 	public InventoryMatterAnalyzer(int id, Inventory playerinv, CapabilityInventory invcap,
 			ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_MATTER_ANALYZER.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_MATTER_ANALYZER.get(), id, playerinv, invcap, tilecoords);
 	}
 	
 	public InventoryMatterAnalyzer(int id, Inventory playerinv) {

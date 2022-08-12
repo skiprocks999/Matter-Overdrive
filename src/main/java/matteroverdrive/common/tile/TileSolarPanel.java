@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.core.capability.types.CapabilityType;
@@ -8,6 +7,7 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +28,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	public CapabilityEnergyStorage clientEnergy;
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_SOLAR_PANEL.get(), pos, state);
+		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)

@@ -2,7 +2,6 @@ package matteroverdrive.common.tile.matter_network;
 
 import javax.annotation.Nullable;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
@@ -19,6 +18,7 @@ import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -60,7 +60,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public ItemStack clientScannedItem = ItemStack.EMPTY;
 	
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_ANALYZER.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_ANALYZER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES)
 				.setValidator(getValidator()));

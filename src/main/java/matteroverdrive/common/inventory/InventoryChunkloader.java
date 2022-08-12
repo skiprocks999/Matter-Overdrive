@@ -1,12 +1,12 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -16,7 +16,7 @@ public class InventoryChunkloader extends GenericInventoryTile<TileChunkloader> 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.POWER_STORAGE };
 
 	public InventoryChunkloader(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_CHUNKLOADER.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_CHUNKLOADER.get(), id, playerinv, invcap, tilecoords);
 	}
 	
 	public InventoryChunkloader(int id, Inventory playerinv) {

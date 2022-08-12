@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -8,6 +7,7 @@ import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;
 import matteroverdrive.core.inventory.slot.SlotMatterCharging;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -18,7 +18,7 @@ public class InventorySpacetimeAccelerator extends GenericInventoryTile<TileSpac
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MATTER_STORAGE, UpgradeType.RANGE };
 	
 	public InventorySpacetimeAccelerator(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_SPACETIME_ACCELERATOR.get(), id, playerinv, invcap, tilecoords);
 	}
 	
 	public InventorySpacetimeAccelerator(int id, Inventory playerinv) {

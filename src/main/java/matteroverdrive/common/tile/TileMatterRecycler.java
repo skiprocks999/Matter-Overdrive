@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
@@ -12,6 +11,8 @@ import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -46,7 +47,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	public CapabilityEnergyStorage clientEnergy;
 
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_RECYCLER.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
@@ -84,7 +85,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 							if (currProgress >= OPERATING_TIME) {
 								currProgress = 0;
 								if (output.isEmpty()) {
-									ItemStack refinedDust = new ItemStack(DeferredRegisters.ITEM_MATTER_DUST.get(), 1);
+									ItemStack refinedDust = new ItemStack(ItemRegistry.ITEM_MATTER_DUST.get(), 1);
 									UtilsNbt.writeMatterVal(refinedDust, value);
 									inv.setStackInSlot(1, refinedDust.copy());
 								} else {

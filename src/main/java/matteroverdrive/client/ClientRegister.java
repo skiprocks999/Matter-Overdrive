@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
@@ -31,6 +30,10 @@ import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.utils.UtilsNbt;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.MenuRegistry;
+import matteroverdrive.registry.ParticleRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -75,22 +78,22 @@ public class ClientRegister {
 	
 	public static void init() {
 
-		MenuScreens.register(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
-		MenuScreens.register(DeferredRegisters.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
-		MenuScreens.register(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
-		MenuScreens.register(DeferredRegisters.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
-		MenuScreens.register(DeferredRegisters.MENU_CHARGER.get(), ScreenCharger::new);
-		MenuScreens.register(DeferredRegisters.MENU_MICROWAVE.get(), ScreenMicrowave::new);
-		MenuScreens.register(DeferredRegisters.MENU_INSCRIBER.get(), ScreenInscriber::new);
-		MenuScreens.register(DeferredRegisters.MENU_TRANSPORTER.get(), ScreenTransporter::new);
-		MenuScreens.register(DeferredRegisters.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
-		MenuScreens.register(DeferredRegisters.MENU_CHUNKLOADER.get(), ScreenChunkloader::new);
-		MenuScreens.register(DeferredRegisters.MENU_PATTERN_STORAGE.get(), ScreenPatternStorage::new);
-		MenuScreens.register(DeferredRegisters.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
-		MenuScreens.register(DeferredRegisters.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
-		MenuScreens.register(DeferredRegisters.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
+		MenuScreens.register(MenuRegistry.MENU_TRITANIUM_CRATE.get(), ScreenTritaniumCrate::new);
+		MenuScreens.register(MenuRegistry.MENU_SOLAR_PANEL.get(), ScreenSolarPanel::new);
+		MenuScreens.register(MenuRegistry.MENU_MATTER_DECOMPOSER.get(), ScreenMatterDecomposer::new);
+		MenuScreens.register(MenuRegistry.MENU_MATTER_RECYCLER.get(), ScreenMatterRecycler::new);
+		MenuScreens.register(MenuRegistry.MENU_CHARGER.get(), ScreenCharger::new);
+		MenuScreens.register(MenuRegistry.MENU_MICROWAVE.get(), ScreenMicrowave::new);
+		MenuScreens.register(MenuRegistry.MENU_INSCRIBER.get(), ScreenInscriber::new);
+		MenuScreens.register(MenuRegistry.MENU_TRANSPORTER.get(), ScreenTransporter::new);
+		MenuScreens.register(MenuRegistry.MENU_SPACETIME_ACCELERATOR.get(), ScreenSpacetimeAccelerator::new);
+		MenuScreens.register(MenuRegistry.MENU_CHUNKLOADER.get(), ScreenChunkloader::new);
+		MenuScreens.register(MenuRegistry.MENU_PATTERN_STORAGE.get(), ScreenPatternStorage::new);
+		MenuScreens.register(MenuRegistry.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
+		MenuScreens.register(MenuRegistry.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
+		MenuScreens.register(MenuRegistry.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
 
-		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
+		ItemProperties.register(ItemRegistry.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
 					return stack.getCapability(CapabilityEnergy.ENERGY).map(m -> {
 						double chargeRatio = m.getMaxEnergyStored() > 0
@@ -110,7 +113,7 @@ public class ClientRegister {
 						return 0;
 					}).orElse(0);
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY).get(), CHARGE,
+		ItemProperties.register(ItemRegistry.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY).get(), CHARGE,
 				(stack, world, entity, call) -> {
 					return stack.getCapability(CapabilityEnergy.ENERGY).map(m -> {
 						double chargeRatio = m.getMaxEnergyStored() > 0
@@ -130,7 +133,7 @@ public class ClientRegister {
 						return 0;
 					}).orElse(0);
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR).get(), CHARGE, (stack, world, entity, call) -> {
+		ItemProperties.register(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR).get(), CHARGE, (stack, world, entity, call) -> {
 			return stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).map(m -> {
 				double chargeRatio = m.getMaxMatterStored() > 0 ? m.getMatterStored() / m.getMaxMatterStored() : 0.0;
 				if (chargeRatio >= 0.875) {
@@ -153,14 +156,14 @@ public class ClientRegister {
 				return 0;
 			}).orElse(0);
 		});
-		ItemProperties.register(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE,
+		ItemProperties.register(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE.get(), CHARGE,
 				(stack, world, entity, call) -> {
 					if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 						return 1;
 					}
 					return 0;
 				});
-		ItemProperties.register(DeferredRegisters.ITEM_MATTER_SCANNER.get(), CHARGE, 
+		ItemProperties.register(ItemRegistry.ITEM_MATTER_SCANNER.get(), CHARGE, 
 				(stack, world, entity, call) -> {
 					if(stack.hasTag() && stack.getTag().getBoolean("on")) {
 						return 1;
@@ -175,10 +178,10 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CHARGER.get(), RendererCharger::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_INSCRIBER.get(), RendererInscriber::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MATTER_REPLICATOR.get(), RendererMatterReplicator::new);
+		event.registerBlockEntityRenderer(TileRegistry.TILE_CHARGER.get(), RendererCharger::new);
+		event.registerBlockEntityRenderer(TileRegistry.TILE_INSCRIBER.get(), RendererInscriber::new);
+		event.registerBlockEntityRenderer(TileRegistry.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
+		event.registerBlockEntityRenderer(TileRegistry.TILE_MATTER_REPLICATOR.get(), RendererMatterReplicator::new);
 		
 	}
 
@@ -190,9 +193,9 @@ public class ClientRegister {
 
 	@SubscribeEvent
 	public static void registerParticles(RegisterParticleProvidersEvent event) {
-		event.register(DeferredRegisters.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
-		event.register(DeferredRegisters.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
-		event.register(DeferredRegisters.PARTICLE_VENT.get(), ParticleVent.Factory::new);
+		event.register(ParticleRegistry.PARTICLE_REPLICATOR.get(), ParticleReplicator.Factory::new);
+		event.register(ParticleRegistry.PARTICLE_SHOCKWAVE.get(), ParticleShockwave.Factory::new);
+		event.register(ParticleRegistry.PARTICLE_VENT.get(), ParticleVent.Factory::new);
 	}
 
 	private static ResourceLocation blockModel(String path) {

@@ -3,7 +3,6 @@ package matteroverdrive.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.GenericEntityBlock;
@@ -12,6 +11,7 @@ import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,7 +42,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(BlockStateProperties.FACING)) {
+		switch (state.getValue(FACING)) {
 		case NORTH, SOUTH:
 			return NS;
 		case EAST, WEST:
@@ -93,7 +92,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pPos, BlockState pState) {
 		ItemStack stack = super.getCloneItemStack(level, pPos, pState);
-		level.getBlockEntity(pPos, DeferredRegisters.TILE_TRITANIUM_CRATE.get()).ifPresent(crate -> {
+		level.getBlockEntity(pPos, TileRegistry.TILE_TRITANIUM_CRATE.get()).ifPresent(crate -> {
 			crate.saveToItem(stack);
 		});
 		return stack;

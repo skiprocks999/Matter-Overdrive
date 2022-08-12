@@ -1,7 +1,7 @@
 package matteroverdrive.core.datagen.client;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
+import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +18,7 @@ public class OverdriveBlockModelsProvider extends BlockModelProvider {
 
 	@Override
 	protected void registerModels() {
-		blockTopBottom(DeferredRegisters.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
+		blockTopBottom(BlockRegistry.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
 				"block/transporter/transporter_bottom", "block/transporter/transporter_side");
 	}
 

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
@@ -16,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -78,7 +78,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			changed = true;
 		}
 		if (changed) {
-			initialFacing = initialState.getValue(BlockStateProperties.FACING);
+			initialFacing = initialState.getValue(GenericEntityBlock.FACING);
 			refreshCapability();
 		}
 		return this;

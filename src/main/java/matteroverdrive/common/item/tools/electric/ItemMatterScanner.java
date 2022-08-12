@@ -3,7 +3,6 @@ package matteroverdrive.common.item.tools.electric;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.network.NetworkMatter;
@@ -16,6 +15,7 @@ import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsWorld;
+import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -373,7 +373,7 @@ public class ItemMatterScanner extends ItemElectric {
 	}
 	
 	private void spawnMatterDust (Level world, ItemStack stack, BlockPos blockLoc) {
-		ItemStack dust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
+		ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 		dust.getOrCreateTag().putDouble(UtilsNbt.STORED_MATTER_VAL, stack.getTag().getDouble(UtilsNbt.STORED_MATTER_VAL));
 		world.addFreshEntity(new ItemEntity(world, blockLoc.getX() + 0.5, blockLoc.getY() + 0.5, blockLoc.getZ() + 0.5, dust));
 	}

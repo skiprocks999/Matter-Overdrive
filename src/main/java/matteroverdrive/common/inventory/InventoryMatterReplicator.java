@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -11,6 +10,8 @@ import matteroverdrive.core.inventory.slot.SlotRestricted;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -23,7 +24,7 @@ public class InventoryMatterReplicator extends GenericInventoryTile<TileMatterRe
 	
 	public InventoryMatterReplicator(int id, Inventory playerinv, CapabilityInventory invcap,
 			ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_MATTER_REPLICATOR.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_MATTER_REPLICATOR.get(), id, playerinv, invcap, tilecoords);
 	}
 	
 	public InventoryMatterReplicator(int id, Inventory playerinv) {
@@ -33,9 +34,9 @@ public class InventoryMatterReplicator extends GenericInventoryTile<TileMatterRe
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 75, new int[] { 0 }, SlotType.BIG, IconType.PATTERN_DRIVE_DARK,
-				DeferredRegisters.ITEM_PATTERN_DRIVE.get()));
+				ItemRegistry.ITEM_PATTERN_DRIVE.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 78, new int[] { 2 }, SlotType.BIG, IconType.SHIELDING_DARK,
-				DeferredRegisters.ITEM_LEAD_PLATE.get()));
+				ItemRegistry.ITEM_LEAD_PLATE.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, IconType.NONE));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 94, 48, new int[] { 0 }, SlotType.BIG,
 				IconType.MATTER_DUST_DARK));

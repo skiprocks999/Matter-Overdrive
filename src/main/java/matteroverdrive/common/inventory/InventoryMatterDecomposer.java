@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -12,6 +11,7 @@ import matteroverdrive.core.inventory.slot.SlotRestricted;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -24,7 +24,7 @@ public class InventoryMatterDecomposer extends GenericInventoryTile<TileMatterDe
 
 	public InventoryMatterDecomposer(int id, Inventory playerinv, CapabilityInventory invcap,
 			ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_MATTER_DECOMPOSER.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_MATTER_DECOMPOSER.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	public InventoryMatterDecomposer(int id, Inventory playerinv) {

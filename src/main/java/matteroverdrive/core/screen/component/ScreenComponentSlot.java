@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -85,7 +85,7 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 			List<FormattedCharSequence> components = new ArrayList<>();
 			for (UpgradeType upgrade : upgradeSlotTypes) {
 				components.add(Component.translatable(
-						DeferredRegisters.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
+						ItemRegistry.ITEM_UPGRADES.get(upgrade).get().getDescriptionId())
 								.getVisualOrderText());
 			}
 			gui.renderTooltip(stack, components, mouseX, mouseY);
