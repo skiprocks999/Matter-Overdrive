@@ -1,6 +1,5 @@
 package matteroverdrive.core.datagen.server;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileMatterDecomposer;
@@ -16,6 +15,8 @@ import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterRe
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.datagen.utils.AbstractLootTableProvider;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -31,25 +32,25 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	@Override
 	protected void addTables() {
 
-		for (RegistryObject<Block> crate : DeferredRegisters.BLOCK_TRITANIUM_CRATES.getAll()) {
-			this.<TileTritaniumCrate>addITable(crate, DeferredRegisters.TILE_TRITANIUM_CRATE);
+		for (RegistryObject<Block> crate : BlockRegistry.BLOCK_TRITANIUM_CRATES.getAll()) {
+			this.<TileTritaniumCrate>addITable(crate, TileRegistry.TILE_TRITANIUM_CRATE);
 		}
-		this.<TileSolarPanel>addIETable(DeferredRegisters.BLOCK_SOLAR_PANEL, DeferredRegisters.TILE_SOLAR_PANEL);
-		this.<TileMatterDecomposer>addIEMTable(DeferredRegisters.BLOCK_MATTER_DECOMPOSER,
-				DeferredRegisters.TILE_MATTER_DECOMPOSER);
-		this.<TileMatterRecycler>addIETable(DeferredRegisters.BLOCK_MATTER_RECYCLER,
-				DeferredRegisters.TILE_MATTER_RECYCLER);
-		this.<TileCharger>addIETable(DeferredRegisters.BLOCK_CHARGER, DeferredRegisters.TILE_CHARGER);
-		this.<TileMicrowave>addIETable(DeferredRegisters.BLOCK_MICROWAVE, DeferredRegisters.TILE_MICROWAVE);
-		this.<TileTransporter>addIETable(DeferredRegisters.BLOCK_TRANSPORTER, DeferredRegisters.TILE_TRANSPORTER);
-		this.<TileSpacetimeAccelerator>addIEMTable(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, DeferredRegisters.TILE_SPACETIME_ACCELERATOR);
-		this.<TileChunkloader>addIEMTable(DeferredRegisters.BLOCK_CHUNKLOADER, DeferredRegisters.TILE_CHUNKLOADER);
-		this.<TileMatterAnalyzer>addIETable(DeferredRegisters.BLOCK_MATTER_ANALYZER, DeferredRegisters.TILE_MATTER_ANALYZER);
-		this.<TilePatternStorage>addIETable(DeferredRegisters.BLOCK_PATTERN_STORAGE, DeferredRegisters.TILE_PATTERN_STORAGE);
-		this.<TilePatternMonitor>addITable(DeferredRegisters.BLOCK_PATTERN_MONITOR, DeferredRegisters.TILE_PATTERN_MONITOR);
-		this.<TileMatterReplicator>addIEMTable(DeferredRegisters.BLOCK_MATTER_REPLICATOR, DeferredRegisters.TILE_MATTER_REPLICATOR);
+		this.<TileSolarPanel>addIETable(BlockRegistry.BLOCK_SOLAR_PANEL, TileRegistry.TILE_SOLAR_PANEL);
+		this.<TileMatterDecomposer>addIEMTable(BlockRegistry.BLOCK_MATTER_DECOMPOSER,
+				TileRegistry.TILE_MATTER_DECOMPOSER);
+		this.<TileMatterRecycler>addIETable(BlockRegistry.BLOCK_MATTER_RECYCLER,
+				TileRegistry.TILE_MATTER_RECYCLER);
+		this.<TileCharger>addIETable(BlockRegistry.BLOCK_CHARGER, TileRegistry.TILE_CHARGER);
+		this.<TileMicrowave>addIETable(BlockRegistry.BLOCK_MICROWAVE, TileRegistry.TILE_MICROWAVE);
+		this.<TileTransporter>addIETable(BlockRegistry.BLOCK_TRANSPORTER, TileRegistry.TILE_TRANSPORTER);
+		this.<TileSpacetimeAccelerator>addIEMTable(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, TileRegistry.TILE_SPACETIME_ACCELERATOR);
+		this.<TileChunkloader>addIEMTable(BlockRegistry.BLOCK_CHUNKLOADER, TileRegistry.TILE_CHUNKLOADER);
+		this.<TileMatterAnalyzer>addIETable(BlockRegistry.BLOCK_MATTER_ANALYZER, TileRegistry.TILE_MATTER_ANALYZER);
+		this.<TilePatternStorage>addIETable(BlockRegistry.BLOCK_PATTERN_STORAGE, TileRegistry.TILE_PATTERN_STORAGE);
+		this.<TilePatternMonitor>addITable(BlockRegistry.BLOCK_PATTERN_MONITOR, TileRegistry.TILE_PATTERN_MONITOR);
+		this.<TileMatterReplicator>addIEMTable(BlockRegistry.BLOCK_MATTER_REPLICATOR, TileRegistry.TILE_MATTER_REPLICATOR);
 
-		this.addSilkTouchOnlyTable(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS);
+		this.addSilkTouchOnlyTable(BlockRegistry.BLOCK_INDUSTRIAL_GLASS);
 	}
 
 	private <T extends GenericTile> void addITable(RegistryObject<Block> reg,

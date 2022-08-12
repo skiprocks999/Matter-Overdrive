@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
@@ -12,6 +11,7 @@ import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.UtilsWorld;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +47,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public CapabilityMatterStorage clientMatter;
 	
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
+		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));

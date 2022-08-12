@@ -21,6 +21,13 @@ import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.registry.EntityRegistry;
+import matteroverdrive.registry.FluidRegistry;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.MenuRegistry;
+import matteroverdrive.registry.ParticleRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,13 +55,13 @@ public class MatterOverdrive {
 		OverdriveBlockProperties.Defaults.init();
 		SoundRegister.SOUNDS.register(bus);
 		OverdriveBlockStates.init();
-		DeferredRegisters.BLOCKS.register(bus);
-		DeferredRegisters.ITEMS.register(bus);
-		DeferredRegisters.TILES.register(bus);
-		DeferredRegisters.CONTAINERS.register(bus);
-		DeferredRegisters.FLUIDS.register(bus);
-		DeferredRegisters.ENTITIES.register(bus);
-		DeferredRegisters.PARTICLES.register(bus);
+		BlockRegistry.BLOCKS.register(bus);
+		ItemRegistry.ITEMS.register(bus);
+		TileRegistry.TILES.register(bus);
+		MenuRegistry.MENUS.register(bus);
+		FluidRegistry.FLUIDS.register(bus);
+		EntityRegistry.ENTITIES.register(bus);
+		ParticleRegistry.PARTICLES.register(bus);
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
 
@@ -82,8 +89,8 @@ public class MatterOverdrive {
 
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
-		ItemBlockRenderTypes.setRenderLayer(DeferredRegisters.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
-		for (RegistryObject<Block> block : DeferredRegisters.BLOCKS.getEntries()) {
+		ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
+		for (RegistryObject<Block> block : BlockRegistry.BLOCKS.getEntries()) {
 			if (block.get() instanceof BlockCustomGlass) {
 				ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout());
 			}

@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import com.mojang.math.Vector3f;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternStorage;
@@ -29,6 +28,7 @@ import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsParticle;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -67,7 +67,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_PATTERN_STORAGE.get(), pos, state);
+		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
 				.setValidator(getValidator()));
 		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));

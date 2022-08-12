@@ -1,11 +1,11 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +15,7 @@ public class TileTritaniumCrate extends GenericTile {
 	public static final int SIZE = 54;
 
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_TRITANIUM_CRATE.get(), pos, state);
+		super(TileRegistry.TILE_TRITANIUM_CRATE.get(), pos, state);
 
 		addCapability(new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
 		setMenuProvider(

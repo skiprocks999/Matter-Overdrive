@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import matteroverdrive.DeferredRegisters;
+import matteroverdrive.registry.ParticleRegistry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -77,7 +77,7 @@ public class ParticleOptionShockwave extends ParticleType<ParticleOptionShockwav
 
 	@Override
 	public ParticleType<?> getType() {
-		return DeferredRegisters.PARTICLE_SHOCKWAVE.get();
+		return ParticleRegistry.PARTICLE_SHOCKWAVE.get();
 	}
 
 	@Override

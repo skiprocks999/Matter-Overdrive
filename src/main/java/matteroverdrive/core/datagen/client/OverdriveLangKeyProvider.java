@@ -1,8 +1,7 @@
 package matteroverdrive.core.datagen.client;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.References;
-import matteroverdrive.common.block.type.BlockColors;
+import matteroverdrive.common.block.OverdriveBlockColors;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
@@ -12,6 +11,8 @@ import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
+import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -36,80 +37,80 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 
-			addItem(DeferredRegisters.ITEM_RAW_MATTER_DUST, "Raw Matter Dust");
-			addItem(DeferredRegisters.ITEM_MATTER_DUST, "Matter Dust");
-			addItem(DeferredRegisters.ITEM_BASE_UPGRADE, "Upgrade Shell");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.SPEED), "Speed Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.MATTER_STORAGE), "Matter Storage Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.POWER), "Power Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.POWER_STORAGE), "Power Storage Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.FAIL_SAFE), "Fail-Safe Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.HYPER_SPEED), "Hyper Speed Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.RANGE), "Range Upgrade");
-			addItem(DeferredRegisters.ITEM_UPGRADES.get(UpgradeType.MUFFLER), "Muffler Upgrade");
+			addItem(ItemRegistry.ITEM_RAW_MATTER_DUST, "Raw Matter Dust");
+			addItem(ItemRegistry.ITEM_MATTER_DUST, "Matter Dust");
+			addItem(ItemRegistry.ITEM_BASE_UPGRADE, "Upgrade Shell");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.SPEED), "Speed Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.MATTER_STORAGE), "Matter Storage Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.POWER), "Power Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.POWER_STORAGE), "Power Storage Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.FAIL_SAFE), "Fail-Safe Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.HYPER_SPEED), "Hyper Speed Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.RANGE), "Range Upgrade");
+			addItem(ItemRegistry.ITEM_UPGRADES.get(UpgradeType.MUFFLER), "Muffler Upgrade");
 
-			addItem(DeferredRegisters.ITEM_ION_SNIPER, "Ion Sniper");
-			addItem(DeferredRegisters.ITEM_PHASER_RIFLE, "Phaser Rifle");
-			addItem(DeferredRegisters.ITEM_PHASER, "Phaser");
-			addItem(DeferredRegisters.ITEM_PLASMA_SHOTGUN, "Plasma Shotgun");
-			addItem(DeferredRegisters.ITEM_OMNI_TOOL, "Omni Tool");
+			addItem(ItemRegistry.ITEM_ION_SNIPER, "Ion Sniper");
+			addItem(ItemRegistry.ITEM_PHASER_RIFLE, "Phaser Rifle");
+			addItem(ItemRegistry.ITEM_PHASER, "Phaser");
+			addItem(ItemRegistry.ITEM_PLASMA_SHOTGUN, "Plasma Shotgun");
+			addItem(ItemRegistry.ITEM_OMNI_TOOL, "Omni Tool");
 
-			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.REGULAR), "Battery");
-			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "High-Capacity Battery");
-			addItem(DeferredRegisters.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.REGULAR), "Battery");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "High-Capacity Battery");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Creative Battery");
 
-			addItem(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Matter Container");
-			addItem(DeferredRegisters.ITEM_MATTER_CONTAINERS.get(ContainerType.CREATIVE), "Creative Matter Container");
+			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Matter Container");
+			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.CREATIVE), "Creative Matter Container");
 
-			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER1), "Isolinear Circuit Mk1");
-			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Isolinear Circuit Mk2");
-			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3), "Isolinear Circuit Mk3");
-			addItem(DeferredRegisters.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER1), "Isolinear Circuit Mk1");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Isolinear Circuit Mk2");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3), "Isolinear Circuit Mk3");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Isolinear Circuit Mk4");
 
-			addItem(DeferredRegisters.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
-			addItem(DeferredRegisters.ITEM_PATTERN_DRIVE, "Pattern Drive");
-			addItem(DeferredRegisters.ITEM_MATTER_SCANNER, "Matter Scanner");
+			addItem(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Location Flashdrive");
+			addItem(ItemRegistry.ITEM_PATTERN_DRIVE, "Pattern Drive");
+			addItem(ItemRegistry.ITEM_MATTER_SCANNER, "Matter Scanner");
 
-			addItem(DeferredRegisters.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
-			addItem(DeferredRegisters.ITEM_LEAD_PLATE, "Lead Plating");
+			addItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
+			addItem(ItemRegistry.ITEM_LEAD_PLATE, "Lead Plating");
 
-			for (BlockColors color : BlockColors.values()) {
+			for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
-				addBlock(DeferredRegisters.BLOCK_COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
-				addBlock(DeferredRegisters.BLOCK_FLOOR_TILE.get(color), name + " Floor Tile");
-				addBlock(DeferredRegisters.BLOCK_FLOOR_TILES.get(color), name + " Floor Tiles");
+				addBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color), name + " Tritanium Plating");
+				addBlock(BlockRegistry.BLOCK_FLOOR_TILE.get(color), name + " Floor Tile");
+				addBlock(BlockRegistry.BLOCK_FLOOR_TILES.get(color), name + " Floor Tiles");
 			}
-			addBlock(DeferredRegisters.BLOCK_REGULAR_TRITANIUM_PLATING, "Tritanium Plating");
+			addBlock(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING, "Tritanium Plating");
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				String name = getNameFromEnum(color.toString());
 				if (name.equals("Reg")) {
-					addBlock(DeferredRegisters.BLOCK_TRITANIUM_CRATES.get(color), "Tritanium Crate");
+					addBlock(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), "Tritanium Crate");
 				} else {
-					addBlock(DeferredRegisters.BLOCK_TRITANIUM_CRATES.get(color), name + " Tritanium Crate");
+					addBlock(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), name + " Tritanium Crate");
 				}
 
 			}
-			addBlock(DeferredRegisters.BLOCK_INDUSTRIAL_GLASS, "Industrial Glass");
-			addBlock(DeferredRegisters.BLOCK_VENT_OPEN, "Vent");
-			addBlock(DeferredRegisters.BLOCK_VENT_CLOSED, "Vent");
-			addBlock(DeferredRegisters.BLOCK_SOLAR_PANEL, "Solar Panel");
-			addBlock(DeferredRegisters.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
-			addBlock(DeferredRegisters.BLOCK_MATTER_RECYCLER, "Matter Recycler");
-			addBlock(DeferredRegisters.BLOCK_CHARGER_CHILD, "Charger Child");
-			addBlock(DeferredRegisters.BLOCK_CHARGER, "Android Charger");
-			addBlock(DeferredRegisters.BLOCK_MICROWAVE, "Microwave");
-			addBlock(DeferredRegisters.BLOCK_INSCRIBER, "Inscriber");
-			addBlock(DeferredRegisters.BLOCK_TRANSPORTER, "Transporter");
-			addBlock(DeferredRegisters.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
-			addBlock(DeferredRegisters.BLOCK_CHUNKLOADER, "Chunkloader");
-			addBlock(DeferredRegisters.BLOCK_MATTER_ANALYZER, "Matter Analyzer");
-			addBlock(DeferredRegisters.BLOCK_PATTERN_STORAGE, "Pattern Storage");
-			addBlock(DeferredRegisters.BLOCK_PATTERN_MONITOR, "Pattern Monitor");
-			addBlock(DeferredRegisters.BLOCK_MATTER_REPLICATOR, "Matter Replicator");
+			addBlock(BlockRegistry.BLOCK_INDUSTRIAL_GLASS, "Industrial Glass");
+			addBlock(BlockRegistry.BLOCK_VENT_OPEN, "Vent");
+			addBlock(BlockRegistry.BLOCK_VENT_CLOSED, "Vent");
+			addBlock(BlockRegistry.BLOCK_SOLAR_PANEL, "Solar Panel");
+			addBlock(BlockRegistry.BLOCK_MATTER_DECOMPOSER, "Matter Decomposer");
+			addBlock(BlockRegistry.BLOCK_MATTER_RECYCLER, "Matter Recycler");
+			addBlock(BlockRegistry.BLOCK_CHARGER_CHILD, "Charger Child");
+			addBlock(BlockRegistry.BLOCK_CHARGER, "Android Charger");
+			addBlock(BlockRegistry.BLOCK_MICROWAVE, "Microwave");
+			addBlock(BlockRegistry.BLOCK_INSCRIBER, "Inscriber");
+			addBlock(BlockRegistry.BLOCK_TRANSPORTER, "Transporter");
+			addBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, "Spacetime Accelerator");
+			addBlock(BlockRegistry.BLOCK_CHUNKLOADER, "Chunkloader");
+			addBlock(BlockRegistry.BLOCK_MATTER_ANALYZER, "Matter Analyzer");
+			addBlock(BlockRegistry.BLOCK_PATTERN_STORAGE, "Pattern Storage");
+			addBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, "Pattern Monitor");
+			addBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR, "Matter Replicator");
 
-			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
-			addBlock(DeferredRegisters.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
-			addBlock(DeferredRegisters.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
+			addBlock(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
+			addBlock(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
+			addBlock(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
 			
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");

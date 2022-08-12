@@ -1,11 +1,11 @@
 package matteroverdrive.common.block.charger;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,8 +45,8 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 		super.setPlacedBy(world, pos, state, placer, stack);
 		if(!world.isClientSide) {
 			Direction facing = state.getValue(FACING);
-			BlockState middle = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
-			BlockState top = DeferredRegisters.BLOCK_CHARGER_CHILD.get().defaultBlockState();
+			BlockState middle = BlockRegistry.BLOCK_CHARGER_CHILD.get().defaultBlockState();
+			BlockState top = BlockRegistry.BLOCK_CHARGER_CHILD.get().defaultBlockState();
 			middle = middle.setValue(FACING, facing);
 			middle = middle.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.MIDDLE);
 			top = top.setValue(FACING, facing);

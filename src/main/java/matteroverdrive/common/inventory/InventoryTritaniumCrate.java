@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -9,6 +8,7 @@ import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	}
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {
-		super(DeferredRegisters.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
+		super(MenuRegistry.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
 	}
 
 	@Override

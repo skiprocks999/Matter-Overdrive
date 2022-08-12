@@ -1,12 +1,12 @@
 package matteroverdrive.core.utils;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.misc.Scheduler;
+import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -59,11 +59,11 @@ public class UtilsMatter {
 	}
 
 	public static boolean isRefinedDust(ItemStack item) {
-		return UtilsItem.compareItems(item.getItem(), DeferredRegisters.ITEM_MATTER_DUST.get());
+		return UtilsItem.compareItems(item.getItem(), ItemRegistry.ITEM_MATTER_DUST.get());
 	}
 
 	public static boolean isRawDust(ItemStack item) {
-		return UtilsItem.compareItems(item.getItem(), DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
+		return UtilsItem.compareItems(item.getItem(), ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 	}
 
 	public static boolean isMatterReceiver(BlockEntity acceptor) {

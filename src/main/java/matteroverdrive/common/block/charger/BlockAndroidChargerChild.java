@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.BlockOverdrive;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.ChargerBlockPos;
 import matteroverdrive.core.block.GenericEntityBlock;
+import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -200,7 +200,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-		return DeferredRegisters.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
+		return BlockRegistry.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
 	}
 
 	@Override

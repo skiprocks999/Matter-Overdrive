@@ -3,10 +3,10 @@ package matteroverdrive.common.inventory;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileCharger;
 
@@ -16,7 +16,7 @@ public class InventoryCharger extends GenericInventoryTile<TileCharger> {
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.RANGE };
 
 	public InventoryCharger(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_CHARGER.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_CHARGER.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	public InventoryCharger(int id, Inventory playerinv) {

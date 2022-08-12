@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileMatterRecycler;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -10,6 +9,8 @@ import matteroverdrive.core.inventory.slot.SlotRestricted;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -20,7 +21,7 @@ public class InventoryMatterRecycler extends GenericInventoryTile<TileMatterRecy
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MUFFLER };
 
 	public InventoryMatterRecycler(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_MATTER_RECYCLER.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_MATTER_RECYCLER.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	public InventoryMatterRecycler(int id, Inventory playerinv) {
@@ -31,7 +32,7 @@ public class InventoryMatterRecycler extends GenericInventoryTile<TileMatterRecy
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, IconType.MATTER_DUST_DARK,
-				DeferredRegisters.ITEM_RAW_MATTER_DUST.get()));
+				ItemRegistry.ITEM_RAW_MATTER_DUST.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, IconType.NONE));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 81, 55, new int[] { 2 }, UPGRADES));

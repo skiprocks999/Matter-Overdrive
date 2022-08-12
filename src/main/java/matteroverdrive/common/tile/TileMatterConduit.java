@@ -7,7 +7,6 @@ import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.network.NetworkMatterConduit;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
@@ -16,6 +15,7 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.utils.UtilsMatter;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 	private ArrayList<ICapabilityMatterStorage> handler = new ArrayList<>();
 
 	public TileMatterConduit(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_CONDUIT.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_CONDUIT.get(), pos, state);
 		for (Direction dir : Direction.values()) {
 			handler.add(new ICapabilityMatterStorage() {
 

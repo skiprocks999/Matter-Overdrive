@@ -1,6 +1,6 @@
 package matteroverdrive.common.tab;
 
-import matteroverdrive.DeferredRegisters;
+import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,7 +12,7 @@ public class ItemGroupMatterOverdriveMain extends CreativeModeTab {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(DeferredRegisters.BLOCK_TRANSPORTER.get());
+		return new ItemStack(BlockRegistry.BLOCK_TRANSPORTER.get());
 	}
 
 }

@@ -3,12 +3,12 @@ package matteroverdrive.common.tile.matter_network;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
 	
 	public TileMatterNetworkCable(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_NETWORK_CABLE.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_NETWORK_CABLE.get(), pos, state);
 	}
 
 	@Override

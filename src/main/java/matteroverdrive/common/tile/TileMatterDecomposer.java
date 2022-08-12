@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
@@ -17,6 +16,8 @@ import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +59,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	public CapabilityMatterStorage clientMatter;
 
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MATTER_DECOMPOSER.get(), pos, state);
+		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
 
 		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
@@ -106,7 +107,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 							if (currProgress >= OPERATING_TIME) {
 								if (roll() < getCurrentFailure(false)) {
 									if (output.isEmpty()) {
-										ItemStack dust = new ItemStack(DeferredRegisters.ITEM_RAW_MATTER_DUST.get());
+										ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 										UtilsNbt.writeMatterVal(dust, currRecipeValue);
 										inv.setStackInSlot(1, dust.copy());
 									} else {

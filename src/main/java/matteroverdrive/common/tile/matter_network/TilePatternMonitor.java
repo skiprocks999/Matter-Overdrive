@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.block.type.TypeMachine;
@@ -26,6 +25,7 @@ import matteroverdrive.core.packet.type.serverbound.PacketQueueReplication;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +41,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	private HashMap<BlockPos, MatterReplicatorDataWrapper> clientMatterReplicatorData = new HashMap<>();
 	
 	public TilePatternMonitor(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_PATTERN_MONITOR.get(), pos, state);
+		super(TileRegistry.TILE_PATTERN_MONITOR.get(), pos, state);
 		addCapability(new CapabilityInventory(0, false, false));
 		setMenuProvider(
 				new SimpleMenuProvider(

@@ -1,6 +1,5 @@
 package matteroverdrive.common.inventory;
 
-import matteroverdrive.DeferredRegisters;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -11,6 +10,7 @@ import matteroverdrive.core.inventory.slot.SlotRestricted;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
+import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -21,7 +21,7 @@ public class InventoryMicrowave extends GenericInventoryTile<TileMicrowave> {
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MUFFLER };
 
 	public InventoryMicrowave(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-		super(DeferredRegisters.MENU_MICROWAVE.get(), id, playerinv, invcap, tilecoords);
+		super(MenuRegistry.MENU_MICROWAVE.get(), id, playerinv, invcap, tilecoords);
 	}
 
 	public InventoryMicrowave(int id, Inventory playerinv) {
