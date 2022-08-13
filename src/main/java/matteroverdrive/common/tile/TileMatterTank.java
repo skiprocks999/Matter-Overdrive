@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-//TODO Simple Tile implementation for Mic 
+//TODO Simple Tile implementation for Mic (ContainedShadow)
 
 public class TileMatterTank extends GenericTile {
 

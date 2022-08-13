@@ -21,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileInscriber extends GenericSoundTile {
@@ -71,65 +70,66 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			List<ItemStack> inputs = inv.getInputs();
-			ItemStack input1 = inputs.get(0);
-			ItemStack input2 = inputs.get(1);
-			if (!input1.isEmpty() && !input2.isEmpty()) {
-				boolean matched = false;
-				if (cachedRecipe == null) {
-					Level world = getLevel();
-					for (InscriberRecipe recipe : world.getRecipeManager()
-							.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get())) {
-						if (recipe.matchesRecipe(inv, 0)) {
-							cachedRecipe = recipe;
-							matched = true;
-						}
-					}
-				} else {
-					matched = cachedRecipe.matchesRecipe(inv, 0);
-				}
-				if (matched) {
-					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					ItemStack output = inv.getOutputs().get(0);
-					ItemStack result = cachedRecipe.getResultItem();
-					if (energy.getEnergyStored() >= getCurrentPowerUsage(false)
-							&& (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
-									&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-						running = true;
-						currProgress += getCurrentSpeed(false);
-						energy.removeEnergy((int) getCurrentPowerUsage(false));
-						if (currProgress >= OPERATING_TIME) {
-							currProgress = 0;
-							if (output.isEmpty()) {
-								inv.setStackInSlot(2, result.copy());
-							} else {
-								output.grow(result.getCount());
-							}
-							List<CountableIngredient> ings = cachedRecipe.getCountedIngredients();
-							List<Integer> slotOrientation = cachedRecipe.getItemArrangment(0);
-							for (int i = 0; i < inputs.size(); i++) {
-								inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
-							}
-							;
-						}
-						setChanged();
-					} else {
-						running = false;
-					}
-				} else {
-					running = false;
-					currProgress = 0;
-				}
-			} else {
-				running = false;
-				currProgress = 0;
-			}
-		} else {
+		if (!canRun()) {
 			running = false;
 			currProgress = 0;
+			return;
+		} 
+		UtilsTile.drainElectricSlot(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		List<ItemStack> inputs = inv.getInputs();
+		ItemStack input1 = inputs.get(0);
+		ItemStack input2 = inputs.get(1);
+		if (input1.isEmpty() || input2.isEmpty()) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		boolean matched = false;
+		if (cachedRecipe == null) {
+			for (InscriberRecipe recipe : getRecipes()) {
+				if (recipe.matchesRecipe(inv, 0)) {
+					cachedRecipe = recipe;
+					matched = true;
+				}
+			}
+		} else {
+			matched = cachedRecipe.matchesRecipe(inv, 0);
+		}
+		if (!matched) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			running = false;
+			return;
+		}
+		ItemStack output = inv.getOutputs().get(0);
+		ItemStack result = cachedRecipe.getResultItem();
+		if ((output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
+						&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+			running = true;
+			currProgress += getCurrentSpeed(false);
+			energy.removeEnergy((int) getCurrentPowerUsage(false));
+			if (currProgress >= OPERATING_TIME) {
+				currProgress = 0;
+				if (output.isEmpty()) {
+					inv.setStackInSlot(2, result.copy());
+				} else {
+					output.grow(result.getCount());
+				}
+				List<CountableIngredient> ings = cachedRecipe.getCountedIngredients();
+				List<Integer> slotOrientation = cachedRecipe.getItemArrangment(0);
+				for (int i = 0; i < inputs.size(); i++) {
+					inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
+				}
+				
+			}
+			setChanged();
+		} else {
+			running = false;
 		}
 	}
 
@@ -282,6 +282,11 @@ public class TileInscriber extends GenericSoundTile {
 	@Override
 	public double getProcessingTime() {
 		return OPERATING_TIME;
+	}
+	
+	private List<InscriberRecipe> getRecipes(){
+		return getLevel().getRecipeManager()
+				.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get());
 	}
 
 }

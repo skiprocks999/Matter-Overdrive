@@ -66,32 +66,36 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	
 	@Override
 	public void tickServer() {
-		if(canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			UtilsTile.drainMatterSlot(this);
-			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-			if(energy.getEnergyStored() >= getCurrentPowerUsage(false)) {
-				CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
-				if(matter.getMatterStored() >= getCurrentMatterUsage(false)) {
-					running = true;
-					energy.removeEnergy((int) getCurrentPowerUsage(false));
-					matter.removeMatter(getCurrentMatterUsage(false));
-					if(ticks % 10 == 0) {
-						updateSurroundingTileMultipliers(getCurrentSpeed(false));
-					}
-					setChanged();
-				} else {
-					resetRadiusMultipliers();
-					running = false;
-				}
-			} else {
-				resetRadiusMultipliers();
-				running = false;
-			}
-		} else {
+		if(!canRun()) {
 			resetRadiusMultipliers();
 			running = false;
+			return;
 		}
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		
+		
+		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			resetRadiusMultipliers();
+			running = false;
+			return;
+		} 
+		
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		if(matter.getMatterStored() < getCurrentMatterUsage(false)) {
+			resetRadiusMultipliers();
+			running = false;
+			return;
+		} 
+		
+		running = true;
+		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		matter.removeMatter(getCurrentMatterUsage(false));
+		if(ticks % 10 == 0) {
+			updateSurroundingTileMultipliers(getCurrentSpeed(false));
+		}
+		setChanged();
 	}
 	
 	@Override
