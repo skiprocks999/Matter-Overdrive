@@ -103,13 +103,18 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			currProgress = 0;
 			return;
 		} 
+		
+		
 		Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
 				: MatterRegister.INSTANCE.getServerMatterValue(input);
-		if(matterVal == null || !(UtilsMatter.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
-			running = false;
-			currRecipeValue = 0;
-			currProgress = 0;
-			return;
+		if(matterVal == null && UtilsMatter.isRefinedDust(input)) {
+			matterVal = UtilsNbt.readMatterVal(input);
+			if(matterVal <= 0) {
+				running = false;
+				currRecipeValue = 0;
+				currProgress = 0;
+				return;
+			}
 		}
 		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
 		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {

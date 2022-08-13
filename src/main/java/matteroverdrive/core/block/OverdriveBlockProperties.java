@@ -13,6 +13,7 @@ public class OverdriveBlockProperties extends BlockBehaviour.Properties {
 
 	private boolean canBeWaterlogged = false;
 	private boolean canBeLit = false;
+	private boolean litOnPlacement = false;
 	private boolean alwaysLit = false;
 	//best solution to work with current system :L
 	private boolean hasFacing = false;
@@ -32,6 +33,7 @@ public class OverdriveBlockProperties extends BlockBehaviour.Properties {
 		this((BlockBehaviour.Properties)properties);
 
 		canBeLit = properties.canBeLit;
+		litOnPlacement = properties.litOnPlacement;
 		canBeWaterlogged = properties.canBeWaterlogged;
 		hasFacing = properties.hasFacing;
 		omniDir = properties.omniDir;
@@ -62,8 +64,9 @@ public class OverdriveBlockProperties extends BlockBehaviour.Properties {
 		return this;
 	}
 	
-	public OverdriveBlockProperties setCanBeLit() {
+	public OverdriveBlockProperties setCanBeLit(boolean litOnPlacement) {
 		canBeLit = true;
+		this.litOnPlacement = litOnPlacement;
 		return this;
 	}
 
@@ -89,6 +92,10 @@ public class OverdriveBlockProperties extends BlockBehaviour.Properties {
 
 	public boolean canBeLit() {
 		return canBeLit;
+	}
+	
+	public boolean isLitOnPlacement() {
+		return litOnPlacement;
 	}
 	
 	public boolean hasFacing() {

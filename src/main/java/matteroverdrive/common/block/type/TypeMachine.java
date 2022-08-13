@@ -11,15 +11,15 @@ public enum TypeMachine {
 
 	SOLAR_PANEL(Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-					.setCanBeWaterlogged()),
+					.setCanBeWaterlogged().setHasFacing(false)),
 	MATTER_DECOMPOSER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-			.redstoneConnectivity().setCanBeLit().setHasFacing(false)),
+			.redstoneConnectivity().setCanBeLit(false).setHasFacing(false)),
 	MATTER_RECYCLER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-			.setCanBeLit().setHasFacing(false)),
+			.setCanBeLit(false).setHasFacing(false)),
 	CHARGER(new VoxelShape[] { Shapes.block(), Shapes.block(), VoxelShapes.CHARGER_N, VoxelShapes.CHARGER_S,
 			VoxelShapes.CHARGER_E, VoxelShapes.CHARGER_W },
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-					.setHasFacing(true).setCanBeWaterlogged()),
+					.setHasFacing(false).setCanBeWaterlogged()),
 	MICROWAVE(
 			new VoxelShape[] { Shapes.block(), Shapes.block(),
 					Shapes.box(0.0625D, 0.0D, 0.125D, 0.9375D, 0.625D, 0.875D),
@@ -27,28 +27,28 @@ public enum TypeMachine {
 					Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D),
 					Shapes.box(0.125D, 0.0D, 0.0625D, 0.875D, 0.625D, 0.9375D) },
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-					.setCanBeLit().setHasFacing(false).setCanBeWaterlogged()),
+					.setCanBeLit(false).setHasFacing(false).setCanBeWaterlogged()),
 	INSCRIBER(Shapes.box(0.015625D, 0.0D, 0.015625D, 0.984375D, 0.96875D, 0.984375D),
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 					.setHasFacing(false)),
 	TRANSPORTER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-			.setAlwaysLit()),
+			.setAlwaysLit().setHasFacing(false)),
 	SPACETIME_ACCELERATOR(Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D),
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 					.setHasFacing(false).setCanBeWaterlogged()),
 	CHUNKLOADER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()),
 	MATTER_ANALYZER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-			.setCanBeLit().setCanBeWaterlogged().setHasFacing(false)),
+			.setCanBeLit(false).setCanBeWaterlogged().setHasFacing(false)),
 	PATTERN_STORAGE(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 			.setCanBeWaterlogged().setHasFacing(false)),
 	PATTERN_MONITOR(new VoxelShape[] { Shapes.box(0.0D, 0.6875D, 0.0D, 1.0D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D), Shapes.box(0.0D, 0.0D, 0.6875D, 1.0D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.3125D), Shapes.box(0.6875D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.0D, 0.3125D, 1.0D, 1.0D) },
-			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).setCanBeLit()
+			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).setCanBeLit(false)
 					.setHasFacing(true).setCanBeWaterlogged()),
 	MATTER_REPLICATOR(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
-			.redstoneConnectivity().setCanBeLit().setCanBeWaterlogged().setHasFacing(false));
+			.redstoneConnectivity().setCanBeLit(false).setCanBeWaterlogged().setHasFacing(false));
 
 	// DUNSEW
 	public final OverdriveBlockProperties properties;
