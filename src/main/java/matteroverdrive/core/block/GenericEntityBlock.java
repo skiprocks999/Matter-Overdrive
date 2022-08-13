@@ -77,6 +77,9 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
 			superState = superState.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 		}
+		if(stateProperties.canBeLit()) {
+			superState = superState.setValue(BlockStateProperties.LIT, stateProperties.isAlwaysLit() || stateProperties.isLitOnPlacement());
+		}
 		if(stateProperties.hasFacing()) {
 			if(stateProperties.isOmniDirectional()) {
 				float viewRot = context.getPlayer().getViewXRot(1.0F);

@@ -49,6 +49,15 @@ public class BlockRegistry {
 
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
 	
+	/**
+	 * REGISTRY ORDER NOTES:
+	 * 
+	 * Register decoration blocks, then crates, then machines
+	 */
+	
+	
+	//Decoration Blocks
+	
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
@@ -73,6 +82,21 @@ public class BlockRegistry {
 							((OverdriveBlockColors) color).color, false),
 					((OverdriveBlockColors) color).color),
 			OverdriveBlockColors.values());
+
+	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
+			() -> new BlockCustomGlass(0.3F, 0.3F));
+
+	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
+
+	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+					false));
+	
+	
+	//Crates
+	
 	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(crate -> registerBlock(
 			((CrateColors) crate).id(),
 			() -> new BlockTritaniumCrate(OverdriveBlockProperties
@@ -80,6 +104,9 @@ public class BlockRegistry {
 					.setCanBeWaterlogged().setHasFacing(false))),
 			TileTritaniumCrate.CrateColors.values());
 
+	
+	//Machines
+	
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.SOLAR_PANEL.id(),
 			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.SOLAR_PANEL,
 					TileRegistry.TILE_SOLAR_PANEL));
@@ -121,17 +148,6 @@ public class BlockRegistry {
 			TypeMachine.SPACETIME_ACCELERATOR.id(),
 			() -> new BlockMachine<TileSpacetimeAccelerator>(TileSpacetimeAccelerator::new,
 					TypeMachine.SPACETIME_ACCELERATOR, TileRegistry.TILE_SPACETIME_ACCELERATOR));
-
-	public static final RegistryObject<Block> BLOCK_INDUSTRIAL_GLASS = registerBlock("industrial_glass",
-			() -> new BlockCustomGlass(0.3F, 0.3F));
-
-	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-					false));
-
-	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-					false));
 
 	public static final BulkRegister<Block> BLOCK_MATTER_NETWORK_CABLES = bulkBlock(
 			cable -> registerBlock(cable.id(), () -> new BlockMatterNetworkCable((TypeMatterNetworkCable) cable)),

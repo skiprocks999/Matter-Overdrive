@@ -39,9 +39,7 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	}
 
 	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
-		super(type.properties, supplier);
-		this.type = type;
-		this.blockEntityType = entity;
+		this(type.properties, supplier, type, entity);
 	}
 
 	
