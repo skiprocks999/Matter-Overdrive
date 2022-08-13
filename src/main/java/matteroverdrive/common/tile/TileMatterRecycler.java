@@ -207,12 +207,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
 	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
+	
 	@Override
 	public double getDefaultSpeed() {
 		return DEFAULT_SPEED;

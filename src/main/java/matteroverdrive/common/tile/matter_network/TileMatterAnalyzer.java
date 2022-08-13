@@ -276,11 +276,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	}
 
 	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
-	@Override
 	public boolean canConnectToFace(Direction face) {
 		Direction facing = getFacing();
 		Direction back = Direction.NORTH;

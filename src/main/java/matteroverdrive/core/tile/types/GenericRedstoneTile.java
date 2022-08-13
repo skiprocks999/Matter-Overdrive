@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
+public class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
 
 	protected int currRedstoneMode;
 
@@ -46,6 +46,11 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 	public boolean canRun() {
 		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
 		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
+	}
+	
+	@Override
+	public int getMaxMode() {
+		return 2;
 	}
 
 }

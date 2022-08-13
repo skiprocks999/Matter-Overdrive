@@ -218,11 +218,6 @@ public class TileInscriber extends GenericSoundTile {
 	}
 
 	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
-	@Override
 	public double getDefaultSpeed() {
 		return DEFAULT_SPEED;
 	}

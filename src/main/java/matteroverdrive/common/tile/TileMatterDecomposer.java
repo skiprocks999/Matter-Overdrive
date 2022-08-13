@@ -240,11 +240,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
-	@Override
 	public boolean shouldPlaySound() {
 		return clientRunning && !clientMuffled;
 	}

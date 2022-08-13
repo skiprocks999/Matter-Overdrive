@@ -106,73 +106,84 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			UtilsTile.drainMatterSlot(this);
-			if (cooldownTimer >= COOLDOWN) {
-				List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class,
-						new AABB(getBlockPos().above()));
-				if (entitiesAbove.size() > 0 && currDestination >= 0) {
-					TransporterLocationWrapper curLoc = LOCATIONS[currDestination];
-					Pair<Boolean, Integer> validData = validDestination(curLoc);
-					if (validData.getFirst()) {
-						CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-						CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
-						if (energy.getEnergyStored() >= getCurrentPowerUsage(false) && matter.getMatterStored() >= getCurrentMatterUsage(false)) {
-							int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
-									: entitiesAbove.size();
-							energy.removeEnergy((int) getCurrentPowerUsage(false));
-							running = true;
-							currProgress += getCurrentSpeed(false);
-							currEntities.clear();
-							currEntities.addAll(entitiesAbove.subList(0, size));
-							if (currProgress >= BUILD_UP_TIME) {
-								cooldownTimer = 0;
-								matter.removeMatter(getCurrentMatterUsage(false));
-								currProgress = 0;
-								double x = curLoc.getDestination().getX() + 0.5;
-								double y = curLoc.getDestination().getY();
-								double z = curLoc.getDestination().getZ() + 0.5;
-								for (Entity entity : currEntities) {
-									ServerLevel dim = handleDimensionChange(entity);
-									entity.teleportToWithTicket(x, y, z);
-									entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
-										h.setTransporterTimer(70);
-									});
-									level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
-										h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
-									});
-									Scheduler.schedule(1, () -> {
-										dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-									}, false);
-								}
-							}
-							setChanged();
-						} else {
-							running = false;
-							currEntities.clear();
-						}
-					} else {
-						running = false;
-						currProgress = 0;
-						currEntities.clear();
-					}
-				} else {
-					running = false;
-					currProgress = 0;
-					currEntities.clear();
-				}
-			} else {
-				cooldownTimer++;
-				running = false;
-				currProgress = 0;
-				currEntities.clear();
-			}
-		} else {
+		if (!canRun()) {
 			running = false;
 			currProgress = 0;
 			currEntities.clear();
+			return;
 		}
+		
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
+		if (cooldownTimer < COOLDOWN) {
+			cooldownTimer++;
+			running = false;
+			currProgress = 0;
+			currEntities.clear();
+			return;
+		} 
+		
+		List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
+		
+		if (entitiesAbove.size() <= 0 || currDestination < 0) {
+			running = false;
+			currProgress = 0;
+			currEntities.clear();
+			return;
+		} 
+		TransporterLocationWrapper curLoc = LOCATIONS[currDestination];
+		Pair<Boolean, Integer> validData = validDestination(curLoc);
+		
+		if (!validData.getFirst()) {
+			running = false;
+			currProgress = 0;
+			currEntities.clear();
+			return;
+		} 
+		
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			running = false;
+			currEntities.clear();
+			return;
+		}
+		
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		if (matter.getMatterStored() < getCurrentMatterUsage(false)) {
+			running = false;
+			currEntities.clear();
+			return;
+		} 
+		
+		int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
+				: entitiesAbove.size();
+		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		running = true;
+		currProgress += getCurrentSpeed(false);
+		currEntities.clear();
+		currEntities.addAll(entitiesAbove.subList(0, size));
+		if (currProgress >= BUILD_UP_TIME) {
+			cooldownTimer = 0;
+			matter.removeMatter(getCurrentMatterUsage(false));
+			currProgress = 0;
+			double x = curLoc.getDestination().getX() + 0.5;
+			double y = curLoc.getDestination().getY();
+			double z = curLoc.getDestination().getZ() + 0.5;
+			for (Entity entity : currEntities) {
+				ServerLevel dim = handleDimensionChange(entity);
+				entity.teleportToWithTicket(x, y, z);
+				entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
+					h.setTransporterTimer(70);
+				});
+				level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
+					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
+				});
+				Scheduler.schedule(1, () -> {
+					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+				}, false);
+			}
+		}
+		setChanged();
 	}
 
 	@Override
@@ -311,11 +322,6 @@ public class TileTransporter extends GenericSoundTile {
 	@Override
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
-	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
 	}
 
 	@Override

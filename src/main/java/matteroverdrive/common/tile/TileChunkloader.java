@@ -63,11 +63,6 @@ public class TileChunkloader extends GenericUpgradableTile {
 		clientSAMultipler = tag.getDouble("sabonus");
 		clientRunning = tag.getBoolean("running");
 	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
-	}
 	
 	@Override
 	public double getDefaultPowerStorage() {

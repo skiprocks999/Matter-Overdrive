@@ -78,11 +78,6 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	}
 
 	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
-	@Override
 	public double getDefaultPowerStorage() {
 		return ENERGY_STORAGE;
 	}
