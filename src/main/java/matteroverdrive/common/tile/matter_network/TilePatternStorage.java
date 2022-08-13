@@ -192,11 +192,6 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		return new PatternStorageDataWrapper(wrappers, tag.getBoolean("ispowered"));
 	}
 	
-	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-	
 	public boolean containsItem(Item item) {
 		for(ItemStack stack : getDrives()) {
 			if(stack.getItem() instanceof ItemPatternDrive drive) {

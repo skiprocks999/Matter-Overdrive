@@ -69,64 +69,79 @@ public class TileMicrowave extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			ItemStack input = inv.getInputs().get(0);
-			if (!input.isEmpty()) {
-				boolean matched = false;
-				if (cachedRecipe == null) {
-					Level world = getLevel();
-					for (SmokingRecipe recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.SMOKING)) {
-						if (recipe.getIngredients().get(0).test(input)) {
-							cachedRecipe = recipe;
-							matched = true;
-						}
-					}
-				} else {
-					matched = cachedRecipe.getIngredients().get(0).test(input);
-				}
-				if (matched) {
-					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					ItemStack output = inv.getOutputs().get(0);
-					ItemStack result = cachedRecipe.getResultItem();
-					if (energy.getEnergyStored() >= getCurrentPowerUsage(false)
-							&& (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
-									&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-						running = true;
-						currProgress += getCurrentSpeed(false);
-						energy.removeEnergy((int) getCurrentPowerUsage(false));
-						if (currProgress >= OPERATING_TIME) {
-							currProgress = 0;
-							if (output.isEmpty()) {
-								inv.setStackInSlot(1, result.copy());
-							} else {
-								output.grow(result.getCount());
-							}
-							input.shrink(1);
-						}
-						setChanged();
-					} else {
-						running = false;
-					}
-				} else {
-					running = false;
-					currProgress = 0;
-				}
-			} else {
-				running = false;
-				currProgress = 0;
-			}
-		} else {
-			running = false;
-			currProgress = 0;
-		}
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if (currState && !running) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
 		} else if (!currState && running) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
+		if (!canRun()) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		UtilsTile.drainElectricSlot(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		ItemStack input = inv.getInputs().get(0);
+		if (input.isEmpty()) {
+			running = false;
+			currProgress = 0;
+			return;
+		}
+		
+		boolean matched = false;
+		if (cachedRecipe == null) {
+			Level world = getLevel();
+			for (SmokingRecipe recipe : world.getRecipeManager().getAllRecipesFor(RecipeType.SMOKING)) {
+				if (recipe.getIngredients().get(0).test(input)) {
+					cachedRecipe = recipe;
+					matched = true;
+				}
+			}
+		} else {
+			matched = cachedRecipe.getIngredients().get(0).test(input);
+		}
+		if (!matched) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			running = false;
+			return;
+		}
+		
+		ItemStack output = inv.getOutputs().get(0);
+		ItemStack result = cachedRecipe.getResultItem();
+		
+		if(!(output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
+				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+			running = false;
+			return;
+		}
+		
+		if (energy.getEnergyStored() >= getCurrentPowerUsage(false)
+				&& (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
+						&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+			
+		}
+		
+		running = true;
+		currProgress += getCurrentSpeed(false);
+		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		if (currProgress >= OPERATING_TIME) {
+			currProgress = 0;
+			if (output.isEmpty()) {
+				inv.setStackInSlot(1, result.copy());
+			} else {
+				output.grow(result.getCount());
+			}
+			input.shrink(1);
+		}
+		setChanged();
+		
 	}
 
 	@Override
@@ -208,11 +223,6 @@ public class TileMicrowave extends GenericSoundTile {
 	@Override
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
-	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
 	}
 
 	@Override

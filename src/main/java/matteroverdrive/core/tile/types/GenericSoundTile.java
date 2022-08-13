@@ -10,5 +10,7 @@ public abstract class GenericSoundTile extends GenericUpgradableTile implements 
 	protected GenericSoundTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
+	
+	
 
 }

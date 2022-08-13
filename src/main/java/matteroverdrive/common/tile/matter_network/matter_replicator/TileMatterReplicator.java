@@ -440,11 +440,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
 	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
-	}
 	
 	@Override
 	public double getDefaultSpeed() {

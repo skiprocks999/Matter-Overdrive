@@ -80,75 +80,81 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			UtilsTile.fillMatterSlot(this);
-			UtilsTile.outputMatter(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			ItemStack input = inv.getInputs().get(0);
-			if (!input.isEmpty()) {
-				Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
-						: MatterRegister.INSTANCE.getServerMatterValue(input);
-				if (matterVal != null || (UtilsMatter.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
-					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					if (energy.getEnergyStored() >= getCurrentPowerUsage(false)) {
-						currRecipeValue = matterVal.doubleValue();
-						currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
-								.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
-						CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);
-						boolean room = (storage.getMaxMatterStored() - storage.getMatterStored()) >= currRecipeValue;
-						ItemStack output = inv.getOutputs().get(0);
-						boolean outputRoom = output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
-								&& (output.getCount() + 1 <= output.getMaxStackSize()));
-						if (room && outputRoom) {
-							running = true;
-							currProgress += getCurrentSpeed(false);
-							energy.removeEnergy((int) getCurrentPowerUsage(false));
-							if (currProgress >= OPERATING_TIME) {
-								if (roll() < getCurrentFailure(false)) {
-									if (output.isEmpty()) {
-										ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
-										UtilsNbt.writeMatterVal(dust, currRecipeValue);
-										inv.setStackInSlot(1, dust.copy());
-									} else {
-										output.grow(1);
-									}
-									input.shrink(1);
-								} else {
-									storage.giveMatter(currRecipeValue);
-									input.shrink(1);
-								}
-								currProgress = 0;
-							}
-							setChanged();
-						} else {
-							running = false;
-						}
-					} else {
-						running = false;
-					}
-				} else {
-					running = false;
-					currRecipeValue = 0;
-					currProgress = 0;
-				}
-			} else {
-				running = false;
-				currRecipeValue = 0;
-				currProgress = 0;
-			}
-		} else {
-			currRecipeValue = 0;
-			running = false;
-			currProgress = 0;
-		}
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if (currState && !running) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
 		} else if (!currState && running) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
+		if (!canRun()) {
+			currRecipeValue = 0;
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.fillMatterSlot(this);
+		UtilsTile.outputMatter(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		ItemStack input = inv.getInputs().get(0);
+		if (input.isEmpty()) {
+			running = false;
+			currRecipeValue = 0;
+			currProgress = 0;
+			return;
+		} 
+		Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
+				: MatterRegister.INSTANCE.getServerMatterValue(input);
+		if(matterVal == null || !(UtilsMatter.isRefinedDust(input) && UtilsNbt.readMatterVal(input) > 0)) {
+			running = false;
+			currRecipeValue = 0;
+			currProgress = 0;
+			return;
+		}
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			running = false;
+			return;
+		}
+		
+		currRecipeValue = matterVal.doubleValue();
+		currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
+				.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
+		CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);
+		
+		if((storage.getMaxMatterStored() - storage.getMatterStored()) < currRecipeValue) {
+			running = false;
+			return;
+		}
 
+		ItemStack output = inv.getOutputs().get(0);
+		
+		if(!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
+				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
+			running = false;
+			return;
+		}
+		running = true;
+		currProgress += getCurrentSpeed(false);
+		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		if (currProgress >= OPERATING_TIME) {
+			if (roll() < getCurrentFailure(false)) {
+				if (output.isEmpty()) {
+					ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
+					UtilsNbt.writeMatterVal(dust, currRecipeValue);
+					inv.setStackInSlot(1, dust.copy());
+				} else {
+					output.grow(1);
+				}
+				input.shrink(1);
+			} else {
+				storage.giveMatter(currRecipeValue);
+				input.shrink(1);
+			}
+			currProgress = 0;
+		}
+		setChanged();
+		
 	}
 
 	@Override
@@ -231,11 +237,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		currFailureChance = additional.getFloat("failure");
 		usage = additional.getInt("usage");
 		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
 	}
 
 	@Override

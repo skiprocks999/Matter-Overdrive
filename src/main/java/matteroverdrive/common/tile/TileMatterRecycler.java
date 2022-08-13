@@ -66,58 +66,66 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			ItemStack input = inv.getInputs().get(0);
-			if (!input.isEmpty() && UtilsMatter.isRawDust(input)) {
-				double value = UtilsNbt.readMatterVal(input);
-				if (value > 0) {
-					CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-					if (energy.getEnergyStored() >= getCurrentPowerUsage(false)) {
-						ItemStack output = inv.getOutputs().get(0);
-						boolean outputRoom = output.isEmpty() || (output.getCount() < output.getMaxStackSize()
-								&& UtilsNbt.readMatterVal(output) == value);
-						if (outputRoom) {
-							running = true;
-							currProgress += getCurrentSpeed(false);
-							energy.removeEnergy((int) getCurrentPowerUsage(false));
-							if (currProgress >= OPERATING_TIME) {
-								currProgress = 0;
-								if (output.isEmpty()) {
-									ItemStack refinedDust = new ItemStack(ItemRegistry.ITEM_MATTER_DUST.get(), 1);
-									UtilsNbt.writeMatterVal(refinedDust, value);
-									inv.setStackInSlot(1, refinedDust.copy());
-								} else {
-									output.grow(1);
-								}
-								input.shrink(1);
-							}
-							setChanged();
-						} else {
-							running = false;
-						}
-					} else {
-						running = false;
-					}
-				} else {
-					running = false;
-					currProgress = 0;
-				}
-			} else {
-				running = false;
-				currProgress = 0;
-			}
-		} else {
-			running = false;
-			currProgress = 0;
-		}
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		if (currState && !running) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
 		} else if (!currState && running) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
+		
+		if (!canRun()) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		
+		UtilsTile.drainElectricSlot(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		ItemStack input = inv.getInputs().get(0);
+		
+		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		
+		double value = UtilsNbt.readMatterVal(input);
+		if (value <= 0) {
+			running = false;
+			currProgress = 0;
+			return;
+		} 
+		
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		
+		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+			running = false;
+			return;
+		} 
+		
+		ItemStack output = inv.getOutputs().get(0);
+		if (!(output.isEmpty() || (output.getCount() < output.getMaxStackSize()
+				&& UtilsNbt.readMatterVal(output) == value))) {
+			running = false;
+			return;
+		} 
+		
+		running = true;
+		currProgress += getCurrentSpeed(false);
+		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		if (currProgress >= OPERATING_TIME) {
+			currProgress = 0;
+			if (output.isEmpty()) {
+				ItemStack refinedDust = new ItemStack(ItemRegistry.ITEM_MATTER_DUST.get(), 1);
+				UtilsNbt.writeMatterVal(refinedDust, value);
+				inv.setStackInSlot(1, refinedDust.copy());
+			} else {
+				output.grow(1);
+			}
+			input.shrink(1);
+		}
+		setChanged();
+		
 	}
 
 	@Override
@@ -199,12 +207,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
 	}
-
-	@Override
-	public int getMaxMode() {
-		return 2;
-	}
-
+	
 	@Override
 	public double getDefaultSpeed() {
 		return DEFAULT_SPEED;
