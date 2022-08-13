@@ -107,8 +107,11 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		
 		Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
 				: MatterRegister.INSTANCE.getServerMatterValue(input);
-		if(matterVal == null && UtilsMatter.isRefinedDust(input)) {
-			matterVal = UtilsNbt.readMatterVal(input);
+		if(matterVal == null) {
+			matterVal = 0.0;
+			if(UtilsMatter.isRefinedDust(input)) {
+				matterVal = UtilsNbt.readMatterVal(input);
+			}
 			if(matterVal <= 0) {
 				running = false;
 				currRecipeValue = 0;
