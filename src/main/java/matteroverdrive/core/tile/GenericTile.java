@@ -1,5 +1,7 @@
 package matteroverdrive.core.tile;
 
+import javax.annotation.Nullable;
+
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
@@ -66,9 +68,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	}
 
 	@Override
+	//this is about as fast as I can get it without hard-coding if-elses which I don't want to do
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		for (IOverdriveCapability i : capabilities) {
-			if (i.matchesCapability(cap)) {
+			if (i != null && i.matchesCapability(cap)) {
 				return i.getCapability(cap, side);
 			}
 		}
@@ -88,6 +91,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		return capabilities[type.ordinal()] != null;
 	}
 
+	@Nullable
 	public <T extends IOverdriveCapability> T exposeCapability(CapabilityType type) {
 		return (T) capabilities[type.ordinal()];
 	}
@@ -96,13 +100,17 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void onLoad() {
 		super.onLoad();
 		for (IOverdriveCapability cap : capabilities) {
-			cap.onLoad(this);
+			if(cap != null) {
+				cap.onLoad(this);
+			}
 		}
 	}
 
 	public void refreshCapabilities() {
 		for (IOverdriveCapability cap : capabilities) {
-			cap.refreshCapability();
+			if(cap != null) {
+				cap.refreshCapability();
+			}
 		}
 	}
 
@@ -118,7 +126,9 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		for (IOverdriveCapability cap : capabilities) {
-			tag.put(cap.getSaveKey(), cap.serializeNBT());
+			if(cap != null) {
+				tag.put(cap.getSaveKey(), cap.serializeNBT());
+			}
 		}
 	}
 
@@ -126,7 +136,9 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void load(CompoundTag tag) {
 		super.load(tag);
 		for (IOverdriveCapability cap : capabilities) {
-			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
+			if(cap != null) {
+				cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
+			}
 		}
 	}
 
