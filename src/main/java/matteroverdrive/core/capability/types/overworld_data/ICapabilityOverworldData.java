@@ -2,7 +2,7 @@ package matteroverdrive.core.capability.types.overworld_data;
 
 import java.util.List;
 
-import matteroverdrive.common.tile.transporter.ActiveTransportDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
 
 public interface ICapabilityOverworldData {
 

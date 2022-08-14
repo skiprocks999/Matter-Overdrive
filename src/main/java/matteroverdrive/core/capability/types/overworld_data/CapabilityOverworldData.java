@@ -3,7 +3,7 @@ package matteroverdrive.core.capability.types.overworld_data;
 import java.util.ArrayList;
 import java.util.List;
 
-import matteroverdrive.common.tile.transporter.ActiveTransportDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

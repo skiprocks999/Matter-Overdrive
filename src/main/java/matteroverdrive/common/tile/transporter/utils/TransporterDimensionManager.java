@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile.transporter;
+package matteroverdrive.common.tile.transporter.utils;
 
 import java.util.function.Function;
 

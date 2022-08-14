@@ -1,11 +1,11 @@
 package matteroverdrive.core.utils;
 
 import matteroverdrive.common.block.cable.AbstractCableBlock;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.tile.TileMatterConduit;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.utils.misc.Scheduler;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -111,13 +111,13 @@ public class UtilsMatter {
 	}
 
 	private static void updateMatterCable(Level world, TileMatterConduit conduit) {
-		Scheduler.schedule(1, () -> {
+		ServerEventHandler.TASK_HANDLER.queueTask(() -> {
 			BlockState conduitState = conduit.getBlockState();
 			BlockPos conduitPos = conduit.getBlockPos();
 			BlockState updatedState = ((AbstractCableBlock)conduitState.getBlock()).handleConnectionUpdate(conduitState, conduitPos, world);
 			conduit.refreshNetworkIfChange();
 			world.setBlockAndUpdate(conduitPos, updatedState);
-		}, false);
+		});
 	}
 
 }

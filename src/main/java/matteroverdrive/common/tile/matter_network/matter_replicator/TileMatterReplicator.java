@@ -17,6 +17,8 @@ import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.SoundHandlerReplicator;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;

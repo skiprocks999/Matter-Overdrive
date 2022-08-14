@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile.transporter;
+package matteroverdrive.common.tile.transporter.utils;
 
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;

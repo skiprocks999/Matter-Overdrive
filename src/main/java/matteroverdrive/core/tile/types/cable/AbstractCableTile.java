@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile.cable;
+package matteroverdrive.core.tile.types.cable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.cable.ICableType;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.utils.misc.Scheduler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -107,7 +107,7 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		Scheduler.schedule(1, this::refreshNetwork, false);
+		ServerEventHandler.TASK_HANDLER.queueTask(this::refreshNetwork);
 	}
 	
 	@Override

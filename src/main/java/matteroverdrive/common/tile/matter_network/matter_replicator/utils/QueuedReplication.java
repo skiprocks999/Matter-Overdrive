@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile.matter_network.matter_replicator;
+package matteroverdrive.common.tile.matter_network.matter_replicator.utils;
 
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import net.minecraft.core.BlockPos;

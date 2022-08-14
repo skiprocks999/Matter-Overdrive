@@ -12,7 +12,12 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.inventory.InventoryTransporter;
+import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.EntityDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.TransporterDimensionManager;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -22,8 +27,6 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
-import matteroverdrive.core.utils.misc.EntityDataWrapper;
-import matteroverdrive.core.utils.misc.Scheduler;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -178,9 +181,9 @@ public class TileTransporter extends GenericSoundTile {
 				level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
 					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 				});
-				Scheduler.schedule(1, () -> {
+				ServerEventHandler.TASK_HANDLER.queueTask(() -> {
 					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-				}, false);
+				});
 			}
 		}
 		setChanged();

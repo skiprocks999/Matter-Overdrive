@@ -83,32 +83,36 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void tickServer() {
-		if(canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-			int drives = 0;
-			for(ItemStack stack : inv.getInputs()) {
-				if (stack.getItem() instanceof ItemPatternDrive) {
-					drives++;
-				}
-			}
-			int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
-			if(energy.getEnergyStored() >= usage) {
-				isPowered = true;
-				energy.removeEnergy(usage);
-			} else {
-				isPowered = false;
-			}
-			ItemStack scanner = inv.getStackInSlot(6);
-			if(!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
-				scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
-				inv.setStackInSlot(7, scanner.copy());
-				scanner.shrink(1);
-			}
-		} else {
+		if(!canRun()) {
 			isPowered = false;
+			return;
+		} 
+
+		UtilsTile.drainElectricSlot(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		int drives = 0;
+		for(ItemStack stack : inv.getInputs()) {
+			if (stack.getItem() instanceof ItemPatternDrive) {
+				drives++;
+			}
 		}
+		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
+		
+		if(energy.getEnergyStored() < usage) {
+			isPowered = false;
+			return;
+		} 
+		isPowered = true;
+		energy.removeEnergy(usage);
+		
+		ItemStack scanner = inv.getStackInSlot(6);
+		if(!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
+			scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
+			inv.setStackInSlot(7, scanner.copy());
+			scanner.shrink(1);
+		}
+		setChanged();
 	}
 	
 	@Override

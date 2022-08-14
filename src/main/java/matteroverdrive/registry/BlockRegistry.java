@@ -17,7 +17,7 @@ import matteroverdrive.common.block.charger.BlockAndroidChargerParent;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
-import matteroverdrive.common.block_item.BlockItemColored;
+import matteroverdrive.common.blockitem.BlockItemColored;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileInscriber;

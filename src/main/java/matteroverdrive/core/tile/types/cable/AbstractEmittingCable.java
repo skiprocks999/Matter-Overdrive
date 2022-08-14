@@ -1,4 +1,4 @@
-package matteroverdrive.common.tile.cable;
+package matteroverdrive.core.tile.types.cable;
 
 import matteroverdrive.core.network.AbstractCableNetwork;
 import net.minecraft.core.BlockPos;

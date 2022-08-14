@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;

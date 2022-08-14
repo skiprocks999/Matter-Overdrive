@@ -5,7 +5,7 @@ import java.util.List;
 
 import matteroverdrive.client.screen.ScreenPatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
 import matteroverdrive.core.screen.component.wrappers.utils.AbstractWrapperReplicationQueue;
 import matteroverdrive.core.utils.UtilsText;

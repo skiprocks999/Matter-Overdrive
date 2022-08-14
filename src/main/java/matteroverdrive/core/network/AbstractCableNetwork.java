@@ -22,7 +22,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import matteroverdrive.common.block.cable.ICableType;
-import matteroverdrive.common.tile.cable.AbstractCableTile;
+import matteroverdrive.core.tile.types.cable.AbstractCableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
