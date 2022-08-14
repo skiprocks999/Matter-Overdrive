@@ -68,7 +68,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.MATTER_ANALYZER.id())));
 		setTickable();
 		setHasMenuData();
@@ -88,7 +88,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			}
 			return;
 		}
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		if(energy.getEnergyStored() < usage) {
 			isRunning = false;
 			currProgress = 0;
@@ -98,7 +98,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			}
 			return;
 		}
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		ItemStack scanned = inv.getStackInSlot(0);
 		if(scanned.isEmpty()) {
 			isRunning = false;
@@ -124,8 +124,8 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			scannedItem = scanned.copy();
 			//this is a very expensive call so the redundant call locations are required
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
-			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
+			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -145,8 +145,8 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			currProgress = 0;
 			scannedItem = scanned;
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
-			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
+			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -206,7 +206,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void getMenuData(CompoundTag tag) {
 		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 		tag.putInt("usage", usage);
 		tag.putDouble("sabonus", saMultiplier);
@@ -327,7 +327,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
@@ -342,7 +342,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 
@@ -374,7 +374,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) != null
+		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) > 0.0
 				|| index == 1 && UtilsCapability.hasEnergyCap(stack)
 				|| index > 1 && stack.getItem() instanceof ItemUpgrade;
 	}

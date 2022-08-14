@@ -33,7 +33,7 @@ public class TileChunkloader extends GenericUpgradableTile {
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryChunkloader(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.CHUNKLOADER.id())));
 		setHasMenuData();
 		setTickable();
@@ -46,7 +46,7 @@ public class TileChunkloader extends GenericUpgradableTile {
 	
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 		
 		tag.putInt("usage", usagePerTick);
@@ -72,12 +72,12 @@ public class TileChunkloader extends GenericUpgradableTile {
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 

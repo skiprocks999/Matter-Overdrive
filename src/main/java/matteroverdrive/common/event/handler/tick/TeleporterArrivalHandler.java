@@ -1,4 +1,4 @@
-package matteroverdrive.common.event.handler;
+package matteroverdrive.common.event.handler.tick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import com.mojang.math.Vector3f;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
-import matteroverdrive.common.tile.transporter.ActiveTransportDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;

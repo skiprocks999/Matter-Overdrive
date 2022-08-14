@@ -185,7 +185,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 				return microwave.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Item);
+		}, CapabilityType.ITEM);
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
@@ -216,7 +216,7 @@ public class ScreenMicrowave extends GenericScreen<InventoryMicrowave> {
 				return microwave.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Energy);
+		}, CapabilityType.ENERGY);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();

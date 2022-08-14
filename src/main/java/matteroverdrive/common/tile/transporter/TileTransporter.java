@@ -12,7 +12,12 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
+import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.inventory.InventoryTransporter;
+import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.EntityDataWrapper;
+import matteroverdrive.common.tile.transporter.utils.TransporterDimensionManager;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -22,8 +27,6 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
-import matteroverdrive.core.utils.misc.EntityDataWrapper;
-import matteroverdrive.core.utils.misc.Scheduler;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -96,7 +99,7 @@ public class TileTransporter extends GenericSoundTile {
 				state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
-						exposeCapability(CapabilityType.Item), getCoordsData()),
+						exposeCapability(CapabilityType.ITEM), getCoordsData()),
 				getContainerName(TypeMachine.TRANSPORTER.id())));
 		setHasMenuData();
 		setHasRenderData();
@@ -141,14 +144,14 @@ public class TileTransporter extends GenericSoundTile {
 			return;
 		} 
 		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			running = false;
 			currEntities.clear();
 			return;
 		}
 		
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		if (matter.getMatterStored() < getCurrentMatterUsage(false)) {
 			running = false;
 			currEntities.clear();
@@ -178,9 +181,9 @@ public class TileTransporter extends GenericSoundTile {
 				level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
 					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 				});
-				Scheduler.schedule(1, () -> {
+				ServerEventHandler.TASK_HANDLER.queueTask(() -> {
 					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-				}, false);
+				});
 			}
 		}
 		setChanged();
@@ -205,11 +208,11 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		tag.put(matter.getSaveKey(), matter.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -366,13 +369,13 @@ public class TileTransporter extends GenericSoundTile {
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) {
 		return clientSide ? clientMatter.getMaxMatterStored()
-				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
+				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.MATTER).getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
@@ -397,13 +400,13 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void setMatterStorage(double storage) {
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		matter.updateMaxMatterStorage(storage);
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 

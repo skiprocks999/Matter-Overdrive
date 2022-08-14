@@ -3,7 +3,7 @@ package matteroverdrive.core.screen.component.wrappers.utils;
 import java.util.List;
 import java.util.function.Consumer;
 
-import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketCancelReplication;
 import matteroverdrive.core.screen.GenericScreen;

@@ -1,6 +1,7 @@
-package matteroverdrive.common.tile.matter_network.matter_replicator;
+package matteroverdrive.common.tile.matter_network.matter_replicator.utils;
 
 import matteroverdrive.SoundRegister;
+import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.sound.tile.TickableSoundTile;
 import net.minecraft.client.Minecraft;

@@ -10,9 +10,9 @@ import com.google.common.collect.Maps;
 
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.CableConnectionType;
-import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
+import matteroverdrive.core.tile.types.cable.AbstractCableTile;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

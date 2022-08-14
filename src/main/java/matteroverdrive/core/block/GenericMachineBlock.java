@@ -42,8 +42,8 @@ public class GenericMachineBlock extends GenericEntityBlock {
 		if (tile instanceof GenericTile generic && generic != null) {
 			ItemStack stack = player.getItemInHand(hand);
 			if (UtilsCapability.hasMatterCap(stack)) {
-				if (generic.hasCapability(CapabilityType.Matter)) {
-					CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.Matter);
+				if (generic.hasCapability(CapabilityType.MATTER)) {
+					CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.MATTER);
 					ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
 							.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
 					if (storage.canReceive() && matter.canExtract()) {

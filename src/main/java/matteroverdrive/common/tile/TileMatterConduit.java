@@ -9,11 +9,11 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.network.NetworkMatterConduit;
-import matteroverdrive.common.tile.cable.AbstractCableTile;
-import matteroverdrive.common.tile.cable.AbstractEmittingCable;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.network.AbstractCableNetwork;
+import matteroverdrive.core.tile.types.cable.AbstractCableTile;
+import matteroverdrive.core.tile.types.cable.AbstractEmittingCable;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;

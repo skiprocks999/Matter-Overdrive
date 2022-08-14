@@ -1,7 +1,7 @@
 modLoader="javafml" 
 loaderVersion="[40,)" 
 license="GPL-3.0 License"
-issueTrackerURL="https://github.com/infiniteblock/MatterOverdrive-Community-Edition/issues"
+issueTrackerURL="https://github.com/skiprocks999/Matter-Overdrive/issues"
 [[mods]] 
 modId="matteroverdrive"
 version="${file.jarVersion}" 
@@ -10,7 +10,7 @@ updateJSONURL="https://www.curseforge.com/minecraft/mc-mods/matter-overdrive-com
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 logoFile="mo_logo.png" 
 credits="A mod that dwells within matter and energy."
-authors="skip999, AurilisDev, InfiniteBlock, VanMuur, Gandalf360one, Horizon Studio, Coded, Buuz135, Simeon Radivoev, Shadowfacts, Dev_Osmium"
+authors="skip999, SeaRobber69, Sekwah41, Lanse505, NinjaOnion, AurilisDev, InfiniteBlock, VanMuur, Gandalf360one, Horizon Studio, Coded, Buuz135, Simeon Radivoev, Shadowfacts, Dev_Osmium"
 description='''
 Matter Overdrive is a Star Trek themed mod based around manipulating matter and energy.
 '''

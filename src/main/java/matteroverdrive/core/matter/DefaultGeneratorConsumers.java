@@ -15,15 +15,15 @@ public class DefaultGeneratorConsumers {
 		MatterRegister.addGeneratorConsumer((generatedValues, recipeManager) -> {
 			recipeManager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
+				if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
 					Ingredient ing = recipe.getIngredients().get(0);
 
 					for (ItemStack stack : ing.getItems()) {
-						Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-						if (value == null) {
+						double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+						if (value <= 0.0) {
 							value = generatedValues.get(stack.getItem());
 						}
-						if (value != null && !generatedValues.containsKey(result.getItem())) {
+						if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
 							double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
 							generatedValues.put(result.getItem(), matterValue);
 							break;
@@ -36,7 +36,7 @@ public class DefaultGeneratorConsumers {
 		MatterRegister.addGeneratorConsumer((generatedValues, recipeManager) -> {
 			recipeManager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
 				ItemStack result = recipe.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null
+				if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0
 						&& generatedValues.get(result.getItem()) == null) {
 					List<Ingredient> ings = recipe.getIngredients();
 					double sum = 0;
@@ -46,11 +46,11 @@ public class DefaultGeneratorConsumers {
 							break;
 						}
 						for (ItemStack stack : ing.getItems()) {
-							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-							if (value == null) {
+							double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+							if (value <= 0.0) {
 								value = generatedValues.get(stack.getItem());
 							}
-							if (value != null) {
+							if (value > 0.0) {
 								sum += value * stack.getCount();
 								failed = false;
 								break;
@@ -70,7 +70,7 @@ public class DefaultGeneratorConsumers {
 			recipeManager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
 				UpgradeRecipe upgrade = recipe;
 				ItemStack result = upgrade.getResultItem();
-				if (MatterRegister.INSTANCE.getServerMatterValue(result) == null) {
+				if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
 					List<Ingredient> ings = new ArrayList<>();
 					// AT
 					ings.add(upgrade.base);
@@ -82,11 +82,11 @@ public class DefaultGeneratorConsumers {
 							break;
 						}
 						for (ItemStack stack : ing.getItems()) {
-							Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-							if (value == null) {
+							double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+							if (value <= 0.0) {
 								value = generatedValues.get(stack.getItem());
 							}
-							if (value != null && !generatedValues.containsKey(result.getItem())) {
+							if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
 								sum += value * stack.getCount();
 								failed = false;
 								break;

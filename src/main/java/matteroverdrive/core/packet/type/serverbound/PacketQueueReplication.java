@@ -2,8 +2,8 @@ package matteroverdrive.core.packet.type.serverbound;
 
 import java.util.function.Supplier;
 
-import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

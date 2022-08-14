@@ -320,9 +320,9 @@ public class ItemMatterScanner extends ItemElectric {
 	}
 	
 	private void saveBlockToStack(ItemStack stack, BlockState state, BlockPos pos) {
-		Double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
+		double value = MatterRegister.INSTANCE.getServerMatterValue(new ItemStack(state.getBlock()));
 		CompoundTag tag = stack.getOrCreateTag();
-		if(value != null) {
+		if(value > 0.0) {
 			tag.putString(UtilsNbt.ITEM, ForgeRegistries.ITEMS.getKey(state.getBlock().asItem()).toString().toLowerCase());
 			tag.putDouble(UtilsNbt.STORED_MATTER_VAL, value);
 			tag.put(RAY_TRACE_POS, NbtUtils.writeBlockPos(pos));

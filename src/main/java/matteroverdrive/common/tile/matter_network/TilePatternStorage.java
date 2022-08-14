@@ -74,7 +74,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryPatternStorage(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_STORAGE.id())));
 		setTickable();
 		setHasMenuData();
@@ -83,32 +83,36 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void tickServer() {
-		if(canRun()) {
-			UtilsTile.drainElectricSlot(this);
-			CapabilityInventory inv = exposeCapability(CapabilityType.Item);
-			CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
-			int drives = 0;
-			for(ItemStack stack : inv.getInputs()) {
-				if (stack.getItem() instanceof ItemPatternDrive) {
-					drives++;
-				}
-			}
-			int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
-			if(energy.getEnergyStored() >= usage) {
-				isPowered = true;
-				energy.removeEnergy(usage);
-			} else {
-				isPowered = false;
-			}
-			ItemStack scanner = inv.getStackInSlot(6);
-			if(!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
-				scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
-				inv.setStackInSlot(7, scanner.copy());
-				scanner.shrink(1);
-			}
-		} else {
+		if(!canRun()) {
 			isPowered = false;
+			return;
+		} 
+
+		UtilsTile.drainElectricSlot(this);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		int drives = 0;
+		for(ItemStack stack : inv.getInputs()) {
+			if (stack.getItem() instanceof ItemPatternDrive) {
+				drives++;
+			}
 		}
+		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
+		
+		if(energy.getEnergyStored() < usage) {
+			isPowered = false;
+			return;
+		} 
+		isPowered = true;
+		energy.removeEnergy(usage);
+		
+		ItemStack scanner = inv.getStackInSlot(6);
+		if(!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
+			scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
+			inv.setStackInSlot(7, scanner.copy());
+			scanner.shrink(1);
+		}
+		setChanged();
 	}
 	
 	@Override
@@ -122,9 +126,9 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		
 	}
@@ -311,7 +315,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	public List<ItemStack> getDrives(){
-		return this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().subList(0, 6);
+		return this.<CapabilityInventory>exposeCapability(CapabilityType.ITEM).getItems().subList(0, 6);
 	}
 	
 	/**
@@ -346,7 +350,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	@Nullable
 	public ItemPatternWrapper getWrapperFromIndex(int[] index) {
 		if(index[0] > -1) {
-			ItemStack stack = this.<CapabilityInventory>exposeCapability(CapabilityType.Item).getItems().get(index[0]);
+			ItemStack stack = this.<CapabilityInventory>exposeCapability(CapabilityType.ITEM).getItems().get(index[0]);
 			ICapabilityItemPatternStorage cap = UtilsItem.getPatternCap(stack);
 			if(cap != null) {
 				return cap.getStoredPatterns()[index[1]];

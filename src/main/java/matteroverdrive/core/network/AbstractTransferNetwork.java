@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import matteroverdrive.common.block.cable.ICableType;
-import matteroverdrive.common.tile.cable.AbstractCableTile;
-import matteroverdrive.common.tile.cable.AbstractEmittingCable;
+import matteroverdrive.core.tile.types.cable.AbstractCableTile;
+import matteroverdrive.core.tile.types.cable.AbstractEmittingCable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork {

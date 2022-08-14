@@ -185,7 +185,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 				return inscriber.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Item);
+		}, CapabilityType.ITEM);
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
@@ -216,7 +216,7 @@ public class ScreenInscriber extends GenericScreen<InventoryInscriber> {
 				return inscriber.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Energy);
+		}, CapabilityType.ENERGY);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();

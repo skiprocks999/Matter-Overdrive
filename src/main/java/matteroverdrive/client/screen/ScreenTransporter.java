@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.TileTransporter;
-import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
@@ -250,7 +250,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Item);
+		}, CapabilityType.ITEM);
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
@@ -281,7 +281,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Energy);
+		}, CapabilityType.ENERGY);
 		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
@@ -312,7 +312,7 @@ public class ScreenTransporter extends GenericScreen<InventoryTransporter> {
 				return transporter.getBlockPos();
 			}
 			return new BlockPos(0, -100, 0);
-		}, CapabilityType.Matter);
+		}, CapabilityType.MATTER);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();

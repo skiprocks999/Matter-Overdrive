@@ -224,7 +224,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	@Override
 	public CapabilityType getCapabilityType() {
-		return CapabilityType.Item;
+		return CapabilityType.ITEM;
 	}
 
 	@Override

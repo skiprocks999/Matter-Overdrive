@@ -5,9 +5,9 @@ import java.util.HashSet;
 
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.network.NetworkMatter;
-import matteroverdrive.common.tile.cable.AbstractCableTile;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.tile.types.cable.AbstractCableTile;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

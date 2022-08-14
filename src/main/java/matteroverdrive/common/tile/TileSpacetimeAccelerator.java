@@ -57,7 +57,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 				state, new Direction[] { Direction.DOWN }, null));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
-						exposeCapability(CapabilityType.Item), getCoordsData()),
+						exposeCapability(CapabilityType.ITEM), getCoordsData()),
 				getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
 		setTickable();
 		setHasMenuData();
@@ -73,7 +73,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		}
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		
 		
 		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
@@ -82,7 +82,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 			return;
 		} 
 		
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		if(matter.getMatterStored() < getCurrentMatterUsage(false)) {
 			resetRadiusMultipliers();
 			running = false;
@@ -111,11 +111,11 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		tag.put(matter.getSaveKey(), matter.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -214,13 +214,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) {
 		return clientSide ? clientMatter.getMaxMatterStored()
-				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
+				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.MATTER).getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
@@ -245,13 +245,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	@Override
 	public void setMatterStorage(double storage) {
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		matter.updateMaxMatterStorage(storage);
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 

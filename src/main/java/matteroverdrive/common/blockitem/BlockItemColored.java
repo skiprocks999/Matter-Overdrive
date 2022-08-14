@@ -1,4 +1,4 @@
-package matteroverdrive.common.block_item;
+package matteroverdrive.common.blockitem;
 
 import java.util.ArrayList;
 import java.util.List;

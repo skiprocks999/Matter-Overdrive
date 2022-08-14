@@ -13,9 +13,9 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage.PatternStorageDataWrapper;
-import matteroverdrive.common.tile.matter_network.matter_replicator.QueuedReplication;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator.MatterReplicatorDataWrapper;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
@@ -46,7 +46,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryPatternMonitor(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
 		setTickable();
 		setHasMenuData();

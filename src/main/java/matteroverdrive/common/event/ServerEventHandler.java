@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import matteroverdrive.References;
-import matteroverdrive.common.event.handler.TeleporterArrivalHandler;
+import matteroverdrive.common.event.handler.tick.ScheduledTaskHandler;
+import matteroverdrive.common.event.handler.tick.TeleporterArrivalHandler;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.overworld_data.CapabilityOverworldData;
@@ -32,8 +33,11 @@ public class ServerEventHandler {
 	
 	private static final List<AbstractServerTickHandler> TICK_HANDLERS = new ArrayList<>();
 	
+	public static final ScheduledTaskHandler TASK_HANDLER = new ScheduledTaskHandler();
+	
 	public static void init() {
 		TICK_HANDLERS.add(new TeleporterArrivalHandler());
+		TICK_HANDLERS.add(TASK_HANDLER);
 	}
 	
 	@SubscribeEvent

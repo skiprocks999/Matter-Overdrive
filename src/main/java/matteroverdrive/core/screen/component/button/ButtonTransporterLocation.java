@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.transporter.TileTransporter;
-import matteroverdrive.common.tile.transporter.TransporterLocationWrapper;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
