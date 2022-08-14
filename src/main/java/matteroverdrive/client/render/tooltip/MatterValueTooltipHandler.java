@@ -41,8 +41,8 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 					: UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 							.withStyle(ChatFormatting.BLUE);
 		} else {
-			Double val = MatterRegister.INSTANCE.getClientMatterValue(stack);
-			return val == null
+			double val = MatterRegister.INSTANCE.getClientMatterValue(stack);
+			return val <= 0.0
 					? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 							.withStyle(ChatFormatting.BLUE)
 					: UtilsText

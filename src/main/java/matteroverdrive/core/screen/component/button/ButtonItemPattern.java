@@ -57,8 +57,8 @@ public class ButtonItemPattern extends ButtonHoldPress {
 				}
 				List<FormattedCharSequence> tooltips = new ArrayList<>();
 				tooltips.add(UtilsText.tooltip("storedpattern", name.withStyle(color), UtilsText.SINGLE_DECIMAL.format(percentage) + "%").getVisualOrderText());
-				Double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(item));
-				tooltips.add(val == null ? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
+				double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(item));
+				tooltips.add(val <= 0.0 ? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter").withStyle(ChatFormatting.RED))
 						.withStyle(ChatFormatting.BLUE).getVisualOrderText()
 				: UtilsText
 						.tooltip("matterval",

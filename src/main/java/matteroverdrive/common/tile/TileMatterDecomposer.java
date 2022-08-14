@@ -105,14 +105,12 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		} 
 		
 		
-		Double matterVal = currRecipeValue > 0 ? Double.valueOf(currRecipeValue)
-				: MatterRegister.INSTANCE.getServerMatterValue(input);
-		if(matterVal == null) {
-			matterVal = 0.0;
+		double matterVal = currRecipeValue > 0.0 ? currRecipeValue: MatterRegister.INSTANCE.getServerMatterValue(input);
+		if(matterVal <= 0.0) {
 			if(UtilsMatter.isRefinedDust(input)) {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
-			if(matterVal <= 0) {
+			if(matterVal <= 0.0) {
 				running = false;
 				currRecipeValue = 0;
 				currProgress = 0;
@@ -125,7 +123,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			return;
 		}
 		
-		currRecipeValue = matterVal.doubleValue();
+		currRecipeValue = matterVal;
 		currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
 				.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
 		CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);

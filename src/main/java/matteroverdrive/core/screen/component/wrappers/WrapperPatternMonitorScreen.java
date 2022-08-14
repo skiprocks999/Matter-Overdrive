@@ -127,9 +127,9 @@ public class WrapperPatternMonitorScreen {
 				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
-			Double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
+			double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
 			//safety check for data pack fuckery
-			if(value == null || value <= 0) {
+			if(value <= 0.0) {
 				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}

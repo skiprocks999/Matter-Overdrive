@@ -80,19 +80,19 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	}
 
 	@Nullable
-	public Double getServerMatterValue(ItemStack item) {
+	public double getServerMatterValue(ItemStack item) {
 		if (MatterOverdriveConfig.validate_matter_items.get()) {
-			return UtilsMatter.validateItem(item) ? SERVER_VALUES.get(item.getItem()) : null;
+			return UtilsMatter.validateItem(item) ? SERVER_VALUES.getOrDefault(item.getItem(), 0.0) : 0.0;
 		}
-		return SERVER_VALUES.get(item.getItem());
+		return SERVER_VALUES.getOrDefault(item.getItem(), 0.0);
 	}
 
 	@Nullable
-	public Double getClientMatterValue(ItemStack item) {
+	public double getClientMatterValue(ItemStack item) {
 		if (MatterOverdriveConfig.validate_matter_items.get()) {
-			return UtilsMatter.validateItem(item) ? CLIENT_VALUES.get(item.getItem()) : null;
+			return UtilsMatter.validateItem(item) ? CLIENT_VALUES.getOrDefault(item.getItem(), 0.0) : 0.0;
 		}
-		return CLIENT_VALUES.get(item.getItem());
+		return CLIENT_VALUES.getOrDefault(item.getItem(), 0.0);
 	}
 
 	@Override

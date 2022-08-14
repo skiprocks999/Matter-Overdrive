@@ -68,9 +68,9 @@ public class ItemPatternDrive extends OverdriveItem {
 						color = ChatFormatting.RED;
 					}
 					tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%").withStyle(color));
-					Double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
+					double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
 					//datapack fuckery prevention 
-					if(value != null && value > 0) {
+					if(value > 0.0) {
 						double decayFactor = getDecayFactor(value);
 						double usage = value * decayFactor;
 						ChatFormatting warning;

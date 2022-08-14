@@ -169,8 +169,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		currentOrder = orders.get(0);
 		
 		ItemStack stack = new ItemStack(currentOrder.getItem());
-		Double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-		if(value == null || value <= 0 || currentOrder == null || currentOrder.getPercentage() <= 0) {
+		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+		if(value <= 0.0 || currentOrder == null || currentOrder.getPercentage() <= 0) {
 			currentOrder.cancel();
 			isRunning = false;
 			currProgress = 0;

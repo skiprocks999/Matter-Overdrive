@@ -124,8 +124,8 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			scannedItem = scanned.copy();
 			//this is a very expensive call so the redundant call locations are required
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
-			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
+			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -145,8 +145,8 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			currProgress = 0;
 			scannedItem = scanned;
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
-			Double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val == null || stored[0] > -1 && stored[3] >= 100) {
+			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
+			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -374,7 +374,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	}
 	
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
-		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) != null
+		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) > 0.0
 				|| index == 1 && UtilsCapability.hasEnergyCap(stack)
 				|| index > 1 && stack.getItem() instanceof ItemUpgrade;
 	}

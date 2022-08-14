@@ -89,9 +89,9 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			
 			translateToPos(matrix, pos, cam);
 			
-			Double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(state.getBlock()));
+			double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(state.getBlock()));
 			
-			text = val == null
+			text = val <= 0.0
 					? UtilsText.tooltip("matterval", UtilsText.tooltip("nomatter"))
 					: UtilsText.tooltip("matterval", Component.literal(UtilsText.formatMatterValue(val)));
 			
