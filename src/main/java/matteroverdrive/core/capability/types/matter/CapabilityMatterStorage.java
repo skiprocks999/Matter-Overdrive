@@ -212,7 +212,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	@Override
 	public CapabilityType getCapabilityType() {
-		return CapabilityType.Matter;
+		return CapabilityType.MATTER;
 	}
 
 	@Override

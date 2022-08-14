@@ -21,7 +21,7 @@ public class TileTritaniumCrate extends GenericTile {
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName("tritanium_crate")));
 	}
 

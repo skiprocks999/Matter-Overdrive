@@ -35,7 +35,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
-						exposeCapability(CapabilityType.Item), getCoordsData()),
+						exposeCapability(CapabilityType.ITEM), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));
 		setTickable();
 		setHasMenuData();
@@ -49,7 +49,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				generating = world.isDay() && world.canSeeSky(getBlockPos());
 			}
 			if (generating) {
-				CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+				CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 				energy.giveEnergy((int) (GENERATION * saMultiplier));
 			}
 			UtilsTile.outputEnergy(this);
@@ -60,7 +60,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -85,12 +85,12 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 

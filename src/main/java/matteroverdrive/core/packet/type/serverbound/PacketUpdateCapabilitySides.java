@@ -47,8 +47,8 @@ public class PacketUpdateCapabilitySides {
 				if (tile instanceof GenericTile generic) {
 					if (generic.hasCapability(message.type)) {
 						switch (message.type) {
-						case Item:
-							CapabilityInventory inv = generic.exposeCapability(CapabilityType.Item);
+						case ITEM:
+							CapabilityInventory inv = generic.exposeCapability(CapabilityType.ITEM);
 							if (message.input) {
 								inv.setInputDirs(message.inDirs);
 							}
@@ -58,8 +58,8 @@ public class PacketUpdateCapabilitySides {
 							inv.refreshCapability();
 							generic.setChanged();
 							break;
-						case Energy:
-							CapabilityEnergyStorage energy = generic.exposeCapability(CapabilityType.Energy);
+						case ENERGY:
+							CapabilityEnergyStorage energy = generic.exposeCapability(CapabilityType.ENERGY);
 							if (message.input) {
 								energy.setInputDirs(message.inDirs);
 							}
@@ -69,8 +69,8 @@ public class PacketUpdateCapabilitySides {
 							energy.refreshCapability();
 							generic.setChanged();
 							break;
-						case Matter:
-							CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.Matter);
+						case MATTER:
+							CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.MATTER);
 							if (message.input) {
 								matter.setInputDirs(message.inDirs);
 							}

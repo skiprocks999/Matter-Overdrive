@@ -108,7 +108,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMatterReplicator(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.MATTER_REPLICATOR.id())));
 		setTickable();
 		setHasMenuData();
@@ -131,7 +131,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			return;
 		}
 		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		if(energy.getEnergyStored() < usage) {
 			isRunning = false;
 			isPowered = false;
@@ -143,7 +143,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		isPowered = true;
 		
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		ItemStack drive = inv.getStackInSlot(0);
 		if(drive.isEmpty()) {
 			usingFused = false;
@@ -204,7 +204,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			return;
 		}
 		
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		if(matter.getMatterStored() < currRecipeValue) {
 			isRunning = false;
 			if (currState && !isRunning) {
@@ -319,11 +319,11 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	@Override
 	public void getMenuData(CompoundTag tag) {
 		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityMatterStorage storage = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage storage = exposeCapability(CapabilityType.MATTER);
 		tag.put(storage.getSaveKey(), storage.serializeNBT());
 		int size = orders.size();
 		tag.putInt("orderCount", size);
@@ -371,7 +371,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		tag.putDouble("recipe", currRecipeValue);
 		tag.putDouble("speed", currSpeed);
 		tag.putBoolean("muffled", isMuffled);
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		CompoundTag item = new CompoundTag();
 		inv.getStackInSlot(2).save(item);
 		tag.put("item", item);
@@ -486,13 +486,13 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) {
 		return clientSide ? clientMatter.getMaxMatterStored()
-				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.Matter).getMaxMatterStored();
+				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.MATTER).getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
 		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.Energy).getMaxEnergyStored();
+				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
 	}
 
 	@Override
@@ -512,13 +512,13 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 
 	@Override
 	public void setMatterStorage(double storage) {
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.Matter);
+		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
 		matter.updateMaxMatterStorage(storage);
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.Energy);
+		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
 		energy.updateMaxEnergyStorage(storage);
 	}
 
@@ -564,7 +564,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public CompoundTag getNetworkData() {
 		CompoundTag data = new CompoundTag();
 		
-		CapabilityInventory inv = exposeCapability(CapabilityType.Item);
+		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
 		data.put(inv.getSaveKey(), inv.serializeNBT());
 		data.putBoolean("ispowered", isPowered);
 		

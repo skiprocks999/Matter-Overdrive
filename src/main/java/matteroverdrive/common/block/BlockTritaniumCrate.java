@@ -80,7 +80,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof TileTritaniumCrate crate) {
-			CapabilityInventory inv = crate.exposeCapability(CapabilityType.Item);
+			CapabilityInventory inv = crate.exposeCapability(CapabilityType.ITEM);
 			if (MatterOverdriveConfig.crate_drop_items.get()) {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

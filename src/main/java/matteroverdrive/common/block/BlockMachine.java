@@ -74,8 +74,8 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof GenericTile generic) {
-			CapabilityInventory inv = generic.exposeCapability(CapabilityType.Item);
+		if (blockentity instanceof GenericTile generic && generic.hasCapability(CapabilityType.ITEM)) {
+			CapabilityInventory inv = generic.exposeCapability(CapabilityType.ITEM);
 			if (MatterOverdriveConfig.machines_drop_items.get()) {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

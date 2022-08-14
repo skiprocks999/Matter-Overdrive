@@ -46,7 +46,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryPatternMonitor(id, play.getInventory(),
-								exposeCapability(CapabilityType.Item), getCoordsData()),
+								exposeCapability(CapabilityType.ITEM), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
 		setTickable();
 		setHasMenuData();

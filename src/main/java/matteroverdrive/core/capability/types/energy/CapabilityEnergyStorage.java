@@ -213,7 +213,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	@Override
 	public CapabilityType getCapabilityType() {
-		return CapabilityType.Energy;
+		return CapabilityType.ENERGY;
 	}
 
 	@Override

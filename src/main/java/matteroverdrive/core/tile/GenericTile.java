@@ -1,8 +1,5 @@
 package matteroverdrive.core.tile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
@@ -31,7 +28,7 @@ import net.minecraftforge.common.util.TriPredicate;
 
 public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile {
 
-	private List<IOverdriveCapability> capabilities = new ArrayList<>();
+	private IOverdriveCapability[] capabilities = new IOverdriveCapability[CapabilityType.values().length];
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
@@ -79,35 +76,20 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	}
 
 	public void addCapability(IOverdriveCapability cap) {
-		boolean valid = true;
-		for (IOverdriveCapability i : capabilities) {
-			if (i.getCapabilityType() == cap.getCapabilityType()) {
-				valid = false;
-				break;
-			}
+		CapabilityType type = cap.getCapabilityType();
+		IOverdriveCapability capability = capabilities[type.ordinal()];
+		if (capability != null) {
+			throw new RuntimeException("error: capability type " + type + " already added");
 		}
-		if (!valid) {
-			throw new RuntimeException("error: capability type " + cap.getCapabilityType() + " already added");
-		}
-		capabilities.add(cap);
+		capability = cap;
 	}
 
 	public boolean hasCapability(CapabilityType type) {
-		for (IOverdriveCapability cap : capabilities) {
-			if (cap.getCapabilityType() == type) {
-				return true;
-			}
-		}
-		return false;
+		return capabilities[type.ordinal()] != null;
 	}
 
 	public <T extends IOverdriveCapability> T exposeCapability(CapabilityType type) {
-		for (IOverdriveCapability cap : capabilities) {
-			if (cap.getCapabilityType() == type) {
-				return (T) cap;
-			}
-		}
-		return null;
+		return (T) capabilities[type.ordinal()];
 	}
 
 	@Override
