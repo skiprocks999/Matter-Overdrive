@@ -5,7 +5,6 @@ import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
@@ -61,18 +60,17 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
 
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
-		addCapability(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this).setDefaultDirections(
-				state, null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }));
-		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
-				getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
+		addMatterStorageCap(
+				new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this).setDefaultDirections(state,
+						null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
+				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
 		setHasMenuData();
 		setHasRenderData();
 		setTickable();
@@ -91,51 +89,51 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
+		}
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.fillMatterSlot(this);
 		UtilsTile.outputMatter(this);
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
 			running = false;
 			currRecipeValue = 0;
 			currProgress = 0;
 			return;
-		} 
-		
-		
-		double matterVal = currRecipeValue > 0.0 ? currRecipeValue: MatterRegister.INSTANCE.getServerMatterValue(input);
-		if(matterVal <= 0.0) {
-			if(UtilsMatter.isRefinedDust(input)) {
+		}
+
+		double matterVal = currRecipeValue > 0.0 ? currRecipeValue
+				: MatterRegister.INSTANCE.getServerMatterValue(input);
+		if (matterVal <= 0.0) {
+			if (UtilsMatter.isRefinedDust(input)) {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
-			if(matterVal <= 0.0) {
+			if (matterVal <= 0.0) {
 				running = false;
 				currRecipeValue = 0;
 				currProgress = 0;
 				return;
 			}
 		}
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			running = false;
 			return;
 		}
-		
+
 		currRecipeValue = matterVal;
 		currRecipeValue += input.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE)
 				.map(ICapabilityMatterStorage::getMatterStored).orElse(0.0);
-		CapabilityMatterStorage storage = exposeCapability(CapabilityType.MATTER);
-		
-		if((storage.getMaxMatterStored() - storage.getMatterStored()) < currRecipeValue) {
+		CapabilityMatterStorage storage = getMatterStorageCap();
+
+		if ((storage.getMaxMatterStored() - storage.getMatterStored()) < currRecipeValue) {
 			running = false;
 			return;
 		}
 
 		ItemStack output = inv.getOutputs().get(0);
-		
-		if(!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
+
+		if (!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
 				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
 			running = false;
 			return;
@@ -160,7 +158,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			currProgress = 0;
 		}
 		setChanged();
-		
+
 	}
 
 	@Override
@@ -173,11 +171,11 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
+		CapabilityMatterStorage matter = getMatterStorageCap();
 		tag.put(matter.getSaveKey(), matter.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -297,14 +295,12 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) {
-		return clientSide ? clientMatter.getMaxMatterStored()
-				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.MATTER).getMaxMatterStored();
+		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -324,14 +320,12 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public void setMatterStorage(double storage) {
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
-		matter.updateMaxMatterStorage(storage);
+		getMatterStorageCap().updateMaxMatterStorage(storage);
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override

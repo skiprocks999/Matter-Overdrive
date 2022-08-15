@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
@@ -17,6 +17,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PacketUpdateCapabilitySides {
@@ -45,10 +48,10 @@ public class PacketUpdateCapabilitySides {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof GenericTile generic) {
-					if (generic.hasCapability(message.type)) {
+					if (generic.hasCapability(message.type.capability)) {
 						switch (message.type) {
 						case ITEM:
-							CapabilityInventory inv = generic.exposeCapability(CapabilityType.ITEM);
+							CapabilityInventory inv = generic.exposeCapability(message.type.capability);
 							if (message.input) {
 								inv.setInputDirs(message.inDirs);
 							}
@@ -59,7 +62,7 @@ public class PacketUpdateCapabilitySides {
 							generic.setChanged();
 							break;
 						case ENERGY:
-							CapabilityEnergyStorage energy = generic.exposeCapability(CapabilityType.ENERGY);
+							CapabilityEnergyStorage energy = generic.exposeCapability(message.type.capability);
 							if (message.input) {
 								energy.setInputDirs(message.inDirs);
 							}
@@ -70,7 +73,7 @@ public class PacketUpdateCapabilitySides {
 							generic.setChanged();
 							break;
 						case MATTER:
-							CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.MATTER);
+							CapabilityMatterStorage matter = generic.exposeCapability(message.type.capability);
 							if (message.input) {
 								matter.setInputDirs(message.inDirs);
 							}
@@ -132,6 +135,16 @@ public class PacketUpdateCapabilitySides {
 			}
 		}
 		return new PacketUpdateCapabilitySides(pos, type, input, output, inDirs, outDirs);
+	}
+	
+	public static enum CapabilityType {
+		ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), MATTER(MatterOverdriveCapabilities.MATTER_STORAGE), ENERGY(CapabilityEnergy.ENERGY);
+		
+		public final Capability<?> capability;
+		
+		private CapabilityType(Capability<?> cap) {
+			capability = cap;
+		}
 	}
 
 }

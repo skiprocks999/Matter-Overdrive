@@ -45,7 +45,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 
 				@Override
 				public double extractMatter(double maxExtract, boolean simulate) {
-					if(network != null) {
+					if (network != null) {
 						return network.extractFromConnected(maxExtract, simulate);
 					}
 					return 0;
@@ -53,7 +53,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 
 				@Override
 				public double getMatterStored() {
-					if(network != null) {
+					if (network != null) {
 						return network.getCurrentMemberStorage();
 					}
 					return 0;
@@ -61,7 +61,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 
 				@Override
 				public double getMaxMatterStored() {
-					if(network != null) {
+					if (network != null) {
 						return network.getTotalMemberStorage();
 					}
 					return 0;
@@ -110,7 +110,7 @@ public class TileMatterConduit extends AbstractEmittingCable<NetworkMatterCondui
 	public boolean isValidConnection(BlockEntity entity, Direction dir) {
 		return UtilsMatter.isMatterReceiver(entity, dir.getOpposite());
 	}
-	
+
 	@Override
 	public AbstractCableNetwork getNetwork(boolean createIfNull) {
 		if (network == null && createIfNull) {

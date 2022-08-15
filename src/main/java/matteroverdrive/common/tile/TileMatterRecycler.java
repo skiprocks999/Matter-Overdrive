@@ -3,7 +3,6 @@ package matteroverdrive.common.tile;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.sound.SoundBarrierMethods;
@@ -48,17 +47,15 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterRecycler.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
-		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
-				getContainerName(TypeMachine.MATTER_RECYCLER.id())));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
+				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_RECYCLER.id())));
 		setHasMenuData();
 		setHasRenderData();
 		setTickable();
@@ -72,44 +69,44 @@ public class TileMatterRecycler extends GenericSoundTile {
 		} else if (!currState && running) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
-		
+
 		if (!canRun()) {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
-		
+		}
+
 		UtilsTile.drainElectricSlot(this);
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
-		
+
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
-		
+		}
+
 		double value = UtilsNbt.readMatterVal(input);
 		if (value <= 0) {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
-		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		
+		}
+
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+
 		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			running = false;
 			return;
-		} 
-		
+		}
+
 		ItemStack output = inv.getOutputs().get(0);
-		if (!(output.isEmpty() || (output.getCount() < output.getMaxStackSize()
-				&& UtilsNbt.readMatterVal(output) == value))) {
+		if (!(output.isEmpty()
+				|| (output.getCount() < output.getMaxStackSize() && UtilsNbt.readMatterVal(output) == value))) {
 			running = false;
 			return;
-		} 
-		
+		}
+
 		running = true;
 		currProgress += getCurrentSpeed(false);
 		energy.removeEnergy((int) getCurrentPowerUsage(false));
@@ -125,7 +122,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 			input.shrink(1);
 		}
 		setChanged();
-		
+
 	}
 
 	@Override
@@ -138,9 +135,9 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -207,7 +204,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
 	}
-	
+
 	@Override
 	public double getDefaultSpeed() {
 		return DEFAULT_SPEED;
@@ -235,8 +232,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -251,8 +247,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override

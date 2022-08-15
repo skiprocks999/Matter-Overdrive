@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
@@ -208,11 +207,6 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	@Override
 	public <T> boolean matchesCapability(Capability<T> cap) {
 		return cap == MatterOverdriveCapabilities.MATTER_STORAGE;
-	}
-
-	@Override
-	public CapabilityType getCapabilityType() {
-		return CapabilityType.MATTER;
 	}
 
 	@Override

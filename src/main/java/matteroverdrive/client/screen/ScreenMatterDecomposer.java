@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterDecomposer;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;

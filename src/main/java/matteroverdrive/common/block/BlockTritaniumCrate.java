@@ -7,7 +7,6 @@ import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
@@ -80,7 +79,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof TileTritaniumCrate crate) {
-			CapabilityInventory inv = crate.exposeCapability(CapabilityType.ITEM);
+			CapabilityInventory inv = crate.getInventoryCap();
 			if (MatterOverdriveConfig.crate_drop_items.get()) {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

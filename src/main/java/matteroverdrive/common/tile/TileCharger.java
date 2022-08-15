@@ -2,7 +2,6 @@ package matteroverdrive.common.tile;
 
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryCharger;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
@@ -35,15 +34,13 @@ public class TileCharger extends GenericUpgradableTile {
 
 	public TileCharger(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHARGER.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryCharger(id, play.getInventory(),
-								exposeCapability(CapabilityType.ITEM), getCoordsData()),
-						getContainerName(TypeMachine.CHARGER.id())));
+		setMenuProvider(new SimpleMenuProvider(
+				(id, inv, play) -> new InventoryCharger(id, play.getInventory(), getInventoryCap(), getCoordsData()),
+				getContainerName(TypeMachine.CHARGER.id())));
 		setHasMenuData();
 		setTickable();
 	}
@@ -55,9 +52,9 @@ public class TileCharger extends GenericUpgradableTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -125,8 +122,7 @@ public class TileCharger extends GenericUpgradableTile {
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -141,8 +137,7 @@ public class TileCharger extends GenericUpgradableTile {
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override

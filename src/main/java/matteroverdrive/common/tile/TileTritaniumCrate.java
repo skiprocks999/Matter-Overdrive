@@ -1,7 +1,6 @@
 package matteroverdrive.common.tile;
 
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.registers.IBulkRegistryObject;
 import matteroverdrive.core.tile.GenericTile;
@@ -17,12 +16,9 @@ public class TileTritaniumCrate extends GenericTile {
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRITANIUM_CRATE.get(), pos, state);
 
-		addCapability(new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
-								exposeCapability(CapabilityType.ITEM), getCoordsData()),
-						getContainerName("tritanium_crate")));
+		addInventoryCap(new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
+				getInventoryCap(), getCoordsData()), getContainerName("tritanium_crate")));
 	}
 
 	public static enum CrateColors implements IBulkRegistryObject {

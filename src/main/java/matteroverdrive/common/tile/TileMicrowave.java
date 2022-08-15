@@ -3,7 +3,6 @@ package matteroverdrive.common.tile;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMicrowave;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.sound.SoundBarrierMethods;
@@ -51,16 +50,15 @@ public class TileMicrowave extends GenericSoundTile {
 
 	public TileMicrowave(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MICROWAVE.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryMicrowave.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
 		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryMicrowave(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
+				(id, inv, play) -> new InventoryMicrowave(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.MICROWAVE.id())));
 		setHasMenuData();
 		setHasRenderData();
@@ -79,16 +77,16 @@ public class TileMicrowave extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
+		}
 		UtilsTile.drainElectricSlot(this);
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
 			running = false;
 			currProgress = 0;
 			return;
 		}
-		
+
 		boolean matched = false;
 		if (cachedRecipe == null) {
 			Level world = getLevel();
@@ -105,29 +103,29 @@ public class TileMicrowave extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
-		
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		}
+
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			running = false;
 			return;
 		}
-		
+
 		ItemStack output = inv.getOutputs().get(0);
 		ItemStack result = cachedRecipe.getResultItem();
-		
-		if(!(output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
+
+		if (!(output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
 			running = false;
 			return;
 		}
-		
+
 		if (energy.getEnergyStored() >= getCurrentPowerUsage(false)
 				&& (output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 						&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-			
+
 		}
-		
+
 		running = true;
 		currProgress += getCurrentSpeed(false);
 		energy.removeEnergy((int) getCurrentPowerUsage(false));
@@ -141,7 +139,7 @@ public class TileMicrowave extends GenericSoundTile {
 			input.shrink(1);
 		}
 		setChanged();
-		
+
 	}
 
 	@Override
@@ -153,9 +151,9 @@ public class TileMicrowave extends GenericSoundTile {
 	}
 
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -252,8 +250,7 @@ public class TileMicrowave extends GenericSoundTile {
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -268,8 +265,7 @@ public class TileMicrowave extends GenericSoundTile {
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override
