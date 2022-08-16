@@ -8,7 +8,6 @@ import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
-import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentFillArea;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
@@ -19,6 +18,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
+import matteroverdrive.core.screen.types.GenericOverdriveScreen;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage> {
+public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatternStorage> {
 
 	private static boolean EXTENDED = false;
 
@@ -39,8 +39,6 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 	private ButtonMenuOption settings;
 
 	private ButtonRedstoneMode redstone;
-
-	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
@@ -135,16 +133,6 @@ public class ScreenPatternStorage extends GenericScreen<InventoryPatternStorage>
 
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
-	}
-
-	private void updateScreen(int screenNumber) {
-		this.screenNumber = screenNumber;
-		updateComponentActivity(screenNumber);
-	}
-
-	@Override
-	public int getScreenNumber() {
-		return screenNumber;
 	}
 
 }

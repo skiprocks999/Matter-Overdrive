@@ -7,7 +7,6 @@ import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterRe
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
-import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -26,6 +25,7 @@ import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButto
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.component.wrappers.WrapperMatterReplicatorOrders;
+import matteroverdrive.core.screen.types.GenericOverdriveScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplicator> {
+public class ScreenMatterReplicator extends GenericOverdriveScreen<InventoryMatterReplicator> {
 
 	private static boolean EXTENDED = false;
 
@@ -56,8 +56,6 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 	private WrapperIOConfig itemWrapper;
 	private WrapperIOConfig energyWrapper;
 	private WrapperIOConfig matterWrapper;
-
-	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
@@ -433,16 +431,6 @@ public class ScreenMatterReplicator extends GenericScreen<InventoryMatterReplica
 
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
-	}
-
-	private void updateScreen(int screenNumber) {
-		this.screenNumber = screenNumber;
-		updateComponentActivity(screenNumber);
-	}
-
-	@Override
-	public int getScreenNumber() {
-		return screenNumber;
 	}
 	
 	@Override

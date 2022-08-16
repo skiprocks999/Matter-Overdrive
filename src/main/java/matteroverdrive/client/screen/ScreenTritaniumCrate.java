@@ -1,7 +1,7 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryTritaniumCrate;
-import matteroverdrive.core.screen.GenericVanillaScreen;
+import matteroverdrive.core.screen.types.GenericVanillaScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
