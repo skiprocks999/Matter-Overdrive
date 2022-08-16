@@ -10,8 +10,11 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.tile.TileInscriber;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
+import matteroverdrive.core.property.PropertyType;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -501,7 +504,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setPowerStorage((int) powerStorage);
 				upgradable.setPowerUsage((int) powerUsage);
 				upgradable.setRange((int) range);
-				upgradable.setMuffled(isMuffled);
+				if (owner instanceof TileInscriber tile) {
+					tile.getPropertyManager().update(PropertyTypes.BOOLEAN, (short) 0, isMuffled);
+				}
 			}
 			owner.setChanged();
 		}

@@ -8,6 +8,8 @@ import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.message.UpdateClientBlockEntityPropertyMessage;
 import matteroverdrive.core.property.message.UpdateServerBlockEntityPropertyMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -53,7 +55,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
    *
    * @param blockPos The {@link BlockPos} of the {@link BlockEntity} in the world.
    */
-  public void sendBlockEntityChanges(BlockPos blockPos) {
+  public void sendBlockEntityChanges(ServerPlayer player, BlockPos blockPos) {
     List<Triple<PropertyType<?>, Short, Object>> dirtyProperties = Lists.newArrayList();
     for (short i = 0; i < properties.size(); i++) {
       Property<?> property = properties.get(i);
@@ -63,7 +65,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
     }
 
     if (!dirtyProperties.isEmpty()) {
-      NetworkHandler.sendUpdateClientBlockEntityProperties(new UpdateClientBlockEntityPropertyMessage(blockPos, dirtyProperties));
+      NetworkHandler.sendUpdateClientBlockEntityProperties(player, new UpdateClientBlockEntityPropertyMessage(blockPos, dirtyProperties));
     }
   }
 }

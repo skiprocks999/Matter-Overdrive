@@ -106,8 +106,8 @@ public class NetworkHandler {
 		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.noArg(), message);
 	}
 
-	public static void sendUpdateClientBlockEntityProperties(UpdateClientBlockEntityPropertyMessage message) {
-		CHANNEL.send(PacketDistributor.PLAYER.noArg(), message);
+	public static void sendUpdateClientBlockEntityProperties(ServerPlayer player, UpdateClientBlockEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
 	}
 
 	public static void sendUpdateServerBlockEntityProperties(UpdateServerBlockEntityPropertyMessage message) {

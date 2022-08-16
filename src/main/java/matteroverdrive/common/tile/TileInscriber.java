@@ -2,6 +2,7 @@ package matteroverdrive.common.tile;
 
 import java.util.List;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryInscriber;
@@ -9,6 +10,8 @@ import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.recipe.CountableIngredient;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
@@ -35,7 +38,8 @@ public class TileInscriber extends GenericSoundTile {
 	private double currProgress = 0;
 	private double currSpeed = DEFAULT_SPEED;
 	private int usage = USAGE_PER_TICK;
-	private boolean isMuffled = false;
+	public Property<Boolean> isMuffled;
+	private boolean isPureMuffled;
 
 	public int clientEnergyUsage;
 	public double clientProgress;
@@ -64,10 +68,16 @@ public class TileInscriber extends GenericSoundTile {
 		setHasMenuData();
 		setHasRenderData();
 		setTickable();
+		this.isMuffled = this.propertyManager.addTrackedProperty(
+						PropertyTypes.BOOLEAN.create(
+										() -> this.level.isClientSide() ? isMuffled(true) : isMuffled(false),
+										this::setMuffled)
+		);
 	}
 
 	@Override
 	public void tickServer() {
+		MatterOverdrive.LOGGER.info("Server Muffled: " + isMuffled.get());
 		if (!canRun()) {
 			running = false;
 			currProgress = 0;
@@ -133,6 +143,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void tickClient() {
+		MatterOverdrive.LOGGER.info("Client Muffled: " + isMuffled.get());
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
@@ -167,7 +178,6 @@ public class TileInscriber extends GenericSoundTile {
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 
 		tag.putBoolean("running", running);
-		tag.putBoolean("muffled", isMuffled);
 		tag.putDouble("sabonus", saMultiplier);
 	}
 
@@ -177,7 +187,6 @@ public class TileInscriber extends GenericSoundTile {
 		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 
 		clientRunning = tag.getBoolean("running");
-		clientMuffled = tag.getBoolean("muffled");
 		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
@@ -189,8 +198,6 @@ public class TileInscriber extends GenericSoundTile {
 		additional.putDouble("progress", currProgress);
 		additional.putDouble("speed", currSpeed);
 		additional.putInt("usage", usage);
-		additional.putBoolean("muffled", isMuffled);
-
 		tag.put("additional", additional);
 	}
 
@@ -202,7 +209,6 @@ public class TileInscriber extends GenericSoundTile {
 		currProgress = additional.getDouble("progress");
 		currSpeed = additional.getDouble("speed");
 		usage = additional.getInt("usage");
-		isMuffled = additional.getBoolean("muffled");
 	}
 
 	@Override
@@ -232,7 +238,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public boolean isMuffled(boolean clientSide) {
-		return clientSide ? clientMuffled : isMuffled;
+		return isPureMuffled;
 	}
 
 	@Override
@@ -267,7 +273,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void setMuffled(boolean muffled) {
-		isMuffled = muffled;
+		this.isPureMuffled = muffled;
 	}
 
 	@Override
