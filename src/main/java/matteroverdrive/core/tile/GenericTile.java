@@ -12,6 +12,10 @@ import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.property.IPropertyManaged;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyManager;
+import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.tile.utils.ITickableTile;
 import matteroverdrive.core.tile.utils.IUpdatableTile;
@@ -21,6 +25,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -32,10 +38,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
+import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile {
+public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
 
 	private HashMap<Capability<?>, IOverdriveCapability> capabilities = new HashMap<>();
 
@@ -49,8 +56,16 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	
 	protected long ticks = 0;
 
+	/**
+	 * Property Manager for the BlockEntity.
+	 * See: <a href="https://github.com/BrassGoggledCoders/Transport/blob/develop/1.16.x/src/main/java/xyz/brassgoggledcoders/transport/container/locomotive/SteamLocomotiveContainer.java">...</a>
+	 * For implementation example.
+	 */
+	protected final BlockEntityPropertyManager propertyManager;
+
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		this.propertyManager = new BlockEntityPropertyManager(pos);
 	}
 
 	public void setMenuProvider(MenuProvider menu) {
@@ -133,6 +148,15 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
+	}
+
+	/**
+	 * When the BlockEntity is marked as "Changed" call super and then send Property updates.
+	 */
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 	}
 
 	public MutableComponent getContainerName(String name) {
@@ -219,4 +243,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 						&& i.isUpgradeValid(upgrade.type);
 	}
 
+	@Override
+	public PropertyManager getPropertyManager() {
+		return this.propertyManager;
+	}
 }
