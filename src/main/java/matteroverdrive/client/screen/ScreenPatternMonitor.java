@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.common.inventory.InventoryPatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
@@ -15,10 +14,11 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorOrders;
 import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorScreen;
+import matteroverdrive.core.screen.types.GenericOverdriveScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor> {
+public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatternMonitor> {
 
 	private static boolean EXTENDED = false;
 
@@ -31,8 +31,6 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 	
 	private WrapperPatternMonitorScreen wrapper;
 	private WrapperPatternMonitorOrders ordersWrapper; 
-
-	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
@@ -115,16 +113,6 @@ public class ScreenPatternMonitor extends GenericScreen<InventoryPatternMonitor>
 
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
-	}
-
-	private void updateScreen(int screenNumber) {
-		this.screenNumber = screenNumber;
-		updateComponentActivity(screenNumber);
-	}
-
-	@Override
-	public int getScreenNumber() {
-		return screenNumber;
 	}
 	
 	@Override

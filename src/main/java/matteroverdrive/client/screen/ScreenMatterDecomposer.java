@@ -4,10 +4,9 @@ import java.util.HashSet;
 
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.common.tile.TileMatterDecomposer;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
-import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -24,6 +23,7 @@ import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
+import matteroverdrive.core.screen.types.GenericOverdriveScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecomposer> {
+public class ScreenMatterDecomposer extends GenericOverdriveScreen<InventoryMatterDecomposer> {
 
 	private static boolean EXTENDED = false;
 
@@ -53,8 +53,6 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 	private WrapperIOConfig itemWrapper;
 	private WrapperIOConfig energyWrapper;
 	private WrapperIOConfig matterWrapper;
-
-	private int screenNumber = 0;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
@@ -377,16 +375,6 @@ public class ScreenMatterDecomposer extends GenericScreen<InventoryMatterDecompo
 
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
-	}
-
-	private void updateScreen(int screenNumber) {
-		this.screenNumber = screenNumber;
-		updateComponentActivity(screenNumber);
-	}
-
-	@Override
-	public int getScreenNumber() {
-		return screenNumber;
 	}
 
 }

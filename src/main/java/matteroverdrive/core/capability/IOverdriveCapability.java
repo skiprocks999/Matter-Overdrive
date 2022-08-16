@@ -1,6 +1,5 @@
 package matteroverdrive.core.capability;
 
-import matteroverdrive.core.capability.types.CapabilityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -11,8 +10,6 @@ public interface IOverdriveCapability extends ICapabilitySerializable<CompoundTa
 	public void onLoad(BlockEntity tile);
 
 	public <T> boolean matchesCapability(Capability<T> cap);
-
-	CapabilityType getCapabilityType();
 
 	void invalidateCapability();
 

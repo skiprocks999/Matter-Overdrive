@@ -1,7 +1,6 @@
 package matteroverdrive.core.block;
 
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.tile.GenericTile;
@@ -42,8 +41,8 @@ public class GenericMachineBlock extends GenericEntityBlock {
 		if (tile instanceof GenericTile generic && generic != null) {
 			ItemStack stack = player.getItemInHand(hand);
 			if (UtilsCapability.hasMatterCap(stack)) {
-				if (generic.hasCapability(CapabilityType.MATTER)) {
-					CapabilityMatterStorage matter = generic.exposeCapability(CapabilityType.MATTER);
+				if (generic.hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE)) {
+					CapabilityMatterStorage matter = generic.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 					ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
 							.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
 					if (storage.canReceive() && matter.canExtract()) {

@@ -164,6 +164,11 @@ public class WrapperPatternMonitorScreen {
 			}
 		}
 		screen.addButton(selectedItem);
+		for(int i = 3; i >= 0; i--) {
+			for(int j = 5; j >= 0; j--) {
+				patterns[i][j].visible = false;
+			}
+		}
 	}
 	
 	public void tick() {

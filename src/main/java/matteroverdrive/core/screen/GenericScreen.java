@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.inventory.GenericInventory;
 import matteroverdrive.core.inventory.slot.IToggleableSlot;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
@@ -24,18 +23,13 @@ import net.minecraft.world.inventory.Slot;
 
 public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> {
 
-	protected static final ResourceLocation DEFAULT_BACKGROUND = new ResourceLocation(
-			References.ID + ":textures/gui/base/base_gui.png");
 	private List<OverdriveScreenComponent> components = new ArrayList<>();
 	protected int playerInvOffset = 0;
+	protected final ResourceLocation background;
 
-	private static final int OFFSET = 37;
-
-	public static final int GUI_WIDTH = 224;
-	public static final int GUI_HEIGHT = 176;
-
-	public GenericScreen(T menu, Inventory playerinventory, Component title) {
+	public GenericScreen(T menu, Inventory playerinventory, Component title, ResourceLocation background) {
 		super(menu, playerinventory, title);
+		this.background = background;
 		setScreenParams();
 	}
 	
@@ -68,19 +62,9 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int x, int y) {
-		float length = font.width(this.title);
-		float offset = (144.0F - length) / 2.0F;
-		this.font.draw(stack, this.title, (float) this.titleLabelX + 3 + offset, (float) this.titleLabelY + 1,
-				UtilsRendering.TITLE_BLUE);
-	}
-
-	@Override
 	protected void renderBg(PoseStack stack, float partialTick, int x, int y) {
-		UtilsRendering.bindTexture(DEFAULT_BACKGROUND);
-		int guiWidth = (width - imageWidth) / 2;
-		int guiHeight = (height - imageHeight) / 2;
-		blit(stack, guiWidth, guiHeight, 0, 0, imageWidth, imageHeight);
+		UtilsRendering.bindTexture(background);
+		blit(stack, getXPos(), getYPos(), 0, 0, imageWidth, imageHeight);
 	}
 
 	public int getXPos() {
@@ -96,9 +80,9 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	public int[] getAxisAndGuiWidth(int mouseX, int mouseY) {
-		int guiWidth = (width - imageWidth) / 2;
-		int guiHeight = (height - imageHeight) / 2;
-		return new int[] { guiWidth, guiHeight, mouseX - guiWidth, mouseY - guiHeight };
+		int xPos = getXPos();
+		int yPos = getYPos();
+		return new int[] { xPos, yPos, mouseX - xPos, mouseY - yPos };
 	}
 
 	public void updateComponentActivity(int screenNum) {
@@ -127,13 +111,6 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 		addRenderableWidget(box);
 	}
 
-	public void setScreenParams() {
-		leftPos -= OFFSET;
-		imageWidth = GUI_WIDTH;
-		imageHeight = GUI_HEIGHT;
-		titleLabelX += OFFSET;
-	}
-
 	public int getGuiRight() {
 		return getGuiLeft() + getXSize();
 	}
@@ -143,5 +120,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	}
 
 	public abstract int getScreenNumber();
+	
+	public abstract void setScreenParams();
 
 }

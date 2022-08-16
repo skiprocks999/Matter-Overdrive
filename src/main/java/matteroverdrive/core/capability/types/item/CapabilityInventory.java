@@ -12,7 +12,6 @@ import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -33,6 +32,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class CapabilityInventory extends ItemStackHandler implements IOverdriveCapability {
 
+	public static final CapabilityInventory EMPTY = new CapabilityInventory(0, false, false);
+	
 	private TriPredicate<Integer, ItemStack, CapabilityInventory> valid = (slot, item, inv) -> true;
 
 	private HashSet<Direction> relativeInputDirs;
@@ -220,11 +221,6 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Override
 	public <T> boolean matchesCapability(Capability<T> cap) {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-	}
-
-	@Override
-	public CapabilityType getCapabilityType() {
-		return CapabilityType.ITEM;
 	}
 
 	@Override

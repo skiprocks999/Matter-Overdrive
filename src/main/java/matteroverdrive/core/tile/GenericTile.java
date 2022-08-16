@@ -1,15 +1,22 @@
 package matteroverdrive.core.tile;
 
+import java.util.HashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
-import matteroverdrive.core.capability.types.CapabilityType;
+import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
+import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.tile.utils.ITickableTile;
 import matteroverdrive.core.tile.utils.IUpdatableTile;
 import matteroverdrive.core.utils.UtilsCapability;
@@ -32,10 +39,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
 
-	private IOverdriveCapability[] capabilities = new IOverdriveCapability[CapabilityType.values().length];
+	private HashMap<Capability<?>, IOverdriveCapability> capabilities = new HashMap<>();
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
@@ -81,42 +90,38 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	}
 
 	@Override
+	//this is about as fast as I can get it without hard-coding if-elses which I don't want to do
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		for (IOverdriveCapability i : capabilities) {
-			if (i.matchesCapability(cap)) {
-				return i.getCapability(cap, side);
-			}
+		IOverdriveCapability capability = capabilities.get(cap);
+		return capability == null ? LazyOptional.empty() : capability.getCapability(cap, side);
+	}
+
+	public <T> void addCapability(@Nonnull Capability<T> key, @Nonnull IOverdriveCapability cap) {
+		if(capabilities.containsKey(key)) {
+			throw new RuntimeException("error: capability type " + cap.getSaveKey() + " already added");
 		}
-		return super.getCapability(cap, side);
+		capabilities.put(key, cap);
 	}
 
-	public void addCapability(IOverdriveCapability cap) {
-		CapabilityType type = cap.getCapabilityType();
-		IOverdriveCapability capability = capabilities[type.ordinal()];
-		if (capability != null) {
-			throw new RuntimeException("error: capability type " + type + " already added");
-		}
-		capability = cap;
+	public <T> boolean hasCapability(Capability<T> cap) {
+		return capabilities.containsKey(cap);
 	}
 
-	public boolean hasCapability(CapabilityType type) {
-		return capabilities[type.ordinal()] != null;
-	}
-
-	public <T extends IOverdriveCapability> T exposeCapability(CapabilityType type) {
-		return (T) capabilities[type.ordinal()];
+	@Nullable
+	public <T extends IOverdriveCapability, A> T exposeCapability(Capability<A> cap) {
+		return (T) capabilities.get(cap);
 	}
 
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		for (IOverdriveCapability cap : capabilities) {
+		for(IOverdriveCapability cap : capabilities.values()) {
 			cap.onLoad(this);
 		}
 	}
 
 	public void refreshCapabilities() {
-		for (IOverdriveCapability cap : capabilities) {
+		for(IOverdriveCapability cap : capabilities.values()) {
 			cap.refreshCapability();
 		}
 	}
@@ -124,7 +129,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		for (IOverdriveCapability cap : capabilities) {
+		for(IOverdriveCapability cap : capabilities.values()) {
 			cap.invalidateCapability();
 		}
 	}
@@ -132,7 +137,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
-		for (IOverdriveCapability cap : capabilities) {
+		for (IOverdriveCapability cap : capabilities.values()) {
 			tag.put(cap.getSaveKey(), cap.serializeNBT());
 		}
 	}
@@ -140,7 +145,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		for (IOverdriveCapability cap : capabilities) {
+		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
 	}
@@ -181,14 +186,6 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public Component getName() {
 		return Component.literal(References.ID + ".default.tile.name");
 	}
-
-	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {
-		return (x, y, i) -> x < i.outputIndex()
-				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
-				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
-				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
-						&& i.isUpgradeValid(upgrade.type);
-	}
 	
 	@Override
 	public long getTicks() {
@@ -198,6 +195,53 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void incrementTicks() {
 		ticks++;
 	};
+	
+	//Util methods
+	
+	public void addEnergyStorageCap(CapabilityEnergyStorage cap) {
+		addCapability(CapabilityEnergy.ENERGY, cap);
+	}
+	
+	public void addMatterStorageCap(CapabilityMatterStorage cap) {
+		addCapability(MatterOverdriveCapabilities.MATTER_STORAGE, cap);
+	}
+	
+	public void addInventoryCap(CapabilityInventory cap) {
+		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, cap);
+	}
+	
+	//Serverside only!
+	public CapabilityEnergyStorage getEnergyStorageCap() {
+		return (CapabilityEnergyStorage) capabilities.get(CapabilityEnergy.ENERGY);
+	}
+	
+	public CapabilityMatterStorage getMatterStorageCap() {
+		return (CapabilityMatterStorage) capabilities.get(MatterOverdriveCapabilities.MATTER_STORAGE);
+	}
+	
+	public CapabilityInventory getInventoryCap() {
+		return (CapabilityInventory) capabilities.get(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+	}
+	
+	public boolean hasInventoryCap() {
+		return hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+	}
+	
+	public boolean hasEnergyStorageCap() {
+		return hasCapability(CapabilityEnergy.ENERGY);
+	}
+	
+	public boolean hasMatterStorageCap() {
+		return hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
+	}
+	
+	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {
+		return (x, y, i) -> x < i.outputIndex()
+				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
+				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
+						&& i.isUpgradeValid(upgrade.type);
+	}
 
 	@Override
 	public PropertyManager getPropertyManager() {

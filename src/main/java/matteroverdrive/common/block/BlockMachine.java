@@ -7,7 +7,6 @@ import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.core.block.GenericMachineBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
@@ -74,8 +73,8 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof GenericTile generic && generic.hasCapability(CapabilityType.ITEM)) {
-			CapabilityInventory inv = generic.exposeCapability(CapabilityType.ITEM);
+		if (blockentity instanceof GenericTile generic && generic.hasInventoryCap()) {
+			CapabilityInventory inv = generic.getInventoryCap();
 			if (MatterOverdriveConfig.machines_drop_items.get()) {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

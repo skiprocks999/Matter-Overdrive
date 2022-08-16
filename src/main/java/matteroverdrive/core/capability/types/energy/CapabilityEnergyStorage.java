@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
@@ -209,11 +208,6 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	@Override
 	public void onLoad(BlockEntity tile) {
 		refreshCapability();
-	}
-
-	@Override
-	public CapabilityType getCapabilityType() {
-		return CapabilityType.ENERGY;
 	}
 
 	@Override

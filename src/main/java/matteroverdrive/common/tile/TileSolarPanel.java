@@ -2,7 +2,6 @@ package matteroverdrive.common.tile;
 
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySolarPanel;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
@@ -29,13 +28,12 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
 				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
 		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
+				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));
 		setTickable();
 		setHasMenuData();
@@ -49,7 +47,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				generating = world.isDay() && world.canSeeSky(getBlockPos());
 			}
 			if (generating) {
-				CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+				CapabilityEnergyStorage energy = getEnergyStorageCap();
 				energy.giveEnergy((int) (GENERATION * saMultiplier));
 			}
 			UtilsTile.outputEnergy(this);
@@ -60,7 +58,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -84,14 +82,12 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 }

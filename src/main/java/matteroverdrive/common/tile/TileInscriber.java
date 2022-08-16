@@ -7,7 +7,6 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.recipe.CountableIngredient;
@@ -52,16 +51,15 @@ public class TileInscriber extends GenericSoundTile {
 
 	public TileInscriber(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_INSCRIBER.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryInscriber.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
 		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
+				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.INSCRIBER.id())));
 		setHasMenuData();
 		setHasRenderData();
@@ -74,9 +72,9 @@ public class TileInscriber extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
+		}
 		UtilsTile.drainElectricSlot(this);
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		List<ItemStack> inputs = inv.getInputs();
 		ItemStack input1 = inputs.get(0);
 		ItemStack input2 = inputs.get(1);
@@ -84,7 +82,7 @@ public class TileInscriber extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
+		}
 		boolean matched = false;
 		if (cachedRecipe == null) {
 			for (InscriberRecipe recipe : getRecipes()) {
@@ -100,16 +98,16 @@ public class TileInscriber extends GenericSoundTile {
 			running = false;
 			currProgress = 0;
 			return;
-		} 
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		}
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			running = false;
 			return;
 		}
 		ItemStack output = inv.getOutputs().get(0);
 		ItemStack result = cachedRecipe.getResultItem();
 		if ((output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
-						&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
 			running = true;
 			currProgress += getCurrentSpeed(false);
 			energy.removeEnergy((int) getCurrentPowerUsage(false));
@@ -125,7 +123,7 @@ public class TileInscriber extends GenericSoundTile {
 				for (int i = 0; i < inputs.size(); i++) {
 					inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
 				}
-				
+
 			}
 			setChanged();
 		} else {
@@ -143,7 +141,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -165,7 +163,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void getRenderData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 
 		tag.putBoolean("running", running);
@@ -244,8 +242,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -260,8 +257,7 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override
@@ -278,10 +274,9 @@ public class TileInscriber extends GenericSoundTile {
 	public double getProcessingTime() {
 		return OPERATING_TIME;
 	}
-	
-	private List<InscriberRecipe> getRecipes(){
-		return getLevel().getRecipeManager()
-				.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get());
+
+	private List<InscriberRecipe> getRecipes() {
+		return getLevel().getRecipeManager().getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get());
 	}
 
 }

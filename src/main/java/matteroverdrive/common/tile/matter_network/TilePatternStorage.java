@@ -13,7 +13,6 @@ import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.network.NetworkMatter;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
@@ -68,13 +67,13 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
 				.setValidator(getValidator()));
-		addCapability(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryPatternStorage(id, play.getInventory(),
-								exposeCapability(CapabilityType.ITEM), getCoordsData()),
+								getInventoryCap(), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_STORAGE.id())));
 		setTickable();
 		setHasMenuData();
@@ -89,8 +88,8 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		} 
 
 		UtilsTile.drainElectricSlot(this);
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityInventory inv = getInventoryCap();
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		int drives = 0;
 		for(ItemStack stack : inv.getInputs()) {
 			if (stack.getItem() instanceof ItemPatternDrive) {
@@ -126,9 +125,9 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
 		
 	}
@@ -315,7 +314,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	}
 	
 	public List<ItemStack> getDrives(){
-		return this.<CapabilityInventory>exposeCapability(CapabilityType.ITEM).getItems().subList(0, 6);
+		return getInventoryCap().getItems().subList(0, 6);
 	}
 	
 	/**
@@ -350,7 +349,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	@Nullable
 	public ItemPatternWrapper getWrapperFromIndex(int[] index) {
 		if(index[0] > -1) {
-			ItemStack stack = this.<CapabilityInventory>exposeCapability(CapabilityType.ITEM).getItems().get(index[0]);
+			ItemStack stack = getInventoryCap().getItems().get(index[0]);
 			ICapabilityItemPatternStorage cap = UtilsItem.getPatternCap(stack);
 			if(cap != null) {
 				return cap.getStoredPatterns()[index[1]];

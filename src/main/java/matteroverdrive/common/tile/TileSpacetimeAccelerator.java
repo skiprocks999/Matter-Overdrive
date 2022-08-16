@@ -3,7 +3,6 @@ package matteroverdrive.common.tile;
 import matteroverdrive.client.particle.shockwave.ParticleOptionShockwave;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
-import matteroverdrive.core.capability.types.CapabilityType;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
@@ -22,14 +21,14 @@ import net.minecraft.world.phys.AABB;
 public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	public static final int SLOT_COUNT = 6;
-	
+
 	public static final int ENERGY_USAGE_PER_TICK = 64;
 	public static final double MATTER_USAGE_PER_TICK = 0.2D;
 	public static final int BASE_RADIUS = 2;
 	public static final int ENERGY_CAPACITY = 512000;
 	public static final double MATTER_CAPACITY = 1024;
 	public static final double DEFAULT_MULTIPLIER = 1.5;
-	
+
 	private boolean running = false;
 	private double currSpeed = DEFAULT_MULTIPLIER;
 	private int energyUsage = ENERGY_USAGE_PER_TICK;
@@ -45,62 +44,60 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public CapabilityInventory clientInventory;
 	public CapabilityEnergyStorage clientEnergy;
 	public CapabilityMatterStorage clientMatter;
-	
+
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
-		addCapability(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
-				.setUpgrades(4).setOwner(this)
-				.setValidator(machineValidator()).setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));
-		addCapability(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP}, null));
-		addCapability(new CapabilityMatterStorage(MATTER_CAPACITY, true, false).setOwner(this).setDefaultDirections(
-				state, new Direction[] { Direction.DOWN }, null));
-		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
-						exposeCapability(CapabilityType.ITEM), getCoordsData()),
-				getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
+				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
+				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
+				.setDefaultDirections(state, new Direction[] { Direction.UP }, null));
+		addMatterStorageCap(new CapabilityMatterStorage(MATTER_CAPACITY, true, false).setOwner(this)
+				.setDefaultDirections(state, new Direction[] { Direction.DOWN }, null));
+		setMenuProvider(
+				new SimpleMenuProvider((id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
+						getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
 		setTickable();
 		setHasMenuData();
 		setHasRenderData();
 	}
-	
+
 	@Override
 	public void tickServer() {
-		if(!canRun()) {
+		if (!canRun()) {
 			resetRadiusMultipliers();
 			running = false;
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		
-		
-		if(energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+
+		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
 			resetRadiusMultipliers();
 			running = false;
 			return;
-		} 
-		
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
-		if(matter.getMatterStored() < getCurrentMatterUsage(false)) {
+		}
+
+		CapabilityMatterStorage matter = getMatterStorageCap();
+		if (matter.getMatterStored() < getCurrentMatterUsage(false)) {
 			resetRadiusMultipliers();
 			running = false;
 			return;
-		} 
-		
+		}
+
 		running = true;
 		energy.removeEnergy((int) getCurrentPowerUsage(false));
 		matter.removeMatter(getCurrentMatterUsage(false));
-		if(ticks % 10 == 0) {
+		if (ticks % 10 == 0) {
 			updateSurroundingTileMultipliers(getCurrentSpeed(false));
 		}
 		setChanged();
 	}
-	
+
 	@Override
 	public void tickClient() {
-		if(clientRunning && ticks % (getCurrentRange(true) * 5) == 0) {
+		if (clientRunning && ticks % (getCurrentRange(true) * 5) == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
 			shockwave.setMaxScale((float) getCurrentRange(true));
 			shockwave.setColor(191, 228, 230, 255);
@@ -108,14 +105,14 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 			getLevel().addParticle(shockwave, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0, 0);
 		}
 	}
-	
+
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = exposeCapability(CapabilityType.ITEM);
+		CapabilityInventory inv = getInventoryCap();
 		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
+		CapabilityMatterStorage matter = getMatterStorageCap();
 		tag.put(matter.getSaveKey(), matter.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
@@ -123,7 +120,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		tag.putDouble("speed", currSpeed);
 		tag.putDouble("matusage", matterUsage);
 	}
-	
+
 	@Override
 	public void readMenuData(CompoundTag tag) {
 		clientInventory = new CapabilityInventory();
@@ -138,19 +135,19 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		clientSpeed = tag.getDouble("speed");
 		clientMatterUsage = tag.getDouble("matusage");
 	}
-	
+
 	@Override
 	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
 		tag.putInt("radius", radius);
 	}
-	
+
 	@Override
 	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
 		clientRadius = tag.getInt("radius");
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
@@ -173,7 +170,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		energyUsage = additional.getInt("usage");
 		matterUsage = additional.getDouble("matusage");
 		radius = additional.getInt("radius");
-		
+
 	}
 
 	@Override
@@ -200,7 +197,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public double getDefaultPowerUsage() {
 		return ENERGY_USAGE_PER_TICK;
 	}
-	
+
 	@Override
 	public double getDefaultRange() {
 		return BASE_RADIUS;
@@ -213,14 +210,12 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	@Override
 	public double getCurrentMatterStorage(boolean clientSide) {
-		return clientSide ? clientMatter.getMaxMatterStored()
-				: this.<CapabilityMatterStorage>exposeCapability(CapabilityType.MATTER).getMaxMatterStored();
+		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored()
-				: this.<CapabilityEnergyStorage>exposeCapability(CapabilityType.ENERGY).getMaxEnergyStored();
+		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -232,7 +227,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public double getCurrentMatterUsage(boolean clientSide) {
 		return clientSide ? clientMatterUsage : matterUsage;
 	}
-	
+
 	@Override
 	public double getCurrentRange(boolean clientSide) {
 		return clientSide ? clientRadius : radius;
@@ -245,21 +240,19 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	@Override
 	public void setMatterStorage(double storage) {
-		CapabilityMatterStorage matter = exposeCapability(CapabilityType.MATTER);
-		matter.updateMaxMatterStorage(storage);
+		getMatterStorageCap().updateMaxMatterStorage(storage);
 	}
 
 	@Override
 	public void setPowerStorage(int storage) {
-		CapabilityEnergyStorage energy = exposeCapability(CapabilityType.ENERGY);
-		energy.updateMaxEnergyStorage(storage);
+		getEnergyStorageCap().updateMaxEnergyStorage(storage);
 	}
 
 	@Override
 	public void setPowerUsage(int usage) {
 		this.energyUsage = usage;
 	}
-	
+
 	public void setRange(int range) {
 		this.radius = Math.min(range, 8);
 	}
@@ -268,21 +261,24 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public void setMatterUsage(double matter) {
 		this.matterUsage = matter;
 	}
-	
+
 	private void resetRadiusMultipliers() {
-		if(running) {
+		if (running) {
 			updateSurroundingTileMultipliers(1.0);
-		}	
+		}
 	}
-	
+
 	private void updateSurroundingTileMultipliers(double multipler) {
 		BlockPos pos = getBlockPos();
-		UtilsWorld.getSurroundingBlockEntities(level, new AABB(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))).forEach(entity -> {
-			if(entity instanceof IUpgradableTile upgrade) {
-				upgrade.setAcceleratorMultiplier(multipler);
-				entity.setChanged();
-			}
-		});
+		UtilsWorld
+				.getSurroundingBlockEntities(level,
+						new AABB(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius)))
+				.forEach(entity -> {
+					if (entity instanceof IUpgradableTile upgrade) {
+						upgrade.setAcceleratorMultiplier(multipler);
+						entity.setChanged();
+					}
+				});
 	}
 
 }
