@@ -506,7 +506,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setPowerUsage((int) powerUsage);
 				upgradable.setRange((int) range);
 				if (owner instanceof TileInscriber tile) {
-					((BlockEntityPropertyManager)tile.getPropertyManager()).updateServerBlockEntity(tile.isMuffled, isMuffled);
+					tile.isMuffled.set(isMuffled);
 				}
 			}
 			owner.setChanged();
