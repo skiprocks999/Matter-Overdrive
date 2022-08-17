@@ -10,6 +10,7 @@ import matteroverdrive.core.property.message.UpdateServerBlockEntityPropertyMess
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -18,18 +19,18 @@ import java.util.List;
 public class BlockEntityPropertyManager extends PropertyManager {
 
   /**
-   * The {@link BlockPos} of the {@link BlockEntity}.
+   * The {@link BlockEntity}.
    */
-  private final BlockPos blockPos;
+  private final BlockEntity blockEntity;
 
   /**
    * BlockEntity PropertyManager Constructor
    *
-   * @param blockPos The BlockPos of the BlockEntity
+   * @param blockEntity The {@link BlockEntity}
    */
-  public BlockEntityPropertyManager(BlockPos blockPos) {
+  public BlockEntityPropertyManager(BlockEntity blockEntity) {
     super(Lists.newArrayList());
-    this.blockPos = blockPos;
+    this.blockEntity = blockEntity;
   }
 
   /**
@@ -47,7 +48,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
       }
     }
     property.set(value);
-    NetworkHandler.sendUpdateServerBlockEntityProperties(new UpdateServerBlockEntityPropertyMessage(blockPos, property.getPropertyType(), propertyId, value));
+    NetworkHandler.sendUpdateServerBlockEntityProperties(blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()), new UpdateServerBlockEntityPropertyMessage(blockEntity.getBlockPos(), property.getPropertyType(), propertyId, value));
   }
 
   /**
@@ -55,7 +56,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
    *
    * @param blockPos The {@link BlockPos} of the {@link BlockEntity} in the world.
    */
-  public void sendBlockEntityChanges(ServerPlayer player, BlockPos blockPos) {
+  public void sendBlockEntityChanges(BlockPos blockPos) {
     List<Triple<PropertyType<?>, Short, Object>> dirtyProperties = Lists.newArrayList();
     for (short i = 0; i < properties.size(); i++) {
       Property<?> property = properties.get(i);
@@ -64,8 +65,8 @@ public class BlockEntityPropertyManager extends PropertyManager {
       }
     }
 
-    if (!dirtyProperties.isEmpty()) {
-      NetworkHandler.sendUpdateClientBlockEntityProperties(player, new UpdateClientBlockEntityPropertyMessage(blockPos, dirtyProperties));
+    if (!dirtyProperties.isEmpty() && blockEntity.getLevel() != null) {
+      NetworkHandler.sendUpdateClientBlockEntityProperties(blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()), new UpdateClientBlockEntityPropertyMessage(blockPos, dirtyProperties));
     }
   }
 }

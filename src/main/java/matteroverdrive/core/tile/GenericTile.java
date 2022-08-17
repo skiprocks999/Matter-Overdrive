@@ -64,7 +64,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.propertyManager = new BlockEntityPropertyManager(pos);
+		this.propertyManager = new BlockEntityPropertyManager(this);
 	}
 
 	public void setMenuProvider(MenuProvider menu) {
@@ -155,12 +155,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide()) this.propertyManager
-						.sendBlockEntityChanges(this.level.getNearestEntity(
-										ServerPlayer.class, TargetingConditions.DEFAULT, null,
-										this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(),
-										new AABB(this.getBlockPos().getX() - 2, this.getBlockPos().getY(), this.getBlockPos().getZ() - 2,
-										this.getBlockPos().getX() + 2, this.getBlockPos().getY() + 2, this.getBlockPos().getZ() + 2)), this.getBlockPos());
+		if (!level.isClientSide())
+			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 	}
 
 	public MutableComponent getContainerName(String name) {

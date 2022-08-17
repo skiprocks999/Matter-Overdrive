@@ -18,6 +18,7 @@ import matteroverdrive.core.property.message.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -106,12 +107,12 @@ public class NetworkHandler {
 		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.noArg(), message);
 	}
 
-	public static void sendUpdateClientBlockEntityProperties(ServerPlayer player, UpdateClientBlockEntityPropertyMessage message) {
-		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk, UpdateClientBlockEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 
-	public static void sendUpdateServerBlockEntityProperties(UpdateServerBlockEntityPropertyMessage message) {
-		CHANNEL.send(PacketDistributor.PLAYER.noArg(), message);
+	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk, UpdateServerBlockEntityPropertyMessage message) {
+		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 
 }

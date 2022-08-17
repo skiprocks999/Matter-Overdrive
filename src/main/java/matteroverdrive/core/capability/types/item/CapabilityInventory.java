@@ -15,6 +15,7 @@ import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.PropertyTypes;
+import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -505,7 +506,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setPowerUsage((int) powerUsage);
 				upgradable.setRange((int) range);
 				if (owner instanceof TileInscriber tile) {
-					tile.getPropertyManager().update(PropertyTypes.BOOLEAN, (short) 0, isMuffled);
+					((BlockEntityPropertyManager)tile.getPropertyManager()).updateServerBlockEntity(tile.isMuffled, isMuffled);
 				}
 			}
 			owner.setChanged();
