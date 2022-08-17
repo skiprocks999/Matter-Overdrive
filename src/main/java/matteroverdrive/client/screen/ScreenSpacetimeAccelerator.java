@@ -108,7 +108,7 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null && spacetime.clientRunning) {
-				return spacetime.getCurrentPowerUsage(true);
+				return spacetime.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 141, 35, new int[] { 0 }));
@@ -127,7 +127,7 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null && spacetime.clientRunning) {
-				return spacetime.getCurrentMatterUsage(true);
+				return spacetime.getCurrentMatterUsage();
 			}
 			return 0;
 		}, this, 95, 35, new int[] { 0 }).setMatter().setMatterPerTick());

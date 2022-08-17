@@ -467,32 +467,32 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 
 	@Override
-	public boolean isMuffled(boolean clientSide) {
+	public boolean isMuffled() {
 		return clientSide ? clientMuffled : isMuffled;
 	}
 
 	@Override
-	public double getCurrentSpeed(boolean clientSide) {
+	public double getCurrentSpeed() {
 		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
 	}
 
 	@Override
-	public float getCurrentFailure(boolean clientSide) {
+	public float getCurrentFailure() {
 		return clientSide ? clientFailure * (float) clientSAMultipler : currFailureChance * (float) saMultiplier;
 	}
 
 	@Override
-	public double getCurrentMatterStorage(boolean clientSide) {
+	public double getCurrentMatterStorage() {
 		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
+	public double getCurrentPowerStorage() {
 		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public double getCurrentPowerUsage(boolean clientSide) {
+	public double getCurrentPowerUsage() {
 		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
 	}
 

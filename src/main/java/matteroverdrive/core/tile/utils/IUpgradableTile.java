@@ -32,37 +32,37 @@ public interface IUpgradableTile {
 		return 0;
 	}
 
-	default boolean isMuffled(boolean clientSide) {
+	default boolean isMuffled() {
 		return false;
 	}
 
 	// MODIFIED VALUES
 
-	default double getCurrentSpeed(boolean clientSide) {
+	default double getCurrentSpeed() {
 		return 0;
 	}
 
-	default double getCurrentMatterUsage(boolean clientSide) {
+	default double getCurrentMatterUsage() {
 		return 0;
 	}
 
-	default float getCurrentFailure(boolean clientSide) {
+	default float getCurrentFailure() {
 		return 0;
 	}
 
-	default double getCurrentMatterStorage(boolean clientSide) {
+	default double getCurrentMatterStorage() {
 		return 0;
 	}
 
-	default double getCurrentPowerStorage(boolean clientSide) {
+	default double getCurrentPowerStorage() {
 		return 0;
 	}
 
-	default double getCurrentPowerUsage(boolean clientSide) {
+	default double getCurrentPowerUsage() {
 		return 0;
 	}
 
-	default double getCurrentRange(boolean clientSide) {
+	default double getCurrentRange() {
 		return 0;
 	}
 
@@ -80,13 +80,13 @@ public interface IUpgradableTile {
 	default void setMatterStorage(double storage) {
 	}
 
-	default void setPowerStorage(int storage) {
+	default void setPowerStorage(double storage) {
 	}
 
-	default void setPowerUsage(int usage) {
+	default void setPowerUsage(double usage) {
 	}
 
-	default void setRange(int range) {
+	default void setRange(double range) {
 	}
 
 	default void setMuffled(boolean muffled) {

@@ -417,7 +417,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null && transporter.clientRunning) {
-				return transporter.getCurrentPowerUsage(true);
+				return transporter.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 48, 35, new int[] { 0 }));
@@ -436,7 +436,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null && transporter.clientRunning) {
-				return transporter.getCurrentMatterUsage(true);
+				return transporter.getCurrentMatterUsage();
 			}
 			return 0;
 		}, this, 48, 94, new int[] { 0 }).setMatter());
