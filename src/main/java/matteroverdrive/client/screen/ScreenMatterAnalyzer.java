@@ -111,7 +111,7 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 			return 0;
 		}, () -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
-			if (matter != null && matter.clientRunning) {
+			if (matter != null && matter.isRunning) {
 				return matter.getCurrentPowerUsage();
 			}
 			return 0;
@@ -119,7 +119,7 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientRunning;
+				return matter.isRunning;
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));

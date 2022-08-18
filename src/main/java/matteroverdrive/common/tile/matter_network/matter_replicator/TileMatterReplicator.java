@@ -66,7 +66,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public static final int NEEDED_PLATES = 5;
 	
 	private boolean isPowered = false;
-	private boolean isRunning = false;
 	private List<QueuedReplication> orders = new ArrayList<>();
 	private double currRecipeValue = 0;
 	private double currProgress = 0;
@@ -75,9 +74,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	//Render data
 	public boolean clientPowered;
-	public boolean clientRunning = false;
 	public QueuedReplication clientCurrentOrder;
-	private boolean clientSoundPlaying = false; 
 	public double clientRecipeValue;
 	private SoundHandlerReplicator soundHandler;
 	
@@ -264,7 +261,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			soundHandler = new SoundHandlerReplicator(this);
 		}
 		soundHandler.tick(getAdjustedTicks(), clientSoundPlaying);
-		if(clientRunning && clientCurrentOrder != null) {
+		if(isRunning && clientCurrentOrder != null) {
 			Level world = getLevel();
 			BlockPos blockPos = getBlockPos();
 			ItemEntity entity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.25, blockPos.getZ() + 0.5D, new ItemStack(clientCurrentOrder.getItem()));
@@ -333,7 +330,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	@Override
 	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("powered", isPowered);
-		tag.putBoolean("running", isRunning);
 		if(orders.size() > 0) {
 			orders.get(0).writeToNbt(tag, "order");
 		}
@@ -348,7 +344,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	@Override
 	public void readRenderData(CompoundTag tag) {
 		clientPowered = tag.getBoolean("powered");
-		clientRunning = tag.getBoolean("running");
 		if(tag.contains("order")) {
 			clientCurrentOrder = QueuedReplication.readFromNbt(tag.getCompound("order"));
 		} else {
@@ -397,16 +392,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		currentPowerUsage = data.getDouble("usage");
 		isMuffled = data.getBoolean("muffled");
 		usingFused = data.getBoolean("fused");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 	
 	@Override

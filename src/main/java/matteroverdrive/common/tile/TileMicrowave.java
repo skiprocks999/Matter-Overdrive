@@ -30,12 +30,9 @@ public class TileMicrowave extends GenericSoundTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
 
-	private boolean running = false;
 	private double currProgress = 0;
 
 	public double clientProgress;
-	public boolean clientRunning;
-	private boolean clientSoundPlaying = false;
 
 	private SmokingRecipe cachedRecipe;
 
@@ -54,20 +51,19 @@ public class TileMicrowave extends GenericSoundTile {
 				(id, inv, play) -> new InventoryMicrowave(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.MICROWAVE.id())));
 		setHasMenuData();
-		setHasRenderData();
 		setTickable();
 	}
 
 	@Override
 	public void tickServer() {
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		if (currState && !running) {
+		if (currState && !isRunning) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
-		} else if (!currState && running) {
+		} else if (!currState && isRunning) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		if (!canRun()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -75,7 +71,7 @@ public class TileMicrowave extends GenericSoundTile {
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -93,14 +89,14 @@ public class TileMicrowave extends GenericSoundTile {
 			matched = cachedRecipe.getIngredients().get(0).test(input);
 		}
 		if (!matched) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
@@ -109,7 +105,7 @@ public class TileMicrowave extends GenericSoundTile {
 
 		if (!(output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
@@ -119,7 +115,7 @@ public class TileMicrowave extends GenericSoundTile {
 
 		}
 
-		running = true;
+		isRunning = true;
 		currProgress += getCurrentSpeed();
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (currProgress >= OPERATING_TIME) {
@@ -153,16 +149,6 @@ public class TileMicrowave extends GenericSoundTile {
 	}
 
 	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
-	}
-
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
-	}
-
-	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 
@@ -184,16 +170,6 @@ public class TileMicrowave extends GenericSoundTile {
 		currentSpeed = additional.getDouble("speed");
 		currentPowerUsage = additional.getDouble("usage");
 		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 
 	@Override

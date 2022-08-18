@@ -36,14 +36,11 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
 
-	private boolean running = false;
 	private double currRecipeValue = 0;
 	private double currProgress = 0;
 
 	public double clientRecipeValue;
 	public double clientProgress;
-	public boolean clientRunning;
-	private boolean clientSoundPlaying = false;
 
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
@@ -62,21 +59,20 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
 		setHasMenuData();
-		setHasRenderData();
 		setTickable();
 	}
 
 	@Override
 	public void tickServer() {
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		if (currState && !running) {
+		if (currState && !isRunning) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
-		} else if (!currState && running) {
+		} else if (!currState && isRunning) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		if (!canRun()) {
 			currRecipeValue = 0;
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -86,7 +82,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			running = false;
+			isRunning = false;
 			currRecipeValue = 0;
 			currProgress = 0;
 			return;
@@ -99,7 +95,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
 			if (matterVal <= 0.0) {
-				running = false;
+				isRunning = false;
 				currRecipeValue = 0;
 				currProgress = 0;
 				return;
@@ -107,7 +103,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
@@ -117,7 +113,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		CapabilityMatterStorage storage = getMatterStorageCap();
 
 		if ((storage.getMaxMatterStored() - storage.getMatterStored()) < currRecipeValue) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
@@ -125,10 +121,10 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 		if (!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == currRecipeValue
 				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
-			running = false;
+			isRunning = false;
 			return;
 		}
-		running = true;
+		isRunning = true;
 		currProgress += getCurrentSpeed();
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (currProgress >= OPERATING_TIME) {
@@ -174,16 +170,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
-	}
-
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
-	}
-
-	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 
@@ -207,16 +193,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 		currentFailureChance = additional.getFloat("failure");
 		currentPowerUsage = additional.getDouble("usage");
 		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 
 	@Override

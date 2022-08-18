@@ -32,12 +32,9 @@ public class TileInscriber extends GenericSoundTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
 
-	private boolean running = false;
 	private double currProgress = 0;
 
 	public double clientProgress;
-	public boolean clientRunning;
-	private boolean clientSoundPlaying = false;
 
 	private InscriberRecipe cachedRecipe;
 
@@ -56,7 +53,6 @@ public class TileInscriber extends GenericSoundTile {
 				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.INSCRIBER.id())));
 		setHasMenuData();
-		setHasRenderData();
 		setTickable();
 	}
 
@@ -64,7 +60,7 @@ public class TileInscriber extends GenericSoundTile {
 	public void tickServer() {
 		MatterOverdrive.LOGGER.info("Server Muffled: " + isMuffled);
 		if (!canRun()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -74,7 +70,7 @@ public class TileInscriber extends GenericSoundTile {
 		ItemStack input1 = inputs.get(0);
 		ItemStack input2 = inputs.get(1);
 		if (input1.isEmpty() || input2.isEmpty()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -90,20 +86,20 @@ public class TileInscriber extends GenericSoundTile {
 			matched = cachedRecipe.matchesRecipe(inv, 0);
 		}
 		if (!matched) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 		ItemStack output = inv.getOutputs().get(0);
 		ItemStack result = cachedRecipe.getResultItem();
 		if ((output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-			running = true;
+			isRunning = true;
 			currProgress += getCurrentSpeed();
 			energy.removeEnergy((int) getCurrentPowerUsage());
 			if (currProgress >= OPERATING_TIME) {
@@ -122,7 +118,7 @@ public class TileInscriber extends GenericSoundTile {
 			}
 			setChanged();
 		} else {
-			running = false;
+			isRunning = false;
 		}
 	}
 
@@ -146,16 +142,6 @@ public class TileInscriber extends GenericSoundTile {
 	}
 
 	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
-	}
-
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
-	}
-
-	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 
@@ -174,11 +160,6 @@ public class TileInscriber extends GenericSoundTile {
 		currProgress = additional.getDouble("progress");
 		currentSpeed = additional.getDouble("speed");
 		currentPowerUsage = additional.getDouble("usage");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
 	}
 
 	@Override

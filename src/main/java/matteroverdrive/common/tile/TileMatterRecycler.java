@@ -29,12 +29,9 @@ public class TileMatterRecycler extends GenericSoundTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
 
-	private boolean running = false;
 	private double currProgress = 0;
 
 	public double clientProgress;
-	public boolean clientRunning;
-	private boolean clientSoundPlaying = false;
 
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
@@ -50,21 +47,20 @@ public class TileMatterRecycler extends GenericSoundTile {
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_RECYCLER.id())));
 		setHasMenuData();
-		setHasRenderData();
 		setTickable();
 	}
 
 	@Override
 	public void tickServer() {
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		if (currState && !running) {
+		if (currState && !isRunning) {
 			UtilsTile.updateLit(this, Boolean.FALSE);
-		} else if (!currState && running) {
+		} else if (!currState && isRunning) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 
 		if (!canRun()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -74,14 +70,14 @@ public class TileMatterRecycler extends GenericSoundTile {
 		ItemStack input = inv.getInputs().get(0);
 
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
 
 		double value = UtilsNbt.readMatterVal(input);
 		if (value <= 0) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			return;
 		}
@@ -89,18 +85,18 @@ public class TileMatterRecycler extends GenericSoundTile {
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
 		ItemStack output = inv.getOutputs().get(0);
 		if (!(output.isEmpty()
 				|| (output.getCount() < output.getMaxStackSize() && UtilsNbt.readMatterVal(output) == value))) {
-			running = false;
+			isRunning = false;
 			return;
 		}
 
-		running = true;
+		isRunning = true;
 		currProgress += getCurrentSpeed();
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (currProgress >= OPERATING_TIME) {
@@ -136,14 +132,6 @@ public class TileMatterRecycler extends GenericSoundTile {
 		clientProgress = tag.getDouble("progress");
 	}
 
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
-	}
-
-	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
-	}
-
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
@@ -166,16 +154,6 @@ public class TileMatterRecycler extends GenericSoundTile {
 		currentSpeed = additional.getDouble("speed");
 		currentPowerUsage = additional.getDouble("usage");
 		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 
 	@Override

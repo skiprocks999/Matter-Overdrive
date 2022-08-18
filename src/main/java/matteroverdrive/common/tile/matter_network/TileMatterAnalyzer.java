@@ -38,7 +38,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	private static final int DEFAULT_SPEED = 1;
 	private static final int PERCENTAGE_PER_SCAN = 20;
 	
-	private boolean isRunning = false;
 	private double currProgress = 0;
 	
 	private ItemStack scannedItem = null;
@@ -46,8 +45,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	
 	
 	public boolean clientPowered;
-	public boolean clientRunning = false;
-	private boolean clientSoundPlaying = false; 
 	public double clientProgress;
 	public ItemStack clientScannedItem = ItemStack.EMPTY;
 	
@@ -200,7 +197,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void getMenuData(CompoundTag tag) {
 		
-		tag.putBoolean("running", isRunning);
 		tag.putDouble("progress", currProgress);
 		if(scannedItem != null && !scannedItem.isEmpty()) {
 			CompoundTag item = new CompoundTag();
@@ -213,7 +209,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void readMenuData(CompoundTag tag) {
 		
-		clientRunning = tag.getBoolean("running");
 		clientProgress = tag.getDouble("progress");
 		if(tag.contains("item")) {
 			clientScannedItem = ItemStack.of(tag.getCompound("item"));
@@ -245,16 +240,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		currentSpeed = data.getDouble("speed");
 		currentPowerUsage = data.getDouble("usage");
 		isMuffled = data.getBoolean("muffled");
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 
 	@Override

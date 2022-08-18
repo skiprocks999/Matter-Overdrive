@@ -44,7 +44,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileMatterAnalyzer analyzer = supplier.get();
-		if(analyzer != null && analyzer.clientRunning) {
+		if(analyzer != null && analyzer.isRunning) {
 			int color = UtilsRendering.TITLE_BLUE;
 			
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -55,7 +55,6 @@ public class TileTransporter extends GenericSoundTile {
 	private static final int DEFAULT_SPEED = 1;
 	private static final int DEFAULT_RADIUS = 32;
 
-	private boolean running = false;
 	private double currProgress = 0;
 	private int cooldownTimer = 0;
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
@@ -65,8 +64,6 @@ public class TileTransporter extends GenericSoundTile {
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
 	public double clientProgress;
-	public boolean clientRunning;
-	private boolean clientSoundPlaying = false;
 	public int clientCooldown;
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
 	public int clientDestination = -1;
@@ -101,7 +98,7 @@ public class TileTransporter extends GenericSoundTile {
 	@Override
 	public void tickServer() {
 		if (!canRun()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			currEntities.clear();
 			return;
@@ -111,7 +108,7 @@ public class TileTransporter extends GenericSoundTile {
 		UtilsTile.drainMatterSlot(this);
 		if (cooldownTimer < COOLDOWN) {
 			cooldownTimer++;
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			currEntities.clear();
 			return;
@@ -120,7 +117,7 @@ public class TileTransporter extends GenericSoundTile {
 		List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 		
 		if (entitiesAbove.size() <= 0 || currDestination < 0) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			currEntities.clear();
 			return;
@@ -129,7 +126,7 @@ public class TileTransporter extends GenericSoundTile {
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 		
 		if (!validData.getFirst()) {
-			running = false;
+			isRunning = false;
 			currProgress = 0;
 			currEntities.clear();
 			return;
@@ -137,14 +134,14 @@ public class TileTransporter extends GenericSoundTile {
 		
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
-			running = false;
+			isRunning = false;
 			currEntities.clear();
 			return;
 		}
 		
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
-			running = false;
+			isRunning = false;
 			currEntities.clear();
 			return;
 		} 
@@ -152,7 +149,7 @@ public class TileTransporter extends GenericSoundTile {
 		int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
 				: entitiesAbove.size();
 		energy.removeEnergy((int) getCurrentPowerUsage());
-		running = true;
+		isRunning = true;
 		currProgress += getCurrentSpeed();
 		currEntities.clear();
 		currEntities.addAll(entitiesAbove.subList(0, size));
@@ -186,7 +183,7 @@ public class TileTransporter extends GenericSoundTile {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
 		}
-		if (clientProgress > 0 && clientEntityData != null && clientRunning) {
+		if (clientProgress > 0 && clientEntityData != null && isRunning) {
 			int particlesPerTick = (int) ((clientProgress / (double) BUILD_UP_TIME) * 20);
 			for (int i = 0; i < particlesPerTick; i++) {
 				for (EntityDataWrapper entityData : clientEntityData) {
@@ -222,7 +219,6 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
 		tag.putDouble("progress", currProgress);
 		tag.putInt("entities", currEntities.size());
 		for (int i = 0; i < currEntities.size(); i++) {
@@ -235,7 +231,6 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
 		clientProgress = tag.getDouble("progress");
 		clientEntityData = new ArrayList<>();
 		int size = tag.getInt("entities");
@@ -280,16 +275,6 @@ public class TileTransporter extends GenericSoundTile {
 		for (int i = 0; i < LOCATIONS.length; i++) {
 			LOCATIONS[i].deserializeNbt(additional.getCompound("destination" + i));
 		}
-	}
-
-	@Override
-	public boolean shouldPlaySound() {
-		return clientRunning && !isMuffled && clientProgress > 0;
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
 	}
 
 	@Override

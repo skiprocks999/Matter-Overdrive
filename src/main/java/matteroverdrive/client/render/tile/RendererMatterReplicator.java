@@ -36,7 +36,7 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 			int light, int overlay) {
 		ItemStack stack = ItemStack.EMPTY;
 		boolean shouldSpin = false;
-		if (replicator.clientRunning && replicator.clientCurrentOrder != null) {
+		if (replicator.isRunning && replicator.clientCurrentOrder != null) {
 			stack = new ItemStack(replicator.clientCurrentOrder.getItem());
 			shouldSpin = true;
 		} else {
