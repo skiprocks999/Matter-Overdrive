@@ -75,7 +75,7 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 		}, () -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientRedstoneMode;
+				return matter.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -94,20 +94,20 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
+				return matter.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
+				return matter.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null && matter.clientTilePowered) {
 				int drives = 0;
-				List<ItemStack> drivesList = matter.clientInventory == null ? new ArrayList<>() : matter.clientInventory.getItems().subList(0, 6);
+				List<ItemStack> drivesList = matter.getInventoryCap() == null ? new ArrayList<>() : matter.getInventoryCap().getItems().subList(0, 6);
 				for(ItemStack stack : drivesList) {
 					if(stack.getItem() instanceof ItemPatternDrive) {
 						drives++;

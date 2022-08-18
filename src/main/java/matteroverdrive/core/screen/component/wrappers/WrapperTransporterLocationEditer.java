@@ -147,7 +147,7 @@ public class WrapperTransporterLocationEditer {
 		
 		importFlashdriveData = new ButtonOverdrive(gui, 57 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("importpos"), button -> {
 			TileTransporter transporter = transporterSupplier.get();
-			ItemStack flashdrive = transporter.clientInventory.getStackInSlot(0);
+			ItemStack flashdrive = transporter.getInventoryCap().getStackInSlot(0);
 			if(!flashdrive.isEmpty() && flashdrive.hasTag() && flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
 				CompoundTag tag = flashdrive.getTag();
 				BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS));

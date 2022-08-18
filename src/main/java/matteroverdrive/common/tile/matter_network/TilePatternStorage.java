@@ -59,11 +59,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	public static final int BASE_USAGE = 50;
 	public static final int USAGE_PER_DRIVE = 100;
 	
-	public boolean clientTilePowered;
-	
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
-	
+	public boolean clientTilePowered;	
 	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
@@ -76,7 +72,6 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 								getInventoryCap(), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_STORAGE.id())));
 		setTickable();
-		setHasMenuData();
 		setHasRenderData();
 	}
 	
@@ -121,23 +116,6 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 			pos.add(0.5F, 0.5F, 0.5F);
 			UtilsParticle.spawnVentParticles(pos, 0.03F, getFacing(), 1);
 		}
-	}
-	
-	@Override
-	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		
-	}
-	
-	@Override
-	public void readMenuData(CompoundTag tag) {
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
 	}
 	
 	@Override

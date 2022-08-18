@@ -1,5 +1,7 @@
 package matteroverdrive.core.tile.types;
 
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IRedstoneModeTile;
 import matteroverdrive.core.utils.UtilsTile;
@@ -10,12 +12,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
 
-	protected int currRedstoneMode;
+	public int currRedstoneMode = 0;
 
-	public int clientRedstoneMode;
-
+	public final Property<Integer> currRedstoneModeProp;
+	
 	protected GenericRedstoneTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		this.currRedstoneModeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(this::getCurrMod, this::setMode));
 	}
 
 	@Override

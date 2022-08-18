@@ -22,9 +22,9 @@ public class RendererInscriber extends AbstractTileRenderer<TileInscriber> {
 	@Override
 	public void render(TileInscriber inscriber, float tick, PoseStack pose, MultiBufferSource source, int light,
 			int overlay) {
-		if (inscriber.clientInventory != null) {
+		if (inscriber.getInventoryCap() != null) {
 			ItemStack stack = null;
-			List<ItemStack> items = inscriber.clientInventory.getItems();
+			List<ItemStack> items = inscriber.getInventoryCap().getItems();
 			if (!items.get(0).isEmpty()) {
 				stack = items.get(0);
 			} else if (!items.get(2).isEmpty()) {

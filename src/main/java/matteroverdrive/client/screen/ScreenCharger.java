@@ -76,7 +76,7 @@ public class ScreenCharger extends GenericOverdriveScreen<InventoryCharger> {
 		}, () -> {
 			TileCharger charger = getMenu().getTile();
 			if (charger != null) {
-				return charger.clientRedstoneMode;
+				return charger.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -91,19 +91,19 @@ public class ScreenCharger extends GenericOverdriveScreen<InventoryCharger> {
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileCharger charger = getMenu().getTile();
 			if (charger != null) {
-				return charger.clientEnergy.getEnergyStored();
+				return charger.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileCharger charger = getMenu().getTile();
 			if (charger != null) {
-				return charger.clientEnergy.getMaxEnergyStored();
+				return charger.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileCharger charger = getMenu().getTile();
 			if (charger != null && charger.clientRunning) {
-				return charger.getCurrentPowerUsage(true);
+				return charger.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

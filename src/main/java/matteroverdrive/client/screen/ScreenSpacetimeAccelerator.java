@@ -79,7 +79,7 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.clientRedstoneMode;
+				return spacetime.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -96,13 +96,13 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.clientEnergy.getEnergyStored();
+				return spacetime.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.clientEnergy.getMaxEnergyStored();
+				return spacetime.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
@@ -115,13 +115,13 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.clientMatter.getMatterStored();
+				return spacetime.getMatterStorageCap().getMatterStored();
 			}
 			return 0;
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.clientMatter.getMaxMatterStored();
+				return spacetime.getMatterStorageCap().getMaxMatterStored();
 			}
 			return 0;
 		}, () -> {

@@ -39,27 +39,17 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	private boolean running = false;
 	private double currRecipeValue = 0;
 	private double currProgress = 0;
-	private double currSpeed = DEFAULT_SPEED;
-	private float currFailureChance = FAILURE_CHANCE;
-	private int usage = USAGE_PER_TICK;
-	private boolean isMuffled = false;
 
-	public int clientEnergyUsage;
 	public double clientRecipeValue;
 	public double clientProgress;
-	public double clientSpeed;
-	public float clientFailure;
-	private boolean clientMuffled;
 	public boolean clientRunning;
 	private boolean clientSoundPlaying = false;
 
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
-	public CapabilityMatterStorage clientMatter;
-
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
-
+		currentSpeed = DEFAULT_SPEED;
+		currentFailureChance = FAILURE_CHANCE;
+		currentPowerUsage = USAGE_PER_TICK;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
@@ -116,7 +106,7 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			}
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			running = false;
 			return;
 		}
@@ -139,10 +129,10 @@ public class TileMatterDecomposer extends GenericSoundTile {
 			return;
 		}
 		running = true;
-		currProgress += getCurrentSpeed(false);
-		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		currProgress += getCurrentSpeed();
+		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (currProgress >= OPERATING_TIME) {
-			if (roll() < getCurrentFailure(false)) {
+			if (roll() < getCurrentFailure()) {
 				if (output.isEmpty()) {
 					ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 					UtilsNbt.writeMatterVal(dust, currRecipeValue);
@@ -171,50 +161,26 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = getMatterStorageCap();
-		tag.put(matter.getSaveKey(), matter.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putInt("usage", usage);
+		
 		tag.putDouble("recipe", currRecipeValue);
 		tag.putDouble("progress", currProgress);
-		tag.putDouble("speed", currSpeed);
-		tag.putFloat("failure", currFailureChance);
+
 	}
 
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientMatter = new CapabilityMatterStorage(0, false, false);
-		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
-		clientEnergyUsage = tag.getInt("usage");
 		clientRecipeValue = tag.getDouble("recipe");
 		clientProgress = tag.getDouble("progress");
-		clientSpeed = tag.getDouble("speed");
-		clientFailure = tag.getFloat("failure");
 	}
 
 	@Override
 	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
-		tag.putBoolean("muffled", isMuffled);
-		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	@Override
 	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
-		clientMuffled = tag.getBoolean("muffled");
-		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -223,9 +189,9 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", currSpeed);
-		additional.putFloat("failure", currFailureChance);
-		additional.putInt("usage", usage);
+		additional.putDouble("speed", currentSpeed);
+		additional.putFloat("failure", currentFailureChance);
+		additional.putDouble("usage", currentPowerUsage);
 		additional.putBoolean("muffled", isMuffled);
 
 		tag.put("additional", additional);
@@ -237,15 +203,15 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		currSpeed = additional.getDouble("speed");
-		currFailureChance = additional.getFloat("failure");
-		usage = additional.getInt("usage");
+		currentSpeed = additional.getDouble("speed");
+		currentFailureChance = additional.getFloat("failure");
+		currentPowerUsage = additional.getDouble("usage");
 		isMuffled = additional.getBoolean("muffled");
 	}
 
 	@Override
 	public boolean shouldPlaySound() {
-		return clientRunning && !clientMuffled;
+		return clientRunning && !isMuffled;
 	}
 
 	@Override
@@ -279,21 +245,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public boolean isMuffled() {
-		return clientSide ? clientMuffled : isMuffled;
-	}
-
-	@Override
-	public double getCurrentSpeed() {
-		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
-	}
-
-	@Override
-	public float getCurrentFailure() {
-		return currFailureChance * (float) saMultiplier;
-	}
-
-	@Override
 	public double getCurrentMatterStorage() {
 		return getMatterStorageCap().getMaxMatterStored();
 	}
@@ -304,21 +255,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public double getCurrentPowerUsage() {
-		return usage * saMultiplier;
-	}
-
-	@Override
-	public void setSpeed(double speed) {
-		currSpeed = speed;
-	}
-
-	@Override
-	public void setFailure(float failure) {
-		currFailureChance = failure;
-	}
-
-	@Override
 	public void setMatterStorage(double storage) {
 		getMatterStorageCap().updateMaxMatterStorage(storage);
 	}
@@ -326,16 +262,6 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	@Override
 	public void setPowerStorage(double storage) {
 		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
-
-	@Override
-	public void setPowerUsage(double usage) {
-		this.currPowerUsage.set(usage);
-	}
-
-	@Override
-	public void setMuffled(boolean muffled) {
-		isMuffled = muffled;
 	}
 
 	@Override

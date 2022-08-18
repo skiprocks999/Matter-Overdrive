@@ -130,7 +130,7 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientRedstoneMode;
+				return inscriber.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -156,25 +156,25 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientInventory.getInputDirections();
+				return inscriber.getInventoryCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientInventory.getOutputDirections();
+				return inscriber.getInventoryCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientInventory.hasInput;
+				return inscriber.getInventoryCap().hasInput;
 			}
 			return false;
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientInventory.hasOutput;
+				return inscriber.getInventoryCap().hasOutput;
 			}
 			return false;
 		}, () -> {
@@ -187,25 +187,25 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.getInputDirections();
+				return inscriber.getEnergyStorageCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.getOutputDirections();
+				return inscriber.getEnergyStorageCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.canReceive();
+				return inscriber.getEnergyStorageCap().canReceive();
 			}
 			return false;
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.canExtract();
+				return inscriber.getEnergyStorageCap().canExtract();
 			}
 			return false;
 		}, () -> {
@@ -251,19 +251,19 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.getEnergyStored();
+				return inscriber.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientEnergy.getMaxEnergyStored();
+				return inscriber.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null && inscriber.clientRunning) {
-				return inscriber.getCurrentPowerUsage(true);
+				return inscriber.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

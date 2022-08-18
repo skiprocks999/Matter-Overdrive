@@ -177,7 +177,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientRedstoneMode;
+				return transporter.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -221,25 +221,25 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientInventory.getInputDirections();
+				return transporter.getInventoryCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientInventory.getOutputDirections();
+				return transporter.getInventoryCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientInventory.hasInput;
+				return transporter.getInventoryCap().hasInput;
 			}
 			return false;
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientInventory.hasOutput;
+				return transporter.getInventoryCap().hasOutput;
 			}
 			return false;
 		}, () -> {
@@ -252,25 +252,25 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.getInputDirections();
+				return transporter.getEnergyStorageCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.getOutputDirections();
+				return transporter.getEnergyStorageCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.canReceive();
+				return transporter.getEnergyStorageCap().canReceive();
 			}
 			return false;
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.canExtract();
+				return transporter.getEnergyStorageCap().canExtract();
 			}
 			return false;
 		}, () -> {
@@ -283,25 +283,25 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.getInputDirections();
+				return transporter.getMatterStorageCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.getOutputDirections();
+				return transporter.getMatterStorageCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.canReceive();
+				return transporter.getMatterStorageCap().canReceive();
 			}
 			return false;
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.canExtract();
+				return transporter.getMatterStorageCap().canExtract();
 			}
 			return false;
 		}, () -> {
@@ -405,13 +405,13 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.getEnergyStored();
+				return transporter.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientEnergy.getMaxEnergyStored();
+				return transporter.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
@@ -424,13 +424,13 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.getMatterStored();
+				return transporter.getMatterStorageCap().getMatterStored();
 			}
 			return 0;
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.clientMatter.getMaxMatterStored();
+				return transporter.getMatterStorageCap().getMaxMatterStored();
 			}
 			return 0;
 		}, () -> {

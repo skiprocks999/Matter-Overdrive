@@ -130,7 +130,7 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientRedstoneMode;
+				return matter.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -156,25 +156,25 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientInventory.getInputDirections();
+				return matter.getInventoryCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientInventory.getOutputDirections();
+				return matter.getInventoryCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientInventory.hasInput;
+				return matter.getInventoryCap().hasInput;
 			}
 			return false;
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientInventory.hasOutput;
+				return matter.getInventoryCap().hasOutput;
 			}
 			return false;
 		}, () -> {
@@ -187,25 +187,25 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getInputDirections();
+				return matter.getEnergyStorageCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getOutputDirections();
+				return matter.getEnergyStorageCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.canReceive();
+				return matter.getEnergyStorageCap().canReceive();
 			}
 			return false;
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.canExtract();
+				return matter.getEnergyStorageCap().canExtract();
 			}
 			return false;
 		}, () -> {
@@ -251,19 +251,19 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
+				return matter.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
+				return matter.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null && matter.clientRunning) {
-				return matter.getCurrentPowerUsage(true);
+				return matter.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

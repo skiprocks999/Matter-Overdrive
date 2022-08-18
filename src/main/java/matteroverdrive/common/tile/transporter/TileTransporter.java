@@ -58,32 +58,23 @@ public class TileTransporter extends GenericSoundTile {
 	private boolean running = false;
 	private double currProgress = 0;
 	private int cooldownTimer = 0;
-	private double matterUsage = MATTER_USAGE;
 	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private int currDestination = -1;
 	private List<Entity> currEntities = new ArrayList<>();
 	
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
-	public int clientEnergyUsage;
-	public double clientMatterUsage;
 	public double clientProgress;
-	public double clientSpeed;
-	private boolean clientMuffled;
 	public boolean clientRunning;
-	public int clientRadius;
 	private boolean clientSoundPlaying = false;
 	public int clientCooldown;
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
 	public int clientDestination = -1;
 	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
 
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
-	public CapabilityMatterStorage clientMatter;
-
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
+		currentMatterUsage = MATTER_USAGE;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
@@ -208,19 +199,8 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = getMatterStorageCap();
-		tag.put(matter.getSaveKey(), matter.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putInt("usage", this.currPowerUsage.get().intValue());
-		tag.putDouble("speed", this.currSpeedProp.get());
-		tag.putInt("radius", this.currRangeProp.get().intValue());
+		
 		tag.putInt("cooldown", cooldownTimer);
-		tag.putDouble("matusage", this.currMatterUsage.get());
 		tag.putInt("dest", currDestination);
 
 		for (int i = 0; i < LOCATIONS.length; i++) {
@@ -230,19 +210,8 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientMatter = new CapabilityMatterStorage(0, false, false);
-		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
-		this.currPowerUsage.set((double) tag.getInt("usage"));
-		this.currSpeedProp.set(tag.getDouble("speed"));
-		this.currRangeProp.set((double) tag.getInt("radius"));
+		
 		clientCooldown = tag.getInt("cooldown");
-		this.currMatterUsage.set(tag.getDouble("matusage"));
 		clientDestination = tag.getInt("dest");
 
 		fillLocations(CLIENT_LOCATIONS);
@@ -281,11 +250,11 @@ public class TileTransporter extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", this.currSpeedProp.get());
-		additional.putInt("usage", this.currPowerUsage.get().intValue());
-		additional.putBoolean("muffled", this.currIsMuffled.get());
-		additional.putInt("radius", this.currRangeProp.get().intValue());
-		additional.putDouble("matusage", this.currMatterUsage.get());
+		additional.putDouble("speed", currentSpeed);
+		additional.putDouble("usage", currentPowerUsage);
+		additional.putBoolean("muffled", isMuffled);
+		additional.putDouble("radius", currentRange);
+		additional.putDouble("matusage", currentMatterUsage);
 		additional.putInt("cooldown", cooldownTimer);
 		additional.putInt("dest", currDestination);
 		for (int i = 0; i < LOCATIONS.length; i++) {
@@ -301,12 +270,12 @@ public class TileTransporter extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		this.currSpeedProp.set(additional.getDouble("speed"));
-		this.currPowerUsage.set((double) additional.getInt("usage"));
-		this.currMatterUsage.set(additional.getDouble("matusage"));
+		currentSpeed = additional.getDouble("speed");
+		currentPowerUsage = additional.getDouble("usage");
+		currentMatterUsage = additional.getDouble("matusage");
 		cooldownTimer = additional.getInt("cooldown");
-		this.currRangeProp.set((double) additional.getInt("radius"));
-		this.currIsMuffled.set(additional.getBoolean("muffled"));
+		currentRange = additional.getDouble("radius");
+		isMuffled = additional.getBoolean("muffled");
 		currDestination = additional.getInt("dest");
 		for (int i = 0; i < LOCATIONS.length; i++) {
 			LOCATIONS[i].deserializeNbt(additional.getCompound("destination" + i));
@@ -315,7 +284,7 @@ public class TileTransporter extends GenericSoundTile {
 
 	@Override
 	public boolean shouldPlaySound() {
-		return clientRunning && !clientMuffled && clientProgress > 0;
+		return clientRunning && !isMuffled && clientProgress > 0;
 	}
 
 	@Override
@@ -353,11 +322,6 @@ public class TileTransporter extends GenericSoundTile {
 	}
 
 	@Override
-	public double getCurrentSpeed() {
-		return this.currSpeedProp.get() * saMultiplier;
-	}
-
-	@Override
 	public double getCurrentMatterStorage() {
 		return getMatterStorageCap().getMaxMatterStored();
 	}
@@ -368,23 +332,6 @@ public class TileTransporter extends GenericSoundTile {
 	}
 
 	@Override
-	public double getCurrentPowerUsage() {
-		return this.currPowerUsage.get().intValue() * saMultiplier;
-	}
-
-	@Override
-	public double getCurrentMatterUsage() {
-		return matterUsage * saMultiplier;
-	}
-	
-	@Override
-	public double getCurrentRange() {
-		return this.currRangeProp.get();
-	}
-
-
-
-	@Override
 	public void setMatterStorage(double storage) {
 		getMatterStorageCap().updateMaxMatterStorage(storage);
 	}
@@ -392,25 +339,6 @@ public class TileTransporter extends GenericSoundTile {
 	@Override
 	public void setPowerStorage(double storage) {
 		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
-
-	@Override
-	public void setPowerUsage(double usage) {
-		this.currPowerUsage.set(usage);
-	}
-
-	@Override
-	public void setMatterUsage(double matter) {
-		this.currMatterUsage.set(matter);
-	}
-
-	@Override
-	public void setMuffled(boolean muffled) {
-		this.currIsMuffled.set(muffled);
-	}
-	
-	public void setRadius(int radius) {
-		this.currRangeProp.set((double) radius);
 	}
 
 	@Override

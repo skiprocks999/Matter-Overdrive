@@ -79,7 +79,7 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 		}, () -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientRedstoneMode;
+				return matter.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -100,19 +100,19 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getEnergyStored();
+				return matter.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.clientEnergy.getMaxEnergyStored();
+				return matter.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null && matter.clientRunning) {
-				return matter.getCurrentPowerUsage(true);
+				return matter.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 180, 35, new int[] { 0 }));

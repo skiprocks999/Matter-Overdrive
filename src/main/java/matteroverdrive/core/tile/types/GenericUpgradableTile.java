@@ -9,10 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class GenericUpgradableTile extends GenericRedstoneTile implements IUpgradableTile {
 
-
-	
-	public double clientSAMultipler = 1;
-
 	// Defaults
 	public double defaultSpeed = 0;
 	public double defaultMatterUsage = 0;
@@ -26,7 +22,6 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	public double currentSpeed = 0;
 	public double currentMatterUsage = 0;
 	public double currentMatterStorage = 0;
-	public double currentPowerStorage = 0;
 	public double currentPowerUsage = 0;
 	public double currentRange = 0;
 	public float currentFailureChance = 0;
@@ -119,11 +114,6 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	}
 
 	@Override
-	public double getCurrentPowerStorage() {
-		return this.currentPowerStorage;
-	}
-
-	@Override
 	public double getCurrentPowerUsage() {
 		return this.currentPowerUsage;
 	}
@@ -160,11 +150,6 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public void setMatterStorage(double storage) {
 		this.currentMatterStorage = storage;
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		this.currentPowerStorage = storage;
 	}
 
 	@Override

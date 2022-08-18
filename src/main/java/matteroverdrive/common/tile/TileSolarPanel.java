@@ -24,7 +24,6 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	private boolean generating = false;
 
 	public boolean clientGenerating;
-	public CapabilityEnergyStorage clientEnergy;
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
@@ -51,6 +50,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				energy.giveEnergy((int) (GENERATION * saMultiplier));
 			}
 			UtilsTile.outputEnergy(this);
+			setChanged();
 		} else {
 			generating = false;
 		}
@@ -58,21 +58,11 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
 		tag.putBoolean("generating", generating);
-		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	public void readMenuData(CompoundTag tag) {
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
 		clientGenerating = tag.getBoolean("generating");
-		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -81,13 +71,13 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	}
 
 	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
+	public double getCurrentPowerStorage() {
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 }

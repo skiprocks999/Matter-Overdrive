@@ -70,35 +70,27 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	private List<QueuedReplication> orders = new ArrayList<>();
 	private double currRecipeValue = 0;
 	private double currProgress = 0;
-	private double currSpeed = DEFAULT_SPEED;
-	private float currFailureChance = FAILURE_CHANCE;
-	private int usage = USAGE_PER_TICK;
-	private boolean isMuffled = false;
 	private QueuedReplication currentOrder = null;
 	private boolean usingFused = false;
 	
 	//Render data
 	public boolean clientPowered;
 	public boolean clientRunning = false;
-	public CapabilityInventory clientInventory;
 	public QueuedReplication clientCurrentOrder;
-	private boolean clientMuffled;
 	private boolean clientSoundPlaying = false; 
+	public double clientRecipeValue;
 	private SoundHandlerReplicator soundHandler;
 	
 	//Menu data
-	public CapabilityEnergyStorage clientEnergy;
-	public CapabilityMatterStorage clientMatter;
 	public List<QueuedReplication> clientOrders;
-	public int clientEnergyUsage;
-	public double clientRecipeValue;
 	public double clientProgress;
-	public double clientSpeed;
-	public float clientFailure;
 	public ItemStack outputItem = ItemStack.EMPTY;
 	
 	public TileMatterReplicator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_REPLICATOR.get(), pos, state);
+		currentSpeed = DEFAULT_SPEED;
+		currentFailureChance = FAILURE_CHANCE;
+		currentPowerUsage = USAGE_PER_TICK;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
 				.setValidator(getValidator()));
@@ -130,7 +122,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		if(energy.getEnergyStored() < usage) {
+		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
 			isRunning = false;
 			isPowered = false;
 			currProgress = 0;
@@ -212,9 +204,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		isRunning = true;
-		currProgress += currSpeed;
+		currProgress += getCurrentSpeed();
 		
-		energy.removeEnergy(usage);
+		energy.removeEnergy((int) getCurrentPowerUsage());
 		int plateCount = inv.getStackInSlot(1).getCount();
 		if(plateCount < NEEDED_PLATES) {
 			int radius = NEEDED_PLATES - plateCount;
@@ -242,7 +234,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		currentOrder.decRemaining();
 		float progToFloat = (float) currentOrder.getPercentage() / 100.0F;
 		
-		if(roll() < getCurrentFailure(false) / progToFloat) {
+		if(roll() < getCurrentFailure() / progToFloat) {
 			if(dustEmpty) {
 				ItemStack newDust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 				UtilsNbt.writeMatterVal(newDust, currRecipeValue);
@@ -316,13 +308,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityMatterStorage storage = getMatterStorageCap();
-		tag.put(storage.getSaveKey(), storage.serializeNBT());
 		int size = orders.size();
 		tag.putInt("orderCount", size);
 		QueuedReplication queued;
@@ -332,29 +317,16 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			queued.setQueuePos(i);
 			queued.writeToNbt(tag, "order" + i);
 		}
-		tag.putInt("usage", usage);
-		tag.putFloat("failure", currFailureChance);
-		tag.putDouble("sabonus", saMultiplier);
 		
 	}
 	
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientMatter = new CapabilityMatterStorage(0, false, false);
-		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
 		int orderSize = tag.getInt("orderCount");
 		clientOrders = new ArrayList<>();
 		for(int i = 0; i < orderSize; i++) {
 			clientOrders.add(QueuedReplication.readFromNbt(tag.getCompound("order" + i)));
 		}
-		clientEnergyUsage = tag.getInt("usage");
-		clientFailure = tag.getFloat("failure");
-		clientSAMultipler = tag.getDouble("sabonus");
 		
 	}
 	
@@ -367,8 +339,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		tag.putDouble("progress", currProgress);
 		tag.putDouble("recipe", currRecipeValue);
-		tag.putDouble("speed", currSpeed);
-		tag.putBoolean("muffled", isMuffled);
 		CapabilityInventory inv = getInventoryCap();
 		CompoundTag item = new CompoundTag();
 		inv.getStackInSlot(2).save(item);
@@ -386,8 +356,6 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		clientRecipeValue = tag.getDouble("recipe");
 		clientProgress = tag.getDouble("progress");
-		clientSpeed = tag.getDouble("speed");
-		clientMuffled = tag.getBoolean("muffled");
 		outputItem = ItemStack.of(tag.getCompound("item"));
 	}
 	
@@ -403,9 +371,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		data.putDouble("progress", currProgress);
-		data.putDouble("speed", currSpeed);
-		data.putFloat("failure", currFailureChance);
-		data.putInt("usage", usage);
+		data.putDouble("speed", currentSpeed);
+		data.putFloat("failure", currentFailureChance);
+		data.putDouble("usage", currentPowerUsage);
 		data.putBoolean("muffled", isMuffled);
 		data.putBoolean("fused", usingFused);
 		
@@ -424,16 +392,16 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		currProgress = data.getDouble("progress");
-		currSpeed = data.getDouble("speed");
-		currFailureChance = data.getFloat("failure");
-		usage = data.getInt("usage");
+		currentSpeed = data.getDouble("speed");
+		currentFailureChance = data.getFloat("failure");
+		currentPowerUsage = data.getDouble("usage");
 		isMuffled = data.getBoolean("muffled");
 		usingFused = data.getBoolean("fused");
 	}
 
 	@Override
 	public boolean shouldPlaySound() {
-		return clientRunning && !clientMuffled;
+		return clientRunning && !isMuffled;
 	}
 
 	@Override
@@ -467,43 +435,13 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 
 	@Override
-	public boolean isMuffled() {
-		return clientSide ? clientMuffled : isMuffled;
-	}
-
-	@Override
-	public double getCurrentSpeed() {
-		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
-	}
-
-	@Override
-	public float getCurrentFailure() {
-		return clientSide ? clientFailure * (float) clientSAMultipler : currFailureChance * (float) saMultiplier;
-	}
-
-	@Override
 	public double getCurrentMatterStorage() {
-		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
+		return getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage() {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public double getCurrentPowerUsage() {
-		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
-	}
-
-	@Override
-	public void setSpeed(double speed) {
-		currSpeed = speed;
-	}
-
-	@Override
-	public void setFailure(float failure) {
-		currFailureChance = failure;
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -512,18 +450,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 
 	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
-	}
-
-	@Override
-	public void setPowerUsage(int usage) {
-		this.usage = usage;
-	}
-
-	@Override
-	public void setMuffled(boolean muffled) {
-		isMuffled = muffled;
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 	@Override
@@ -594,7 +522,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 	
 	private int getAdjustedTicks() {
-		return (int) Math.ceil(getProcessingTime() / (clientSpeed == 0 ? 1.0D : clientSpeed));
+		return (int) Math.ceil(getProcessingTime() / (currentSpeed == 0 ? 1.0D : currentSpeed));
 	}
 	
 	public int getCurrOrders() {

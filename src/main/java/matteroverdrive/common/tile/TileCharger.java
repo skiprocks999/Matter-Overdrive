@@ -21,19 +21,14 @@ public class TileCharger extends GenericUpgradableTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_RADIUS = 8;
 
-	private double usage = CHARGE_RATE;
-	private double radius = DEFAULT_RADIUS;
 	private boolean running = false;
-
-	public int clientEnergyUsage;
-	public int clientRadius;
+	
 	public boolean clientRunning;
-
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
 
 	public TileCharger(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHARGER.get(), pos, state);
+		currentPowerUsage = CHARGE_RATE;
+		currentRange = DEFAULT_RADIUS;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
@@ -52,30 +47,12 @@ public class TileCharger extends GenericUpgradableTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putDouble("usage", usage);
-		tag.putDouble("radius", radius);
 		tag.putBoolean("running", running);
-		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
-		clientEnergyUsage = tag.getInt("usage");
-		clientRadius = tag.getInt("radius");
 		clientRunning = tag.getBoolean("running");
-		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -83,8 +60,8 @@ public class TileCharger extends GenericUpgradableTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("usage", usage);
-		additional.putDouble("radius", radius);
+		additional.putDouble("usage", currentPowerUsage);
+		additional.putDouble("radius", currentRange);
 		additional.putBoolean("running", running);
 
 		tag.put("additional", additional);
@@ -95,8 +72,8 @@ public class TileCharger extends GenericUpgradableTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		usage = additional.getInt("usage");
-		radius = additional.getInt("radius");
+		currentPowerUsage = additional.getInt("usage");
+		currentRange = additional.getInt("radius");
 		running = additional.getBoolean("runnning");
 	}
 
@@ -126,28 +103,8 @@ public class TileCharger extends GenericUpgradableTile {
 	}
 
 	@Override
-	public double getCurrentPowerUsage() {
-		return usage * saMultiplier;
-	}
-
-	@Override
-	public double getCurrentRange() {
-		return radius;
-	}
-
-	@Override
 	public void setPowerStorage(double storage) {
 		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
-
-	@Override
-	public void setPowerUsage(double usage) {
-		this.usage = usage;
-	}
-
-	@Override
-	public void setRange(double range) {
-		radius = range;
 	}
 
 }

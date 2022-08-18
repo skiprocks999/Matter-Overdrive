@@ -30,23 +30,15 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public static final double DEFAULT_MULTIPLIER = 1.5;
 
 	private boolean running = false;
-	private double currSpeed = DEFAULT_MULTIPLIER;
-	private int energyUsage = ENERGY_USAGE_PER_TICK;
-	private int radius = BASE_RADIUS;
-	private double matterUsage = MATTER_USAGE_PER_TICK;
 
-	public int clientEnergyUsage;
-	public double clientMatterUsage;
-	public double clientSpeed;
 	public boolean clientRunning;
-	public int clientRadius;
-
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
-	public CapabilityMatterStorage clientMatter;
 
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
+		currentSpeed = DEFAULT_MULTIPLIER;
+		currentPowerUsage = ENERGY_USAGE_PER_TICK;
+		currentRange = BASE_RADIUS;
+		currentMatterUsage = MATTER_USAGE_PER_TICK;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
 				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));
@@ -58,7 +50,6 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 				new SimpleMenuProvider((id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
 		setTickable();
-		setHasMenuData();
 		setHasRenderData();
 	}
 
@@ -107,45 +98,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	}
 
 	@Override
-	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-		CapabilityMatterStorage matter = getMatterStorageCap();
-		tag.put(matter.getSaveKey(), matter.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putInt("usage", energyUsage);
-		tag.putDouble("speed", currSpeed);
-		tag.putDouble("matusage", matterUsage);
-	}
-
-	@Override
-	public void readMenuData(CompoundTag tag) {
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-		clientMatter = new CapabilityMatterStorage(0, false, false);
-		clientMatter.deserializeNBT(tag.getCompound(clientMatter.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
-		clientEnergyUsage = tag.getInt("usage");
-		clientSpeed = tag.getDouble("speed");
-		clientMatterUsage = tag.getDouble("matusage");
-	}
-
-	@Override
 	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
-		tag.putInt("radius", radius);
 	}
 
 	@Override
 	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
-		clientRadius = tag.getInt("radius");
 	}
 
 	@Override
@@ -153,10 +112,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("speed", currSpeed);
-		additional.putInt("usage", energyUsage);
-		additional.putInt("radius", radius);
-		additional.putDouble("matusage", matterUsage);
+		additional.putDouble("speed", currentSpeed);
+		additional.putDouble("usage", currentPowerUsage);
+		additional.putDouble("radius", currentRange);
+		additional.putDouble("matusage", currentMatterUsage);
 
 		tag.put("additional", additional);
 	}
@@ -166,10 +125,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		currSpeed = additional.getDouble("speed");
-		energyUsage = additional.getInt("usage");
-		matterUsage = additional.getDouble("matusage");
-		radius = additional.getInt("radius");
+		currentSpeed = additional.getDouble("speed");
+		currentPowerUsage = additional.getDouble("usage");
+		currentMatterUsage = additional.getDouble("matusage");
+		currentRange = additional.getDouble("radius");
 
 	}
 
@@ -204,38 +163,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	}
 
 	@Override
-	public double getCurrentSpeed() {
-		return clientSide ? clientSpeed : currSpeed;
-	}
-
-	@Override
 	public double getCurrentMatterStorage() {
-		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
+		return getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
 	public double getCurrentPowerStorage() {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public double getCurrentPowerUsage() {
-		return clientSide ? clientEnergyUsage : energyUsage;
-	}
-
-	@Override
-	public double getCurrentMatterUsage() {
-		return clientSide ? clientMatterUsage : matterUsage;
-	}
-
-	@Override
-	public double getCurrentRange() {
-		return clientSide ? clientRadius : radius;
-	}
-
-	@Override
-	public void setSpeed(double speed) {
-		currSpeed = speed;
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
@@ -244,22 +178,8 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	}
 
 	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
-	}
-
-	@Override
-	public void setPowerUsage(int usage) {
-		this.energyUsage = usage;
-	}
-
-	public void setRange(int range) {
-		this.radius = Math.min(range, 8);
-	}
-
-	@Override
-	public void setMatterUsage(double matter) {
-		this.matterUsage = matter;
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 	private void resetRadiusMultipliers() {
@@ -272,7 +192,7 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		BlockPos pos = getBlockPos();
 		UtilsWorld
 				.getSurroundingBlockEntities(level,
-						new AABB(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius)))
+						new AABB(pos.offset(-currentRange, -currentRange, -currentRange), pos.offset(currentRange, currentRange, currentRange)))
 				.forEach(entity -> {
 					if (entity instanceof IUpgradableTile upgrade) {
 						upgrade.setAcceleratorMultiplier(multipler);

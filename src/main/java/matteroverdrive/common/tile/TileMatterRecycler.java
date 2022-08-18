@@ -31,22 +31,15 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	private boolean running = false;
 	private double currProgress = 0;
-	private double currSpeed = DEFAULT_SPEED;
-	private int usage = USAGE_PER_TICK;
-	private boolean isMuffled = false;
 
-	public int clientEnergyUsage;
 	public double clientProgress;
-	public double clientSpeed;
-	private boolean clientMuffled;
 	public boolean clientRunning;
 	private boolean clientSoundPlaying = false;
 
-	public CapabilityInventory clientInventory;
-	public CapabilityEnergyStorage clientEnergy;
-
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
+		currentSpeed = DEFAULT_SPEED;
+		currentPowerUsage = USAGE_PER_TICK;
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
@@ -95,7 +88,7 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
-		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			running = false;
 			return;
 		}
@@ -108,8 +101,8 @@ public class TileMatterRecycler extends GenericSoundTile {
 		}
 
 		running = true;
-		currProgress += getCurrentSpeed(false);
-		energy.removeEnergy((int) getCurrentPowerUsage(false));
+		currProgress += getCurrentSpeed();
+		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (currProgress >= OPERATING_TIME) {
 			currProgress = 0;
 			if (output.isEmpty()) {
@@ -135,40 +128,20 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		CapabilityInventory inv = getInventoryCap();
-		tag.put(inv.getSaveKey(), inv.serializeNBT());
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		tag.put(energy.getSaveKey(), energy.serializeNBT());
-
-		tag.putInt("redstone", currRedstoneMode);
-		tag.putInt("usage", usage);
 		tag.putDouble("progress", currProgress);
-		tag.putDouble("speed", currSpeed);
 	}
 
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		clientInventory = new CapabilityInventory();
-		clientInventory.deserializeNBT(tag.getCompound(clientInventory.getSaveKey()));
-		clientEnergy = new CapabilityEnergyStorage(0, false, false);
-		clientEnergy.deserializeNBT(tag.getCompound(clientEnergy.getSaveKey()));
-
-		clientRedstoneMode = tag.getInt("redstone");
-		clientEnergyUsage = tag.getInt("usage");
 		clientProgress = tag.getDouble("progress");
-		clientSpeed = tag.getDouble("speed");
 	}
 
 	public void getRenderData(CompoundTag tag) {
 		tag.putBoolean("running", running);
-		tag.putBoolean("muffled", isMuffled);
-		tag.putDouble("sabonus", saMultiplier);
 	}
 
 	public void readRenderData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
-		clientMuffled = tag.getBoolean("muffled");
-		clientSAMultipler = tag.getDouble("sabonus");
 	}
 
 	@Override
@@ -177,8 +150,8 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", currSpeed);
-		additional.putInt("usage", usage);
+		additional.putDouble("speed", currentSpeed);
+		additional.putDouble("usage", currentPowerUsage);
 		additional.putBoolean("muffled", isMuffled);
 
 		tag.put("additional", additional);
@@ -190,14 +163,14 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		currSpeed = additional.getDouble("speed");
-		usage = additional.getInt("usage");
+		currentSpeed = additional.getDouble("speed");
+		currentPowerUsage = additional.getDouble("usage");
 		isMuffled = additional.getBoolean("muffled");
 	}
 
 	@Override
 	public boolean shouldPlaySound() {
-		return clientRunning && !clientMuffled;
+		return clientRunning && !isMuffled;
 	}
 
 	@Override
@@ -221,43 +194,13 @@ public class TileMatterRecycler extends GenericSoundTile {
 	}
 
 	@Override
-	public boolean isMuffled(boolean clientSide) {
-		return clientSide ? clientMuffled : isMuffled;
+	public double getCurrentPowerStorage() {
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public double getCurrentSpeed(boolean clientSide) {
-		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
-	}
-
-	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
-	}
-
-	@Override
-	public void setSpeed(double speed) {
-		currSpeed = speed;
-	}
-
-	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
-	}
-
-	@Override
-	public void setPowerUsage(int usage) {
-		this.usage = usage;
-	}
-
-	@Override
-	public void setMuffled(boolean muffled) {
-		isMuffled = muffled;
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 	@Override

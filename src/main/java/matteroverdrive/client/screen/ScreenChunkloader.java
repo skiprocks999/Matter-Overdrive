@@ -76,7 +76,7 @@ public class ScreenChunkloader extends GenericOverdriveScreen<InventoryChunkload
 		}, () -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
-				return supply.clientRedstoneMode;
+				return supply.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -93,19 +93,19 @@ public class ScreenChunkloader extends GenericOverdriveScreen<InventoryChunkload
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
-				return supply.clientEnergy.getEnergyStored();
+				return supply.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
-				return supply.clientEnergy.getMaxEnergyStored();
+				return supply.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null && supply.clientRunning) {
-				return supply.clientUsage;
+				return supply.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

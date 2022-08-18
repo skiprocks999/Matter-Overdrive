@@ -130,7 +130,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientRedstoneMode;
+				return microwave.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -156,25 +156,25 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientInventory.getInputDirections();
+				return microwave.getInventoryCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientInventory.getOutputDirections();
+				return microwave.getInventoryCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientInventory.hasInput;
+				return microwave.getInventoryCap().hasInput;
 			}
 			return false;
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientInventory.hasOutput;
+				return microwave.getInventoryCap().hasOutput;
 			}
 			return false;
 		}, () -> {
@@ -187,25 +187,25 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.getInputDirections();
+				return microwave.getEnergyStorageCap().getInputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.getOutputDirections();
+				return microwave.getEnergyStorageCap().getOutputDirections();
 			}
 			return new HashSet<Direction>();
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.canReceive();
+				return microwave.getEnergyStorageCap().canReceive();
 			}
 			return false;
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.canExtract();
+				return microwave.getEnergyStorageCap().canExtract();
 			}
 			return false;
 		}, () -> {
@@ -251,19 +251,19 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.getEnergyStored();
+				return microwave.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.clientEnergy.getMaxEnergyStored();
+				return microwave.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null && microwave.clientRunning) {
-				return microwave.getCurrentPowerUsage(false);
+				return microwave.getCurrentPowerUsage();
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }));

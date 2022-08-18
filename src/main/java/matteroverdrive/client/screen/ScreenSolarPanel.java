@@ -76,7 +76,7 @@ public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
-				return solar.clientRedstoneMode;
+				return solar.currRedstoneMode;
 			}
 			return 0;
 		});
@@ -93,19 +93,19 @@ public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel
 		addScreenComponent(new ScreenComponentCharge(() -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
-				return solar.clientEnergy.getEnergyStored();
+				return solar.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
-				return solar.clientEnergy.getMaxEnergyStored();
+				return solar.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null && solar.clientGenerating) {
-				return solar.clientSAMultipler * TileSolarPanel.GENERATION;
+				return solar.saMultiplier * TileSolarPanel.GENERATION;
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }).setGenerator());
