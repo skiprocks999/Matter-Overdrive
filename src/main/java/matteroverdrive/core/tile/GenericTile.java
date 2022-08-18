@@ -1,10 +1,5 @@
 package matteroverdrive.core.tile;
 
-import java.util.HashMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
@@ -12,11 +7,10 @@ import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.property.IPropertyManaged;
-import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
-import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.tile.utils.ITickableTile;
 import matteroverdrive.core.tile.utils.IUpdatableTile;
 import matteroverdrive.core.utils.UtilsCapability;
@@ -25,22 +19,27 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
-import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
 
 public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
 
@@ -65,7 +64,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 
 	protected GenericTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.propertyManager = new BlockEntityPropertyManager(pos);
+		this.propertyManager = new BlockEntityPropertyManager(this);
 	}
 
 	public void setMenuProvider(MenuProvider menu) {
@@ -156,7 +155,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
+		if (!level.isClientSide())
+			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 	}
 
 	public MutableComponent getContainerName(String name) {

@@ -73,33 +73,33 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		UtilsTile.drainMatterSlot(this);
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
-		if (energy.getEnergyStored() < getCurrentPowerUsage(false)) {
+		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			resetRadiusMultipliers();
 			running = false;
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
-		if (matter.getMatterStored() < getCurrentMatterUsage(false)) {
+		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			resetRadiusMultipliers();
 			running = false;
 			return;
 		}
 
 		running = true;
-		energy.removeEnergy((int) getCurrentPowerUsage(false));
-		matter.removeMatter(getCurrentMatterUsage(false));
+		energy.removeEnergy((int) getCurrentPowerUsage());
+		matter.removeMatter(getCurrentMatterUsage());
 		if (ticks % 10 == 0) {
-			updateSurroundingTileMultipliers(getCurrentSpeed(false));
+			updateSurroundingTileMultipliers(getCurrentSpeed());
 		}
 		setChanged();
 	}
 
 	@Override
 	public void tickClient() {
-		if (clientRunning && ticks % (getCurrentRange(true) * 5) == 0) {
+		if (clientRunning && ticks % (getCurrentRange() * 5) == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
-			shockwave.setMaxScale((float) getCurrentRange(true));
+			shockwave.setMaxScale((float) getCurrentRange());
 			shockwave.setColor(191, 228, 230, 255);
 			BlockPos pos = getBlockPos();
 			getLevel().addParticle(shockwave, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0, 0);
@@ -204,32 +204,32 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	}
 
 	@Override
-	public double getCurrentSpeed(boolean clientSide) {
+	public double getCurrentSpeed() {
 		return clientSide ? clientSpeed : currSpeed;
 	}
 
 	@Override
-	public double getCurrentMatterStorage(boolean clientSide) {
+	public double getCurrentMatterStorage() {
 		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
+	public double getCurrentPowerStorage() {
 		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public double getCurrentPowerUsage(boolean clientSide) {
+	public double getCurrentPowerUsage() {
 		return clientSide ? clientEnergyUsage : energyUsage;
 	}
 
 	@Override
-	public double getCurrentMatterUsage(boolean clientSide) {
+	public double getCurrentMatterUsage() {
 		return clientSide ? clientMatterUsage : matterUsage;
 	}
 
 	@Override
-	public double getCurrentRange(boolean clientSide) {
+	public double getCurrentRange() {
 		return clientSide ? clientRadius : radius;
 	}
 

@@ -21,8 +21,8 @@ public class TileCharger extends GenericUpgradableTile {
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_RADIUS = 8;
 
-	private int usage = CHARGE_RATE;
-	private int radius = DEFAULT_RADIUS;
+	private double usage = CHARGE_RATE;
+	private double radius = DEFAULT_RADIUS;
 	private boolean running = false;
 
 	public int clientEnergyUsage;
@@ -58,8 +58,8 @@ public class TileCharger extends GenericUpgradableTile {
 		tag.put(energy.getSaveKey(), energy.serializeNBT());
 
 		tag.putInt("redstone", currRedstoneMode);
-		tag.putInt("usage", usage);
-		tag.putInt("radius", radius);
+		tag.putDouble("usage", usage);
+		tag.putDouble("radius", radius);
 		tag.putBoolean("running", running);
 		tag.putDouble("sabonus", saMultiplier);
 	}
@@ -83,8 +83,8 @@ public class TileCharger extends GenericUpgradableTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putInt("usage", usage);
-		additional.putInt("radius", radius);
+		additional.putDouble("usage", usage);
+		additional.putDouble("radius", radius);
 		additional.putBoolean("running", running);
 
 		tag.put("additional", additional);
@@ -121,32 +121,32 @@ public class TileCharger extends GenericUpgradableTile {
 	}
 
 	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
+	public double getCurrentPowerStorage() {
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
+	public double getCurrentPowerUsage() {
+		return usage * saMultiplier;
 	}
 
 	@Override
-	public double getCurrentRange(boolean clientSide) {
-		return clientSide ? clientRadius : radius;
+	public double getCurrentRange() {
+		return radius;
 	}
 
 	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 	@Override
-	public void setPowerUsage(int usage) {
+	public void setPowerUsage(double usage) {
 		this.usage = usage;
 	}
 
 	@Override
-	public void setRange(int range) {
+	public void setRange(double range) {
 		radius = range;
 	}
 

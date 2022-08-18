@@ -279,33 +279,33 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public boolean isMuffled(boolean clientSide) {
+	public boolean isMuffled() {
 		return clientSide ? clientMuffled : isMuffled;
 	}
 
 	@Override
-	public double getCurrentSpeed(boolean clientSide) {
+	public double getCurrentSpeed() {
 		return clientSide ? clientSpeed * clientSAMultipler : currSpeed * saMultiplier;
 	}
 
 	@Override
-	public float getCurrentFailure(boolean clientSide) {
-		return clientSide ? clientFailure * (float) clientSAMultipler : currFailureChance * (float) saMultiplier;
+	public float getCurrentFailure() {
+		return currFailureChance * (float) saMultiplier;
 	}
 
 	@Override
-	public double getCurrentMatterStorage(boolean clientSide) {
-		return clientSide ? clientMatter.getMaxMatterStored() : getMatterStorageCap().getMaxMatterStored();
+	public double getCurrentMatterStorage() {
+		return getMatterStorageCap().getMaxMatterStored();
 	}
 
 	@Override
-	public double getCurrentPowerStorage(boolean clientSide) {
-		return clientSide ? clientEnergy.getMaxEnergyStored() : getEnergyStorageCap().getMaxEnergyStored();
+	public double getCurrentPowerStorage() {
+		return getEnergyStorageCap().getMaxEnergyStored();
 	}
 
 	@Override
-	public double getCurrentPowerUsage(boolean clientSide) {
-		return clientSide ? clientEnergyUsage * clientSAMultipler : usage * saMultiplier;
+	public double getCurrentPowerUsage() {
+		return usage * saMultiplier;
 	}
 
 	@Override
@@ -324,13 +324,13 @@ public class TileMatterDecomposer extends GenericSoundTile {
 	}
 
 	@Override
-	public void setPowerStorage(int storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage(storage);
+	public void setPowerStorage(double storage) {
+		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 	@Override
-	public void setPowerUsage(int usage) {
-		this.usage = usage;
+	public void setPowerUsage(double usage) {
+		this.currPowerUsage.set(usage);
 	}
 
 	@Override
