@@ -63,6 +63,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
 				.setValidator(getValidator()));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));

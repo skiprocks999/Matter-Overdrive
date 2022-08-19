@@ -39,6 +39,12 @@ public class PropertyTypes {
    */
   public static PropertyType<Double> DOUBLE = addType("double", Double.class, FriendlyByteBuf::readDouble,
           FriendlyByteBuf::writeDouble);
+  
+  /**
+   * Default {@link PropertyType} implementation for {@link Double} values.
+   */
+  public static PropertyType<Float> FLOAT = addType("float", Float.class, FriendlyByteBuf::readFloat,
+          FriendlyByteBuf::writeFloat);
 
   /**
    * Add type method.

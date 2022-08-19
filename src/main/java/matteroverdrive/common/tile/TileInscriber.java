@@ -2,7 +2,6 @@ package matteroverdrive.common.tile;
 
 import java.util.List;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryInscriber;
@@ -40,8 +39,14 @@ public class TileInscriber extends GenericSoundTile {
 
 	public TileInscriber(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_INSCRIBER.get(), pos, state);
-		currentSpeed = DEFAULT_SPEED;
-		currentPowerUsage = USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_SPEED);
+		setPowerUsage(USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_SPEED;
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = USAGE_PER_TICK;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
@@ -58,7 +63,6 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
-		MatterOverdrive.LOGGER.info("Server Muffled: " + isMuffled);
 		if (!canRun()) {
 			isRunning = false;
 			currProgress = 0;
@@ -124,7 +128,6 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void tickClient() {
-		MatterOverdrive.LOGGER.info("Client Muffled: " + isMuffled);
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
@@ -147,8 +150,8 @@ public class TileInscriber extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", currentSpeed);
-		additional.putDouble("usage", currentPowerUsage);
+		additional.putDouble("speed", getCurrentSpeed());
+		additional.putDouble("usage", getCurrentPowerUsage());
 		tag.put("additional", additional);
 	}
 
@@ -158,28 +161,8 @@ public class TileInscriber extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		currentSpeed = additional.getDouble("speed");
-		currentPowerUsage = additional.getDouble("usage");
-	}
-
-	@Override
-	public void setNotPlaying() {
-		clientSoundPlaying = false;
-	}
-
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_SPEED;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return USAGE_PER_TICK;
+		setSpeed(additional.getDouble("speed"));
+		setPowerUsage(additional.getDouble("usage"));
 	}
 	
 	@Override

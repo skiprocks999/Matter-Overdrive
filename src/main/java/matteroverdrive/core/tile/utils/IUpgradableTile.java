@@ -65,6 +65,10 @@ public interface IUpgradableTile {
 	default double getCurrentRange() {
 		return 0;
 	}
+	
+	default double getAcceleratorMultiplier() {
+		return 0;
+	}
 
 	// MUTATOR METHODS
 

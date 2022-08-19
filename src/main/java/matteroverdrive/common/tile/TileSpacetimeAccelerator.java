@@ -35,10 +35,19 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
-		currentSpeed = DEFAULT_MULTIPLIER;
-		currentPowerUsage = ENERGY_USAGE_PER_TICK;
-		currentRange = BASE_RADIUS;
-		currentMatterUsage = MATTER_USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_MULTIPLIER);
+		setPowerUsage(ENERGY_USAGE_PER_TICK);
+		setRange(BASE_RADIUS);
+		setMatterUsage(MATTER_USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_MULTIPLIER;
+		defaultMatterUsage = MATTER_USAGE_PER_TICK;
+		defaultMatterStorage = MATTER_CAPACITY;
+		defaultPowerStorage = ENERGY_CAPACITY;
+		defaultPowerUsage = ENERGY_USAGE_PER_TICK;
+		defaultRange = BASE_RADIUS;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
 				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));
@@ -112,10 +121,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("speed", currentSpeed);
-		additional.putDouble("usage", currentPowerUsage);
-		additional.putDouble("radius", currentRange);
-		additional.putDouble("matusage", currentMatterUsage);
+		additional.putDouble("speed", getCurrentSpeed());
+		additional.putDouble("usage", getCurrentPowerUsage());
+		additional.putDouble("radius", getCurrentRange());
+		additional.putDouble("matusage", getCurrentMatterUsage());
 
 		tag.put("additional", additional);
 	}
@@ -125,41 +134,11 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		currentSpeed = additional.getDouble("speed");
-		currentPowerUsage = additional.getDouble("usage");
-		currentMatterUsage = additional.getDouble("matusage");
-		currentRange = additional.getDouble("radius");
+		setSpeed(additional.getDouble("speed"));
+		setPowerUsage(additional.getDouble("usage"));
+		setMatterUsage(additional.getDouble("matusage"));
+		setRange(additional.getDouble("radius"));
 
-	}
-
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_MULTIPLIER;
-	}
-
-	@Override
-	public double getDefaultMatterUsage() {
-		return MATTER_USAGE_PER_TICK;
-	}
-
-	@Override
-	public double getDefaultMatterStorage() {
-		return MATTER_CAPACITY;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_CAPACITY;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return ENERGY_USAGE_PER_TICK;
-	}
-
-	@Override
-	public double getDefaultRange() {
-		return BASE_RADIUS;
 	}
 
 	@Override
@@ -190,9 +169,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	private void updateSurroundingTileMultipliers(double multipler) {
 		BlockPos pos = getBlockPos();
+		double range = getCurrentRange();
 		UtilsWorld
 				.getSurroundingBlockEntities(level,
-						new AABB(pos.offset(-currentRange, -currentRange, -currentRange), pos.offset(currentRange, currentRange, currentRange)))
+						new AABB(pos.offset(-range, -range, -range), pos.offset(range, range, range)))
 				.forEach(entity -> {
 					if (entity instanceof IUpgradableTile upgrade) {
 						upgrade.setAcceleratorMultiplier(multipler);

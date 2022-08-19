@@ -27,6 +27,9 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
+		
+		defaultPowerStorage = ENERGY_STORAGE;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
@@ -47,7 +50,7 @@ public class TileSolarPanel extends GenericUpgradableTile {
 			}
 			if (generating) {
 				CapabilityEnergyStorage energy = getEnergyStorageCap();
-				energy.giveEnergy((int) (GENERATION * saMultiplier));
+				energy.giveEnergy((int) (GENERATION * getAcceleratorMultiplier()));
 			}
 			UtilsTile.outputEnergy(this);
 			setChanged();
@@ -63,11 +66,6 @@ public class TileSolarPanel extends GenericUpgradableTile {
 
 	public void readMenuData(CompoundTag tag) {
 		clientGenerating = tag.getBoolean("generating");
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
 	}
 
 	@Override

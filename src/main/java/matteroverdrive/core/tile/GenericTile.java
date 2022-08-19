@@ -113,6 +113,9 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		for(IOverdriveCapability cap : capabilities.values()) {
 			cap.onLoad(this);
 		}
+		if (!level.isClientSide()) {
+			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
+		}
 	}
 
 	public void refreshCapabilities() {
@@ -144,6 +147,15 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
 	}
+	
+	@Override
+	public CompoundTag getUpdateTag() {
+		if (!level.isClientSide()) {
+			//call me a butcher, because I'm hacking this game
+			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
+		}
+		return super.getUpdateTag();
+	}
 
 	/**
 	 * When the BlockEntity is marked as "Changed" call super and then send Property updates.
@@ -151,8 +163,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void setChanged() {
 		super.setChanged();
-		if (!level.isClientSide())
+		if (!level.isClientSide()) {
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
+		}
+			
 	}
 
 	public MutableComponent getContainerName(String name) {

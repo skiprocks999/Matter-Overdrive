@@ -105,7 +105,7 @@ public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null && solar.clientGenerating) {
-				return solar.saMultiplier * TileSolarPanel.GENERATION;
+				return solar.getAcceleratorMultiplier() * TileSolarPanel.GENERATION;
 			}
 			return 0;
 		}, this, 118, 35, new int[] { 0 }).setGenerator());

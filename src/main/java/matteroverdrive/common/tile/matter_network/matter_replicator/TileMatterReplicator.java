@@ -85,9 +85,17 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	public TileMatterReplicator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_REPLICATOR.get(), pos, state);
-		currentSpeed = DEFAULT_SPEED;
-		currentFailureChance = FAILURE_CHANCE;
-		currentPowerUsage = USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_SPEED);
+		setFailure(FAILURE_CHANCE);
+		setPowerUsage(USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_SPEED;
+		defaultFailureChance = FAILURE_CHANCE;
+		defaultMatterStorage = MATTER_STORAGE;
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = USAGE_PER_TICK;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
 				.setValidator(getValidator()));
@@ -366,10 +374,10 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		data.putDouble("progress", currProgress);
-		data.putDouble("speed", currentSpeed);
-		data.putFloat("failure", currentFailureChance);
-		data.putDouble("usage", currentPowerUsage);
-		data.putBoolean("muffled", isMuffled);
+		data.putDouble("speed", getCurrentSpeed());
+		data.putFloat("failure", getCurrentFailure());
+		data.putDouble("usage", getCurrentPowerUsage());
+		data.putBoolean("muffled", isMuffled());
 		data.putBoolean("fused", usingFused);
 		
 		tag.put("data", data);
@@ -387,36 +395,11 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		currProgress = data.getDouble("progress");
-		currentSpeed = data.getDouble("speed");
-		currentFailureChance = data.getFloat("failure");
-		currentPowerUsage = data.getDouble("usage");
-		isMuffled = data.getBoolean("muffled");
+		setSpeed(data.getDouble("speed"));
+		setFailure(data.getFloat("failure"));
+		setPowerUsage(data.getDouble("usage"));
+		setMuffled(data.getBoolean("muffled"));
 		usingFused = data.getBoolean("fused");
-	}
-	
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_SPEED;
-	}
-	
-	@Override
-	public float getDefaultFailure() {
-		return FAILURE_CHANCE;
-	}
-
-	@Override
-	public double getDefaultMatterStorage() {
-		return MATTER_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return USAGE_PER_TICK;
 	}
 
 	@Override
@@ -507,7 +490,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 	
 	private int getAdjustedTicks() {
-		return (int) Math.ceil(getProcessingTime() / (currentSpeed == 0 ? 1.0D : currentSpeed));
+		return (int) Math.ceil(getProcessingTime() / (getCurrentSpeed() == 0 ? 1.0D : getCurrentSpeed()));
 	}
 	
 	public int getCurrOrders() {

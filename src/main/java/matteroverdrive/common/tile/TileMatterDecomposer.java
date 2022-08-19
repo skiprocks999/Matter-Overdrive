@@ -44,9 +44,17 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
-		currentSpeed = DEFAULT_SPEED;
-		currentFailureChance = FAILURE_CHANCE;
-		currentPowerUsage = USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_SPEED);
+		setFailure(FAILURE_CHANCE);
+		setPowerUsage(USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_SPEED;
+		defaultFailureChance = FAILURE_CHANCE;
+		defaultMatterStorage = MATTER_STORAGE;
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = USAGE_PER_TICK;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
@@ -175,10 +183,10 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", currentSpeed);
-		additional.putFloat("failure", currentFailureChance);
-		additional.putDouble("usage", currentPowerUsage);
-		additional.putBoolean("muffled", isMuffled);
+		additional.putDouble("speed", getCurrentSpeed());
+		additional.putFloat("failure", getCurrentFailure());
+		additional.putDouble("usage", getCurrentPowerUsage());
+		additional.putBoolean("muffled", isMuffled());
 
 		tag.put("additional", additional);
 	}
@@ -189,35 +197,10 @@ public class TileMatterDecomposer extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		currentSpeed = additional.getDouble("speed");
-		currentFailureChance = additional.getFloat("failure");
-		currentPowerUsage = additional.getDouble("usage");
-		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_SPEED;
-	}
-
-	@Override
-	public float getDefaultFailure() {
-		return FAILURE_CHANCE;
-	}
-
-	@Override
-	public double getDefaultMatterStorage() {
-		return MATTER_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return USAGE_PER_TICK;
+		setSpeed(additional.getDouble("speed"));
+		setFailure(additional.getFloat("failure"));
+		setPowerUsage(additional.getDouble("usage"));
+		setMuffled(additional.getBoolean("muffled"));
 	}
 
 	@Override

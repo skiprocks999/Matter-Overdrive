@@ -50,8 +50,14 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_ANALYZER.get(), pos, state);
-		currentSpeed = DEFAULT_SPEED;
-		currentPowerUsage = USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_SPEED);
+		setPowerUsage(USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_SPEED;
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = USAGE_PER_TICK;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES)
 				.setValidator(getValidator()));
@@ -80,7 +86,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		if(energy.getEnergyStored() < currentPowerUsage) {
+		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
 			isRunning = false;
 			currProgress = 0;
 			scannedItem = null;
@@ -148,8 +154,8 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			return;
 		}
 		isRunning = true;
-		currProgress += currentSpeed;
-		energy.removeEnergy((int) currentPowerUsage);
+		currProgress += getCurrentSpeed();
+		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (!currState && isRunning) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
@@ -224,9 +230,9 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		CompoundTag data = new CompoundTag();
 		
 		data.putDouble("progress", currProgress);
-		data.putDouble("speed", currentSpeed);
-		data.putDouble("usage", currentPowerUsage);
-		data.putBoolean("muffled", isMuffled);
+		data.putDouble("speed", getCurrentSpeed());
+		data.putDouble("usage", getCurrentPowerUsage());
+		data.putBoolean("muffled", isMuffled());
 		
 		tag.put("data", data);
 	}
@@ -237,9 +243,9 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		CompoundTag data = tag.getCompound("data");
 		
 		currProgress = data.getDouble("progress");
-		currentSpeed = data.getDouble("speed");
-		currentPowerUsage = data.getDouble("usage");
-		isMuffled = data.getBoolean("muffled");
+		setSpeed(data.getDouble("speed"));
+		setPowerUsage(data.getDouble("usage"));
+		setMuffled(data.getBoolean("muffled"));
 	}
 
 	@Override
@@ -264,21 +270,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public boolean isPowered(boolean client) {
 		return true;
-	}
-	
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_SPEED;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return USAGE_PER_TICK;
 	}
 
 	@Override

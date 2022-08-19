@@ -23,7 +23,11 @@ public class TileChunkloader extends GenericUpgradableTile {
 
 	public TileChunkloader(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHUNKLOADER.get(), pos, state);
-		currentPowerUsage = USAGE;
+		
+		setPowerUsage(USAGE);
+		
+		defaultPowerStorage = ENERGY_CAPACITY;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setEnergySlots(1).setUpgrades(4)
 				.setOwner(this).setValidator(machineValidator()).setValidUpgrades(InventoryChunkloader.UPGRADES));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this));
@@ -35,7 +39,7 @@ public class TileChunkloader extends GenericUpgradableTile {
 
 	@Override
 	public void tickServer() {
-
+		//TODO implement
 	}
 
 	@Override
@@ -46,11 +50,6 @@ public class TileChunkloader extends GenericUpgradableTile {
 	@Override
 	public void readMenuData(CompoundTag tag) {
 		clientRunning = tag.getBoolean("running");
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_CAPACITY;
 	}
 
 	@Override

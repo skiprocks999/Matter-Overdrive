@@ -19,39 +19,38 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	public float defaultFailureChance = 0;
 
 	// Currents
-	public double currentSpeed = 0;
-	public double currentMatterUsage = 0;
-	public double currentMatterStorage = 0;
-	public double currentPowerUsage = 0;
-	public double currentRange = 0;
-	public float currentFailureChance = 0;
+	private double currentSpeed = 0;
+	private double currentMatterUsage = 0;
+	private double currentPowerUsage = 0;
+	private double currentRange = 0;
+	private float currentFailureChance = 0;
 
-	public double saMultiplier = 1; //we don't save this to NBT to make out lives easier
+	private double saMultiplier = 1; //we don't save this to NBT to make out lives easier
 
 	// MISC
-	public boolean isMuffled = false;
+	private boolean isMuffled = false;
 
 	// Properties
-	public final Property<Double> currSpeedProp;
-	public final Property<Double> currMatterUsage;
-	public final Property<Double> currMatterStorage;
-	public final Property<Double> currPowerUsage;
-	public final Property<Double> currPowerStorage;
-	public final Property<Double> currRangeProp;
-	public final Property<Boolean> currIsMuffled;
-	public final Property<Double> currSAMultiplier;
+	private final Property<Double> currSpeedProp;
+	private final Property<Double> currMatterUsage;
+	private final Property<Double> currPowerUsage;
+	private final Property<Double> currRangeProp;
+	private final Property<Boolean> currIsMuffled;
+	private final Property<Double> currSAMultiplier;
+	private final Property<Float> currFailureChance;
 	
 	public GenericUpgradableTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.currSpeedProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentSpeed, this::setSpeed));
-		this.currMatterUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentMatterUsage, this::setMatterUsage));
-		this.currMatterStorage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentMatterStorage, this::setMatterStorage));
-		this.currPowerUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentPowerUsage, this::setPowerUsage));
-		this.currPowerStorage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentPowerStorage, this::setPowerStorage));
-		this.currRangeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getCurrentRange, this::setRange));
-		this.currIsMuffled = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(this::isMuffled, this::setMuffled));
-		this.currSAMultiplier = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::getSaMultiplier, this::setSaMultiplier));
+		this.currSpeedProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentSpeedGetter, this::speedSetter));
+		this.currMatterUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentMatterUsageGetter, this::matterUsageSetter));
+		this.currPowerUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentPowerUsageGetter, this::powerUsageSetter));
+		this.currRangeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentRangeGetter, this::rangeSetter));
+		this.currIsMuffled = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(this::muffledGetter, this::muffledSetter));
+		this.currSAMultiplier = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::acceleratorMultiplierGetter, this::acceleratorMultiplierSetter));
+		this.currFailureChance = this.getPropertyManager().addTrackedProperty(PropertyTypes.FLOAT.create(this::currentFailureGetter, this::failureSetter));
 	}
+	
+	//INTERFACE HANDLING
 
 	@Override
 	public double getDefaultSpeed() {
@@ -87,87 +86,139 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	public double getDefaultRange() {
 		return this.defaultRange;
 	}
+	
+	//getters
 
 	@Override
 	public boolean isMuffled() {
-		return this.isMuffled;
+		return this.currIsMuffled.get();
 	}
 
 	@Override
 	public double getCurrentSpeed() {
-		return this.currentSpeed;
+		return this.currSpeedProp.get();
 	}
 
 	@Override
 	public double getCurrentMatterUsage() {
-		return this.currentMatterUsage;
+		return this.currMatterUsage.get();
 	}
 
 	@Override
 	public float getCurrentFailure() {
-		return this.currentFailureChance;
-	}
-
-	@Override
-	public double getCurrentMatterStorage() {
-		return this.currentMatterStorage;
+		return this.currFailureChance.get();
 	}
 
 	@Override
 	public double getCurrentPowerUsage() {
-		return this.currentPowerUsage;
+		return this.currPowerUsage.get();
 	}
 
 	@Override
 	public double getCurrentRange() {
-		return this.currentRange;
-	}
-
-	public double getSaMultiplier() {
-		return saMultiplier;
+		return this.currRangeProp.get();
 	}
 
 	@Override
+	public double getAcceleratorMultiplier() {
+		return this.currSAMultiplier.get();
+	}
+	
+	//setters
+
+	@Override
 	public void setAcceleratorMultiplier(double multiplier) {
-		this.saMultiplier = multiplier;
+		this.currSAMultiplier.set(multiplier);
 	}
 
 	@Override
 	public void setSpeed(double speed) {
-		this.currentSpeed = speed;
+		this.currSpeedProp.set(speed);
 	}
 
 	@Override
 	public void setMatterUsage(double matter) {
-		this.currentMatterUsage = matter;
+		this.currMatterUsage.set(matter);
 	}
 
 	@Override
 	public void setFailure(float failure) {
-		this.currentFailureChance = failure;
-	}
-
-	@Override
-	public void setMatterStorage(double storage) {
-		this.currentMatterStorage = storage;
+		this.currFailureChance.set(failure);
 	}
 
 	@Override
 	public void setPowerUsage(double usage) {
-		this.currentPowerUsage = usage;
+		this.currPowerUsage.set(usage);
 	}
 
 	@Override
 	public void setRange(double range) {
-		this.currentRange = range;
+		this.currRangeProp.set(range);
 	}
 
 	@Override
 	public void setMuffled(boolean muffled) {
+		this.currIsMuffled.set(muffled);
+	}
+	
+	//GETTERS
+	
+	private boolean muffledGetter() {
+		return this.isMuffled;
+	}
+
+	private double currentSpeedGetter() {
+		return this.currentSpeed;
+	}
+
+	private double currentMatterUsageGetter() {
+		return this.currentMatterUsage;
+	}
+
+	private float currentFailureGetter() {
+		return this.currentFailureChance;
+	}
+
+	private double currentPowerUsageGetter() {
+		return this.currentPowerUsage;
+	}
+
+	private double currentRangeGetter() {
+		return this.currentRange;
+	}
+
+	private double acceleratorMultiplierGetter() {
+		return saMultiplier;
+	}
+	
+	//SETTERS
+	
+	private void acceleratorMultiplierSetter(double multiplier) {
+		this.saMultiplier = multiplier;
+	}
+
+	private void speedSetter(double speed) {
+		this.currentSpeed = speed;
+	}
+
+	private void matterUsageSetter(double matter) {
+		this.currentMatterUsage = matter;
+	}
+
+	private void failureSetter(float failure) {
+		this.currentFailureChance = failure;
+	}
+
+	private void powerUsageSetter(double usage) {
+		this.currentPowerUsage = usage;
+	}
+
+	private void rangeSetter(double range) {
+		this.currentRange = range;
+	}
+
+	private void muffledSetter(boolean muffled) {
 		this.isMuffled = muffled;
 	}
 
-	public void setSaMultiplier(double saMultiplier) {
-		this.saMultiplier = saMultiplier;
-	}
 }

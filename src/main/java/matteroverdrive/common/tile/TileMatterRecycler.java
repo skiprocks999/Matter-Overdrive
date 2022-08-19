@@ -35,8 +35,14 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
-		currentSpeed = DEFAULT_SPEED;
-		currentPowerUsage = USAGE_PER_TICK;
+		
+		setSpeed(DEFAULT_SPEED);
+		setPowerUsage(USAGE_PER_TICK);
+		
+		defaultSpeed = DEFAULT_SPEED;
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = USAGE_PER_TICK;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
@@ -138,9 +144,9 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("progress", currProgress);
-		additional.putDouble("speed", currentSpeed);
-		additional.putDouble("usage", currentPowerUsage);
-		additional.putBoolean("muffled", isMuffled);
+		additional.putDouble("speed", getCurrentSpeed());
+		additional.putDouble("usage", getCurrentPowerUsage());
+		additional.putBoolean("muffled", isMuffled());
 
 		tag.put("additional", additional);
 	}
@@ -151,24 +157,9 @@ public class TileMatterRecycler extends GenericSoundTile {
 
 		CompoundTag additional = tag.getCompound("additional");
 		currProgress = additional.getDouble("progress");
-		currentSpeed = additional.getDouble("speed");
-		currentPowerUsage = additional.getDouble("usage");
-		isMuffled = additional.getBoolean("muffled");
-	}
-
-	@Override
-	public double getDefaultSpeed() {
-		return DEFAULT_SPEED;
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return USAGE_PER_TICK;
+		setSpeed(additional.getDouble("speed"));
+		setPowerUsage(additional.getDouble("usage"));
+		setMuffled(additional.getBoolean("muffled"));
 	}
 
 	@Override

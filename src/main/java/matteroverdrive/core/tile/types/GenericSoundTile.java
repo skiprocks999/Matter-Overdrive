@@ -27,7 +27,7 @@ public abstract class GenericSoundTile extends GenericUpgradableTile implements 
 	
 	@Override
 	public boolean shouldPlaySound() {
-		return isRunning && !isMuffled;
+		return isRunning && !isMuffled();
 	}
 	
 	public boolean isRunning() {

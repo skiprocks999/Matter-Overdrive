@@ -27,8 +27,14 @@ public class TileCharger extends GenericUpgradableTile {
 
 	public TileCharger(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHARGER.get(), pos, state);
-		currentPowerUsage = CHARGE_RATE;
-		currentRange = DEFAULT_RADIUS;
+		
+		setPowerUsage(CHARGE_RATE);
+		setRange(DEFAULT_RADIUS);
+		
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = CHARGE_RATE;
+		defaultRange = DEFAULT_RADIUS;
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
 				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
@@ -60,8 +66,8 @@ public class TileCharger extends GenericUpgradableTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("usage", currentPowerUsage);
-		additional.putDouble("radius", currentRange);
+		additional.putDouble("usage", getCurrentPowerUsage());
+		additional.putDouble("radius", getCurrentRange());
 		additional.putBoolean("running", running);
 
 		tag.put("additional", additional);
@@ -72,29 +78,14 @@ public class TileCharger extends GenericUpgradableTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		currentPowerUsage = additional.getInt("usage");
-		currentRange = additional.getInt("radius");
+		setPowerUsage(additional.getInt("usage"));
+		setRange(additional.getInt("radius"));
 		running = additional.getBoolean("runnning");
 	}
 
 	@Override
 	public AABB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().inflate(2);
-	}
-
-	@Override
-	public double getDefaultPowerStorage() {
-		return ENERGY_STORAGE;
-	}
-
-	@Override
-	public double getDefaultPowerUsage() {
-		return CHARGE_RATE;
-	}
-
-	@Override
-	public double getDefaultRange() {
-		return DEFAULT_RADIUS;
 	}
 
 	@Override
