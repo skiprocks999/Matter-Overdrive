@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
+import matteroverdrive.core.property.Property;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
@@ -43,6 +44,8 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private LazyOptional<ICapabilityMatterStorage> childOutput;
 	// Down Up North South West East
 	private LazyOptional<ICapabilityMatterStorage>[] sideCaps = new LazyOptional[6];
+	
+	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityMatterStorage(double maxStorage, boolean hasInput, boolean hasOutput) {
 		// will be overwritten by nbt load!
@@ -79,6 +82,11 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			initialFacing = initialState.getValue(GenericEntityBlock.FACING);
 			refreshCapability();
 		}
+		return this;
+	}
+	
+	public CapabilityMatterStorage setPropertyManager(Property<CompoundTag> property) {
+		propertyHandler = property;
 		return this;
 	}
 
@@ -247,14 +255,17 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	public void updateMaxMatterStorage(double maxStorage) {
 		this.maxStorage = maxStorage;
+		onChange();
 	}
 
 	public void updateInput(boolean input) {
 		this.hasInput = input;
+		onChange();
 	}
 
 	public void updateOutput(boolean output) {
 		this.hasOutput = output;
+		onChange();
 	}
 
 	// method for us to allow for matter removal on items/blocks that aren't
@@ -303,6 +314,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	private void onChange() {
+		if(propertyHandler != null) {
+			propertyHandler.set(serializeNBT());
+		}
 		if (hasOwner) {
 			owner.setChanged();
 		}
@@ -321,6 +335,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		for (Direction dir : dirs) {
 			relativeInputDirs.add(dir);
 		}
+		onChange();
 	}
 
 	public void setOutputDirs(@Nonnull List<Direction> dirs) {
@@ -328,6 +343,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		for (Direction dir : dirs) {
 			relativeOutputDirs.add(dir);
 		}
+		onChange();
 	}
 
 	public boolean isSided() {

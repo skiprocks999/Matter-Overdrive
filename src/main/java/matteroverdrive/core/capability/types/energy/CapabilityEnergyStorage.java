@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
+import matteroverdrive.core.property.Property;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.Direction;
@@ -44,6 +45,8 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	private LazyOptional<IEnergyStorage> childOutput;
 	// Down Up North South West East
 	private LazyOptional<IEnergyStorage>[] sideCaps = new LazyOptional[6];
+	
+	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityEnergyStorage(int maxStorage, boolean hasInput, boolean hasOutput) {
 		// will be overwritten by nbt load!
@@ -80,6 +83,11 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			initialFacing = initialState.getValue(GenericEntityBlock.FACING);
 			refreshCapability();
 		}
+		return this;
+	}
+	
+	public CapabilityEnergyStorage setPropertyManager(Property<CompoundTag> property) {
+		propertyHandler = property;
 		return this;
 	}
 
@@ -270,14 +278,17 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	public void updateMaxEnergyStorage(int maxStorage) {
 		this.maxStorage = maxStorage;
+		onChange();
 	}
 
 	public void updateInput(boolean input) {
 		this.hasInput = input;
+		onChange();
 	}
 
 	public void updateOutput(boolean output) {
 		this.hasOutput = output;
+		onChange();
 	}
 
 	// method for us to allow for energy removal on items/blocks that aren't
@@ -305,6 +316,9 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	}
 
 	private void onChange() {
+		if(propertyHandler != null) {
+			propertyHandler.set(serializeNBT());
+		}
 		if (hasOwner) {
 			owner.setChanged();
 		}
@@ -327,6 +341,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		for (Direction dir : dirs) {
 			relativeInputDirs.add(dir);
 		}
+		onChange();
 	}
 
 	public void setOutputDirs(@Nonnull List<Direction> dirs) {
@@ -334,6 +349,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		for (Direction dir : dirs) {
 			relativeOutputDirs.add(dir);
 		}
+		onChange();
 	}
 
 	private class ChildCapabilityEnergyStorage extends CapabilityEnergyStorage {

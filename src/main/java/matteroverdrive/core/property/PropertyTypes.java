@@ -1,6 +1,8 @@
 package matteroverdrive.core.property;
 
 import com.google.common.collect.Lists;
+
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -45,6 +47,9 @@ public class PropertyTypes {
    */
   public static PropertyType<Float> FLOAT = addType("float", Float.class, FriendlyByteBuf::readFloat,
           FriendlyByteBuf::writeFloat);
+  
+  public static PropertyType<CompoundTag> NBT = addType("nbt", CompoundTag.class, FriendlyByteBuf::readNbt,
+          FriendlyByteBuf::writeNbt);
 
   /**
    * Add type method.

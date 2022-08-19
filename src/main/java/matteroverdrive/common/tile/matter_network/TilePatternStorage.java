@@ -19,6 +19,8 @@ import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternS
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.types.GenericRedstoneTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -61,12 +63,20 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	public boolean clientTilePowered;	
 	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
+	
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1).setOwner(this)
-				.setValidator(getValidator()));
-		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
+				.setValidator(getValidator()).setPropertyManager(capInventoryProp));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryPatternStorage(id, play.getInventory(),

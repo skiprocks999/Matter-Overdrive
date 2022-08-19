@@ -22,6 +22,8 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsMath;
@@ -68,11 +70,18 @@ public class TileTransporter extends GenericSoundTile {
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
 	public int clientDestination = -1;
 	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
+	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
+	public final Property<CompoundTag> capMatterStorageProp;
 
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
 		
 		setMatterUsage(MATTER_USAGE);
+		setSpeed(DEFAULT_SPEED);
+		setPowerUsage(USAGE_PER_TICK);
+		setRange(DEFAULT_RADIUS);
 		
 		defaultSpeed = DEFAULT_SPEED;
 		defaultMatterUsage = MATTER_USAGE;
@@ -81,14 +90,21 @@ public class TileTransporter extends GenericSoundTile {
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultRange = DEFAULT_RADIUS;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
+				tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
 		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this).setDefaultDirections(
-				state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null));
+				state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null).setPropertyManager(capMatterStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()),
@@ -96,12 +112,9 @@ public class TileTransporter extends GenericSoundTile {
 		setHasMenuData();
 		setHasRenderData();
 		setTickable();
+		
 		fillLocations(LOCATIONS);
-		setSpeed(DEFAULT_SPEED);
-		setPowerUsage(USAGE_PER_TICK);
-		setRange(DEFAULT_RADIUS);
-		setMatterUsage(MATTER_USAGE);
-		setMatterStorage(MATTER_STORAGE);
+		
 	}
 
 	@Override

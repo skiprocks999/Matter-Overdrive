@@ -12,6 +12,7 @@ import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
+import matteroverdrive.core.property.Property;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -64,6 +65,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private LazyOptional<IItemHandlerModifiable>[] sideCaps = new LazyOptional[6];
 
 	private UpgradeType[] validUpgrades;
+	
+	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityInventory() {
 		super();
@@ -143,6 +146,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	public CapabilityInventory setValidator(TriPredicate<Integer, ItemStack, CapabilityInventory> valid) {
 		this.valid = valid;
+		return this;
+	}
+	
+	public CapabilityInventory setPropertyManager(Property<CompoundTag> property) {
+		propertyHandler = property;
 		return this;
 	}
 
@@ -501,6 +509,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setPowerStorage((int) powerStorage);
 				upgradable.setPowerUsage((int) powerUsage);
 				upgradable.setRange((int) range);
+				upgradable.setMuffled(isMuffled);
+			}
+			if(propertyHandler != null) {
+				propertyHandler.set(serializeNBT());
 			}
 			owner.setChanged();
 		}
@@ -519,6 +531,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		for (Direction dir : dirs) {
 			relativeInputDirs.add(dir);
 		}
+		onContentsChanged(-1);
 	}
 
 	public void setOutputDirs(@Nonnull List<Direction> dirs) {
@@ -526,6 +539,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		for (Direction dir : dirs) {
 			relativeOutputDirs.add(dir);
 		}
+		onContentsChanged(-1);
 	}
 
 	public boolean isUpgradeValid(UpgradeType type) {

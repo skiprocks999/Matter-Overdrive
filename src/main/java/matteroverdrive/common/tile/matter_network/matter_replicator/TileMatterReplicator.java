@@ -26,6 +26,8 @@ import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPattern
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
@@ -83,6 +85,10 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public double clientProgress;
 	public ItemStack outputItem = ItemStack.EMPTY;
 	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
+	public final Property<CompoundTag> capMatterStorageProp;
+	
 	public TileMatterReplicator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_REPLICATOR.get(), pos, state);
 		
@@ -96,11 +102,18 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
+				tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
-				.setValidator(getValidator()));
-		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
-		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this));
+				.setValidator(getValidator()).setPropertyManager(capInventoryProp));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setPropertyManager(capEnergyStorageProp));
+		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this).setPropertyManager(capMatterStorageProp));
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMatterReplicator(id, play.getInventory(), getInventoryCap(), getCoordsData()),

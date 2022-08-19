@@ -5,6 +5,8 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsItem;
@@ -35,6 +37,9 @@ public class TileMicrowave extends GenericSoundTile {
 	public double clientProgress;
 
 	private SmokingRecipe cachedRecipe;
+	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileMicrowave(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MICROWAVE.get(), pos, state);
@@ -46,13 +51,18 @@ public class TileMicrowave extends GenericSoundTile {
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryMicrowave.UPGRADES));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryMicrowave.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryMicrowave(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.MICROWAVE.id())));

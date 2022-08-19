@@ -4,6 +4,8 @@ import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.TileRegistry;
@@ -24,16 +26,24 @@ public class TileSolarPanel extends GenericUpgradableTile {
 	private boolean generating = false;
 
 	public boolean clientGenerating;
+	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
 		
 		defaultPowerStorage = ENERGY_STORAGE;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
-				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES));
+				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
-				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }));
+				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }).setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));

@@ -11,6 +11,8 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericSoundTile;
 import matteroverdrive.core.utils.UtilsCapability;
@@ -43,10 +45,12 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	private ItemStack scannedItem = null;
 	private boolean shouldAnalyze = false;
 	
-	
 	public boolean clientPowered;
 	public double clientProgress;
 	public ItemStack clientScannedItem = ItemStack.EMPTY;
+	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
 	
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_ANALYZER.get(), pos, state);
@@ -58,10 +62,15 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES)
-				.setValidator(getValidator()));
-		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this));
+				.setValidator(getValidator()).setPropertyManager(capInventoryProp));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(
 				new SimpleMenuProvider(
 						(id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),

@@ -6,6 +6,8 @@ import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.types.GenericUpgradableTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
@@ -32,6 +34,10 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	private boolean running = false;
 
 	public boolean clientRunning;
+	
+	public final Property<CompoundTag> capInventoryProp;
+	public final Property<CompoundTag> capEnergyStorageProp;
+	public final Property<CompoundTag> capMatterStorageProp;
 
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
@@ -48,13 +54,20 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		defaultPowerUsage = ENERGY_USAGE_PER_TICK;
 		defaultRange = BASE_RADIUS;
 		
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
+				tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
+				tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
+				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
-				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES));
+				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP }, null));
+				.setDefaultDirections(state, new Direction[] { Direction.UP }, null).setPropertyManager(capEnergyStorageProp));
 		addMatterStorageCap(new CapabilityMatterStorage(MATTER_CAPACITY, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.DOWN }, null));
+				.setDefaultDirections(state, new Direction[] { Direction.DOWN }, null).setPropertyManager(capMatterStorageProp));
 		setMenuProvider(
 				new SimpleMenuProvider((id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
