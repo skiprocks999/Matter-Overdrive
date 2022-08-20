@@ -18,25 +18,27 @@ public class TileChunkloader extends GenericMachineTile {
 	public static final int SLOT_COUNT = 5;
 	public static final int ENERGY_CAPACITY = 1024000;
 	public static final int USAGE = 0;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileChunkloader(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHUNKLOADER.get(), pos, state);
-		
+
 		setPowerUsage(USAGE);
-		
+
 		defaultPowerStorage = ENERGY_CAPACITY;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setEnergySlots(1).setUpgrades(4)
-				.setOwner(this).setValidator(machineValidator()).setValidUpgrades(InventoryChunkloader.UPGRADES).setPropertyManager(capInventoryProp));
-		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this).setPropertyManager(capEnergyStorageProp));
+				.setOwner(this).setValidator(machineValidator()).setValidUpgrades(InventoryChunkloader.UPGRADES)
+				.setPropertyManager(capInventoryProp));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
+				.setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryChunkloader(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.CHUNKLOADER.id())));
 		setTickable();
@@ -44,9 +46,9 @@ public class TileChunkloader extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		//TODO implement
+		// TODO implement
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

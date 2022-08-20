@@ -39,132 +39,131 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	private static final double PROCESSING_TIME = 800;
 	private static final int DEFAULT_SPEED = 1;
 	private static final int PERCENTAGE_PER_SCAN = 20;
-	
+
 	private ItemStack scannedItem = ItemStack.EMPTY;
-	//Server-side only
+	// Server-side only
 	private boolean shouldAnalyze = false;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<ItemStack> scannedItemProp;
-	
+
 	public TileMatterAnalyzer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_ANALYZER.get(), pos, state);
-		
+
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
-		
+
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultProcessingTime = PROCESSING_TIME;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		scannedItemProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.ITEM_STACK.create(() -> scannedItem, item -> scannedItem = item.copy()));
-		
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1)
-				.setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES)
-				.setValidator(getValidator()).setPropertyManager(capInventoryProp));
-		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this).setPropertyManager(capEnergyStorageProp));
-		setMenuProvider(
-				new SimpleMenuProvider(
-						(id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),
-								getInventoryCap(), getCoordsData()),
-						getContainerName(TypeMachine.MATTER_ANALYZER.id())));
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		scannedItemProp = this.getPropertyManager().addTrackedProperty(
+				PropertyTypes.ITEM_STACK.create(() -> scannedItem, item -> scannedItem = item.copy()));
+
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setUpgrades(4)
+				.setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES).setValidator(getValidator())
+				.setPropertyManager(capInventoryProp));
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
+				.setPropertyManager(capEnergyStorageProp));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterAnalyzer(id, play.getInventory(),
+				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_ANALYZER.id())));
 		setTickable();
 	}
-	
+
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		boolean flag = false;
-		if(!canRun()) {
+		if (!canRun()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(ItemStack.EMPTY);
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
+		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(ItemStack.EMPTY);
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack scanned = inv.getStackInSlot(0);
-		if(scanned.isEmpty()) {
+		if (scanned.isEmpty()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(ItemStack.EMPTY);
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
-		if(network == null || !hasAttachedDrives(network)) {
+		if (network == null || !hasAttachedDrives(network)) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(ItemStack.EMPTY);
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
-		
-		if(scannedItemProp.get().isEmpty()) {
-			//this is a very expensive call so the redundant call locations are required
+
+		if (scannedItemProp.get().isEmpty()) {
+			// this is a very expensive call so the redundant call locations are required
 			int[] stored = network.getHighestStorageLocationForItem(scanned.getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
+			if (val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
 			}
-			
+
 		}
-		if(!shouldAnalyze) {
+		if (!shouldAnalyze) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(ItemStack.EMPTY);
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
-		if(!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
+		if (!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setScannedItem(scanned);
 			int[] stored = network.getHighestStorageLocationForItem(scannedItemProp.get().getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
-			if(val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
+			if (val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
 				shouldAnalyze = false;
 			} else {
 				shouldAnalyze = true;
@@ -172,7 +171,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -184,38 +183,39 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		setChanged();
-		if(getProgress() < PROCESSING_TIME) {
+		if (getProgress() < PROCESSING_TIME) {
 			return;
 		}
 		int[] stored = network.getHighestStorageLocationForItem(scannedItemProp.get().getItem(), true);
 		boolean successFlag = false;
-		if(stored[0] > -1) {
+		if (stored[0] > -1) {
 			TilePatternStorage drive = network.getStorageFromIndex(stored[0]);
-			if(drive != null) {
-				if(drive.storeItem(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN, new int[] {stored[1], stored[2], stored[3]})) {
+			if (drive != null) {
+				if (drive.storeItem(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN,
+						new int[] { stored[1], stored[2], stored[3] })) {
 					successFlag = true;
-				} else if(drive.storeItemFirstChance(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN)) {
+				} else if (drive.storeItemFirstChance(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN)) {
 					successFlag = true;
-				} 
-			} 
-		} else if(network.storeItemFirstChance(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN, true)){
+				}
+			}
+		} else if (network.storeItemFirstChance(scannedItemProp.get().getItem(), PERCENTAGE_PER_SCAN, true)) {
 			successFlag = true;
-		} 
-		
-		if(successFlag) {
+		}
+
+		if (successFlag) {
 			scanned.shrink(1);
 			playSuccessSound();
 		} else {
 			playFailureSound();
 		}
-		
+
 		setProgress(0);
 		shouldAnalyze = false;
 		setScannedItem(ItemStack.EMPTY);
 		setRunning(false);
 		setChanged();
 	}
-	
+
 	@Override
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
@@ -223,25 +223,25 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_ANALYZER.get(), this, true);
 		}
 	}
-	
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		CompoundTag data = new CompoundTag();
-		
+
 		data.putDouble("progress", getProgress());
 		data.putDouble("speed", getCurrentSpeed());
 		data.putDouble("usage", getCurrentPowerUsage());
 		data.putBoolean("muffled", isMuffled());
-		
+
 		tag.put("data", data);
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
 		CompoundTag data = tag.getCompound("data");
-		
+
 		setProgress(data.getDouble("progress"));
 		setSpeed(data.getDouble("speed"));
 		setPowerUsage(data.getDouble("usage"));
@@ -255,13 +255,13 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		Direction relative = UtilsDirection.getRelativeSide(back, handleEastWest(facing));
 		return relative == face;
 	}
-	
+
 	@Override
 	@Nullable
 	public NetworkMatter getConnectedNetwork() {
 		Direction back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
-		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
+		if (entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);
 		}
 		return null;
@@ -271,29 +271,31 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	public boolean isPowered(boolean client) {
 		return true;
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);
 	}
-	
+
 	public boolean setScannedItem(ItemStack item) {
 		scannedItemProp.set(item);
 		return scannedItemProp.isDirtyNoUpdate();
 	}
-	
+
 	private boolean hasAttachedDrives(NetworkMatter matter) {
 		return matter.getPatternDrives() != null && matter.getPatternDrives().size() > 0;
 	}
-	
+
 	private void playFailureSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS,
+				0.5F, 1.0F);
 	}
-	
+
 	private void playSuccessSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS,
+				0.5F, 1.0F);
 	}
-	
+
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
 		return (index, stack, cap) -> index == 0 && MatterRegister.INSTANCE.getServerMatterValue(stack) > 0.0
 				|| index == 1 && UtilsCapability.hasEnergyCap(stack)

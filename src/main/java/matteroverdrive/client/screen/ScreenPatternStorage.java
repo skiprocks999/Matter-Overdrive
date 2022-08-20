@@ -10,7 +10,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
@@ -32,15 +31,15 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenPatternStorage(InventoryPatternStorage menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -56,26 +55,26 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 			home.isActivated = false;
 			redstone.visible = true;
 		}, MenuButtonType.SETTINGS, menu, false);
-		
+
 		redstone = redstoneButton(48, 32);
-		
+
 		addButton(close);
 		addButton(menu);
 		addButton(home);
 		addButton(settings);
 		addButton(redstone);
-		
+
 		redstone.visible = false;
-		
-		addScreenComponent(new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, UtilsRendering.GUI_STANDARD));
+
+		addScreenComponent(
+				new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, UtilsRendering.GUI_STANDARD));
 		addScreenComponent(new ScreenComponentProgress(() -> 0, this, 8, 61, new int[] { 0 }).vertical());
-		addScreenComponent(defaultEnergyBar(167, 35, new int[] {0}));
+		addScreenComponent(defaultEnergyBar(167, 35, new int[] { 0 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(getPoweredIndicator(6, 159, new int[] {0, 1}));
-		
-		
+		addScreenComponent(getPoweredIndicator(6, 159, new int[] { 0, 1 }));
+
 	}
 
 	private void toggleBarOpen() {

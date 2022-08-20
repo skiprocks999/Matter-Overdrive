@@ -52,13 +52,13 @@ public class TickableSoundTile extends AbstractTickableSoundInstance {
 			this.volume = initialVolume;
 		}
 	}
-	
+
 	@Override
 	public void stop() {
 		super.stop();
 		tile.setNotPlaying();
 	}
-	
+
 	public void stopAbstract() {
 		super.stop();
 	}

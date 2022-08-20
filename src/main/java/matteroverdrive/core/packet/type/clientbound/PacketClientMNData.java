@@ -12,12 +12,12 @@ public class PacketClientMNData {
 
 	private final CompoundTag data;
 	private final BlockPos monitorPos;
-	
+
 	public PacketClientMNData(CompoundTag data, BlockPos pos) {
 		this.data = data;
 		monitorPos = pos;
 	}
-	
+
 	public static void handle(PacketClientMNData message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -25,14 +25,14 @@ public class PacketClientMNData {
 		});
 		ctx.setPacketHandled(true);
 	}
-	
+
 	public static void encode(PacketClientMNData pkt, FriendlyByteBuf buf) {
 		buf.writeNbt(pkt.data);
 		buf.writeBlockPos(pkt.monitorPos);
 	}
-	
+
 	public static PacketClientMNData decode(FriendlyByteBuf buf) {
 		return new PacketClientMNData(buf.readNbt(), buf.readBlockPos());
 	}
-	
+
 }

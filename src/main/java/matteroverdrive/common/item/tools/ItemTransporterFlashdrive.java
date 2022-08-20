@@ -28,12 +28,12 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 	public ItemTransporterFlashdrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
 	}
-	
+
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-		if(!world.isClientSide()) {
+		if (!world.isClientSide()) {
 			ItemStack stack = player.getItemInHand(hand);
-			if(player.isShiftKeyDown()) {
+			if (player.isShiftKeyDown()) {
 				stack.getOrCreateTag().remove(UtilsNbt.BLOCK_POS);
 			} else {
 				HitResult trace = getPlayerPOVHitResult(world, player, net.minecraft.world.level.ClipContext.Fluid.ANY);
@@ -51,16 +51,17 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 		}
 		return super.use(world, player, hand);
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltips, TooltipFlag advanced) {
 		super.appendHoverText(stack, world, tooltips, advanced);
-		if(stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
+		if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 			CompoundTag tag = stack.getTag();
-			tooltips.add(Component.literal(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString()).withStyle(ChatFormatting.GRAY));
+			tooltips.add(Component.literal(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString())
+					.withStyle(ChatFormatting.GRAY));
 			MutableComponent name;
 			String key = UtilsNbt.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION)).location().getPath();
-			if(UtilsText.dimensionExists(key)) {
+			if (UtilsText.dimensionExists(key)) {
 				name = UtilsText.dimension(key);
 			} else {
 				name = Component.literal(key);

@@ -13,7 +13,7 @@ public class ParticleRegistry {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister
 			.create(ForgeRegistries.PARTICLE_TYPES, References.ID);
-	
+
 	public static final RegistryObject<ParticleOptionReplicator> PARTICLE_REPLICATOR = PARTICLES.register("replicator",
 			() -> new ParticleOptionReplicator());
 	public static final RegistryObject<ParticleOptionShockwave> PARTICLE_SHOCKWAVE = PARTICLES.register("shockwave",
@@ -21,5 +21,4 @@ public class ParticleRegistry {
 	public static final RegistryObject<ParticleOptionVent> PARTICLE_VENT = PARTICLES.register("vent",
 			() -> new ParticleOptionVent());
 
-	
 }

@@ -1,9 +1,8 @@
 package matteroverdrive.core.screen.component;
 
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
@@ -15,37 +14,34 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 
-	private final Supplier<IUpgradableTile> tile;
 	private boolean matterPerTick = false;
 	private boolean powerNonTick = false;
 	private boolean customTime = false;
 	private String customTimeKey = null;
 
-	public ScreenComponentUpgradeInfo(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
-			Supplier<IUpgradableTile> tile) {
+	public ScreenComponentUpgradeInfo(GenericScreen<?> gui, int x, int y, int[] screenNumbers) {
 		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
-		this.tile = tile;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setMatterPerTick() {
 		matterPerTick = true;
 		return this;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setPowerNonTick() {
 		powerNonTick = true;
 		return this;
 	}
-	
+
 	public ScreenComponentUpgradeInfo setCustomTimeKey(String key) {
 		customTime = true;
 		customTimeKey = key;
 		return this;
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		IUpgradableTile owner = tile.get();
+		IUpgradableTile owner = (IUpgradableTile) ((GenericInventoryTile<?>) gui.getMenu()).getTile();
 		MutableComponent component;
 		int color;
 		if (owner != null) {
@@ -55,7 +51,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			double currSpeed = owner.getCurrentSpeed();
 			double operatingTime = owner.getProcessingTime();
 			if (currSpeed > 0 && owner.getDefaultSpeed() > 0) {
-				if(customTime) {
+				if (customTime) {
 					component = UtilsText.gui(customTimeKey, currSpeed);
 				} else {
 					component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));

@@ -14,8 +14,8 @@ public class ScreenComponentHotbarBar extends OverdriveScreenComponent {
 	private static final int WIDTH = 169;
 
 	public ScreenComponentHotbarBar(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y, 
-				WIDTH, HEIGHT, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/base/hotbar_bar.png"), gui, x, y, WIDTH, HEIGHT,
+				screenNumbers);
 	}
 
 	@Override

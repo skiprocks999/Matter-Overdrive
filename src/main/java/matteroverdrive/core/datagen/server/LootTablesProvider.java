@@ -38,17 +38,18 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 		this.<TileSolarPanel>addIETable(BlockRegistry.BLOCK_SOLAR_PANEL, TileRegistry.TILE_SOLAR_PANEL);
 		this.<TileMatterDecomposer>addIEMTable(BlockRegistry.BLOCK_MATTER_DECOMPOSER,
 				TileRegistry.TILE_MATTER_DECOMPOSER);
-		this.<TileMatterRecycler>addIETable(BlockRegistry.BLOCK_MATTER_RECYCLER,
-				TileRegistry.TILE_MATTER_RECYCLER);
+		this.<TileMatterRecycler>addIETable(BlockRegistry.BLOCK_MATTER_RECYCLER, TileRegistry.TILE_MATTER_RECYCLER);
 		this.<TileCharger>addIETable(BlockRegistry.BLOCK_CHARGER, TileRegistry.TILE_CHARGER);
 		this.<TileMicrowave>addIETable(BlockRegistry.BLOCK_MICROWAVE, TileRegistry.TILE_MICROWAVE);
 		this.<TileTransporter>addIETable(BlockRegistry.BLOCK_TRANSPORTER, TileRegistry.TILE_TRANSPORTER);
-		this.<TileSpacetimeAccelerator>addIEMTable(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, TileRegistry.TILE_SPACETIME_ACCELERATOR);
+		this.<TileSpacetimeAccelerator>addIEMTable(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR,
+				TileRegistry.TILE_SPACETIME_ACCELERATOR);
 		this.<TileChunkloader>addIEMTable(BlockRegistry.BLOCK_CHUNKLOADER, TileRegistry.TILE_CHUNKLOADER);
 		this.<TileMatterAnalyzer>addIETable(BlockRegistry.BLOCK_MATTER_ANALYZER, TileRegistry.TILE_MATTER_ANALYZER);
 		this.<TilePatternStorage>addIETable(BlockRegistry.BLOCK_PATTERN_STORAGE, TileRegistry.TILE_PATTERN_STORAGE);
 		this.<TilePatternMonitor>addITable(BlockRegistry.BLOCK_PATTERN_MONITOR, TileRegistry.TILE_PATTERN_MONITOR);
-		this.<TileMatterReplicator>addIEMTable(BlockRegistry.BLOCK_MATTER_REPLICATOR, TileRegistry.TILE_MATTER_REPLICATOR);
+		this.<TileMatterReplicator>addIEMTable(BlockRegistry.BLOCK_MATTER_REPLICATOR,
+				TileRegistry.TILE_MATTER_REPLICATOR);
 
 		this.addSilkTouchOnlyTable(BlockRegistry.BLOCK_INDUSTRIAL_GLASS);
 	}
@@ -68,7 +69,8 @@ public class LootTablesProvider extends AbstractLootTableProvider {
 	private <T extends GenericTile> void addIEMTable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
+		lootTables.put(block,
+				itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
 	}
 
 	/**

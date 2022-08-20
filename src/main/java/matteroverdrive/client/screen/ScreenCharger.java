@@ -9,7 +9,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
@@ -37,7 +36,7 @@ public class ScreenCharger extends GenericMachineScreen<InventoryCharger> {
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -71,16 +70,16 @@ public class ScreenCharger extends GenericMachineScreen<InventoryCharger> {
 		addButton(settings);
 		addButton(upgrades);
 		addButton(redstone);
-		
-		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
-		addScreenComponent(getRunningIndicator(6, 156, new int[] {0, 1, 2}));
+
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] { 0 }));
+		addScreenComponent(getRunningIndicator(6, 156, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
 
 		redstone.visible = false;
-		
+
 	}
 
 	private void toggleBarOpen() {

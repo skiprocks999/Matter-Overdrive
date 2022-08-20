@@ -45,7 +45,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	private LazyOptional<IEnergyStorage> childOutput;
 	// Down Up North South West East
 	private LazyOptional<IEnergyStorage>[] sideCaps = new LazyOptional[6];
-	
+
 	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityEnergyStorage(int maxStorage, boolean hasInput, boolean hasOutput) {
@@ -85,7 +85,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		}
 		return this;
 	}
-	
+
 	public CapabilityEnergyStorage setPropertyManager(Property<CompoundTag> property) {
 		propertyHandler = property;
 		return this;
@@ -316,7 +316,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	}
 
 	private void onChange() {
-		if(propertyHandler != null) {
+		if (propertyHandler != null) {
 			propertyHandler.set(serializeNBT());
 		}
 		if (hasOwner) {

@@ -22,12 +22,12 @@ public class BlockMatterConduit extends AbstractCableBlock {
 		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 		PIPESET.add(this);
 	}
-	
+
 	@Override
-	protected void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable, 
+	protected void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable,
 			LevelAccessor world, BlockPos pos) {
 		BlockEntity entity;
-		for(Direction dir : Direction.values()) {
+		for (Direction dir : Direction.values()) {
 			entity = world.getBlockEntity(pos.relative(dir));
 			if (entity instanceof TileMatterConduit) {
 				usedDirs.add(dir);
@@ -35,7 +35,7 @@ public class BlockMatterConduit extends AbstractCableBlock {
 			} else if (UtilsMatter.isMatterReceiver(entity, dir.getOpposite())) {
 				usedDirs.add(dir);
 				inventory.add(dir);
-			} 
+			}
 		}
 	}
 

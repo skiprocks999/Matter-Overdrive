@@ -43,7 +43,7 @@ public class RendererCharger extends AbstractTileRenderer<TileCharger> {
 			break;
 		default:
 		}
-	
+
 		BakedModel ibakedmodel = UtilsRendering.getBakedModel(ClientRegister.MODEL_CHARGER);
 		UtilsRendering.renderModel(ibakedmodel, charger, RenderType.solid(), stack, source, light, overlay);
 

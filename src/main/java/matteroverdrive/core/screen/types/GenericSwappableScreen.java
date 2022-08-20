@@ -9,11 +9,11 @@ import net.minecraft.world.entity.player.Inventory;
 public abstract class GenericSwappableScreen<T extends GenericInventory> extends GenericScreen<T> {
 
 	protected int screenNumber = 0;
-	
+
 	public GenericSwappableScreen(T menu, Inventory playerinventory, Component title, ResourceLocation background) {
 		super(menu, playerinventory, title, background);
 	}
-	
+
 	protected void updateScreen(int screenNumber) {
 		this.screenNumber = screenNumber;
 		updateComponentActivity(screenNumber);

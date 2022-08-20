@@ -34,7 +34,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class CapabilityInventory extends ItemStackHandler implements IOverdriveCapability {
 
 	public static final CapabilityInventory EMPTY = new CapabilityInventory(0, false, false);
-	
+
 	private TriPredicate<Integer, ItemStack, CapabilityInventory> valid = (slot, item, inv) -> true;
 
 	private HashSet<Direction> relativeInputDirs;
@@ -65,7 +65,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private LazyOptional<IItemHandlerModifiable>[] sideCaps = new LazyOptional[6];
 
 	private UpgradeType[] validUpgrades;
-	
+
 	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityInventory() {
@@ -148,7 +148,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		this.valid = valid;
 		return this;
 	}
-	
+
 	public CapabilityInventory setPropertyManager(Property<CompoundTag> property) {
 		propertyHandler = property;
 		return this;
@@ -268,9 +268,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		}
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
-		
-		int[] vals = new int[] {inputs, outputs, byproducts, energySlot, matterSlot, upgrades};
-		
+
+		int[] vals = new int[] { inputs, outputs, byproducts, energySlot, matterSlot, upgrades };
+
 		tag.putIntArray("sizes", vals);
 
 		return tag;
@@ -511,7 +511,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setRange((int) range);
 				upgradable.setMuffled(isMuffled);
 			}
-			if(propertyHandler != null) {
+			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}
 			owner.setChanged();

@@ -13,7 +13,7 @@ import net.minecraftforge.event.TickEvent.Phase;
 public class ScheduledTaskHandler extends AbstractServerTickHandler {
 
 	private ConcurrentHashMap<Runnable, Integer> tasks = new ConcurrentHashMap<>();
-	
+
 	@Override
 	public void handleTick(MinecraftServer server, Phase phase, boolean enoughTime) {
 		Iterator<Entry<Runnable, Integer>> it = tasks.entrySet().iterator();
@@ -27,11 +27,11 @@ public class ScheduledTaskHandler extends AbstractServerTickHandler {
 			}
 		}
 	}
-	
+
 	public void queueTask(@Nonnull Runnable run, int delay) {
 		tasks.put(run, delay);
 	}
-	
+
 	public void queueTask(@Nonnull Runnable run) {
 		queueTask(run, 1);
 	}

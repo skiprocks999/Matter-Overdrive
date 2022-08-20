@@ -26,7 +26,7 @@ public class UtilsNbt {
 	public static final String DURABILITY = "durability";
 
 	/* COMPOUND TAG */
-	
+
 	public static void writeMatterVal(ItemStack item, double value) {
 		clearMatterVal(item);
 		item.getOrCreateTag().putDouble(STORED_MATTER_VAL, value);
@@ -48,17 +48,17 @@ public class UtilsNbt {
 	private static boolean validateMatterTag(ItemStack item) {
 		return item.hasTag() && item.getTag().contains(STORED_MATTER_VAL);
 	}
-	
+
 	public static CompoundTag writeDimensionToTag(ResourceKey<Level> level) {
 		CompoundTag tag = new CompoundTag();
 		tag.putString(DIMENSION, level.location().toString());
 		return tag;
 	}
-	
+
 	public static ResourceKey<Level> readDimensionFromTag(CompoundTag tag) {
 		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString(DIMENSION)));
 	}
-	
+
 	/* BYTE BUFFER */
 
 	public static void writeStringToBuffer(FriendlyByteBuf buf, String message) {
@@ -76,15 +76,15 @@ public class UtilsNbt {
 		}
 		return text;
 	}
-	
+
 	public static void writeDimensionToBuffer(FriendlyByteBuf buf, ResourceKey<Level> dimension) {
 		writeStringToBuffer(buf, dimension.location().toString());
 	}
-	
+
 	public static ResourceKey<Level> readDimensionFromBuffer(FriendlyByteBuf buf) {
 		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(readStringFromBuffer(buf)));
 	}
-	
+
 	@Nullable
 	public static Item getItemFromString(String resource) {
 		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(resource));

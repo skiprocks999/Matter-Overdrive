@@ -30,40 +30,42 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 	public static final int ENERGY_CAPACITY = 512000;
 	public static final double MATTER_CAPACITY = 1024;
 	public static final double DEFAULT_MULTIPLIER = 1.5;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
 
 	public TileSpacetimeAccelerator(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SPACETIME_ACCELERATOR.get(), pos, state);
-		
+
 		setSpeed(DEFAULT_MULTIPLIER);
 		setPowerUsage(ENERGY_USAGE_PER_TICK);
 		setRange(BASE_RADIUS);
 		setMatterUsage(MATTER_USAGE_PER_TICK);
-		
+
 		defaultSpeed = DEFAULT_MULTIPLIER;
 		defaultMatterUsage = MATTER_USAGE_PER_TICK;
 		defaultMatterStorage = MATTER_CAPACITY;
 		defaultPowerStorage = ENERGY_CAPACITY;
 		defaultPowerUsage = ENERGY_USAGE_PER_TICK;
 		defaultRange = BASE_RADIUS;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
-				tag -> getMatterStorageCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getMatterStorageCap().serializeNBT(), tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
 				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.UP }, null).setPropertyManager(capEnergyStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.UP }, null)
+				.setPropertyManager(capEnergyStorageProp));
 		addMatterStorageCap(new CapabilityMatterStorage(MATTER_CAPACITY, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.DOWN }, null).setPropertyManager(capMatterStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.DOWN }, null)
+				.setPropertyManager(capMatterStorageProp));
 		setMenuProvider(
 				new SimpleMenuProvider((id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
@@ -76,7 +78,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		if (!canRun()) {
 			resetRadiusMultipliers();
 			flag = setRunning(false);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -88,7 +90,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			resetRadiusMultipliers();
 			flag = setRunning(false);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -98,7 +100,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			resetRadiusMultipliers();
 			flag = setRunning(false);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -148,7 +150,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		setRange(additional.getDouble("radius"));
 
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

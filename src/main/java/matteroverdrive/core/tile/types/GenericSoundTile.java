@@ -7,9 +7,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class GenericSoundTile extends GenericUpgradableTile implements ITickingSoundTile {
 
-	//Client-side only value
-	protected boolean clientSoundPlaying = false; 
-	
+	// Client-side only value
+	protected boolean clientSoundPlaying = false;
+
 	protected GenericSoundTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -18,12 +18,12 @@ public abstract class GenericSoundTile extends GenericUpgradableTile implements 
 	public void setNotPlaying() {
 		clientSoundPlaying = false;
 	}
-	
+
 	@Override
 	public boolean shouldPlaySound() {
 		return isRunning() && !isMuffled();
 	}
-	
+
 	public abstract boolean isRunning();
 
 }

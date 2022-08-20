@@ -19,7 +19,7 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 
 	private boolean isMatter = false;
 	private boolean isGenerator = false;
-	
+
 	private boolean powerNonTick = false;
 	private boolean matterPerTick = false;
 
@@ -33,8 +33,8 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 	public ScreenComponentCharge(final DoubleSupplier currStorage, final DoubleSupplier maxStorage,
 			final DoubleSupplier generation, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, 
-				WIDTH, HEIGHT, screenNumbers);
+		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, WIDTH, HEIGHT,
+				screenNumbers);
 		this.maxStorage = maxStorage;
 		this.currStorage = currStorage;
 		this.usage = generation;
@@ -49,12 +49,12 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 		isGenerator = true;
 		return this;
 	}
-	
+
 	public ScreenComponentCharge setPowerNonTick() {
 		powerNonTick = true;
 		return this;
 	}
-	
+
 	public ScreenComponentCharge setMatterPerTick() {
 		matterPerTick = true;
 		return this;
@@ -64,20 +64,21 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		List<FormattedCharSequence> components = new ArrayList<>();
 		String storeLoc = isMatter ? "matterstored" : "energystored";
-		components.add(UtilsText.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
+		components.add(UtilsText
+				.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
 				.getVisualOrderText());
 
 		double use = usage.getAsDouble();
 		if (use > 0) {
-			if(isMatter) {
+			if (isMatter) {
 				String usageLoc = matterPerTick ? "usagetick" : "usage";
 				String formatted = UtilsText.formatMatterValue(use);
 				if (isGenerator) {
 					components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
 							.getVisualOrderText());
 				} else {
-					components.add(
-							UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
+					components.add(UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED)
+							.getVisualOrderText());
 				}
 			} else {
 				String usageLoc = powerNonTick ? "usage" : "usagetick";
@@ -86,15 +87,14 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 					components.add(UtilsText.tooltip(usageLoc, "+" + formatted).withStyle(ChatFormatting.GREEN)
 							.getVisualOrderText());
 				} else {
-					components.add(
-							UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED).getVisualOrderText());
+					components.add(UtilsText.tooltip(usageLoc, "-" + formatted).withStyle(ChatFormatting.RED)
+							.getVisualOrderText());
 				}
 			}
 		}
 		gui.renderTooltip(stack, components, mouseX, mouseY);
-		
-	}
 
+	}
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
@@ -102,12 +102,12 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 		double progress = maxStorage.getAsDouble() > 0
 				? Math.min(1.0, (double) currStorage.getAsDouble() / (double) maxStorage.getAsDouble())
 				: 0;
-		
+
 		int height = (int) (progress * this.height);
 		int offset = this.height - height;
-		
+
 		if (isMatter) {
-			
+
 			blit(stack, this.x, this.y, this.width * 2, 0, this.width, this.height);
 			blit(stack, this.x, this.y + offset, this.width * 3, offset, this.width, height);
 

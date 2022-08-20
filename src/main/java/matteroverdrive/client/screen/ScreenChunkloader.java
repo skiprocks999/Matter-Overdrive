@@ -9,7 +9,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
@@ -29,7 +28,7 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenChunkloader(InventoryChunkloader menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
@@ -37,7 +36,7 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -73,14 +72,14 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 		addButton(redstone);
 
 		redstone.visible = false;
-		
-		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
-		addScreenComponent(getRunningIndicator(6, 159, new int[] {0, 1, 2}));
+
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] { 0 }));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
-		
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
+
 	}
 
 	private void toggleBarOpen() {

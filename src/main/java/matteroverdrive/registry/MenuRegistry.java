@@ -25,7 +25,7 @@ public class MenuRegistry {
 
 	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES,
 			References.ID);
-	
+
 	public static final RegistryObject<MenuType<InventoryTritaniumCrate>> MENU_TRITANIUM_CRATE = MENUS
 			.register("tritanium_crate", () -> new MenuType<>(InventoryTritaniumCrate::new));
 	public static final RegistryObject<MenuType<InventorySolarPanel>> MENU_SOLAR_PANEL = MENUS
@@ -54,5 +54,5 @@ public class MenuRegistry {
 			.register(TypeMachine.PATTERN_MONITOR.id(), () -> new MenuType<>(InventoryPatternMonitor::new));
 	public static final RegistryObject<MenuType<InventoryMatterAnalyzer>> MENU_MATTER_ANALYZER = MENUS
 			.register(TypeMachine.MATTER_ANALYZER.id(), () -> new MenuType<>(InventoryMatterAnalyzer::new));
-	
+
 }

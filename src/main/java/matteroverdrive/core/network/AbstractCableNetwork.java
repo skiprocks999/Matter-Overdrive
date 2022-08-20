@@ -29,20 +29,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class AbstractCableNetwork {
-	
+
 	/*
-	 * Need to store:
-	 * > Cables
-	 * > Blocks connected to cables
-	 * > How many cables surround a single tile
-	 * > The types of cables in the network
+	 * Need to store: > Cables > Blocks connected to cables > How many cables
+	 * surround a single tile > The types of cables in the network
 	 */
-	//Use a HashSet because it eleminates duplicates and is faster than Arrays with Graph Structures
+	// Use a HashSet because it eleminates duplicates and is faster than Arrays with
+	// Graph Structures
 	public Set<AbstractCableTile<?>> cables = new HashSet<>();
 	public Set<BlockEntity> connected = new HashSet<>();
 	public Map<BlockEntity, Set<Direction>> dirsPerConnectionMap = new HashMap<>();
 	public Map<ICableType, Set<AbstractCableTile<?>>> cableTypes = new HashMap<>();
-	
+
 	protected boolean clientSide;
 
 	public AbstractCableNetwork(List<? extends AbstractCableTile<?>> varCables, boolean client) {
@@ -63,13 +61,13 @@ public abstract class AbstractCableNetwork {
 		CableNetworkRegistry.register(this, client);
 	}
 
-	//Refresh the network without modifying it
+	// Refresh the network without modifying it
 	public void refresh() {
-		//Step 1. Check what cables are still valid
+		// Step 1. Check what cables are still valid
 		connected.clear();
 		dirsPerConnectionMap.clear();
 		Iterator<AbstractCableTile<?>> cableIterator = cables.iterator();
-		while(cableIterator.hasNext()) {
+		while (cableIterator.hasNext()) {
 			AbstractCableTile<?> cable = cableIterator.next();
 			if (cable == null || cable.isRemoved()) {
 				cableIterator.remove();
@@ -77,7 +75,7 @@ public abstract class AbstractCableNetwork {
 				cable.setNetwork(this);
 			}
 		}
-		//Step 2. Store the surrounding connected cables
+		// Step 2. Store the surrounding connected cables
 		for (AbstractCableTile<?> cable : cables) {
 			for (Direction direction : Direction.values()) {
 				BlockEntity adjacent = cable.getLevel().getBlockEntity(cable.getBlockPos().relative(direction));
@@ -89,7 +87,7 @@ public abstract class AbstractCableNetwork {
 				}
 			}
 		}
-		//Step 3. Sort the cables into their respective types
+		// Step 3. Sort the cables into their respective types
 		sortCables();
 	}
 
@@ -102,13 +100,13 @@ public abstract class AbstractCableNetwork {
 			cableTypes.get(wire.getConductorType()).add(wire);
 		}
 	}
-	
+
 	// split the network when a cable is removed
 	public void split(@Nonnull AbstractCableTile<?> cableToRemove) {
-		//Step 1. Remove the cable from the network
+		// Step 1. Remove the cable from the network
 		removeFromNetwork(cableToRemove);
-		
-		//Step 2. Determine the cables surrounding the removed cable
+
+		// Step 2. Determine the cables surrounding the removed cable
 		BlockEntity[] connectedTiles = new BlockEntity[6];
 		boolean[] tilesToHandle = { false, false, false, false, false, false };
 		Level world = cableToRemove.getLevel();
@@ -122,23 +120,23 @@ public abstract class AbstractCableNetwork {
 				}
 			}
 		}
-		
-		//Step 3. Create networks from the surrounds cables found
+
+		// Step 3. Create networks from the surrounds cables found
 		for (int i = 0; i < 6; i++) {
 			BlockEntity currentBlock = connectedTiles[i];
 			if (currentBlock != null && isCable(currentBlock) && !tilesToHandle[i]) {
-				
+
 				// Step 3.1 keep checking adjacent blocks and see if they are cables
 				// Store them if they are
-				
+
 				AbstractCableTile<?> currentCable = (AbstractCableTile<?>) currentBlock;
 				BlockPos currentPos = currentCable.getBlockPos();
-				
+
 				ArrayList<AbstractCableTile<?>> checked = new ArrayList<>();
 				checked.add(currentCable);
 				ArrayList<BlockPos> posToIgnore = new ArrayList<>();
 				posToIgnore.add(splitPos);
-				
+
 				for (Direction dir : Direction.values()) {
 					BlockPos adjacent = currentPos.relative(dir);
 					if (!posToIgnore.contains(adjacent) && world.hasChunkAt(adjacent)) {
@@ -148,35 +146,36 @@ public abstract class AbstractCableNetwork {
 						}
 					}
 				}
-				
-				//Check if the blocks we checked included the surrounding tiles we initially 
-				//need to check
-				
+
+				// Check if the blocks we checked included the surrounding tiles we initially
+				// need to check
+
 				for (int j = i + 1; j < 6; j++) {
 					BlockEntity nextBlock = connectedTiles[j];
 					if (isCable(nextBlock) && !tilesToHandle[j] && checked.contains(nextBlock)) {
 						tilesToHandle[j] = true;
 					}
 				}
-				
-				//safety check
+
+				// safety check
 				checked.remove(cableToRemove);
-				
+
 				AbstractCableNetwork newNetwork = newInstance(checked, clientSide);
 				newNetwork.refresh();
 			}
 		}
-		
-		//Step 4. Remove this network
+
+		// Step 4. Remove this network
 		deregister(clientSide);
 	}
-	
-	private void checkSurroundingBlocks(AbstractCableTile<?> cable, ArrayList<AbstractCableTile<?>> checked, ArrayList<BlockPos> posToIgnore) {
+
+	private void checkSurroundingBlocks(AbstractCableTile<?> cable, ArrayList<AbstractCableTile<?>> checked,
+			ArrayList<BlockPos> posToIgnore) {
 		checked.add(cable);
 		for (BlockEntity adjConnected : cable.getAdjacentConnections()) {
 			if (adjConnected != null) {
 				BlockPos adjPos = adjConnected.getBlockPos();
-				//Keep calling recursively until we stop finding cables
+				// Keep calling recursively until we stop finding cables
 				if (!checked.contains(adjConnected) && !posToIgnore.contains(adjPos) && isCable(adjConnected)) {
 					checkSurroundingBlocks((AbstractCableTile<?>) adjConnected, checked, posToIgnore);
 				}
@@ -190,13 +189,13 @@ public abstract class AbstractCableNetwork {
 			Set<AbstractCableNetwork> networks = new HashSet<>();
 			networks.add(this);
 			networks.add(network);
-			//need this because abstract classes 
+			// need this because abstract classes
 			AbstractCableNetwork newNetwork = newInstance(networks, clientSide);
 			newNetwork.refresh();
 		}
 	}
 
-	//remove cable from the network and update it
+	// remove cable from the network and update it
 	public void removeFromNetwork(AbstractCableTile<?> conductor) {
 		cables.remove(conductor);
 		if (cables.isEmpty()) {
@@ -204,7 +203,7 @@ public abstract class AbstractCableNetwork {
 		}
 	}
 
-	//Clear out all cables before removing from the network registry 
+	// Clear out all cables before removing from the network registry
 	public void deregister(boolean client) {
 		cables.clear();
 		connected.clear();
@@ -216,9 +215,9 @@ public abstract class AbstractCableNetwork {
 	public int getSize() {
 		return cables.size();
 	}
-	
+
 	public void tick() {
-		
+
 	}
 
 	public abstract boolean isCable(BlockEntity tile);
@@ -226,9 +225,10 @@ public abstract class AbstractCableNetwork {
 	public abstract boolean canConnect(BlockEntity acceptor, Direction orientation);
 
 	public abstract ICableType[] getConductorTypes();
-	
+
 	public abstract AbstractCableNetwork newInstance(List<? extends AbstractCableTile<?>> cables, boolean client);
-	
-	public abstract AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks, boolean client);
+
+	public abstract AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks,
+			boolean client);
 
 }

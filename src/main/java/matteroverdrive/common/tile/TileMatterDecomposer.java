@@ -37,41 +37,43 @@ public class TileMatterDecomposer extends GenericMachineTile {
 	private static final int MATTER_STORAGE = 1024;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
 
 	public TileMatterDecomposer(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_DECOMPOSER.get(), pos, state);
-		
+
 		setSpeed(DEFAULT_SPEED);
 		setFailure(FAILURE_CHANCE);
 		setPowerUsage(USAGE_PER_TICK);
-		
+
 		defaultSpeed = DEFAULT_SPEED;
 		defaultFailureChance = FAILURE_CHANCE;
 		defaultMatterStorage = MATTER_STORAGE;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultProcessingTime = OPERATING_TIME;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
-				tag -> getMatterStorageCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getMatterStorageCap().serializeNBT(), tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP }, new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterDecomposer.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
-		addMatterStorageCap(
-				new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this).setDefaultDirections(state,
-						null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }).setPropertyManager(capMatterStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null)
+				.setPropertyManager(capEnergyStorageProp));
+		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, false, true).setOwner(this)
+				.setDefaultDirections(state, null, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST })
+				.setPropertyManager(capMatterStorageProp));
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterDecomposer(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_DECOMPOSER.id())));
 		setTickable();
@@ -90,7 +92,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 			flag = setRecipeValue(0);
 			flag |= setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -104,7 +106,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 			flag = setRunning(false);
 			flag |= setRecipeValue(0);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -120,7 +122,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 				flag = setRunning(false);
 				flag |= setRecipeValue(0);
 				flag |= setProgress(0);
-				if(flag) {
+				if (flag) {
 					setChanged();
 				}
 				return;
@@ -128,7 +130,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -140,7 +142,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		CapabilityMatterStorage storage = getMatterStorageCap();
 
 		if ((storage.getMaxMatterStored() - storage.getMatterStored()) < getRecipeValue()) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -150,7 +152,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 
 		if (!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == getRecipeValue()
 				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -211,7 +213,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		setPowerUsage(additional.getDouble("usage"));
 		setMuffled(additional.getBoolean("muffled"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

@@ -15,11 +15,13 @@ public class ScreenComponentLabel extends OverdriveScreenComponent {
 	private final Supplier<Component> component;
 	private final int fontColor;
 
-	public ScreenComponentLabel(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers, final Component component, final int color) {
+	public ScreenComponentLabel(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers,
+			final Component component, final int color) {
 		this(gui, x, y, screenNumbers, () -> component, color);
 	}
-	
-	public ScreenComponentLabel(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers, final Supplier<Component> component, final int color) {
+
+	public ScreenComponentLabel(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers,
+			final Supplier<Component> component, final int color) {
 		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
 		this.component = component;
 		fontColor = color;

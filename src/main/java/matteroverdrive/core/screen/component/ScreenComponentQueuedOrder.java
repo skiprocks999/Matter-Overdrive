@@ -15,41 +15,44 @@ import net.minecraft.world.item.ItemStack;
 
 public class ScreenComponentQueuedOrder extends OverdriveScreenComponent {
 
-	private static final ResourceLocation TEXT = new ResourceLocation(References.ID + ":textures/gui/misc/order_bar.png");
-	
+	private static final ResourceLocation TEXT = new ResourceLocation(
+			References.ID + ":textures/gui/misc/order_bar.png");
+
 	private final ItemRenderer itemRenderer;
 	private QueuedReplication order;
-	
-	public ScreenComponentQueuedOrder(GenericScreen<?> gui, int x, int y, int[] screenNumbers, ItemRenderer itemRenderer) {
+
+	public ScreenComponentQueuedOrder(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
+			ItemRenderer itemRenderer) {
 		super(TEXT, gui, x, y, 158, 20, screenNumbers);
 		this.itemRenderer = itemRenderer;
 	}
-	
+
 	public void setOrder(QueuedReplication replication) {
 		order = replication;
 	}
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		if(order != null) {
+		if (order != null) {
 			UtilsRendering.bindTexture(resource);
 			blit(stack, x, y, width, height, 0, 0, width, height, width, height);
 		}
 	}
-	
+
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		if(order != null) {
+		if (order != null) {
 			itemRenderer.renderGuiItem(new ItemStack(order.getItem()), x + 2, y + 2);
-			MutableComponent order = UtilsText.gui("orderratio", this.order.getRemaining(), this.order.getOrderedCount());
+			MutableComponent order = UtilsText.gui("orderratio", this.order.getRemaining(),
+					this.order.getOrderedCount());
 			gui.getFontRenderer().draw(stack, order, x + 22, y + 6.5F, UtilsRendering.WHITE);
 		}
 	}
-	
+
 	public boolean isFilled() {
 		return order != null;
 	}
-	
+
 	public QueuedReplication getOrder() {
 		return order;
 	}

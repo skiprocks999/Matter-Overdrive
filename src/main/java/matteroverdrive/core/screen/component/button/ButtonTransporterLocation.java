@@ -22,14 +22,15 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 	public int index;
 	private Supplier<TileTransporter> transporter;
 
-	public ButtonTransporterLocation(GenericScreen<?> gui, int x, int y, int index, OnPress onPress, 
+	public ButtonTransporterLocation(GenericScreen<?> gui, int x, int y, int index, OnPress onPress,
 			Supplier<TileTransporter> transporter) {
 		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonTransporterLocation loc = (ButtonTransporterLocation) button;
 			TileTransporter transport = loc.transporter.get();
 			TransporterLocationWrapper wrapper = transport.locationManager.getLocation(loc.index);
 			if (transport.validDestination(wrapper).getFirst()) {
-				loc.gui.renderTooltip(stack, Component.literal(wrapper.getDestination().toShortString()), mouseX, mouseY);
+				loc.gui.renderTooltip(stack, Component.literal(wrapper.getDestination().toShortString()), mouseX,
+						mouseY);
 			} else {
 				loc.gui.renderTooltip(stack, UtilsText.tooltip("invaliddest"), mouseX, mouseY);
 			}
@@ -38,7 +39,7 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 		this.index = index;
 		this.transporter = transporter;
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileTransporter transport = transporter.get();
@@ -59,11 +60,10 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 		drawCenteredString(stack, gui.getFontRenderer(), wrapper.getName(), this.x + this.width / 2,
 				this.y + (this.height - 8) / 2, color);
 	}
-	
+
 	@Override
 	public void playDownSound(SoundManager manager) {
 		manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F, 1.0F));
 	}
-
 
 }

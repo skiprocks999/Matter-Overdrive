@@ -15,17 +15,17 @@ public class EditBoxSearchbar extends EditBoxOverdrive {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
 			"textures/gui/guidebook/search_field.png");
-	
+
 	private static final double RS_WIDTH_COEFF = 0.13855421686746987951807228915663; // 23/166
 	private static final double LS_WIDTH_COEFF = 0.07228915662650602409638554216867; // 12/166
-	
+
 	private final int totalWidth;
-	
+
 	public EditBoxSearchbar(GenericScreen<?> gui, int x, int y, int width, int height, int totalWidth) {
 		super(gui, x, y, width, height);
 		this.totalWidth = totalWidth;
 	}
-	
+
 	@Override
 	public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTick) {
 		if (this.isVisible()) {
@@ -36,9 +36,8 @@ public class EditBoxSearchbar extends EditBoxOverdrive {
 			UtilsRendering.bindTexture(TEXTURE);
 			int leftSide = (int) ((double) this.totalWidth * LS_WIDTH_COEFF);
 			int rightSide = (int) ((double) this.totalWidth * RS_WIDTH_COEFF);
-			
+
 			blit(stack, this.x - leftSide, this.y, width + rightSide, 0, 0, 166, 14, 166, 14);
-			
 
 			int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
 			int j = this.cursorPos - this.displayPos;

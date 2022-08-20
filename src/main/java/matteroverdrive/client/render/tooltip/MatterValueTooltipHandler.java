@@ -21,7 +21,7 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 			tooltips.add(getMatterTooltip(stack));
 		}
 	}
-	
+
 	private Component getMatterTooltip(ItemStack stack) {
 		if (UtilsMatter.isRawDust(stack)) {
 			double val = UtilsNbt.readMatterVal(stack);

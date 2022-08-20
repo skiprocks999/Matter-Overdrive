@@ -21,14 +21,14 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 
 	protected boolean[] connections = new boolean[6];
 	protected BlockEntity[] tileConnections = new BlockEntity[6];
-	
+
 	protected NETWORK network;
 	protected ICableType cableType;
-	
+
 	protected AbstractCableTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-	
+
 	public void removeFromNetwork() {
 		if (network != null) {
 			network.removeFromNetwork(this);
@@ -58,13 +58,13 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 			refreshNetwork();
 		}
 	}
-	
+
 	public AbstractCableNetwork getNetwork() {
 		return getNetwork(true);
 	}
-	
+
 	public abstract AbstractCableNetwork getNetwork(boolean createIfNull);
-	
+
 	public void refreshNetwork() {
 		if (!level.isClientSide) {
 			updateAdjacent();
@@ -103,19 +103,19 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 			network.split(this);
 		}
 	}
-	
+
 	@Override
 	public void onLoad() {
 		super.onLoad();
 		ServerEventHandler.TASK_HANDLER.queueTask(this::refreshNetwork);
 	}
-	
+
 	@Override
 	public void saveAdditional(CompoundTag compound) {
 		compound.putInt("ord", getConductorType().getOrdinal());
 		super.saveAdditional(compound);
 	}
-	
+
 	public boolean updateAdjacent() {
 		boolean flag = false;
 		for (Direction dir : Direction.values()) {
@@ -128,12 +128,12 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 			}
 
 		}
-		if(flag) {
+		if (flag) {
 			setChanged();
 		}
 		return flag;
 	}
-	
+
 	protected HashSet<AbstractCableTile<NETWORK>> getConnectedConductors() {
 		HashSet<AbstractCableTile<NETWORK>> set = new HashSet<>();
 		for (Direction dir : Direction.values()) {
@@ -146,7 +146,7 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 	}
 
 	public abstract boolean isCable(BlockEntity entity);
-	
+
 	public abstract boolean isValidConnection(BlockEntity entity, @Nullable Direction direction);
-	
+
 }

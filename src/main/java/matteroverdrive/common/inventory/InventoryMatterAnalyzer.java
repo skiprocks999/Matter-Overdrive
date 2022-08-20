@@ -18,14 +18,14 @@ public class InventoryMatterAnalyzer extends GenericInventoryTile<TileMatterAnal
 
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MUFFLER };
-	
-	public InventoryMatterAnalyzer(int id, Inventory playerinv, CapabilityInventory invcap,
-			ContainerData tilecoords) {
+
+	public InventoryMatterAnalyzer(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
 		super(MenuRegistry.MENU_MATTER_ANALYZER.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryMatterAnalyzer(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileMatterAnalyzer.SLOT_COUNT, true, true), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileMatterAnalyzer.SLOT_COUNT, true, true),
+				new SimpleContainerData(3));
 	}
 
 	@Override
@@ -48,6 +48,4 @@ public class InventoryMatterAnalyzer extends GenericInventoryTile<TileMatterAnal
 		return new int[] { 0 };
 	}
 
-	
-	
 }

@@ -21,20 +21,21 @@ public class InventoryMatterReplicator extends GenericInventoryTile<TileMatterRe
 	public static final UpgradeType[] UPGRADES = new UpgradeType[] { UpgradeType.SPEED, UpgradeType.HYPER_SPEED,
 			UpgradeType.POWER, UpgradeType.POWER_STORAGE, UpgradeType.MATTER_STORAGE, UpgradeType.FAIL_SAFE,
 			UpgradeType.MUFFLER };
-	
+
 	public InventoryMatterReplicator(int id, Inventory playerinv, CapabilityInventory invcap,
 			ContainerData tilecoords) {
 		super(MenuRegistry.MENU_MATTER_REPLICATOR.get(), id, playerinv, invcap, tilecoords);
 	}
-	
+
 	public InventoryMatterReplicator(int id, Inventory playerinv) {
-		this(id, playerinv, new CapabilityInventory(TileMatterReplicator.SLOT_COUNT, true, true), new SimpleContainerData(3));
+		this(id, playerinv, new CapabilityInventory(TileMatterReplicator.SLOT_COUNT, true, true),
+				new SimpleContainerData(3));
 	}
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 75, new int[] { 0 }, SlotType.BIG, IconType.PATTERN_DRIVE_DARK,
-				ItemRegistry.ITEM_PATTERN_DRIVE.get()));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 75, new int[] { 0 }, SlotType.BIG,
+				IconType.PATTERN_DRIVE_DARK, ItemRegistry.ITEM_PATTERN_DRIVE.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 78, new int[] { 2 }, SlotType.BIG, IconType.SHIELDING_DARK,
 				ItemRegistry.ITEM_LEAD_PLATE.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, IconType.NONE));
@@ -50,7 +51,7 @@ public class InventoryMatterReplicator extends GenericInventoryTile<TileMatterRe
 
 	@Override
 	public int[] getHotbarNumbers() {
-		return new int[] {0, 1, 2, 3};
+		return new int[] { 0, 1, 2, 3 };
 	}
 
 	@Override

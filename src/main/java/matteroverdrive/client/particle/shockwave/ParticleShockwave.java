@@ -56,7 +56,7 @@ public class ParticleShockwave extends TextureSheetParticle {
 		int i = this.getLightColor(partialTicks);
 		int j = i >> 16 & 65535;
 		int k = i & 65535;
-		
+
 		float vMin = getV0();
 		float vMax = getV1();
 		float uMin = getU0();
@@ -64,7 +64,7 @@ public class ParticleShockwave extends TextureSheetParticle {
 
 		AABB box = getBoundingBox();
 		Vec3 cameraPos = camera.getPosition();
-		
+
 		float minX = (float) (box.minX - cameraPos.x);
 		float minY = (float) (box.minY - cameraPos.y);
 		float minZ = (float) (box.minZ - cameraPos.z);

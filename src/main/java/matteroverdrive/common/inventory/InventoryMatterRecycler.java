@@ -31,8 +31,8 @@ public class InventoryMatterRecycler extends GenericInventoryTile<TileMatterRecy
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN, IconType.MATTER_DUST_DARK,
-				ItemRegistry.ITEM_RAW_MATTER_DUST.get()));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 48, new int[] { 0 }, SlotType.MAIN,
+				IconType.MATTER_DUST_DARK, ItemRegistry.ITEM_RAW_MATTER_DUST.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 67, 48, new int[] { 0 }, SlotType.BIG, IconType.NONE));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 75, new int[] { 0 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 81, 55, new int[] { 2 }, UPGRADES));

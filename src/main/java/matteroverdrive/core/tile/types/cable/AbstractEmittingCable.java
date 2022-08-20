@@ -10,7 +10,7 @@ public abstract class AbstractEmittingCable<NETWORK extends AbstractCableNetwork
 	protected AbstractEmittingCable(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-	
+
 	public abstract double getMaxTransfer();
 
 }

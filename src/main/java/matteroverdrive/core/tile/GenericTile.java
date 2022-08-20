@@ -27,7 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-public abstract class GenericTile extends BlockEntity implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
+public abstract class GenericTile extends BlockEntity
+		implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
 
 	private HashMap<Capability<?>, IOverdriveCapability> capabilities = new HashMap<>();
 
@@ -35,15 +36,15 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	private MenuProvider menu;
 
 	public boolean isTickable = false;
-	
+
 	public boolean hasMenuData = false;
 	public boolean hasRenderData = false;
-	
+
 	protected long ticks = 0;
 
 	/**
-	 * Property Manager for the BlockEntity.
-	 * See: <a href="https://github.com/BrassGoggledCoders/Transport/blob/develop/1.16.x/src/main/java/xyz/brassgoggledcoders/transport/container/locomotive/SteamLocomotiveContainer.java">...</a>
+	 * Property Manager for the BlockEntity. See: <a href=
+	 * "https://github.com/BrassGoggledCoders/Transport/blob/develop/1.16.x/src/main/java/xyz/brassgoggledcoders/transport/container/locomotive/SteamLocomotiveContainer.java">...</a>
 	 * For implementation example.
 	 */
 	protected final BlockEntityPropertyManager propertyManager;
@@ -65,24 +66,25 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void setTickable() {
 		isTickable = true;
 	}
-	
+
 	public void setHasMenuData() {
 		hasMenuData = true;
 	}
-	
+
 	public void setHasRenderData() {
 		hasRenderData = true;
 	}
 
 	@Override
-	//this is about as fast as I can get it without hard-coding if-elses which I don't want to do
+	// this is about as fast as I can get it without hard-coding if-elses which I
+	// don't want to do
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		IOverdriveCapability capability = capabilities.get(cap);
 		return capability == null ? LazyOptional.empty() : capability.getCapability(cap, side);
 	}
 
 	public <T> void addCapability(@Nonnull Capability<T> key, @Nonnull IOverdriveCapability cap) {
-		if(capabilities.containsKey(key)) {
+		if (capabilities.containsKey(key)) {
 			throw new RuntimeException("error: capability type " + cap.getSaveKey() + " already added");
 		}
 		capabilities.put(key, cap);
@@ -101,7 +103,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void onLoad() {
 		super.onLoad();
 		if (!level.isClientSide()) {
-			for(IOverdriveCapability cap : capabilities.values()) {
+			for (IOverdriveCapability cap : capabilities.values()) {
 				cap.onLoad(this);
 			}
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
@@ -109,7 +111,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	}
 
 	public void refreshCapabilities() {
-		for(IOverdriveCapability cap : capabilities.values()) {
+		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.refreshCapability();
 		}
 	}
@@ -117,7 +119,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		for(IOverdriveCapability cap : capabilities.values()) {
+		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.invalidateCapability();
 		}
 	}
@@ -136,13 +138,13 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
-		
+
 	}
-	
+
 	@Override
 	public CompoundTag getUpdateTag() {
 		if (!level.isClientSide()) {
-			//call me a butcher, because I'm hacking this game
+			// call me a butcher, because I'm hacking this game
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
 		CompoundTag tag = super.getUpdateTag();
@@ -151,7 +153,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	}
 
 	/**
-	 * When the BlockEntity is marked as "Changed" call super and then send Property updates.
+	 * When the BlockEntity is marked as "Changed" call super and then send Property
+	 * updates.
 	 */
 	@Override
 	public void setChanged() {
@@ -159,7 +162,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		if (!level.isClientSide()) {
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
-			
+
 	}
 
 	public MutableComponent getContainerName(String name) {
@@ -189,12 +192,12 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public Component getName() {
 		return Component.literal(References.ID + ".default.tile.name");
 	}
-	
+
 	@Override
 	public long getTicks() {
 		return ticks;
 	}
-	
+
 	public void incrementTicks() {
 		ticks++;
 	};
@@ -203,10 +206,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
 	}
-	
-	//Override this if your class overrides saveAdditional()
+
+	// Override this if your class overrides saveAdditional()
 	public void getFirstContactData(CompoundTag tag) {
-		
+
 	}
-	
+
 }

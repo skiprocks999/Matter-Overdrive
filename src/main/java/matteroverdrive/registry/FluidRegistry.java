@@ -8,5 +8,5 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class FluidRegistry {
 
 	public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, References.ID);
-	
+
 }

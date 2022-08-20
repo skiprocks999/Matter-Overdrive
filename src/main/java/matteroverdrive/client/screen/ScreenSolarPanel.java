@@ -6,7 +6,6 @@ import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
@@ -38,7 +37,7 @@ public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> 
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -74,19 +73,19 @@ public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> 
 		addButton(redstone);
 
 		redstone.visible = false;
-		addScreenComponent(getEnergyBar(118, 36, new int[] {0}, () -> {
+		addScreenComponent(getEnergyBar(118, 36, new int[] { 0 }, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null && solar.isRunning()) {
 				return solar.getAcceleratorMultiplier() * TileSolarPanel.GENERATION;
 			}
 			return 0;
 		}).setGenerator());
-		addScreenComponent(getRunningIndicator(6, 159, new int[] {0, 1, 2}));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
-		
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
+
 	}
 
 	private void toggleBarOpen() {

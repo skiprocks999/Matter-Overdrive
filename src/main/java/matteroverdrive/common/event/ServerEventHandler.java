@@ -30,16 +30,16 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber(modid = References.ID, bus = Bus.FORGE)
 public class ServerEventHandler {
-	
+
 	private static final List<AbstractServerTickHandler> TICK_HANDLERS = new ArrayList<>();
-	
+
 	public static final ScheduledTaskHandler TASK_HANDLER = new ScheduledTaskHandler();
-	
+
 	public static void init() {
 		TICK_HANDLERS.add(new TeleporterArrivalHandler());
 		TICK_HANDLERS.add(TASK_HANDLER);
 	}
-	
+
 	@SubscribeEvent
 	public static void reloadListeners(AddReloadListenerEvent event) {
 		event.addListener(MatterRegister.INSTANCE);
@@ -55,35 +55,34 @@ public class ServerEventHandler {
 		CommandGenerateMatterValues.register(event.getDispatcher());
 		CommandManualMatterValue.register(event.getDispatcher());
 	}
-	
+
 	@SubscribeEvent
 	public static void attachOverworldData(AttachCapabilitiesEvent<Level> event) {
 		Level world = event.getObject();
-		if(!world.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).isPresent() && world.dimension().equals(Level.OVERWORLD)) {
+		if (!world.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).isPresent()
+				&& world.dimension().equals(Level.OVERWORLD)) {
 			event.addCapability(new ResourceLocation(References.ID, "overworld_data"), new CapabilityOverworldData());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void attachEntityCaps(AttachCapabilitiesEvent<Entity> event) {
-		if(!event.getObject().getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
+		if (!event.getObject().getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
 			event.addCapability(new ResourceLocation(References.ID, "entity_data"), new CapabilityEntityData());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void handlerServerTickEvents(ServerTickEvent event) {
-		
+
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		Phase phase = event.phase;
 		boolean enoughTime = event.haveTime();
-		
-		for(AbstractServerTickHandler handler : TICK_HANDLERS) {
+
+		for (AbstractServerTickHandler handler : TICK_HANDLERS) {
 			handler.handleTick(server, phase, enoughTime);
 		}
-		
+
 	}
-	
-	
 
 }

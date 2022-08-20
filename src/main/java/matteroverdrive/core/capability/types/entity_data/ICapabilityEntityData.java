@@ -2,10 +2,10 @@ package matteroverdrive.core.capability.types.entity_data;
 
 public interface ICapabilityEntityData {
 
-	//Transporter Data
-	
+	// Transporter Data
+
 	int getTransporterTimer();
-	
+
 	void setTransporterTimer(int time);
-	
+
 }

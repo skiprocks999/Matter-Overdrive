@@ -9,9 +9,9 @@ import net.minecraft.world.item.ItemStack;
 public abstract class AbstractTooltipHandler {
 
 	public AbstractTooltipHandler() {
-		
+
 	}
-	
+
 	public abstract void handleTooltips(List<Component> tooltips, ItemStack stack, Player player);
-	
+
 }

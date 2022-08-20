@@ -23,8 +23,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(blockPath(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING),
-				modLoc("block/tritanium_plating"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
 		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
 			withExistingParent(blockPath(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color)),
 					modLoc("block/tritanium_plating_colorless"));
@@ -40,28 +39,23 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(BlockRegistry.BLOCK_TRANSPORTER), modLoc("block/transporter"));
 		withExistingParent(blockPath(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
 
-		withExistingParent(blockPath(BlockRegistry.BLOCK_INDUSTRIAL_GLASS),
-				modLoc("block/industrial_glass"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_INDUSTRIAL_GLASS), modLoc("block/industrial_glass"));
 
-		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_OPEN),
-				modLoc("block/vent_open"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_OPEN), modLoc("block/vent_open"));
 
-		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_CLOSED),
-				modLoc("block/vent_closed"));
-		
+		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_CLOSED), modLoc("block/vent_closed"));
+
 		simpleItem(ItemRegistry.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
 		simpleItem(ItemRegistry.ITEM_MATTER_DUST, "item/matter_dust");
 		simpleItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "item/tritanium_plate");
 		simpleItem(ItemRegistry.ITEM_BASE_UPGRADE, "item/upgrade/upgrade_base");
 		for (UpgradeType type : UpgradeType.values()) {
-			simpleItem(ItemRegistry.ITEM_UPGRADES.get(type),
-					"item/upgrade/upgrade_" + type.toString().toLowerCase());
+			simpleItem(ItemRegistry.ITEM_UPGRADES.get(type), "item/upgrade/upgrade_" + type.toString().toLowerCase());
 		}
 		for (TypeIsolinearCircuit circuit : TypeIsolinearCircuit.values()) {
-			simpleItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(circuit),
-					"item/isolinear_circuit/" + circuit.id());
+			simpleItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(circuit), "item/isolinear_circuit/" + circuit.id());
 		}
-		
+
 		simpleItem(ItemRegistry.ITEM_LEAD_PLATE, "item/lead_plate");
 	}
 
@@ -75,8 +69,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	}
 
 	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
-		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"), "layer0",
-				new ResourceLocation(References.ID, textureLoc));
+		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"),
+				"layer0", new ResourceLocation(References.ID, textureLoc));
 	}
 
 	private void simpleBlock(RegistryObject<Block> block, String textureLoc) {

@@ -34,33 +34,35 @@ public class TileInscriber extends GenericMachineTile {
 	private static final int DEFAULT_SPEED = 1;
 
 	private InscriberRecipe cachedRecipe;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileInscriber(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_INSCRIBER.get(), pos, state);
-		
+
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
-		
+
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultProcessingTime = OPERATING_TIME;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryInscriber.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryInscriber.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null)
+				.setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.INSCRIBER.id())));
@@ -74,7 +76,7 @@ public class TileInscriber extends GenericMachineTile {
 		if (!canRun()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -87,7 +89,7 @@ public class TileInscriber extends GenericMachineTile {
 		if (input1.isEmpty() || input2.isEmpty()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -106,14 +108,14 @@ public class TileInscriber extends GenericMachineTile {
 		if (!matched) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -141,7 +143,7 @@ public class TileInscriber extends GenericMachineTile {
 			}
 			setChanged();
 		} else {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 		}
@@ -175,7 +177,7 @@ public class TileInscriber extends GenericMachineTile {
 		setSpeed(additional.getDouble("speed"));
 		setPowerUsage(additional.getDouble("usage"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

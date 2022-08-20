@@ -16,5 +16,5 @@ public class ScreenHandlerPatternStorage extends AbstractScreenHandler<ScreenPat
 		}
 		return rectangles;
 	}
-	
+
 }

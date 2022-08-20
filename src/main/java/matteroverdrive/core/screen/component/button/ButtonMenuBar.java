@@ -45,7 +45,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		UtilsRendering.bindTexture(TEXTURE);
-		
+
 		if (isPressed) {
 			this.blit(stack, this.x, this.y, 16, 0, 16, 143);
 		} else {

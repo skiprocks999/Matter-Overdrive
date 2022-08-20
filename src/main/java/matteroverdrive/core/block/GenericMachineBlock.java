@@ -23,7 +23,7 @@ public class GenericMachineBlock extends GenericEntityBlock {
 
 	public static final Properties DEFAULT_MACHINE_PROPERTIES = Properties.of(Material.METAL).strength(3.5F)
 			.sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops();
-	
+
 	protected BlockEntitySupplier<BlockEntity> blockEntitySupplier;
 
 	protected GenericMachineBlock(OverdriveBlockProperties properties, BlockEntitySupplier<BlockEntity> supplier) {
@@ -42,7 +42,8 @@ public class GenericMachineBlock extends GenericEntityBlock {
 			ItemStack stack = player.getItemInHand(hand);
 			if (UtilsCapability.hasMatterCap(stack)) {
 				if (generic.hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE)) {
-					CapabilityMatterStorage matter = generic.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
+					CapabilityMatterStorage matter = generic
+							.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 					ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
 							.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
 					if (storage.canReceive() && matter.canExtract()) {

@@ -21,15 +21,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
-	
+
 	public NetworkMatterConduit(List<? extends AbstractCableTile<?>> varCables) {
 		super(varCables, false);
 	}
-	
+
 	public NetworkMatterConduit(Collection<? extends AbstractCableNetwork> networks) {
 		super(networks, false);
 	}
-	
+
 	@Override
 	public Double emitToConnected(Double transfer, ArrayList<BlockEntity> ignored, boolean debug) {
 		if (transfer > 0) {
@@ -52,26 +52,26 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 		}
 		return 0.0;
 	}
-	
+
 	@Override
 	public Double extractFromConnected(Double amount, boolean simulate) {
 		double stored = getCurrentMemberStorage();
 		double taken = stored > amount ? amount : stored;
-		if(!simulate) {
+		if (!simulate) {
 			double toRemove = taken;
-			breakpoint:
-			if (!connected.isEmpty() && toRemove > 0) {
+			breakpoint: if (!connected.isEmpty() && toRemove > 0) {
 				for (BlockEntity receiver : connected) {
 					if (dirsPerConnectionMap.containsKey(receiver)) {
 						for (Direction connection : dirsPerConnectionMap.get(receiver)) {
-							LazyOptional<ICapabilityMatterStorage> lazy = receiver.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
-							if(lazy.isPresent()) {
+							LazyOptional<ICapabilityMatterStorage> lazy = receiver
+									.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
+							if (lazy.isPresent()) {
 								ICapabilityMatterStorage matter = lazy.resolve().get();
-								if(matter.canExtract()) {
+								if (matter.canExtract()) {
 									double capStored = matter.getMatterStored();
 									double removed = capStored > toRemove ? toRemove : capStored;
 									toRemove -= matter.extractMatter(removed, false);
-									if(toRemove <= 0) {
+									if (toRemove <= 0) {
 										break breakpoint;
 									}
 								}
@@ -91,10 +91,11 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 			for (BlockEntity receiver : connected) {
 				if (dirsPerConnectionMap.containsKey(receiver)) {
 					for (Direction connection : dirsPerConnectionMap.get(receiver)) {
-						LazyOptional<ICapabilityMatterStorage> lazy = receiver.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
-						if(lazy.isPresent()) {
+						LazyOptional<ICapabilityMatterStorage> lazy = receiver
+								.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
+						if (lazy.isPresent()) {
 							ICapabilityMatterStorage matter = lazy.resolve().get();
-							if(matter.canExtract() && Double.MAX_VALUE - stored >= matter.getMatterStored()) {
+							if (matter.canExtract() && Double.MAX_VALUE - stored >= matter.getMatterStored()) {
 								stored += matter.getMatterStored();
 							}
 						}
@@ -112,10 +113,11 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 			for (BlockEntity receiver : connected) {
 				if (dirsPerConnectionMap.containsKey(receiver)) {
 					for (Direction connection : dirsPerConnectionMap.get(receiver)) {
-						LazyOptional<ICapabilityMatterStorage> lazy = receiver.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
-						if(lazy.isPresent()) {
+						LazyOptional<ICapabilityMatterStorage> lazy = receiver
+								.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE, connection).cast();
+						if (lazy.isPresent()) {
 							ICapabilityMatterStorage matter = lazy.resolve().get();
-							if(matter.canExtract() && Double.MAX_VALUE - stored >= matter.getMaxMatterStored()) {
+							if (matter.canExtract() && Double.MAX_VALUE - stored >= matter.getMaxMatterStored()) {
 								stored += matter.getMaxMatterStored();
 							}
 						}
@@ -140,7 +142,7 @@ public class NetworkMatterConduit extends AbstractTransferNetwork<Double> {
 	public boolean canConnect(BlockEntity acceptor, Direction orientation) {
 		return UtilsMatter.isMatterReceiver(acceptor, orientation.getOpposite());
 	}
-	
+
 	@Override
 	public AbstractCableNetwork newInstance(Collection<? extends AbstractCableNetwork> networks, boolean client) {
 		return new NetworkMatterConduit(networks);

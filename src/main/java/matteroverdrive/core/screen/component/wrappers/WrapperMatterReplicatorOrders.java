@@ -12,12 +12,12 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.MutableComponent;
 
 public class WrapperMatterReplicatorOrders extends AbstractWrapperReplicationQueue {
-	
+
 	private static final MutableComponent TITLE = UtilsText.gui("replicatorqueue");
-	
+
 	public WrapperMatterReplicatorOrders(ScreenMatterReplicator screen, int x, int y, int[] screenNumbers) {
 		super(screen, x, y, screenNumbers);
-		
+
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class WrapperMatterReplicatorOrders extends AbstractWrapperReplicationQue
 	@Override
 	public List<QueuedReplication> getOrders() {
 		TileMatterReplicator replicator = ((ScreenMatterReplicator) screen).getMenu().getTile();
-		if(replicator == null) {
+		if (replicator == null) {
 			return Collections.emptyList();
 		}
 		return replicator.orderManager.getAllOrders();

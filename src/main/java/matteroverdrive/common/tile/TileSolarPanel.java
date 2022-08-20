@@ -22,24 +22,26 @@ public class TileSolarPanel extends GenericMachineTile {
 	public static final int GENERATION = 5;
 
 	private static final int ENERGY_STORAGE = 64000;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileSolarPanel(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_SOLAR_PANEL.get(), pos, state);
-		
+
 		defaultPowerStorage = ENERGY_STORAGE;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(SLOT_COUNT).setOwner(this)
-				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventorySolarPanel.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, false, true).setOwner(this)
-				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN }).setPropertyManager(capEnergyStorageProp));
+				.setDefaultDirections(state, null, new Direction[] { Direction.DOWN })
+				.setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));
@@ -60,7 +62,7 @@ public class TileSolarPanel extends GenericMachineTile {
 			UtilsTile.outputEnergy(this);
 			setChanged();
 		} else {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 		}

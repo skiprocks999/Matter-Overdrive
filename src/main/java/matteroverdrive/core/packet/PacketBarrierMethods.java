@@ -30,41 +30,43 @@ public class PacketBarrierMethods {
 			MatterRegister.INSTANCE.setClientValues(values);
 		}
 	}
-	
+
 	public static void handlePacketClientMNData(CompoundTag data, BlockPos monitorPos) {
 		Level world = Minecraft.getInstance().level;
-		if(world != null) {
+		if (world != null) {
 			BlockEntity tile = world.getBlockEntity(monitorPos);
-			if(tile != null && tile instanceof TilePatternMonitor monitor) {
+			if (tile != null && tile instanceof TilePatternMonitor monitor) {
 				monitor.handleNetworkData(data, world);
 			}
 		}
 	}
-	
+
 	public static void handlePacketPlayMatterScannerSound(UUID id, InteractionHand hand) {
 		Minecraft minecraft = Minecraft.getInstance();
 		Level world = minecraft.level;
 		if (world != null) {
 			Player player = minecraft.player;
-			if(player.getUUID().equals(id) && player.getItemInHand(hand).getItem() instanceof ItemMatterScanner) {
+			if (player.getUUID().equals(id) && player.getItemInHand(hand).getItem() instanceof ItemMatterScanner) {
 				minecraft.getSoundManager().play(new TickableSoundMatterScanner(hand, id));
 			}
 		}
 	}
-	
+
 	public static void handlePacketSyncClientEntityCapability(UUID id, CapabilityEntityData clientCapability) {
 		Minecraft minecraft = Minecraft.getInstance();
 		Level world = minecraft.level;
 		if (world != null) {
 			Player player = minecraft.player;
-			if(player.getUUID().equals(id) && player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
-				LazyOptional<ICapabilityEntityData> lazy = player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).cast();
+			if (player.getUUID().equals(id)
+					&& player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
+				LazyOptional<ICapabilityEntityData> lazy = player.getCapability(MatterOverdriveCapabilities.ENTITY_DATA)
+						.cast();
 				CapabilityEntityData cap = (CapabilityEntityData) lazy.resolve().get();
 				cap.copyFromOther(clientCapability);
 			}
 		}
 	}
-	
+
 	public static void handlePacketUpdateTile(CompoundTag data, boolean isGui, BlockPos pos) {
 		ClientLevel world = Minecraft.getInstance().level;
 		if (world != null) {
@@ -72,7 +74,7 @@ public class PacketBarrierMethods {
 			if (tile instanceof GenericTile generic) {
 				if (isGui && generic.hasMenuData) {
 					generic.readMenuData(data);
-				} else if(!isGui && generic.hasRenderData) {
+				} else if (!isGui && generic.hasRenderData) {
 					generic.readRenderData(data);
 				}
 			}

@@ -19,61 +19,61 @@ import java.util.function.Supplier;
 
 public class UpdateClientBlockEntityPropertyMessage {
 
-  private final BlockPos blockPos;
-  private final List<Triple<PropertyType<?>, Short, Object>> updates;
+	private final BlockPos blockPos;
+	private final List<Triple<PropertyType<?>, Short, Object>> updates;
 
-  public UpdateClientBlockEntityPropertyMessage(BlockPos blockPos,
-                                              List<Triple<PropertyType<?>, Short, Object>> updates) {
-    this.blockPos = blockPos;
-    this.updates = updates;
-  }
+	public UpdateClientBlockEntityPropertyMessage(BlockPos blockPos,
+			List<Triple<PropertyType<?>, Short, Object>> updates) {
+		this.blockPos = blockPos;
+		this.updates = updates;
+	}
 
-  public void encode(FriendlyByteBuf packetBuffer) {
-    packetBuffer.writeBlockPos(blockPos);
-    List<Triple<PropertyType<?>, Short, Object>> validUpdates = Lists.newArrayList();
-    for (Triple<PropertyType<?>, Short, Object> update : updates) {
-      if (update.getLeft().isValid(update.getRight())) {
-        validUpdates.add(update);
-      }
-    }
+	public void encode(FriendlyByteBuf packetBuffer) {
+		packetBuffer.writeBlockPos(blockPos);
+		List<Triple<PropertyType<?>, Short, Object>> validUpdates = Lists.newArrayList();
+		for (Triple<PropertyType<?>, Short, Object> update : updates) {
+			if (update.getLeft().isValid(update.getRight())) {
+				validUpdates.add(update);
+			}
+		}
 
-    packetBuffer.writeShort(validUpdates.size());
-    for (Triple<PropertyType<?>, Short, Object> update : validUpdates) {
-      packetBuffer.writeShort(PropertyTypes.getIndex(update.getLeft()));
-      packetBuffer.writeShort(update.getMiddle());
-      update.getLeft().attemptWrite(packetBuffer, update.getRight());
-    }
-  }
+		packetBuffer.writeShort(validUpdates.size());
+		for (Triple<PropertyType<?>, Short, Object> update : validUpdates) {
+			packetBuffer.writeShort(PropertyTypes.getIndex(update.getLeft()));
+			packetBuffer.writeShort(update.getMiddle());
+			update.getLeft().attemptWrite(packetBuffer, update.getRight());
+		}
+	}
 
-  public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-    contextSupplier.get().enqueueWork(() -> {
-      LocalPlayer playerEntity = Minecraft.getInstance().player;
-      if (playerEntity != null) {
-        BlockEntity entity = playerEntity.level.getBlockEntity(blockPos);
-        if (entity instanceof IPropertyManaged managed) {
-          PropertyManager propertyManager = managed.getPropertyManager();
-          for (Triple<PropertyType<?>, Short, Object> update : updates) {
-            propertyManager.update(update.getLeft(), update.getMiddle(), update.getRight());
-          }
-        } else {
-          MatterOverdrive.LOGGER.info("BlockEntity is not instance of IPropertyManaged");
-        }
-      }
-    });
-    return true;
-  }
+	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+		contextSupplier.get().enqueueWork(() -> {
+			LocalPlayer playerEntity = Minecraft.getInstance().player;
+			if (playerEntity != null) {
+				BlockEntity entity = playerEntity.level.getBlockEntity(blockPos);
+				if (entity instanceof IPropertyManaged managed) {
+					PropertyManager propertyManager = managed.getPropertyManager();
+					for (Triple<PropertyType<?>, Short, Object> update : updates) {
+						propertyManager.update(update.getLeft(), update.getMiddle(), update.getRight());
+					}
+				} else {
+					MatterOverdrive.LOGGER.info("BlockEntity is not instance of IPropertyManaged");
+				}
+			}
+		});
+		return true;
+	}
 
-  public static UpdateClientBlockEntityPropertyMessage decode(FriendlyByteBuf packetBuffer) {
-    BlockPos pos = packetBuffer.readBlockPos();
-    short updateAmount = packetBuffer.readShort();
-    List<Triple<PropertyType<?>, Short, Object>> updates = Lists.newArrayList();
-    for (short i = 0; i < updateAmount; i++) {
-      PropertyType<?> propertyType = PropertyTypes.getByIndex(packetBuffer.readShort());
-      short propertyLocation = packetBuffer.readShort();
-      Object object = propertyType.getReader().apply(packetBuffer);
-      updates.add(Triple.of(propertyType, propertyLocation, object));
-    }
-    return new UpdateClientBlockEntityPropertyMessage(pos, updates);
-  }
+	public static UpdateClientBlockEntityPropertyMessage decode(FriendlyByteBuf packetBuffer) {
+		BlockPos pos = packetBuffer.readBlockPos();
+		short updateAmount = packetBuffer.readShort();
+		List<Triple<PropertyType<?>, Short, Object>> updates = Lists.newArrayList();
+		for (short i = 0; i < updateAmount; i++) {
+			PropertyType<?> propertyType = PropertyTypes.getByIndex(packetBuffer.readShort());
+			short propertyLocation = packetBuffer.readShort();
+			Object object = propertyType.getReader().apply(packetBuffer);
+			updates.add(Triple.of(propertyType, propertyLocation, object));
+		}
+		return new UpdateClientBlockEntityPropertyMessage(pos, updates);
+	}
 
 }

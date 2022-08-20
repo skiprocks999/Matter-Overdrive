@@ -12,12 +12,12 @@ public class PacketPlayMatterScannerSound {
 
 	private final UUID id;
 	private final InteractionHand hand;
-	
+
 	public PacketPlayMatterScannerSound(UUID id, InteractionHand hand) {
 		this.id = id;
 		this.hand = hand;
 	}
-	
+
 	public static void handle(PacketPlayMatterScannerSound message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -25,7 +25,7 @@ public class PacketPlayMatterScannerSound {
 		});
 		ctx.setPacketHandled(true);
 	}
-	
+
 	public static void encode(PacketPlayMatterScannerSound pkt, FriendlyByteBuf buf) {
 		buf.writeUUID(pkt.id);
 		buf.writeEnum(pkt.hand);
@@ -34,5 +34,5 @@ public class PacketPlayMatterScannerSound {
 	public static PacketPlayMatterScannerSound decode(FriendlyByteBuf buf) {
 		return new PacketPlayMatterScannerSound(buf.readUUID(), buf.readEnum(InteractionHand.class));
 	}
-	
+
 }

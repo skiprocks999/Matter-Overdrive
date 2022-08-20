@@ -14,17 +14,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockMatterNetworkCable extends AbstractCableBlock {
-	
+
 	public BlockMatterNetworkCable(TypeMatterNetworkCable type) {
 		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 	}
-	
+
 	@Override
 	protected void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable,
 			LevelAccessor world, BlockPos pos) {
-		
+
 		BlockEntity entity;
-		for(Direction dir : Direction.values()) {
+		for (Direction dir : Direction.values()) {
 			entity = world.getBlockEntity(pos.relative(dir));
 			if (entity instanceof TileMatterNetworkCable) {
 				usedDirs.add(dir);
@@ -32,9 +32,9 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 			} else if (entity instanceof IMatterNetworkMember member && member.canConnectToFace(dir.getOpposite())) {
 				usedDirs.add(dir);
 				inventory.add(dir);
-			} 
+			}
 		}
-		
+
 	}
 
 	@Override
@@ -51,5 +51,5 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 	public boolean isValidConnection(BlockEntity facingTile, Direction facing) {
 		return facingTile instanceof IMatterNetworkMember member && member.canConnectToFace(facing);
 	}
-	
+
 }

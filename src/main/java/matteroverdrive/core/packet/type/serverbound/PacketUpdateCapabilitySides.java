@@ -136,12 +136,13 @@ public class PacketUpdateCapabilitySides {
 		}
 		return new PacketUpdateCapabilitySides(pos, type, input, output, inDirs, outDirs);
 	}
-	
+
 	public static enum CapabilityType {
-		ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), MATTER(MatterOverdriveCapabilities.MATTER_STORAGE), ENERGY(CapabilityEnergy.ENERGY);
-		
+		ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), MATTER(MatterOverdriveCapabilities.MATTER_STORAGE),
+		ENERGY(CapabilityEnergy.ENERGY);
+
 		public final Capability<?> capability;
-		
+
 		private CapabilityType(Capability<?> cap) {
 			capability = cap;
 		}

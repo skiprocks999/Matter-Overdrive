@@ -31,29 +31,29 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	public TypeMachine type;
 	private RegistryObject<BlockEntityType<T>> blockEntityType;
 
-	public BlockMachine(OverdriveBlockProperties properties, BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
-			RegistryObject<BlockEntityType<T>> entity) {
+	public BlockMachine(OverdriveBlockProperties properties, BlockEntitySupplier<BlockEntity> supplier,
+			TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
 		super(properties, supplier);
 		this.type = type;
 		this.blockEntityType = entity;
 	}
 
-	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type, RegistryObject<BlockEntityType<T>> entity) {
+	public BlockMachine(BlockEntitySupplier<BlockEntity> supplier, TypeMachine type,
+			RegistryObject<BlockEntityType<T>> entity) {
 		this(type.properties, supplier, type, entity);
 	}
 
-	
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		if (type.hasCustomAABB) {
-			if(type.singleShape) {
+			if (type.singleShape) {
 				return type.omniShape;
-			} 
+			}
 			OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
 			Direction facing = state.getValue(FACING);
-			if(stateProperties.isOmniDirectional()) {
+			if (stateProperties.isOmniDirectional()) {
 				VerticalFacing vertical = state.getValue(OverdriveBlockStates.VERTICAL_FACING);
-				if(vertical.mapped != null) {
+				if (vertical.mapped != null) {
 					facing = vertical.mapped;
 				}
 			}
@@ -74,7 +74,8 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof GenericTile generic && generic.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)) {
+		if (blockentity instanceof GenericTile generic
+				&& generic.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)) {
 			CapabilityInventory inv = generic.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 			if (MatterOverdriveConfig.machines_drop_items.get()) {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());

@@ -50,16 +50,16 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketCancelReplication.class, PacketCancelReplication::encode,
 				PacketCancelReplication::decode, PacketCancelReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		
+
 		CHANNEL.messageBuilder(UpdateServerContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
 				.encoder(UpdateServerContainerPropertyMessage::encode)
 				.decoder(UpdateServerContainerPropertyMessage::decode)
 				.consumerNetworkThread(UpdateServerContainerPropertyMessage::consume).add();
-		
+
 		CHANNEL.messageBuilder(UpdateServerEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
 				.encoder(UpdateServerEntityPropertyMessage::encode).decoder(UpdateServerEntityPropertyMessage::decode)
 				.consumerNetworkThread(UpdateServerEntityPropertyMessage::consume).add();
-		
+
 		CHANNEL.messageBuilder(UpdateServerBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
 				.encoder(UpdateServerBlockEntityPropertyMessage::encode)
 				.decoder(UpdateServerBlockEntityPropertyMessage::decode)
@@ -80,16 +80,16 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class, PacketPlayMatterScannerSound::encode,
 				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle,
 				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		
+
 		CHANNEL.messageBuilder(UpdateClientContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
 				.encoder(UpdateClientContainerPropertyMessage::encode)
 				.decoder(UpdateClientContainerPropertyMessage::decode)
 				.consumerNetworkThread(UpdateClientContainerPropertyMessage::consume).add();
-		
+
 		CHANNEL.messageBuilder(UpdateClientEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
 				.encoder(UpdateClientEntityPropertyMessage::encode).decoder(UpdateClientEntityPropertyMessage::decode)
 				.consumerNetworkThread(UpdateClientEntityPropertyMessage::consume).add();
-		
+
 		CHANNEL.messageBuilder(UpdateClientBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
 				.encoder(UpdateClientBlockEntityPropertyMessage::encode)
 				.decoder(UpdateClientBlockEntityPropertyMessage::decode)

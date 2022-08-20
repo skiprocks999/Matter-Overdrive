@@ -44,7 +44,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	private LazyOptional<ICapabilityMatterStorage> childOutput;
 	// Down Up North South West East
 	private LazyOptional<ICapabilityMatterStorage>[] sideCaps = new LazyOptional[6];
-	
+
 	private Property<CompoundTag> propertyHandler = null;
 
 	public CapabilityMatterStorage(double maxStorage, boolean hasInput, boolean hasOutput) {
@@ -84,7 +84,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		}
 		return this;
 	}
-	
+
 	public CapabilityMatterStorage setPropertyManager(Property<CompoundTag> property) {
 		propertyHandler = property;
 		return this;
@@ -314,7 +314,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 	}
 
 	private void onChange() {
-		if(propertyHandler != null) {
+		if (propertyHandler != null) {
 			propertyHandler.set(serializeNBT());
 		}
 		if (hasOwner) {

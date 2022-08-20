@@ -12,12 +12,12 @@ public class PacketSyncClientEntityCapability {
 
 	private final CapabilityEntityData clientCapability;
 	private final UUID id;
-	
+
 	public PacketSyncClientEntityCapability(CapabilityEntityData cap, UUID id) {
 		clientCapability = cap;
 		this.id = id;
 	}
-	
+
 	public static void handle(PacketSyncClientEntityCapability message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
@@ -25,7 +25,7 @@ public class PacketSyncClientEntityCapability {
 		});
 		ctx.setPacketHandled(true);
 	}
-	
+
 	public static void encode(PacketSyncClientEntityCapability pkt, FriendlyByteBuf buf) {
 		pkt.clientCapability.writeToByteBuffer(buf);
 		buf.writeUUID(pkt.id);
@@ -36,5 +36,5 @@ public class PacketSyncClientEntityCapability {
 		capability.readFromByteBuffer(buf);
 		return new PacketSyncClientEntityCapability(capability, buf.readUUID());
 	}
-	
+
 }

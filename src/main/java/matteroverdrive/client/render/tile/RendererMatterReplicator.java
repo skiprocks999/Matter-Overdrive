@@ -22,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterReplicator> {
 
 	private static final int SEED = 64;
-	
+
 	private int simLifespan = 0;
-	
+
 	private final Random random;
 
 	public RendererMatterReplicator(Context context) {
@@ -47,23 +47,23 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 		if (!stack.isEmpty()) {
 			// Copy Pasta time
 			matrix.pushPose();
-			
+
 			matrix.translate(0.5, 0.3, 0.5);
-			
+
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-			
+
 			random.setSeed((long) (Item.getId(stack.getItem()) + stack.getDamageValue()));
-			
+
 			BakedModel model = renderer.getModel(stack, replicator.getLevel(), (LivingEntity) null, SEED);
-			
+
 			boolean isGui3D = model.isGui3d();
-			
+
 			float spin = ((float) simLifespan + ticks) / 20.0F;
-			
-			if(shouldSpin) {
+
+			if (shouldSpin) {
 				matrix.mulPose(Vector3f.YP.rotation(spin));
 			}
-			
+
 			if (!isGui3D) {
 				float f7 = -0.0F;
 				float f8 = -0.0F;
@@ -71,15 +71,14 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 				matrix.translate((double) f7, (double) f8, (double) f9);
 			}
 
-
 			renderer.render(stack, ItemTransforms.TransformType.GROUND, false, matrix, buffer, light,
 					OverlayTexture.NO_OVERLAY, model);
 
 			simLifespan++;
-			if(simLifespan >= 6000) {
+			if (simLifespan >= 6000) {
 				simLifespan = 0;
 			}
-			
+
 			matrix.popPose();
 		} else {
 			simLifespan = 0;

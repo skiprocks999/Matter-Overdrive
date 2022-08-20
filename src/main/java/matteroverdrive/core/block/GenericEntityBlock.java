@@ -30,10 +30,10 @@ import net.minecraft.world.level.material.Fluids;
 public abstract class GenericEntityBlock extends BaseEntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-	
+
 	protected GenericEntityBlock(OverdriveBlockProperties properties) {
 		super(properties);
-		
+
 		BlockState defaultState = getStateDefinition().any();
 		OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
 		if (stateProperties.canBeWaterlogged()) {
@@ -42,15 +42,15 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		if (stateProperties.canBeLit()) {
 			defaultState.setValue(BlockStateProperties.LIT, false);
 		}
-		if(stateProperties.hasFacing()) {
+		if (stateProperties.hasFacing()) {
 			defaultState.setValue(FACING, Direction.NORTH);
 		}
-		if(stateProperties.isOmniDirectional()) {
+		if (stateProperties.isOmniDirectional()) {
 			defaultState.setValue(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.NONE);
 		}
 		registerDefaultState(defaultState);
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(@NonNull Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
@@ -61,43 +61,45 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		if (stateProperties.canBeLit()) {
 			builder.add(BlockStateProperties.LIT);
 		}
-		if(stateProperties.hasFacing()) {
+		if (stateProperties.hasFacing()) {
 			builder.add(FACING);
 		}
-		if(stateProperties.isOmniDirectional()) {
+		if (stateProperties.isOmniDirectional()) {
 			builder.add(OverdriveBlockStates.VERTICAL_FACING);
 		}
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState superState = super.getStateForPlacement(context);
 		OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
-		if(stateProperties.canBeWaterlogged()) {
+		if (stateProperties.canBeWaterlogged()) {
 			FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
 			superState = superState.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 		}
-		if(stateProperties.canBeLit()) {
-			superState = superState.setValue(BlockStateProperties.LIT, stateProperties.isAlwaysLit() || stateProperties.isLitOnPlacement());
+		if (stateProperties.canBeLit()) {
+			superState = superState.setValue(BlockStateProperties.LIT,
+					stateProperties.isAlwaysLit() || stateProperties.isLitOnPlacement());
 		}
-		if(stateProperties.hasFacing()) {
-			if(stateProperties.isOmniDirectional()) {
+		if (stateProperties.hasFacing()) {
+			if (stateProperties.isOmniDirectional()) {
 				float viewRot = context.getPlayer().getViewXRot(1.0F);
-				
+
 				Direction vertical = null;
-				
-				if(viewRot < -50.0F) {
+
+				if (viewRot < -50.0F) {
 					vertical = Direction.DOWN;
 				} else if (viewRot > 50.0F) {
 					vertical = Direction.UP;
 				}
-				superState = superState.setValue(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.fromDirection(vertical));
-			} 
+				superState = superState.setValue(OverdriveBlockStates.VERTICAL_FACING,
+						VerticalFacing.fromDirection(vertical));
+			}
 			superState = superState.setValue(FACING, context.getHorizontalDirection().getOpposite());
 		}
 		return superState;
 	}
-	
+
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
@@ -128,11 +130,10 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		}
 		return super.mirror(state, mirrorIn);
 	}
-	
+
 	@Override
-	public BlockState updateShape(BlockState state, @NotNull Direction direction,
-			@NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos,
-			@NotNull BlockPos neighborPos) {
+	public BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState,
+			@NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos neighborPos) {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
 			level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
@@ -150,7 +151,7 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			}
 		}
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
@@ -158,16 +159,17 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 		}
 		return super.getFluidState(state);
 	}
-	
+
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
 		OverdriveBlockProperties stateProperties = (OverdriveBlockProperties) this.properties;
-		if ((state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) || stateProperties.isAlwaysLit()) {
+		if ((state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT))
+				|| stateProperties.isAlwaysLit()) {
 			return 15;
 		}
 		return super.getLightEmission(state, level, pos);
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return ((OverdriveBlockProperties) this.properties).canConnectToRedstone();

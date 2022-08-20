@@ -163,49 +163,40 @@ public abstract class MergeableCodecDataManager<RAW, FINE>
 			final ProfilerFiller profiler) {
 		final Map<ResourceLocation, List<RAW>> map = Maps.newHashMap();
 		/*
-		for (ResourceLocation resourceLocation : resourceManager.listResources(this.folderName,
-				MergeableCodecDataManager::isStringJsonFile)) {
-			final String namespace = resourceLocation.getNamespace();
-			final String filePath = resourceLocation.getPath();
-			final String dataPath = filePath.substring(this.folderName.length() + 1,
-					filePath.length() - JSON_EXTENSION_LENGTH);
-
-			// this is a json with identifier "somemodid:somedata"
-			final ResourceLocation jsonIdentifier = new ResourceLocation(namespace, dataPath);
-			// this is the list of all json objects with the given resource location (i.e.
-			// in multiple datapacks)
-			final List<RAW> unmergedRaws = new ArrayList<>();
-			// it's entirely possible that there are multiple jsons with this identifier,
-			// we can query the resource manager for these
-			try {
-				for (Resource resource : resourceManager.getResources(resourceLocation)) {
-					try // with resources
-					(final InputStream inputStream = resource.getInputStream();
-							final Reader reader = new BufferedReader(
-									new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
-						// read the json file and save the parsed object for later
-						// this json element may return null
-						final JsonElement jsonElement = GsonHelper.fromJson(this.gson, reader, JsonElement.class);
-						this.codec.parse(JsonOps.INSTANCE, jsonElement)
-								// resultOrPartial either returns a non-empty optional or calls the consumer
-								// given
-								.resultOrPartial(MergeableCodecDataManager::throwJsonParseException)
-								.ifPresent(unmergedRaws::add);
-					} catch (RuntimeException | IOException exception) {
-						this.logger.error("Data loader for {} could not read data {} from file {} in data pack {}",
-								this.folderName, jsonIdentifier, resourceLocation, resource.getSourceName(), exception);
-					} finally {
-						IOUtils.closeQuietly(resource);
-					}
-				}
-			} catch (IOException exception) {
-				this.logger.error("Data loader for {} could not read data {} from file {}", this.folderName,
-						jsonIdentifier, resourceLocation, exception);
-			}
-
-			map.put(jsonIdentifier, unmergedRaws);
-		}
-	*/
+		 * for (ResourceLocation resourceLocation :
+		 * resourceManager.listResources(this.folderName,
+		 * MergeableCodecDataManager::isStringJsonFile)) { final String namespace =
+		 * resourceLocation.getNamespace(); final String filePath =
+		 * resourceLocation.getPath(); final String dataPath =
+		 * filePath.substring(this.folderName.length() + 1, filePath.length() -
+		 * JSON_EXTENSION_LENGTH);
+		 * 
+		 * // this is a json with identifier "somemodid:somedata" final ResourceLocation
+		 * jsonIdentifier = new ResourceLocation(namespace, dataPath); // this is the
+		 * list of all json objects with the given resource location (i.e. // in
+		 * multiple datapacks) final List<RAW> unmergedRaws = new ArrayList<>(); // it's
+		 * entirely possible that there are multiple jsons with this identifier, // we
+		 * can query the resource manager for these try { for (Resource resource :
+		 * resourceManager.getResources(resourceLocation)) { try // with resources
+		 * (final InputStream inputStream = resource.getInputStream(); final Reader
+		 * reader = new BufferedReader( new InputStreamReader(inputStream,
+		 * StandardCharsets.UTF_8));) { // read the json file and save the parsed object
+		 * for later // this json element may return null final JsonElement jsonElement
+		 * = GsonHelper.fromJson(this.gson, reader, JsonElement.class);
+		 * this.codec.parse(JsonOps.INSTANCE, jsonElement) // resultOrPartial either
+		 * returns a non-empty optional or calls the consumer // given
+		 * .resultOrPartial(MergeableCodecDataManager::throwJsonParseException)
+		 * .ifPresent(unmergedRaws::add); } catch (RuntimeException | IOException
+		 * exception) { this.logger.
+		 * error("Data loader for {} could not read data {} from file {} in data pack {}"
+		 * , this.folderName, jsonIdentifier, resourceLocation,
+		 * resource.getSourceName(), exception); } finally {
+		 * IOUtils.closeQuietly(resource); } } } catch (IOException exception) {
+		 * this.logger.error("Data loader for {} could not read data {} from file {}",
+		 * this.folderName, jsonIdentifier, resourceLocation, exception); }
+		 * 
+		 * map.put(jsonIdentifier, unmergedRaws); }
+		 */
 		return MergeableCodecDataManager.mapValues(map, this.merger::apply);
 	}
 

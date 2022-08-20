@@ -38,7 +38,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 
 	private HashMap<BlockPos, PatternStorageDataWrapper> clientPatternStorageData = new HashMap<>();
 	private HashMap<BlockPos, MatterReplicatorDataWrapper> clientMatterReplicatorData = new HashMap<>();
-	
+
 	public TilePatternMonitor(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_MONITOR.get(), pos, state);
 		setMenuProvider(
@@ -49,11 +49,11 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 		setTickable();
 		setHasMenuData();
 	}
-	
+
 	@Override
 	public void tickServer() {
-		if(getTicks() % 4 == 0) {
-			if(getConnectedNetwork() != null) {
+		if (getTicks() % 4 == 0) {
+			if (getConnectedNetwork() != null) {
 				UtilsTile.updateLit(this, true);
 			} else {
 				UtilsTile.updateLit(this, false);
@@ -64,13 +64,13 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	@Override
 	public boolean canConnectToFace(Direction face) {
 		VerticalFacing vertical = getBlockState().getValue(OverdriveBlockStates.VERTICAL_FACING);
-		if(vertical == null || vertical == VerticalFacing.NONE) {
+		if (vertical == null || vertical == VerticalFacing.NONE) {
 			Direction relative = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 			return relative == face;
 		} else {
 			return face == vertical.mapped.getOpposite();
 		}
-		
+
 	}
 
 	@Override
@@ -78,13 +78,13 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	public NetworkMatter getConnectedNetwork() {
 		VerticalFacing vertical = getBlockState().getValue(OverdriveBlockStates.VERTICAL_FACING);
 		Direction back;
-		if(vertical == null || vertical == VerticalFacing.NONE) {
+		if (vertical == null || vertical == VerticalFacing.NONE) {
 			back = UtilsDirection.getRelativeSide(Direction.NORTH, handleEastWest(getFacing()));
 		} else {
 			back = vertical.mapped.getOpposite();
 		}
 		BlockEntity entity = getLevel().getBlockEntity(getBlockPos().relative(back));
-		if(entity != null && entity instanceof TileMatterNetworkCable cable) {
+		if (entity != null && entity instanceof TileMatterNetworkCable cable) {
 			return (NetworkMatter) cable.getNetwork(false);
 		}
 		return null;
@@ -94,81 +94,86 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 	public boolean isPowered(boolean client) {
 		return true;
 	}
-	
+
 	public void handleNetworkData(CompoundTag data, Level world) {
 		clientPatternStorageData = new HashMap<>();
 		BlockEntity entity;
 		BlockPos pos;
-		for(int i = 0; i < data.getInt("drivesize"); i++) {
+		for (int i = 0; i < data.getInt("drivesize"); i++) {
 			pos = NbtUtils.readBlockPos(data.getCompound("drivepos" + i));
 			entity = world.getBlockEntity(pos);
-			if(entity != null && entity instanceof TilePatternStorage storage) {
-				clientPatternStorageData.put(new BlockPos(pos), storage.handleNetworkData(data.getCompound("drivedata" + i)));
+			if (entity != null && entity instanceof TilePatternStorage storage) {
+				clientPatternStorageData.put(new BlockPos(pos),
+						storage.handleNetworkData(data.getCompound("drivedata" + i)));
 				data.remove("drivepos" + i);
 				data.remove("drivedata" + i);
 			}
 		}
 		clientMatterReplicatorData = new HashMap<>();
-		for(int i = 0; i < data.getInt("replicatorsize"); i++) {
+		for (int i = 0; i < data.getInt("replicatorsize"); i++) {
 			pos = NbtUtils.readBlockPos(data.getCompound("reppos" + i));
 			entity = world.getBlockEntity(pos);
-			if(entity != null && entity instanceof TileMatterReplicator replicator) {
-				clientMatterReplicatorData.put(new BlockPos(pos), replicator.handleNetworkData(data.getCompound("repdata" + i)));
+			if (entity != null && entity instanceof TileMatterReplicator replicator) {
+				clientMatterReplicatorData.put(new BlockPos(pos),
+						replicator.handleNetworkData(data.getCompound("repdata" + i)));
 				data.remove("reppos" + i);
 				data.remove("repdata" + i);
 			}
 		}
 	}
-	
-	public List<ItemPatternWrapper> getStoredPatterns(boolean checkPowered){
+
+	public List<ItemPatternWrapper> getStoredPatterns(boolean checkPowered) {
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
 		PatternStorageDataWrapper wrapper;
-		for(Entry<BlockPos, PatternStorageDataWrapper> entry : clientPatternStorageData.entrySet()) {
-			if(entry != null) {
+		for (Entry<BlockPos, PatternStorageDataWrapper> entry : clientPatternStorageData.entrySet()) {
+			if (entry != null) {
 				wrapper = entry.getValue();
-				if(wrapper != null && checkPowered ? wrapper.isPowered() : true) {
+				if (wrapper != null && checkPowered ? wrapper.isPowered() : true) {
 					patterns.addAll(wrapper.getPatterns());
 				}
 			}
 		}
 		return patterns;
 	}
-	
+
 	public boolean postOrderToNetwork(ItemPatternWrapper pattern, int count, boolean checkPowered, boolean checkFused) {
 		int smallestQueue = -1;
 		Entry<BlockPos, MatterReplicatorDataWrapper> val = null;
 		MatterReplicatorDataWrapper wrapper;
 		int queueSize;
-		for(Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
-			if(entry != null) {
+		for (Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
+			if (entry != null) {
 				wrapper = entry.getValue();
-				if(entry != null && checkPowered ? wrapper.isPowered() : true && checkFused ? !wrapper.isFused() : true) {
+				if (entry != null && checkPowered ? wrapper.isPowered()
+						: true && checkFused ? !wrapper.isFused() : true) {
 					queueSize = wrapper.getOrders().size();
-					if(queueSize > smallestQueue) {
+					if (queueSize > smallestQueue) {
 						smallestQueue = queueSize;
 						val = entry;
-						if(queueSize == 0) {
-							NetworkHandler.CHANNEL.sendToServer(new PacketQueueReplication(entry.getKey(), pattern, count));
+						if (queueSize == 0) {
+							NetworkHandler.CHANNEL
+									.sendToServer(new PacketQueueReplication(entry.getKey(), pattern, count));
 							return true;
 						}
-					} 
+					}
 				}
 			}
 		}
-		if(val != null) {
+		if (val != null) {
 			NetworkHandler.CHANNEL.sendToServer(new PacketQueueReplication(val.getKey(), pattern, count));
 			return true;
 		}
 		return false;
 	}
-	
+
 	public List<QueuedReplication> getGlobalOrders(boolean checkPowered, boolean checkFused) {
 		List<QueuedReplication> orders = new ArrayList<>();
 		MatterReplicatorDataWrapper wrapper;
-		for(Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
-			if(entry != null) {
+		for (Entry<BlockPos, MatterReplicatorDataWrapper> entry : clientMatterReplicatorData.entrySet()) {
+			if (entry != null) {
 				wrapper = entry.getValue();
-				if(entry != null && checkPowered ? wrapper.isPowered() : true && checkFused ? !wrapper.isFused() : true) {
+				if (entry != null && checkPowered ? wrapper.isPowered()
+						: true && checkFused ? !wrapper.isFused() : true) {
 					orders.addAll(wrapper.getOrders());
 				}
 			}

@@ -43,7 +43,7 @@ public class ParticleVent extends TextureSheetParticle {
 		this.xd *= 0.9599999785423279D;
 		this.yd *= 0.9599999785423279D;
 		this.zd *= 0.9599999785423279D;
-		
+
 	}
 
 	public float getQuadSize(float scale) {
@@ -54,21 +54,21 @@ public class ParticleVent extends TextureSheetParticle {
 	public ParticleRenderType getRenderType() {
 		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
-	
+
 	public static class Factory implements ParticleProvider<ParticleOptionVent> {
 
 		private final SpriteSet spriteSet;
-		
+
 		public Factory(SpriteSet spriteSet) {
 			this.spriteSet = spriteSet;
 		}
-		
+
 		@Override
 		public Particle createParticle(ParticleOptionVent type, ClientLevel world, double x, double y, double z,
 				double xVel, double yVel, double zVel) {
 			return new ParticleVent(world, x, y, z, xVel, yVel, zVel, type.scale, type.alpha, spriteSet);
 		}
-		
+
 	}
 
 }

@@ -15,7 +15,7 @@ public class ParticleOptionVent extends ParticleType<ParticleOptionVent> impleme
 
 	public float scale;
 	public float alpha;
-	
+
 	public static final Codec<ParticleOptionVent> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(Codec.FLOAT.fieldOf("scale").forGetter(instance0 -> {
 			return instance0.scale;
@@ -37,21 +37,20 @@ public class ParticleOptionVent extends ParticleType<ParticleOptionVent> impleme
 		}
 
 		@Override
-		public ParticleOptionVent fromNetwork(ParticleType<ParticleOptionVent> type,
-				FriendlyByteBuf buffer) {
+		public ParticleOptionVent fromNetwork(ParticleType<ParticleOptionVent> type, FriendlyByteBuf buffer) {
 			return new ParticleOptionVent().setScale(buffer.readFloat()).setAlpha(buffer.readFloat());
 		}
 	};
-	
+
 	public ParticleOptionVent() {
 		super(false, DESERIALIZER);
 	}
-	
+
 	public ParticleOptionVent setScale(float scale) {
 		this.scale = scale;
 		return this;
 	}
-	
+
 	public ParticleOptionVent setAlpha(float alpha) {
 		this.alpha = alpha;
 		return this;

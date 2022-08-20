@@ -10,7 +10,6 @@ import matteroverdrive.core.screen.component.button.ButtonIOConfig;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
@@ -51,7 +50,7 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -158,19 +157,19 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 		energy.visible = false;
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
-		
-		addScreenComponent(getProgressArrow(33, 48, new int[] {0}));
-		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+
+		addScreenComponent(getProgressArrow(33, 48, new int[] { 0 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] { 0 }));
 		addScreenComponent(getRunningIndicator(6, 158, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
 				UtilsRendering.TEXT_BLUE));
-		
+
 	}
 
 	private void toggleBarOpen() {

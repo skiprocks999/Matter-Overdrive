@@ -28,34 +28,34 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 
 	private ButtonMenuOption home;
 	private ButtonMenuOption tasks;
-	
+
 	private WrapperPatternMonitorScreen wrapper;
-	private WrapperPatternMonitorOrders ordersWrapper; 
+	private WrapperPatternMonitorOrders ordersWrapper;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenComponentVerticalSlider slider;
 	public ScreenComponentVerticalSlider ordersSlider;
-	
+
 	public ScreenPatternMonitor(InventoryPatternMonitor menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();
-		if(screenNumber == 0) {
+		if (screenNumber == 0) {
 			wrapper.tick();
 		} else if (screenNumber == 1) {
 			ordersWrapper.tick();
 		}
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
-		
+
 		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
@@ -74,22 +74,22 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 			wrapper.updateButtons(false);
 			ordersWrapper.updateButtons(true);
 		}, MenuButtonType.TASKS, menu, false);
-		
+
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0 }));
-		
+
 		wrapper = new WrapperPatternMonitorScreen(this, 53, 26);
-		ordersWrapper = new WrapperPatternMonitorOrders(this, 48, 32, new int[] { 1 } );
-		
+		ordersWrapper = new WrapperPatternMonitorOrders(this, 48, 32, new int[] { 1 });
+
 		addButton(close);
 		addButton(menu);
 		addButton(home);
 		addButton(tasks);
-		
+
 		wrapper.initButtons(itemRenderer);
 		ordersWrapper.initButtons(itemRenderer);
-		
+
 		ordersWrapper.updateButtons(false);
-		
+
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TilePatternMonitor monitor = getMenu().getTile();
 			if (monitor != null) {
@@ -97,29 +97,28 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1 }));
-		
-		
+
 		slider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 0 });
 		slider.setClickConsumer(wrapper.getSliderClickedConsumer());
 		slider.setDragConsumer(wrapper.getSliderDraggedConsumer());
 		addScreenComponent(slider);
-		
+
 		ordersSlider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 1 });
 		ordersSlider.setClickConsumer(ordersWrapper.getSliderClickedConsumer());
 		ordersSlider.setDragConsumer(ordersWrapper.getSliderDraggedConsumer());
 		addScreenComponent(ordersSlider);
-		
+
 	}
 
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if(wrapper != null && screenNumber == 0) {
-			if(delta > 0) {
-				//scroll up
+		if (wrapper != null && screenNumber == 0) {
+			if (delta > 0) {
+				// scroll up
 				wrapper.handleMouseScroll(-1);
 			} else if (delta < 0) {
 				// scroll down
@@ -128,41 +127,42 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
 		super.mouseMoved(mouseX, mouseY);
-		if(slider != null && screenNumber == 0) {
+		if (slider != null && screenNumber == 0) {
 			slider.mouseMoved(mouseX, mouseY);
 		} else if (ordersSlider != null && screenNumber == 1) {
 			ordersSlider.mouseMoved(mouseX, mouseY);
 		}
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 0) {
+		if (slider != null && screenNumber == 0) {
 			slider.mouseClicked(mouseX, mouseY, button);
 		} else if (ordersSlider != null && screenNumber == 1) {
 			ordersSlider.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 0) {
+		if (slider != null && screenNumber == 0) {
 			slider.mouseReleased(mouseX, mouseY, button);
 		} else if (ordersSlider != null && screenNumber == 1) {
 			ordersSlider.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
-	
+
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if(this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) && screenNumber == 0 && wrapper.isSearchBarSelected()) {
+		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) && screenNumber == 0
+				&& wrapper.isSearchBarSelected()) {
 			return false;
 		}
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);

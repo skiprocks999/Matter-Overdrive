@@ -33,30 +33,32 @@ public class TileMatterRecycler extends GenericMachineTile {
 
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
-	
+
 	public TileMatterRecycler(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_RECYCLER.get(), pos, state);
-		
+
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
-		
+
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultProcessingTime = OPERATING_TIME;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterRecycler.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryMatterRecycler.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null)
+				.setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryMatterRecycler(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.MATTER_RECYCLER.id())));
 		setTickable();
@@ -74,7 +76,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		if (!canRun()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -87,7 +89,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -97,7 +99,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		if (value <= 0) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
@@ -106,7 +108,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -115,7 +117,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		ItemStack output = inv.getOutputs().get(0);
 		if (!(output.isEmpty()
 				|| (output.getCount() < output.getMaxStackSize() && UtilsNbt.readMatterVal(output) == value))) {
-			if(setRunning(false)) {
+			if (setRunning(false)) {
 				setChanged();
 			}
 			return;
@@ -170,7 +172,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		setPowerUsage(additional.getDouble("usage"));
 		setMuffled(additional.getBoolean("muffled"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

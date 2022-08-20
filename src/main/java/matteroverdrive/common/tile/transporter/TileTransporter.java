@@ -62,9 +62,9 @@ public class TileTransporter extends GenericMachineTile {
 	private int currDestination = -1;
 	public TransporterLocationManager locationManager = new TransporterLocationManager(5);
 	public TransporterEntityDataManager entityDataManager = new TransporterEntityDataManager();
-	
+
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
@@ -75,48 +75,53 @@ public class TileTransporter extends GenericMachineTile {
 
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
-		
+
 		setMatterUsage(MATTER_USAGE);
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
 		setRange(DEFAULT_RADIUS);
-		
+
 		defaultSpeed = DEFAULT_SPEED;
 		defaultMatterUsage = MATTER_USAGE;
 		defaultMatterStorage = MATTER_STORAGE;
-		defaultPowerStorage =  ENERGY_STORAGE;
+		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultRange = DEFAULT_RADIUS;
 		defaultProcessingTime = BUILD_UP_TIME;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getMatterStorageCap().serializeNBT(),
-				tag -> getMatterStorageCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		cooldownProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> cooldownTimer, timer -> cooldownTimer = timer));
-		destinationProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> currDestination, dest -> currDestination = dest));
-		locationManagerProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(locationManager::serializeNbt, locationManager::deserializeNbt));
-		entityDataProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(entityDataManager::serializeNbt, entityDataManager::deserializeNbt));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capMatterStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getMatterStorageCap().serializeNBT(), tag -> getMatterStorageCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		cooldownProp = this.getPropertyManager()
+				.addTrackedProperty(PropertyTypes.INTEGER.create(() -> cooldownTimer, timer -> cooldownTimer = timer));
+		destinationProp = this.getPropertyManager().addTrackedProperty(
+				PropertyTypes.INTEGER.create(() -> currDestination, dest -> currDestination = dest));
+		locationManagerProp = this.getPropertyManager().addTrackedProperty(
+				PropertyTypes.NBT.create(locationManager::serializeNbt, locationManager::deserializeNbt));
+		entityDataProp = this.getPropertyManager().addTrackedProperty(
+				PropertyTypes.NBT.create(entityDataManager::serializeNbt, entityDataManager::deserializeNbt));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null).setPropertyManager(capEnergyStorageProp));
-		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this).setDefaultDirections(
-				state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null).setPropertyManager(capMatterStorageProp));
-		setMenuProvider(new SimpleMenuProvider(
-				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
-						getInventoryCap(), getCoordsData()),
-				getContainerName(TypeMachine.TRANSPORTER.id())));
+				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null)
+				.setPropertyManager(capEnergyStorageProp));
+		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this)
+				.setDefaultDirections(state, new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST }, null)
+				.setPropertyManager(capMatterStorageProp));
+		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
+				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.TRANSPORTER.id())));
 		setTickable();
-		
+
 		locationManager.setVars(locationManagerProp, this);
 		entityDataManager.setVars(entityDataProp, this);
-		
+
 	}
 
 	@Override
@@ -126,12 +131,12 @@ public class TileTransporter extends GenericMachineTile {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= entityDataManager.wipe();
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
-		
+
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
 		if (cooldownProp.get() < COOLDOWN) {
@@ -141,52 +146,52 @@ public class TileTransporter extends GenericMachineTile {
 			entityDataManager.wipe();
 			setChanged();
 			return;
-		} 
-		
+		}
+
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
-		
+
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= entityDataManager.wipe();
-			if(flag) {
-				setChanged();
-			}
-			return;
-		} 
-		
-		TransporterLocationWrapper curLoc = locationManager.getLocation(destinationProp.get());
-		Pair<Boolean, Integer> validData = validDestination(curLoc);
-		
-		if (!validData.getFirst()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= entityDataManager.wipe();
-			if(flag) {
-				setChanged();
-			}
-			return;
-		} 
-		
-		CapabilityEnergyStorage energy = getEnergyStorageCap();
-		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
-			flag = setRunning(false);
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
 		}
-		
+
+		TransporterLocationWrapper curLoc = locationManager.getLocation(destinationProp.get());
+		Pair<Boolean, Integer> validData = validDestination(curLoc);
+
+		if (!validData.getFirst()) {
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			flag |= entityDataManager.wipe();
+			if (flag) {
+				setChanged();
+			}
+			return;
+		}
+
+		CapabilityEnergyStorage energy = getEnergyStorageCap();
+		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
+			flag = setRunning(false);
+			if (flag) {
+				setChanged();
+			}
+			return;
+		}
+
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			flag = setRunning(false);
 			flag |= entityDataManager.wipe();
-			if(flag) {
+			if (flag) {
 				setChanged();
 			}
 			return;
-		} 
-		
+		}
+
 		int size = currentEntities.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH : currentEntities.size();
 		currentEntities = currentEntities.subList(0, size);
 		energy.removeEnergy((int) getCurrentPowerUsage());
@@ -211,7 +216,8 @@ public class TileTransporter extends GenericMachineTile {
 					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 				});
 				ServerEventHandler.TASK_HANDLER.queueTask(() -> {
-					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(),
+							SoundSource.BLOCKS, 1.0F, 1.0F);
 				});
 			}
 		}
@@ -224,7 +230,7 @@ public class TileTransporter extends GenericMachineTile {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
 		}
-		
+
 		if (getProgress() > 0 && isRunning()) {
 			int particlesPerTick = (int) ((getProgress() / (double) BUILD_UP_TIME) * 20);
 			for (int i = 0; i < particlesPerTick; i++) {
@@ -269,7 +275,7 @@ public class TileTransporter extends GenericMachineTile {
 		destinationProp.set(additional.getInt("dest"));
 		locationManagerProp.set(additional.getCompound("locations"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);
@@ -302,8 +308,8 @@ public class TileTransporter extends GenericMachineTile {
 			origin.sub(pos);
 			origin.mul(speed);
 
-			getLevel().addParticle(new ParticleOptionReplicator()
-					.setGravity(gravity).setScale(0.1F).setAge(age), pos.x(), pos.y(), pos.z(), 0, speed, 0);
+			getLevel().addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.1F).setAge(age),
+					pos.x(), pos.y(), pos.z(), 0, speed, 0);
 		}
 
 	}
@@ -311,10 +317,10 @@ public class TileTransporter extends GenericMachineTile {
 	public void setDestination(int index) {
 		destinationProp.set(index);
 	}
-	
+
 	private ServerLevel handleDimensionChange(Entity entity) {
 		ResourceKey<Level> dim = locationManager.getLocation(destinationProp.get()).getDimension();
-		if(dim != null) {
+		if (dim != null) {
 			ServerLevel level = ServerLifecycleHooks.getCurrentServer().getLevel(dim);
 			entity.changeDimension(level, MANAGER);
 			return level;

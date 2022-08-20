@@ -11,19 +11,19 @@ import net.minecraft.world.entity.Entity;
 public class TransporterEntityDataManager {
 
 	private List<EntityDataWrapper> entities;
-	
+
 	private TileTransporter owner;
 	private Property<CompoundTag> dataProp;
-	
+
 	public TransporterEntityDataManager() {
-		 entities = new ArrayList<>();
+		entities = new ArrayList<>();
 	}
-	
+
 	public void setVars(Property<CompoundTag> property, TileTransporter owner) {
 		this.owner = owner;
 		dataProp = property;
 	}
-	
+
 	public void setEntities(List<Entity> entities) {
 		this.entities.clear();
 		for (int i = 0; i < entities.size(); i++) {
@@ -34,22 +34,22 @@ public class TransporterEntityDataManager {
 		}
 		setChanged();
 	}
-	
+
 	public boolean wipe() {
 		entities.clear();
 		dataProp.set(serializeNbt());
 		return dataProp.isDirtyNoUpdate();
 	}
-	
+
 	private void setChanged() {
 		dataProp.set(serializeNbt());
 		owner.setChanged();
 	}
-	
-	public List<EntityDataWrapper> getEntityData(){
+
+	public List<EntityDataWrapper> getEntityData() {
 		return entities;
 	}
-	
+
 	public CompoundTag serializeNbt() {
 		CompoundTag data = new CompoundTag();
 		data.putInt("entities", entities.size());
@@ -58,7 +58,7 @@ public class TransporterEntityDataManager {
 		}
 		return data;
 	}
-	
+
 	public void deserializeNbt(CompoundTag tag) {
 		entities.clear();
 		int size = tag.getInt("entities");
@@ -66,5 +66,5 @@ public class TransporterEntityDataManager {
 			entities.add(EntityDataWrapper.fromNbt(tag.getCompound("entity" + i)));
 		}
 	}
-	
+
 }

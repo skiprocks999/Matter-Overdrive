@@ -31,9 +31,9 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		BlockState middle = world.getBlockState(pos.offset(0, 1, 0));
-		if(middle.isAir() || middle.getFluidState() != null && !middle.getFluidState().isEmpty()) {
+		if (middle.isAir() || middle.getFluidState() != null && !middle.getFluidState().isEmpty()) {
 			BlockState top = world.getBlockState(pos.offset(0, 2, 0));
-			if(top.isAir() || top.getFluidState() != null && !top.getFluidState().isEmpty()) {
+			if (top.isAir() || top.getFluidState() != null && !top.getFluidState().isEmpty()) {
 				return super.canSurvive(state, world, pos);
 			}
 		}
@@ -43,7 +43,7 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
-		if(!world.isClientSide) {
+		if (!world.isClientSide) {
 			Direction facing = state.getValue(FACING);
 			BlockState middle = BlockRegistry.BLOCK_CHARGER_CHILD.get().defaultBlockState();
 			BlockState top = BlockRegistry.BLOCK_CHARGER_CHILD.get().defaultBlockState();
@@ -58,15 +58,15 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
-		
-		if(!newState.hasProperty(FACING) && !level.isClientSide) {
+
+		if (!newState.hasProperty(FACING) && !level.isClientSide) {
 			level.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.offset(0, 2, 0), Blocks.AIR.defaultBlockState());
 		}
-		
+
 		super.onRemove(state, level, pos, newState, moving);
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
 		if (state.hasProperty(FACING)) {
@@ -76,7 +76,7 @@ public class BlockAndroidChargerParent<T extends GenericTile> extends BlockMachi
 			BlockState secondState = level.getBlockState(second);
 			level.setBlock(first, firstState.setValue(FACING, rot.rotate(firstState.getValue(FACING))), 3);
 			level.setBlock(second, secondState.setValue(FACING, rot.rotate(secondState.getValue(FACING))), 3);
-		
+
 			return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 		}
 		return super.rotate(state, level, pos, rot);

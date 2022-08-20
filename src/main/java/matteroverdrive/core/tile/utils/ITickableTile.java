@@ -10,20 +10,20 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 
 public interface ITickableTile {
-	
+
 	long getTicks();
-	
+
 	void incrementTicks();
-	
-	//DO NOT OVERRIDE
+
+	// DO NOT OVERRIDE
 	default void tick(Level world, GenericTile tile) {
 		tickCommon();
 		incrementTicks();
-		if(world.isClientSide) {
+		if (world.isClientSide) {
 			tickClient();
 		} else {
 			tickServer();
-			if(getTicks() % 2 == 0 && tile.hasRenderData) {
+			if (getTicks() % 2 == 0 && tile.hasRenderData) {
 				Level level = tile.getLevel();
 				BlockPos pos = tile.getBlockPos();
 				if (level instanceof ServerLevel server) {
@@ -36,17 +36,17 @@ public interface ITickableTile {
 			}
 		}
 	}
-	
+
 	default void tickServer() {
-		
+
 	}
-	
+
 	default void tickCommon() {
-		
+
 	}
-	
+
 	default void tickClient() {
-		
+
 	}
 
 }

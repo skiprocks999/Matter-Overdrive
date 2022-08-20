@@ -17,9 +17,12 @@ public class TileTritaniumCrate extends GenericTile {
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRITANIUM_CRATE.get(), pos, state);
 
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
-		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
-				exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()), getContainerName("tritanium_crate")));
+		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+				new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
+		setMenuProvider(new SimpleMenuProvider(
+				(id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
+						exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()),
+				getContainerName("tritanium_crate")));
 	}
 
 	public static enum CrateColors implements IBulkRegistryObject {

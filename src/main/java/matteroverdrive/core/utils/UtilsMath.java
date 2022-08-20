@@ -168,7 +168,8 @@ public class UtilsMath {
 						gradInternal(p[BB], x - 1, y - 1, z))), // FROM 8
 				lerpInternal(v, lerpInternal(u, gradInternal(p[AA + 1], x, y, z - 1), // CORNERS
 						gradInternal(p[BA + 1], x - 1, y, z - 1)), // OF CUBE
-						lerpInternal(u, gradInternal(p[AB + 1], x, y - 1, z - 1), gradInternal(p[BB + 1], x - 1, y - 1, z - 1))));
+						lerpInternal(u, gradInternal(p[AB + 1], x, y - 1, z - 1),
+								gradInternal(p[BB + 1], x - 1, y - 1, z - 1))));
 	}
 
 	private static double fadeInternal(double total) {
@@ -185,12 +186,12 @@ public class UtilsMath {
 				v = h < 4 ? y : h == 12 || h == 14 ? x : z;
 		return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 	}
-	
+
 	public static double lerpD(double form, double to, double time) {
 		double newTime = Mth.clamp(time, 0, 1);
 		return (1 - newTime) * form + newTime * to;
 	}
-	
+
 	public static float lerpF(float form, float to, float time) {
 		float newTime = Mth.clamp(time, 0, 1);
 		return (1 - newTime) * form + newTime * to;

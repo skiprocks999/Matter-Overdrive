@@ -26,7 +26,7 @@ import net.minecraft.world.item.Rarity;
 public class ItemRegistry {
 
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, References.ID);
-	
+
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
@@ -74,11 +74,10 @@ public class ItemRegistry {
 			() -> new Item(new Item.Properties().tab(References.MAIN)));
 	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(TileMatterReplicator.NEEDED_PLATES)));
-	
-	
+
 	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {
 		return new BulkRegister<>(factory, bulkValues);
 	}
-	
+
 }

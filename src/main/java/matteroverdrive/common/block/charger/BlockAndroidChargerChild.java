@@ -39,22 +39,22 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockAndroidChargerChild extends BlockOverdrive {
-	
+
 	private static VoxelShape MIDDLE_E;
 	private static VoxelShape MIDDLE_W;
 	private static VoxelShape MIDDLE_N;
 	private static VoxelShape MIDDLE_S;
-	
+
 	private static final VoxelShape TOP_EW = Shapes.box(0.0D, 0.0D, 0.09375D, 1.0D, 0.3125D, 0.90625D);
 	private static final VoxelShape TOP_NS = Shapes.box(0.09375D, 0.0D, 0.0D, 0.90625D, 0.3125D, 1.0D);
-	
+
 	static {
-		
+
 		MIDDLE_E = Shapes.box(0.0D, 0.9D, 0.09375D, 1.0D, 1.0D, 0.90625D);
-		
+
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.09375D, 0D, 0.29375D, 0.5D, 0.75D, 0.70625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.65625, 0D, 0.40625D, 0.84375, 0.875D, 0.59375D));
-		
+
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.0D, 0.5D, 0.09375D, 0.0625D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.0625D, 0.525D, 0.09375D, 0.125D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.125D, 0.55D, 0.09375D, 0.1875D, 0.9D, 0.90625D));
@@ -71,13 +71,12 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.8125D, 0.825D, 0.09375D, 0.875D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.875D, 0.85D, 0.09375D, 0.9375D, 0.9D, 0.90625D));
 		MIDDLE_E = Shapes.or(MIDDLE_E, Shapes.box(0.9375D, 0.875D, 0.09375D, 1.0D, 0.9D, 0.90625D));
-		
-		
+
 		MIDDLE_W = Shapes.box(0.0D, 0.9D, 0.09375D, 1.0D, 1.0D, 0.90625D);
-		
+
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.5D, 0.0D, 0.29375D, 0.90625D, 0.75D, 0.70625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.15625D, 0.0D, 0.40625D, 0.34375D, 1.0D, 0.59375D));
-		
+
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.0D, 0.875D, 0.09375D, 0.0625D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.0625D, 0.85D, 0.09375D, 0.125D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.125D, 0.825D, 0.09375D, 0.1875D, 0.9D, 0.90625D));
@@ -94,15 +93,14 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.8125D, 0.55D, 0.09375D, 0.875D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.875D, 0.525D, 0.09375D, 0.9375D, 0.9D, 0.90625D));
 		MIDDLE_W = Shapes.or(MIDDLE_W, Shapes.box(0.9375D, 0.5D, 0.09375D, 1.0D, 0.9D, 0.90625D));
-		
-		
+
 		MIDDLE_N = Shapes.box(0.09375D, 0.9D, 0.0D, 0.90625D, 1.0D, 1.0D);
-		
+
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.29375D, 0.0D, 0.5D, 0.70625D, 0.75D, 0.90625D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.40625D, 0.0D, 0.15625D, 0.59375D, 1.0D, 0.34375D));
-		
+
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.875D, 0.0D, 0.90625D, 0.9D, 0.0625D));
-		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.85D,0.0625D, 0.90625D, 0.9D, 0.125D));
+		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.85D, 0.0625D, 0.90625D, 0.9D, 0.125D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.825D, 0.125D, 0.90625D, 0.9D, 0.1875D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.8D, 0.1875D, 0.90625D, 0.9D, 0.25D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.775D, 0.25D, 0.90625D, 0.9D, 0.3125D));
@@ -117,15 +115,14 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.55D, 0.8125D, 0.90625D, 0.9D, 0.875D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.525D, 0.875D, 0.90625D, 0.9D, 0.9375D));
 		MIDDLE_N = Shapes.or(MIDDLE_N, Shapes.box(0.09375D, 0.5D, 0.9375D, 0.90625D, 0.9D, 1.0D));
-		
-		
+
 		MIDDLE_S = Shapes.box(0.09375D, 0.9D, 0.0D, 0.90625D, 1.0D, 1.0D);
-		
+
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.29375D, 0D, 0.09375D, 0.70625D, 0.75D, 0.5D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.40625D, 0D, 0.65625, 0.59375D, 0.875D, 0.84375));
-		
+
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.5D, 0.0D, 0.90625D, 0.9D, 0.0625D));
-		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.525D,0.0625D, 0.90625D, 0.9D, 0.125D));
+		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.525D, 0.0625D, 0.90625D, 0.9D, 0.125D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.55D, 0.125D, 0.90625D, 0.9D, 0.1875D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.575D, 0.1875D, 0.90625D, 0.9D, 0.25D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.6D, 0.25D, 0.90625D, 0.9D, 0.3125D));
@@ -141,14 +138,15 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.85D, 0.875D, 0.90625D, 0.9D, 0.9375D));
 		MIDDLE_S = Shapes.or(MIDDLE_S, Shapes.box(0.09375D, 0.875D, 0.9375D, 0.90625D, 0.9D, 1.0D));
 	}
-	
+
 	public BlockAndroidChargerChild() {
 		super(BlockBehaviour.Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL)
 				.isRedstoneConductor((a, b, c) -> false).noOcclusion(), false);
-		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH).setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
+		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH)
+				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
 				.setValue(BlockStateProperties.WATERLOGGED, false));
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
@@ -156,7 +154,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		builder.add(OverdriveBlockStates.CHARGER_POS);
 		builder.add(BlockStateProperties.WATERLOGGED);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -170,7 +168,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		Direction facing = state.getValue(GenericEntityBlock.FACING);
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
-		switch(loc) {
+		switch (loc) {
 		case MIDDLE:
 			switch (facing) {
 			case EAST:
@@ -197,7 +195,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 			return super.getShape(state, worldIn, pos, context);
 		}
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return BlockRegistry.BLOCK_CHARGER.get().defaultBlockState().getDrops(builder);
@@ -229,7 +227,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -248,7 +246,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -267,7 +265,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
 		BlockPos newPos;
 		BlockState parent;
-		switch(loc) {
+		switch (loc) {
 		case TOP:
 			newPos = pos.offset(0, -2, 0);
 			parent = world.getBlockState(newPos);
@@ -283,9 +281,9 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if(!newState.hasProperty(OverdriveBlockStates.CHARGER_POS)) {
+		if (!newState.hasProperty(OverdriveBlockStates.CHARGER_POS)) {
 			ChargerBlockPos loc = state.getValue(OverdriveBlockStates.CHARGER_POS);
-			switch(loc) {
+			switch (loc) {
 			case MIDDLE:
 				world.setBlockAndUpdate(pos.offset(0, -1, 0), Blocks.AIR.defaultBlockState());
 				world.setBlockAndUpdate(pos.offset(0, 1, 0), Blocks.AIR.defaultBlockState());
@@ -298,7 +296,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation rot) {
 		if (state.hasProperty(GenericEntityBlock.FACING)) {
@@ -307,22 +305,26 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 			BlockPos second;
 			BlockState firstState;
 			BlockState secondState;
-			switch(loc) {
+			switch (loc) {
 			case MIDDLE:
 				first = pos.offset(0, -1, 0);
 				second = pos.offset(0, 1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING, rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
-				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING, rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING,
+						rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING,
+						rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
 				break;
 			case TOP:
 				first = pos.offset(0, -2, 0);
 				second = pos.offset(0, -1, 0);
 				firstState = level.getBlockState(first);
 				secondState = level.getBlockState(second);
-				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING, rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
-				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING, rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(first, firstState.setValue(GenericEntityBlock.FACING,
+						rot.rotate(firstState.getValue(GenericEntityBlock.FACING))), 3);
+				level.setBlock(second, secondState.setValue(GenericEntityBlock.FACING,
+						rot.rotate(secondState.getValue(GenericEntityBlock.FACING))), 3);
 				break;
 			}
 			return state.setValue(GenericEntityBlock.FACING, rot.rotate(state.getValue(GenericEntityBlock.FACING)));
@@ -333,17 +335,16 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
 	}
-	
+
 	@Override
-	public BlockState updateShape(BlockState state, @NotNull Direction direction,
-			@NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos,
-			@NotNull BlockPos neighborPos) {
+	public BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState,
+			@NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos neighborPos) {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
 			level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
 		return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {

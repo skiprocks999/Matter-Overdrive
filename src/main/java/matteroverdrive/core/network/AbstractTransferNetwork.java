@@ -13,15 +13,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork {
 
 	public double networkMaxTransfer;
-	
+
 	public AbstractTransferNetwork(List<? extends AbstractCableTile<?>> varCables, boolean client) {
 		super(varCables, client);
 	}
-	
+
 	public AbstractTransferNetwork(Collection<? extends AbstractCableNetwork> networks, boolean client) {
 		super(networks, client);
 	}
-	
+
 	@Override
 	public void sortCables() {
 		cableTypes.clear();
@@ -34,13 +34,13 @@ public abstract class AbstractTransferNetwork<EMIT> extends AbstractCableNetwork
 			networkMaxTransfer = Math.min(networkMaxTransfer, wire.getMaxTransfer());
 		}
 	}
-	
+
 	public abstract EMIT emitToConnected(EMIT transfer, ArrayList<BlockEntity> ignored, boolean debug);
-	
+
 	public abstract EMIT extractFromConnected(EMIT amount, boolean simulate);
-	
+
 	public abstract EMIT getCurrentMemberStorage();
-	
+
 	public abstract EMIT getTotalMemberStorage();
-	
+
 }

@@ -48,16 +48,15 @@ import matteroverdrive.common.tile.transporter.TileTransporter;
 public class BlockRegistry {
 
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
-	
+
 	/**
 	 * REGISTRY ORDER NOTES:
 	 * 
 	 * Register decoration blocks, then crates, then machines
 	 */
-	
-	
-	//Decoration Blocks
-	
+
+	// Decoration Blocks
+
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
@@ -93,10 +92,9 @@ public class BlockRegistry {
 	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
-	
-	
-	//Crates
-	
+
+	// Crates
+
 	public static final BulkRegister<Block> BLOCK_TRITANIUM_CRATES = bulkBlock(crate -> registerBlock(
 			((CrateColors) crate).id(),
 			() -> new BlockTritaniumCrate(OverdriveBlockProperties
@@ -104,21 +102,19 @@ public class BlockRegistry {
 					.setCanBeWaterlogged().setHasFacing(false))),
 			TileTritaniumCrate.CrateColors.values());
 
-	
-	//Machines
-	
+	// Machines
+
 	public static final RegistryObject<Block> BLOCK_SOLAR_PANEL = registerBlock(TypeMachine.SOLAR_PANEL.id(),
 			() -> new BlockMachine<TileSolarPanel>(TileSolarPanel::new, TypeMachine.SOLAR_PANEL,
 					TileRegistry.TILE_SOLAR_PANEL));
 
 	public static final RegistryObject<Block> BLOCK_MATTER_DECOMPOSER = registerBlock(
-			TypeMachine.MATTER_DECOMPOSER.id(), () -> new BlockMachine<TileMatterDecomposer>(
-					TileMatterDecomposer::new, TypeMachine.MATTER_DECOMPOSER,
-					TileRegistry.TILE_MATTER_DECOMPOSER));
+			TypeMachine.MATTER_DECOMPOSER.id(), () -> new BlockMachine<TileMatterDecomposer>(TileMatterDecomposer::new,
+					TypeMachine.MATTER_DECOMPOSER, TileRegistry.TILE_MATTER_DECOMPOSER));
 
 	public static final RegistryObject<Block> BLOCK_MATTER_RECYCLER = registerBlock(TypeMachine.MATTER_RECYCLER.id(),
-			() -> new BlockMachine<TileMatterRecycler>(
-					TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER, TileRegistry.TILE_MATTER_RECYCLER));
+			() -> new BlockMachine<TileMatterRecycler>(TileMatterRecycler::new, TypeMachine.MATTER_RECYCLER,
+					TileRegistry.TILE_MATTER_RECYCLER));
 
 	public static final RegistryObject<Block> BLOCK_CHARGER_CHILD = registerBlock("charger_child",
 			() -> new BlockAndroidChargerChild());
@@ -172,16 +168,9 @@ public class BlockRegistry {
 	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(
 			TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockMachine<TileMatterReplicator>(TileMatterReplicator::new,
 					TypeMachine.MATTER_REPLICATOR, TileRegistry.TILE_MATTER_REPLICATOR));
-	
-	
-	
-	
-	
-	
-	
-	
-	//Functional Methods
-	
+
+	// Functional Methods
+
 	private static RegistryObject<Block> registerBlock(String name, Supplier<Block> supplier) {
 		return registerBlock(name, supplier, new Item.Properties().tab(References.MAIN));
 	}

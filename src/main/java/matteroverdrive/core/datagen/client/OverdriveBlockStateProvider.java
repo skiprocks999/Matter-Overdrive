@@ -33,8 +33,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 	protected void registerStatesAndModels() {
 		simpleBlock(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING.get(), tritaniumPlatingFile);
 		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
-			simpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color).get(),
-					coloredTritaniumPlatingFile);
+			simpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color).get(), coloredTritaniumPlatingFile);
 			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILE.get(color).get(), floorTileFile);
 			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILES.get(color).get(), floorTilesFile);
 		}

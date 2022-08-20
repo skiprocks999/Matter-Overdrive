@@ -22,29 +22,31 @@ public class TileCharger extends GenericMachineTile {
 	public static final int CHARGE_RATE = 512;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_RADIUS = 8;
-	
+
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileCharger(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_CHARGER.get(), pos, state);
-		
+
 		setPowerUsage(CHARGE_RATE);
 		setRange(DEFAULT_RADIUS);
-		
+
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = CHARGE_RATE;
 		defaultRange = DEFAULT_RADIUS;
-		
-		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
-				tag -> getInventoryCap().deserializeNBT(tag)));
-		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
-				tag -> getEnergyStorageCap().deserializeNBT(tag)));
-		
+
+		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, false, false).setUpgrades(2).setOwner(this)
-				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES).setPropertyManager(capInventoryProp));
+				.setValidator(machineValidator()).setValidUpgrades(InventoryCharger.UPGRADES)
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
-				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null).setPropertyManager(capEnergyStorageProp));
+				.setDefaultDirections(state, new Direction[] { Direction.DOWN, Direction.NORTH }, null)
+				.setPropertyManager(capEnergyStorageProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryCharger(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.CHARGER.id())));
@@ -75,7 +77,7 @@ public class TileCharger extends GenericMachineTile {
 		setPowerUsage(additional.getInt("usage"));
 		setRange(additional.getInt("radius"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);

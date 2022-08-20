@@ -13,7 +13,6 @@ import matteroverdrive.core.screen.component.button.ButtonIOConfig;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
@@ -50,27 +49,26 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;
-	
+
 	public ScreenComponentVerticalSlider slider;
 	public WrapperMatterReplicatorOrders queued;
 
-	
 	public ScreenMatterReplicator(InventoryMatterReplicator menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}
-	
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();
-		if(screenNumber == 4) {
+		if (screenNumber == 4) {
 			queued.tick();
 		}
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
@@ -214,8 +212,8 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
 		matterWrapper.initButtons();
-		
-		queued = new WrapperMatterReplicatorOrders(this, 48, 32, new int[] { 4 } );
+
+		queued = new WrapperMatterReplicatorOrders(this, 48, 32, new int[] { 4 });
 
 		addButton(close);
 		addButton(menu);
@@ -237,7 +235,7 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		for (ButtonIO button : matterWrapper.getButtons()) {
 			addButton(button);
 		}
-		
+
 		queued.initButtons(itemRenderer);
 
 		redstone.visible = false;
@@ -248,9 +246,9 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
 		queued.updateButtons(false);
-		
-		addScreenComponent(defaultEnergyBar(167, 35, new int[] {0}));
-		addScreenComponent(defaultRecipeMatterBar(133, 35, new int[] {0}));
+
+		addScreenComponent(defaultEnergyBar(167, 35, new int[] { 0 }));
+		addScreenComponent(defaultRecipeMatterBar(133, 35, new int[] { 0 }));
 		addScreenComponent(new ScreenComponentPatternHolder(this, 5, 45, new int[] { 0 }, () -> {
 			return getMenu().getTile();
 		}, itemRenderer, () -> {
@@ -264,7 +262,7 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }, () -> getMenu().getTile()));
+		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
 				UtilsRendering.TEXT_BLUE));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
@@ -280,12 +278,12 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 	private void toggleBarOpen() {
 		EXTENDED = !EXTENDED;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if(queued != null && screenNumber == 4) {
-			if(delta > 0) {
-				//scroll up
+		if (queued != null && screenNumber == 4) {
+			if (delta > 0) {
+				// scroll up
 				queued.handleMouseScroll(-1);
 			} else if (delta < 0) {
 				// scroll down
@@ -294,26 +292,26 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
 		super.mouseMoved(mouseX, mouseY);
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseMoved(mouseX, mouseY);
 		}
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseClicked(mouseX, mouseY, button);
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		if(slider != null && screenNumber == 4) {
+		if (slider != null && screenNumber == 4) {
 			slider.mouseReleased(mouseX, mouseY, button);
 		}
 		return super.mouseReleased(mouseX, mouseY, button);

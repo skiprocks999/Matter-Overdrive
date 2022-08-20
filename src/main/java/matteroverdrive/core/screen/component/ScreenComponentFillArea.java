@@ -12,13 +12,13 @@ import net.minecraft.resources.ResourceLocation;
 public class ScreenComponentFillArea extends OverdriveScreenComponent {
 
 	private final int color;
-	
+
 	public ScreenComponentFillArea(GenericScreen<?> gui, int x, int y, int width, int height, int[] screenNumbers,
 			int color) {
 		super(new ResourceLocation("forge:textures/white.png"), gui, x, y, width, height, screenNumbers);
 		this.color = color;
 	}
-	
+
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

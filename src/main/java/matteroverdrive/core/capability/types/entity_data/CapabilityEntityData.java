@@ -11,15 +11,15 @@ import net.minecraftforge.common.util.LazyOptional;
 public class CapabilityEntityData implements ICapabilityEntityData, ICapabilitySerializable<CompoundTag> {
 
 	private final LazyOptional<ICapabilityEntityData> lazyOptional = LazyOptional.of(() -> this);
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if(cap == MatterOverdriveCapabilities.ENTITY_DATA) {
+		if (cap == MatterOverdriveCapabilities.ENTITY_DATA) {
 			return lazyOptional.cast();
 		}
 		return LazyOptional.empty();
 	}
-	
+
 	private int transporterTimer;
 
 	@Override
@@ -37,11 +37,11 @@ public class CapabilityEntityData implements ICapabilityEntityData, ICapabilityS
 	public void writeToByteBuffer(FriendlyByteBuf buf) {
 		buf.writeInt(transporterTimer);
 	}
-	
+
 	public void readFromByteBuffer(FriendlyByteBuf buf) {
 		transporterTimer = buf.readInt();
 	}
-	
+
 	public void copyFromOther(ICapabilityEntityData other) {
 		transporterTimer = other.getTransporterTimer();
 	}

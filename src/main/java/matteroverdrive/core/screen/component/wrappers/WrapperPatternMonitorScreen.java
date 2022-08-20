@@ -39,37 +39,37 @@ public class WrapperPatternMonitorScreen {
 	private ButtonItemPattern[][] patterns = new ButtonItemPattern[4][6];
 	private EditBoxSearchbar searchbar;
 	public ButtonItemPattern selectedItem;
-	
+
 	private ButtonOverdrive incVal;
 	private ButtonOverdrive decVal;
 	private EditBoxOverdrive orderQuantityBox;
 	private ButtonGeneric sendOrder;
-	
+
 	private int topRowIndex = 0;
 	private int lastRowCount = 0;
-	
+
 	private String searchContents = "";
-	
+
 	private static final Component PLUS = Component.literal("+");
 	private static final Component MINUS = Component.literal("-");
-	
+
 	private static final MutableComponent ORDER = UtilsText.tooltip("order");
-	
+
 	public WrapperPatternMonitorScreen(ScreenPatternMonitor screen, int x, int y) {
 		this.screen = screen;
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void initButtons(ItemRenderer renderer) {
 		int guiWidth = screen.getXPos();
 		int guiHeight = screen.getYPos();
-		
+
 		searchbar = new EditBoxSearchbar(screen, guiWidth + x, guiHeight + y, 134, 14, 167);
 		searchbar.setResponder(this::handleSearchBar);
 		searchbar.setTextColor(UtilsRendering.WHITE);
 		searchbar.setTextColorUneditable(UtilsRendering.WHITE);
-		
+
 		orderQuantityBox = new EditBoxOverdrive(screen, guiWidth + x + 44, guiHeight + y + 123, 54, 15);
 		orderQuantityBox.setTextColor(UtilsRendering.WHITE);
 		orderQuantityBox.setTextColorUneditable(UtilsRendering.WHITE);
@@ -77,14 +77,14 @@ public class WrapperPatternMonitorScreen {
 		orderQuantityBox.setResponder(this::handleQuantityBar);
 		orderQuantityBox.setFilter(EditBoxOverdrive.POSITIVE_INTEGER_BOX);
 		orderQuantityBox.setValue(1 + "");
-		
+
 		int butOffX = -2;
 		int butOffY = 17;
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 6; j++) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 6; j++) {
 				patterns[i][j] = new ButtonItemPattern(screen, x + butOffX + 25 * j, y + butOffY + 24 * i, (button) -> {
 					ButtonItemPattern pattern = (ButtonItemPattern) button;
-					if(selectedItem.getPattern() != null && selectedItem.getPattern().isSame(pattern.getPattern())) {
+					if (selectedItem.getPattern() != null && selectedItem.getPattern().isSame(pattern.getPattern())) {
 						selectedItem.setPattern(null);
 						selectedItem.isActivated = false;
 					} else {
@@ -103,7 +103,7 @@ public class WrapperPatternMonitorScreen {
 		incVal = new ButtonOverdrive(screen, x + 98, y + 123, 15, 15, PLUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if(order.length() > 0) {
+			if (order.length() > 0) {
 				orderVal = Integer.parseInt(order);
 			}
 			int inc = Screen.hasShiftDown() ? 16 : 1;
@@ -113,70 +113,75 @@ public class WrapperPatternMonitorScreen {
 		decVal = new ButtonOverdrive(screen, x + 29, y + 123, 15, 15, MINUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if(order.length() > 0) {
+			if (order.length() > 0) {
 				orderVal = Integer.parseInt(order);
 			}
 			int inc = Screen.hasShiftDown() ? 16 : 1;
 			orderVal = Mth.clamp(orderVal -= inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
-		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, Component.empty(),(button) -> {
+		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, Component.empty(), (button) -> {
 			Minecraft minecraft = Minecraft.getInstance();
 			ItemPatternWrapper wrapper = selectedItem.getPattern();
-			if(wrapper == null || wrapper.isAir()) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+			if (wrapper == null || wrapper.isAir()) {
+				minecraft.getSoundManager()
+						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
-			//safety check for data pack fuckery
-			if(value <= 0.0) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+			// safety check for data pack fuckery
+			if (value <= 0.0) {
+				minecraft.getSoundManager()
+						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			TilePatternMonitor monitor = screen.getMenu().getTile();
-			if(monitor == null) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+			if (monitor == null) {
+				minecraft.getSoundManager()
+						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if(order.length() > 0) {
+			if (order.length() > 0) {
 				orderVal = Integer.parseInt(order);
 			}
-			if(monitor.postOrderToNetwork(wrapper, orderVal, true, true)) {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
+			if (monitor.postOrderToNetwork(wrapper, orderVal, true, true)) {
+				minecraft.getSoundManager()
+						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
 			} else {
-				minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+				minecraft.getSoundManager()
+						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
 			}
 
 		}, (button, stack, x, y) -> {
 			screen.renderTooltip(stack, ORDER, x, y);
 		});
-		
+
 		screen.addEditBox(searchbar);
 		screen.addEditBox(orderQuantityBox);
 		screen.addButton(incVal);
 		screen.addButton(decVal);
 		screen.addButton(sendOrder);
-		for(int i = 3; i >= 0; i--) {
-			for(int j = 5; j >= 0; j--) {
+		for (int i = 3; i >= 0; i--) {
+			for (int j = 5; j >= 0; j--) {
 				screen.addButton(patterns[i][j]);
 			}
 		}
 		screen.addButton(selectedItem);
-		for(int i = 3; i >= 0; i--) {
-			for(int j = 5; j >= 0; j--) {
+		for (int i = 3; i >= 0; i--) {
+			for (int j = 5; j >= 0; j--) {
 				patterns[i][j].visible = false;
 			}
 		}
 	}
-	
+
 	public void tick() {
 		searchbar.tick();
 		orderQuantityBox.tick();
 		TilePatternMonitor monitor = screen.getMenu().getTile();
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
-		if(monitor != null) {
+		if (monitor != null) {
 			patterns = monitor.getStoredPatterns(true);
 			Collections.sort(patterns, new Comparator<ItemPatternWrapper>() {
 				@Override
@@ -187,9 +192,10 @@ public class WrapperPatternMonitorScreen {
 			});
 		}
 		List<ItemPatternWrapper> searchedFor = new ArrayList<>();
-		if(searchContents.length() > 0) {
-			for(ItemPatternWrapper wrapper : patterns) {
-				if(wrapper.getItem().getDescription().getString().toLowerCase().contains(searchContents.toLowerCase())) {
+		if (searchContents.length() > 0) {
+			for (ItemPatternWrapper wrapper : patterns) {
+				if (wrapper.getItem().getDescription().getString().toLowerCase()
+						.contains(searchContents.toLowerCase())) {
 					searchedFor.add(wrapper);
 				}
 			}
@@ -198,10 +204,10 @@ public class WrapperPatternMonitorScreen {
 		}
 		lastRowCount = (int) Math.ceil((double) searchedFor.size() / 6.0D);
 		int index;
-		for(ButtonItemPattern[] arr : this.patterns) {
-			for(ButtonItemPattern button : arr) {
+		for (ButtonItemPattern[] arr : this.patterns) {
+			for (ButtonItemPattern button : arr) {
 				index = (topRowIndex + button.getRow()) * 6 + button.getCol();
-				if(index < searchedFor.size()) {
+				if (index < searchedFor.size()) {
 					button.setPattern(searchedFor.get(index));
 				} else {
 					button.setPattern(null);
@@ -210,12 +216,12 @@ public class WrapperPatternMonitorScreen {
 			}
 		}
 		ScreenComponentVerticalSlider slider = screen.slider;
-		if(lastRowCount > 4) {
+		if (lastRowCount > 4) {
 			slider.updateActive(true);
-			if(!slider.isSliderHeld()) {
+			if (!slider.isSliderHeld()) {
 				int moveRoom = screen.slider.getHeight() - 15 - 4;
-				
-				//int moveRoom = 102 - 2;
+
+				// int moveRoom = 102 - 2;
 				double moved = (double) topRowIndex / (double) (lastRowCount - 4.0D);
 				slider.setSliderYOffset((int) ((double) moveRoom * moved));
 			}
@@ -224,18 +230,18 @@ public class WrapperPatternMonitorScreen {
 			slider.setSliderYOffset(0);
 			topRowIndex = 0;
 		}
-		
+
 	}
-	
-	//pos for down, neg for up
+
+	// pos for down, neg for up
 	public void handleMouseScroll(int dir) {
-		if(Screen.hasControlDown()) {
-			dir*= 4;
+		if (Screen.hasControlDown()) {
+			dir *= 4;
 		}
 		int lastRowIndex = lastRowCount - 1;
-		if(lastRowCount > 4) {
-			//check in case something borked
-			if(topRowIndex >= lastRowCount) {
+		if (lastRowCount > 4) {
+			// check in case something borked
+			if (topRowIndex >= lastRowCount) {
 				topRowIndex = lastRowIndex - 3;
 			}
 			topRowIndex = Mth.clamp(topRowIndex += dir, 0, lastRowIndex - 3);
@@ -243,13 +249,13 @@ public class WrapperPatternMonitorScreen {
 			topRowIndex = 0;
 		}
 	}
-	
+
 	public void updateButtons(boolean visible) {
 		searchbar.visible = visible;
 		orderQuantityBox.visible = visible;
 		ButtonItemPattern button;
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 6; j++) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 6; j++) {
 				button = patterns[i][j];
 				button.visible = visible && button.isFilled();
 			}
@@ -259,25 +265,25 @@ public class WrapperPatternMonitorScreen {
 		decVal.visible = visible;
 		sendOrder.visible = visible;
 	}
-	
+
 	private void handleSearchBar(String string) {
 		searchContents = string;
 	}
-	
+
 	private void handleQuantityBar(String string) {
-		if(string.length() == 0) {
+		if (string.length() == 0) {
 			orderQuantityBox.setValue("1");
 		}
 	}
-	
+
 	public Consumer<Integer> getSliderClickedConsumer() {
 		return (mouseY) -> {
 			ScreenComponentVerticalSlider slider = screen.slider;
-			if(slider.isSliderActive()) {
+			if (slider.isSliderActive()) {
 				int sliderY = slider.y;
 				int sliderHeight = slider.getHeight();
 				int mouseHeight = mouseY - sliderY;
-				if(mouseHeight >= sliderHeight - 4 - 15) {
+				if (mouseHeight >= sliderHeight - 4 - 15) {
 					topRowIndex = lastRowCount - 4;
 					slider.setSliderYOffset(sliderHeight - 4 - 15);
 				} else if (mouseHeight <= 2) {
@@ -293,14 +299,14 @@ public class WrapperPatternMonitorScreen {
 			}
 		};
 	}
-	
-	public Consumer<Integer> getSliderDraggedConsumer(){
+
+	public Consumer<Integer> getSliderDraggedConsumer() {
 		return (mouseY) -> {
 			ScreenComponentVerticalSlider slider = screen.slider;
-			if(slider.isSliderActive()) {
+			if (slider.isSliderActive()) {
 				int sliderY = slider.y;
 				int sliderHeight = slider.getHeight();
-				if(mouseY <= sliderY + 2) {
+				if (mouseY <= sliderY + 2) {
 					topRowIndex = 0;
 					slider.setSliderYOffset(0);
 				} else if (mouseY >= sliderY + sliderHeight - 4 - 15) {
@@ -315,14 +321,14 @@ public class WrapperPatternMonitorScreen {
 			}
 		};
 	}
-	
+
 	public boolean isSearchBarSelected() {
 		return searchbar.isFocused();
 	}
-	
-	private Consumer<SoundManager> getIncDecSound(){
+
+	private Consumer<SoundManager> getIncDecSound() {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
 		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F, pitch));
 	}
-	
+
 }

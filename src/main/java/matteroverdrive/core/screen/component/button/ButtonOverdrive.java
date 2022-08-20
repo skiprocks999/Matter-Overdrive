@@ -46,19 +46,20 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	protected ResourceLocation defaultText;
 	protected ResourceLocation hoveredText;
 	protected ResourceLocation pressedText;
-	
+
 	protected int textColor = UtilsRendering.TEXT_BLUE;
 	protected Consumer<SoundManager> downSound = null;
 
-	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress,
-			OnTooltip onTooltip) {
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+			OnPress onPress, OnTooltip onTooltip) {
 		super(gui, x, y, width, height, message, onPress, onTooltip);
 		defaultText = DEFAULT;
 		hoveredText = HOVERED;
 		pressedText = PRESSED;
 	}
 
-	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message, OnPress onPress) {
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+			OnPress onPress) {
 		super(gui, x, y, width, height, message, onPress);
 		defaultText = DEFAULT;
 		hoveredText = HOVERED;
@@ -78,12 +79,12 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 		pressedText = PRESSED_RIGHT;
 		return this;
 	}
-	
+
 	public ButtonOverdrive setColor(int color) {
 		textColor = color;
 		return this;
 	}
-	
+
 	public ButtonOverdrive setSound(Consumer<SoundManager> sound) {
 		downSound = sound;
 		return this;
@@ -106,22 +107,23 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 		drawButton(stack, this.x, this.y, this.width, this.height);
 
 	}
-	
+
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		
+
 		Minecraft minecraft = Minecraft.getInstance();
 		Font font = minecraft.font;
-		drawCenteredString(stack, font, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, getTextColor());
-	
+		drawCenteredString(stack, font, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2,
+				getTextColor());
+
 	}
 
 	public static void drawButton(PoseStack stack, int x, int y, int butWidth, int butHeight) {
 		if (butWidth < 18) {
 			if (butHeight < 18) {
-				blit(stack, x , y, butWidth, butHeight, 0, 0, butWidth, butHeight, butWidth, butHeight);
+				blit(stack, x, y, butWidth, butHeight, 0, 0, butWidth, butHeight, butWidth, butHeight);
 			} else {
-				blit(stack, x , y, butWidth, 7, 0, 0, butWidth, 7, butWidth, 18);
+				blit(stack, x, y, butWidth, 7, 0, 0, butWidth, 7, butWidth, 18);
 
 				int sectionHeight = butHeight - 14;
 				int heightIterations = sectionHeight / 4;
@@ -129,15 +131,16 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 
 				int heightOffset = 7;
 				for (int i = 0; i < heightIterations; i++) {
-					blit(stack, x , y + heightOffset, butWidth, 4, 0, 7, butWidth, 4, butWidth, 18);
+					blit(stack, x, y + heightOffset, butWidth, 4, 0, 7, butWidth, 4, butWidth, 18);
 					heightOffset += 4;
 				}
-				blit(stack, x , y + heightOffset, butWidth, remainderHeight, 0, 7, butWidth, remainderHeight, butWidth, 18);
+				blit(stack, x, y + heightOffset, butWidth, remainderHeight, 0, 7, butWidth, remainderHeight, butWidth,
+						18);
 
-				blit(stack, x , y + butHeight -7, butWidth, 7, 0, 11, butWidth, 7, butWidth, 18);
+				blit(stack, x, y + butHeight - 7, butWidth, 7, 0, 11, butWidth, 7, butWidth, 18);
 			}
 		} else if (butHeight < 18) {
-			blit(stack, x , y, 7, butHeight, 0, 0, 7, butHeight, 18, butHeight);
+			blit(stack, x, y, 7, butHeight, 0, 0, 7, butHeight, 18, butHeight);
 
 			int sectionWidth = butWidth - 14;
 			int widthIterations = sectionWidth / 4;
@@ -150,7 +153,7 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 			}
 			blit(stack, x + widthOffset, y, remainderWidth, butHeight, 7, 0, remainderWidth, butHeight, 18, butHeight);
 
-			blit(stack, x + butWidth - 7 , y, 7, butHeight, 11, 0, 7, butHeight, 18, butHeight);
+			blit(stack, x + butWidth - 7, y, 7, butHeight, 11, 0, 7, butHeight, 18, butHeight);
 		} else {
 			// the button is >= 18x18 at this point
 
@@ -261,11 +264,11 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 		super.onRelease(pMouseX, pMouseY);
 		isPressed = false;
 	}
-	
+
 	@Override
 	public void playDownSound(SoundManager pHandler) {
-		if(downSound != null) {
-			 downSound.accept(pHandler);
+		if (downSound != null) {
+			downSound.accept(pHandler);
 		} else {
 			super.playDownSound(pHandler);
 		}
@@ -274,7 +277,7 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	public int getTextColor() {
 		return textColor;
 	}
-	
+
 	@Override
 	public void updateVisiblity(int screenNumber) {
 

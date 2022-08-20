@@ -30,7 +30,7 @@ public class MatterValueGenerator implements DataProvider {
 		addValues(json);
 		Path path = gen.getOutputFolder().resolve(DATA_LOC);
 		try {
-		String s = GSON.toJson(json);
+			String s = GSON.toJson(json);
 			Files.createDirectories(path.getParent());
 			BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 
@@ -51,7 +51,7 @@ public class MatterValueGenerator implements DataProvider {
 			if (bufferedwriter != null) {
 				bufferedwriter.close();
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

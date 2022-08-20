@@ -27,50 +27,54 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.network.NetworkDirection;
 
 public class TeleporterArrivalHandler extends AbstractServerTickHandler {
-	
+
 	@Override
 	public void handleTick(MinecraftServer server, Phase phase, boolean enoughTime) {
-		if(phase == Phase.START) {
+		if (phase == Phase.START) {
 			ServerLevel overworld = server.overworld();
-			LazyOptional<ICapabilityOverworldData> overworldData = overworld.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).cast();
-			if(overworldData.isPresent()) {
+			LazyOptional<ICapabilityOverworldData> overworldData = overworld
+					.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).cast();
+			if (overworldData.isPresent()) {
 				List<ActiveTransportDataWrapper> finished = new ArrayList<>();
 				ICapabilityOverworldData data = overworldData.resolve().get();
-				for(ActiveTransportDataWrapper wrapper : data.getTransporterData()) {
-					if(wrapper.dimension != null && wrapper.entityID != null) {
+				for (ActiveTransportDataWrapper wrapper : data.getTransporterData()) {
+					if (wrapper.dimension != null && wrapper.entityID != null) {
 						ServerLevel world = server.getLevel(wrapper.dimension);
 						Entity entity = world.getEntity(wrapper.entityID);
-						if(entity == null || entity.isRemoved() || wrapper.timeRemaining == 0) {
+						if (entity == null || entity.isRemoved() || wrapper.timeRemaining == 0) {
 							finished.add(wrapper);
 						} else {
 							double progress = (double) wrapper.timeRemaining / 70.0F;
 							int particles = (int) (progress * 20);
-							for(int i = 0; i < particles; i++) {
+							for (int i = 0; i < particles; i++) {
 								handleParticles(entity, world, progress);
 							}
 							wrapper.timeRemaining--;
-							if(entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
-								LazyOptional<ICapabilityEntityData> lazy = entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).cast();
+							if (entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).isPresent()) {
+								LazyOptional<ICapabilityEntityData> lazy = entity
+										.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).cast();
 								CapabilityEntityData capData = (CapabilityEntityData) lazy.resolve().get();
-								if(capData.getTransporterTimer() > 0) {
+								if (capData.getTransporterTimer() > 0) {
 									capData.setTransporterTimer(capData.getTransporterTimer() - 1);
-									if(entity instanceof ServerPlayer player) {
-										NetworkHandler.CHANNEL.sendTo(new PacketSyncClientEntityCapability(capData, entity.getUUID()), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+									if (entity instanceof ServerPlayer player) {
+										NetworkHandler.CHANNEL.sendTo(
+												new PacketSyncClientEntityCapability(capData, entity.getUUID()),
+												player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 									}
 								}
 							}
-						}	
+						}
 					} else {
 						finished.add(wrapper);
 					}
 				}
-				for(ActiveTransportDataWrapper wrapper : finished) {
+				for (ActiveTransportDataWrapper wrapper : finished) {
 					data.removeTransportData(wrapper);
 				}
 			}
 		}
 	}
-	
+
 	private void handleParticles(Entity entity, ServerLevel world, double progress) {
 		Vector3f vec = new Vector3f((float) entity.getX(), (float) entity.getY() - 1, (float) entity.getZ());
 		double entityRadius = entity.getBbWidth();
@@ -85,15 +89,15 @@ public class TeleporterArrivalHandler extends AbstractServerTickHandler {
 		int age = Math.max((int) Math.round(UtilsMath.easeIn(time, 5, 15, 1)), 2);
 
 		for (int i = 0; i < count; i++) {
-			float speed = 0.5F; 
+			float speed = 0.5F;
 			float height = vec.y() + random.nextFloat() * entity.getBbHeight();
 
 			Vector3f origin = new Vector3f(vec.x(), height, vec.z());
 			Vector3f pos = UtilsMath.randomSpherePoint(origin.x(), origin.y(), origin.z(),
 					new Vector3d(radiusX, 0, radiusZ), random);
-			
-			world.sendParticles(new ParticleOptionReplicator()
-					.setGravity(gravity).setScale(0.1F).setAge(age), pos.x(), pos.y(), pos.z(), 0, 0, speed, 0, 0);
+
+			world.sendParticles(new ParticleOptionReplicator().setGravity(gravity).setScale(0.1F).setAge(age), pos.x(),
+					pos.y(), pos.z(), 0, 0, speed, 0, 0);
 		}
 
 	}

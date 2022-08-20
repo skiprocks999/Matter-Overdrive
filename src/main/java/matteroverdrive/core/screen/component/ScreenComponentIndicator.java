@@ -18,10 +18,10 @@ public class ScreenComponentIndicator extends OverdriveScreenComponent {
 	private static final int WIDTH = 21;
 	private static final int HEIGHT = 5;
 
-	public ScreenComponentIndicator(final BooleanSupplier supplier, final GenericScreen<?> gui, final int x, final int y,
-			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/base/indicator.png"), gui, x, y, 
-				WIDTH, HEIGHT, screenNumbers);
+	public ScreenComponentIndicator(final BooleanSupplier supplier, final GenericScreen<?> gui, final int x,
+			final int y, final int[] screenNumbers) {
+		super(new ResourceLocation(References.ID + ":textures/gui/base/indicator.png"), gui, x, y, WIDTH, HEIGHT,
+				screenNumbers);
 		active = supplier;
 	}
 
@@ -32,9 +32,9 @@ public class ScreenComponentIndicator extends OverdriveScreenComponent {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		
+
 		UtilsRendering.bindTexture(resource);
-		
+
 		blit(stack, this.x, this.y, 0, 0, this.width, this.height);
 
 		if (active.getAsBoolean()) {

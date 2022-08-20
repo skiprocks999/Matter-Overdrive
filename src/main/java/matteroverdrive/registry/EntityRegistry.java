@@ -9,5 +9,5 @@ public class EntityRegistry {
 
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,
 			References.ID);
-	
+
 }

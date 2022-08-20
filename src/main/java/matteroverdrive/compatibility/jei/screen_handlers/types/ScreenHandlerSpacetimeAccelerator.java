@@ -16,5 +16,5 @@ public class ScreenHandlerSpacetimeAccelerator extends AbstractScreenHandler<Scr
 		}
 		return rectangles;
 	}
-	
+
 }
