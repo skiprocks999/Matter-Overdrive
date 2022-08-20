@@ -1,13 +1,8 @@
 package matteroverdrive.client.screen;
 
-import java.util.HashSet;
-
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.tile.TileInscriber;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
@@ -24,8 +19,6 @@ import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -142,68 +135,8 @@ public class ScreenInscriber extends GenericMachineScreen<InventoryInscriber> {
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getInventoryCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getInventoryCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getInventoryCap().hasInput;
-			}
-			return false;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getInventoryCap().hasOutput;
-			}
-			return false;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ITEM);
-		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ENERGY);
+		itemWrapper = getItemIOWrapper(137, 59);
+		energyWrapper = getEnergyIOWrapper(137, 59);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
@@ -237,32 +170,8 @@ public class ScreenInscriber extends GenericMachineScreen<InventoryInscriber> {
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null && inscriber.isRunning()) {
-				return inscriber.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 118, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

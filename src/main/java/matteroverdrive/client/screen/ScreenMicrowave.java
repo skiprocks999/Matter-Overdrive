@@ -1,13 +1,8 @@
 package matteroverdrive.client.screen;
 
-import java.util.HashSet;
-
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.common.tile.TileMicrowave;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
@@ -24,8 +19,6 @@ import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -140,68 +133,8 @@ public class ScreenMicrowave extends GenericMachineScreen<InventoryMicrowave> {
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getInventoryCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getInventoryCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getInventoryCap().hasInput;
-			}
-			return false;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getInventoryCap().hasOutput;
-			}
-			return false;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ITEM);
-		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ENERGY);
+		itemWrapper = getItemIOWrapper(137, 59);
+		energyWrapper = getEnergyIOWrapper(137, 59);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
@@ -235,32 +168,8 @@ public class ScreenMicrowave extends GenericMachineScreen<InventoryMicrowave> {
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null && microwave.isRunning()) {
-				return microwave.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 118, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

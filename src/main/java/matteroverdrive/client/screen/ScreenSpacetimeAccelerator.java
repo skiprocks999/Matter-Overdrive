@@ -1,10 +1,7 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
-import matteroverdrive.common.tile.TileSpacetimeAccelerator;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
@@ -80,51 +77,9 @@ public class ScreenSpacetimeAccelerator extends GenericMachineScreen<InventorySp
 		
 		redstone.visible = false;
 		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null && spacetime.isRunning()) {
-				return spacetime.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 141, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.getMatterStorageCap().getMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.getMatterStorageCap().getMaxMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null && spacetime.isRunning()) {
-				return spacetime.getCurrentMatterUsage();
-			}
-			return 0;
-		}, this, 95, 35, new int[] { 0 }).setMatter().setMatterPerTick());
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2 }));
+		addScreenComponent(defaultEnergyBar(141, 35, new int[] {0}));
+		addScreenComponent(defaultUsageMatterBar(95, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] {0, 1, 2}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

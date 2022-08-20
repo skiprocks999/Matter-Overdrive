@@ -1,13 +1,8 @@
 package matteroverdrive.client.screen;
 
-import java.util.HashSet;
-
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentPatternHolder;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
@@ -26,8 +21,6 @@ import matteroverdrive.core.screen.component.wrappers.WrapperMatterReplicatorOrd
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -214,99 +207,9 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 			matterWrapper.showButtons();
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().hasInput;
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().hasOutput;
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ITEM);
-		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ENERGY);
-		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.MATTER);
+		itemWrapper = getItemIOWrapper(137, 59);
+		energyWrapper = getEnergyIOWrapper(137, 59);
+		matterWrapper = getMatterIOWrapper(137, 59);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
@@ -346,44 +249,8 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		matterWrapper.hideButtons();
 		queued.updateButtons(false);
 		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null && matter.isRunning()) {
-				return matter.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 167, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getMaxMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null && matter.isRunning()) {
-				return matter.getRecipeValue();
-			}
-			return 0;
-		}, this, 133, 35, new int[] { 0 }).setMatter());
+		addScreenComponent(defaultEnergyBar(167, 35, new int[] {0}));
+		addScreenComponent(defaultRecipeMatterBar(133, 35, new int[] {0}));
 		addScreenComponent(new ScreenComponentPatternHolder(this, 5, 45, new int[] { 0 }, () -> {
 			return getMenu().getTile();
 		}, itemRenderer, () -> {
@@ -393,13 +260,7 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 			}
 			return 0;
 		}));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

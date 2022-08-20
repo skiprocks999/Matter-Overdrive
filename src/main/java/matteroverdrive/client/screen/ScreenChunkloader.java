@@ -1,10 +1,7 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryChunkloader;
-import matteroverdrive.common.tile.TileChunkloader;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
@@ -77,32 +74,8 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 
 		redstone.visible = false;
 		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileChunkloader supply = getMenu().getTile();
-			if (supply != null) {
-				return supply.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileChunkloader supply = getMenu().getTile();
-			if (supply != null) {
-				return supply.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileChunkloader supply = getMenu().getTile();
-			if (supply != null && supply.isRunning()) {
-				return supply.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 118, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileChunkloader supply = getMenu().getTile();
-			if (supply != null) {
-				return supply.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] {0, 1, 2}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

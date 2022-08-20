@@ -1,10 +1,7 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryCharger;
-import matteroverdrive.common.tile.TileCharger;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
@@ -75,32 +72,8 @@ public class ScreenCharger extends GenericMachineScreen<InventoryCharger> {
 		addButton(upgrades);
 		addButton(redstone);
 		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileCharger charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileCharger charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileCharger charger = getMenu().getTile();
-			if (charger != null && charger.isRunning()) {
-				return charger.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 118, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileCharger charger = getMenu().getTile();;
-			if (charger != null) {
-				return charger.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 156, new int[] {0, 1, 2}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

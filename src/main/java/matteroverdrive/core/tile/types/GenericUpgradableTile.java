@@ -32,13 +32,13 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	private boolean isMuffled = false;
 
 	// Properties
-	private final Property<Double> currSpeedProp;
-	private final Property<Double> currMatterUsage;
-	private final Property<Double> currPowerUsage;
-	private final Property<Double> currRangeProp;
-	private final Property<Boolean> currIsMuffled;
-	private final Property<Double> currSAMultiplier;
-	private final Property<Float> currFailureChance;
+	public final Property<Double> currSpeedProp;
+	public final Property<Double> currMatterUsage;
+	public final Property<Double> currPowerUsage;
+	public final Property<Double> currRangeProp;
+	public final Property<Boolean> currIsMuffled;
+	public final Property<Double> currSAMultiplier;
+	public final Property<Float> currFailureChance;
 	
 	public GenericUpgradableTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

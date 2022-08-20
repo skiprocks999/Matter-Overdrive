@@ -2,9 +2,7 @@ package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.tile.TileSolarPanel;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
@@ -76,33 +74,14 @@ public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> 
 		addButton(redstone);
 
 		redstone.visible = false;
-		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				return solar.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				return solar.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
+		addScreenComponent(getEnergyBar(118, 36, new int[] {0}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null && solar.isRunning()) {
 				return solar.getAcceleratorMultiplier() * TileSolarPanel.GENERATION;
 			}
 			return 0;
-		}, this, 118, 35, new int[] { 0 }).setGenerator());
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				return solar.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2 }));
+		}).setGenerator());
+		addScreenComponent(getRunningIndicator(6, 159, new int[] {0, 1, 2}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

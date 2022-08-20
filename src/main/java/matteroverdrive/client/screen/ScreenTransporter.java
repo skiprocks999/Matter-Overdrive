@@ -1,17 +1,13 @@
 package matteroverdrive.client.screen;
 
-import java.util.HashSet;
-
 import com.mojang.blaze3d.platform.InputConstants;
 
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
@@ -32,8 +28,6 @@ import matteroverdrive.core.screen.component.wrappers.WrapperTransporterLocation
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -206,99 +200,9 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 			editor.updateButtons(false);
 		}, IOConfigButtonType.MATTER);
 
-		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getInventoryCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getInventoryCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getInventoryCap().hasInput;
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getInventoryCap().hasOutput;
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ITEM);
-		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ENERGY);
-		matterWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.MATTER);
+		itemWrapper = getItemIOWrapper(137, 59);
+		energyWrapper = getEnergyIOWrapper(137, 59);
+		matterWrapper = getEnergyIOWrapper(137, 59);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
@@ -390,44 +294,8 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 		matterWrapper.hideButtons();
 		editor.updateButtons(false);
 		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null && transporter.isRunning()) {
-				return transporter.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 48, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().getMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getMatterStorageCap().getMaxMatterStored();
-			}
-			return 0;
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null && transporter.isRunning()) {
-				return transporter.getCurrentMatterUsage();
-			}
-			return 0;
-		}, this, 48, 94, new int[] { 0 }).setMatter());
+		addScreenComponent(defaultEnergyBar(48, 35, new int[] {0}));
+		addScreenComponent(defaultUsageMatterBar(48, 94, new int[] {0}));
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {

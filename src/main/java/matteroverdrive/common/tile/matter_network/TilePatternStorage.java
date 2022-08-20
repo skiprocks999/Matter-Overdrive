@@ -83,8 +83,12 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 	
 	@Override
 	public void tickServer() {
+		boolean flag = false;
 		if(!canRun()) {
-			if(setPowered(false)) {
+			flag = setPowered(false);
+			setPowerUsage(0);
+			flag |= currPowerUsage.isDirtyNoUpdate();
+			if(flag) {
 				setChanged();
 			}
 			return;
@@ -100,9 +104,12 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 			}
 		}
 		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
-		
-		if(energy.getEnergyStored() < usage) {
-			if(setPowered(false)) {
+		setPowerUsage(usage);
+		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
+			flag = setPowered(false);
+			setPowerUsage(0);
+			flag |= currPowerUsage.isDirtyNoUpdate();
+			if(flag) {
 				setChanged();
 			}
 			return;

@@ -1,15 +1,8 @@
 package matteroverdrive.client.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import matteroverdrive.common.inventory.InventoryPatternStorage;
-import matteroverdrive.common.item.ItemPatternDrive;
-import matteroverdrive.common.tile.matter_network.TilePatternStorage;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentFillArea;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
@@ -23,7 +16,6 @@ import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 
 public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternStorage> {
 
@@ -77,43 +69,11 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 		
 		addScreenComponent(new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, UtilsRendering.GUI_STANDARD));
 		addScreenComponent(new ScreenComponentProgress(() -> 0, this, 8, 61, new int[] { 0 }).vertical());
-		
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null && matter.isPowered()) {
-				int drives = 0;
-				List<ItemStack> drivesList = matter.getInventoryCap() == null ? new ArrayList<>() : matter.getInventoryCap().getItems().subList(0, 6);
-				for(ItemStack stack : drivesList) {
-					if(stack.getItem() instanceof ItemPatternDrive) {
-						drives++;
-					}
-				}
-				return TilePatternStorage.BASE_USAGE + drives * TilePatternStorage.USAGE_PER_DRIVE;
-			}
-			return 0;
-		}, this, 167, 35, new int[] { 0 }));
+		addScreenComponent(defaultEnergyBar(167, 35, new int[] {0}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TilePatternStorage inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.isPowered();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1}));
+		addScreenComponent(getPoweredIndicator(6, 159, new int[] {0, 1}));
 		
 		
 	}

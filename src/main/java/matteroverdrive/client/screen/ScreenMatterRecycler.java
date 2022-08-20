@@ -1,13 +1,8 @@
 package matteroverdrive.client.screen;
 
-import java.util.HashSet;
-
 import matteroverdrive.common.inventory.InventoryMatterRecycler;
 import matteroverdrive.common.tile.TileMatterRecycler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
@@ -24,8 +19,6 @@ import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -140,68 +133,8 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 			energyWrapper.showButtons();
 		}, IOConfigButtonType.ENERGY);
 
-		itemWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().hasInput;
-			}
-			return false;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getInventoryCap().hasOutput;
-			}
-			return false;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ITEM);
-		energyWrapper = new WrapperIOConfig(this, 137, 59, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getInputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getOutputDirections();
-			}
-			return new HashSet<Direction>();
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().canReceive();
-			}
-			return false;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().canExtract();
-			}
-			return false;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getBlockPos();
-			}
-			return new BlockPos(0, -100, 0);
-		}, CapabilityType.ENERGY);
+		itemWrapper = getItemIOWrapper(137, 59);
+		energyWrapper = getEnergyIOWrapper(137, 59);
 
 		itemWrapper.initButtons();
 		energyWrapper.initButtons();
@@ -235,32 +168,8 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentCharge(() -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getEnergyStorageCap().getMaxEnergyStored();
-			}
-			return 0;
-		}, () -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null && matter.isRunning()) {
-				return matter.getCurrentPowerUsage();
-			}
-			return 0;
-		}, this, 118, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
+		addScreenComponent(getRunningIndicator(6, 158, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

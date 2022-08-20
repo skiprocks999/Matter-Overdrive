@@ -120,7 +120,7 @@ public class NetworkHandler {
 
 	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk,
 			UpdateServerBlockEntityPropertyMessage message) {
-		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
+		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
 }
