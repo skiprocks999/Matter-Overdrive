@@ -56,7 +56,7 @@ public class TransporterLocationWrapper {
 		this.dimension = dimension;
 	}
 
-	public void serializeNbt(CompoundTag parent, String key) {
+	public CompoundTag serializeNbt() {
 		CompoundTag tag = new CompoundTag();
 		tag.put("destination", NbtUtils.writeBlockPos(destination));
 		tag.putBoolean("hasCustom", hasCustomName);
@@ -66,7 +66,7 @@ public class TransporterLocationWrapper {
 		if(dimension != null) {
 			tag.put(UtilsNbt.DIMENSION, UtilsNbt.writeDimensionToTag(dimension));
 		}
-		parent.put(key, tag);
+		return tag;
 	}
 
 	public void deserializeNbt(CompoundTag data) {
@@ -78,6 +78,15 @@ public class TransporterLocationWrapper {
 		if(data.contains("ownerid")) {
 			dimension = UtilsNbt.readDimensionFromTag(data.getCompound(UtilsNbt.DIMENSION));
 		}
+	}
+	
+	public TransporterLocationWrapper copy() {
+		TransporterLocationWrapper wrapper = new TransporterLocationWrapper();
+		wrapper.customName = this.customName;
+		wrapper.destination = this.destination;
+		wrapper.dimension = this.dimension;
+		wrapper.hasCustomName = this.hasCustomName;
+		return wrapper;
 	}
 
 }

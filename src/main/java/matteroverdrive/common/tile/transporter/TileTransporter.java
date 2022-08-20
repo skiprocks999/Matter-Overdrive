@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile.transporter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +16,8 @@ import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
 import matteroverdrive.common.tile.transporter.utils.EntityDataWrapper;
 import matteroverdrive.common.tile.transporter.utils.TransporterDimensionManager;
+import matteroverdrive.common.tile.transporter.utils.TransporterEntityDataManager;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationManager;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -59,19 +60,18 @@ public class TileTransporter extends GenericMachineTile {
 
 	private int cooldownTimer = 0;
 	private int currDestination = -1;
-	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
-	private List<Entity> currEntities = new ArrayList<>();
+	public TransporterLocationManager locationManager = new TransporterLocationManager(5);
+	public TransporterEntityDataManager entityDataManager = new TransporterEntityDataManager();
 	
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
-
-	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
-	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
 	public final Property<Integer> cooldownProp;
 	public final Property<Integer> destinationProp;
+	public final Property<CompoundTag> locationManagerProp;
+	public final Property<CompoundTag> entityDataProp;
 
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
@@ -97,7 +97,8 @@ public class TileTransporter extends GenericMachineTile {
 				tag -> getEnergyStorageCap().deserializeNBT(tag)));
 		cooldownProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> cooldownTimer, timer -> cooldownTimer = timer));
 		destinationProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> currDestination, dest -> currDestination = dest));
-		
+		locationManagerProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(locationManager::serializeNbt, locationManager::deserializeNbt));
+		entityDataProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(entityDataManager::serializeNbt, entityDataManager::deserializeNbt));
 		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
@@ -111,11 +112,10 @@ public class TileTransporter extends GenericMachineTile {
 				(id, inv, play) -> new InventoryTransporter(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.TRANSPORTER.id())));
-		setHasMenuData();
-		setHasRenderData();
 		setTickable();
 		
-		fillLocations(LOCATIONS);
+		locationManager.setVars(locationManagerProp, this);
+		entityDataManager.setVars(entityDataProp, this);
 		
 	}
 
@@ -125,7 +125,7 @@ public class TileTransporter extends GenericMachineTile {
 		if (!canRun()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			currEntities.clear();
+			flag |= entityDataManager.wipe();
 			if(flag) {
 				setChanged();
 			}
@@ -138,30 +138,30 @@ public class TileTransporter extends GenericMachineTile {
 			cooldownProp.set(cooldownProp.get() + 1);
 			setRunning(false);
 			setProgress(0);
-			currEntities.clear();
+			entityDataManager.wipe();
 			setChanged();
-			
 			return;
 		} 
 		
-		List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
+		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 		
-		if (entitiesAbove.size() <= 0 || destinationProp.get() < 0) {
+		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			currEntities.clear();
+			flag |= entityDataManager.wipe();
 			if(flag) {
 				setChanged();
 			}
 			return;
 		} 
-		TransporterLocationWrapper curLoc = LOCATIONS[destinationProp.get()];
+		
+		TransporterLocationWrapper curLoc = locationManager.getLocation(destinationProp.get());
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 		
 		if (!validData.getFirst()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
-			currEntities.clear();
+			flag |= entityDataManager.wipe();
 			if(flag) {
 				setChanged();
 			}
@@ -171,7 +171,6 @@ public class TileTransporter extends GenericMachineTile {
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
 			flag = setRunning(false);
-			currEntities.clear();
 			if(flag) {
 				setChanged();
 			}
@@ -181,20 +180,20 @@ public class TileTransporter extends GenericMachineTile {
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			flag = setRunning(false);
-			currEntities.clear();
+			flag |= entityDataManager.wipe();
 			if(flag) {
 				setChanged();
 			}
 			return;
 		} 
 		
-		int size = entitiesAbove.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH
-				: entitiesAbove.size();
+		int size = currentEntities.size() >= ENTITIES_PER_BATCH ? ENTITIES_PER_BATCH : currentEntities.size();
+		currentEntities = currentEntities.subList(0, size);
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		setRunning(true);
 		incrementProgress(getCurrentSpeed());
-		currEntities.clear();
-		currEntities.addAll(entitiesAbove.subList(0, size));
+		entityDataManager.setEntities(currentEntities);
+
 		if (getProgress() >= BUILD_UP_TIME) {
 			cooldownProp.set(0);
 			matter.removeMatter(getCurrentMatterUsage());
@@ -202,7 +201,7 @@ public class TileTransporter extends GenericMachineTile {
 			double x = curLoc.getDestination().getX() + 0.5;
 			double y = curLoc.getDestination().getY();
 			double z = curLoc.getDestination().getZ() + 0.5;
-			for (Entity entity : currEntities) {
+			for (Entity entity : currentEntities) {
 				ServerLevel dim = handleDimensionChange(entity);
 				entity.teleportToWithTicket(x, y, z);
 				entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
@@ -225,51 +224,15 @@ public class TileTransporter extends GenericMachineTile {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
 		}
-		if (getProgress() > 0 && clientEntityData != null && isRunning()) {
+		
+		if (getProgress() > 0 && isRunning()) {
 			int particlesPerTick = (int) ((getProgress() / (double) BUILD_UP_TIME) * 20);
 			for (int i = 0; i < particlesPerTick; i++) {
-				for (EntityDataWrapper entityData : clientEntityData) {
+				for (EntityDataWrapper entityData : entityDataManager.getEntityData()) {
 					handleParticles(entityData, new Vector3f((float) entityData.xPos(), (float) getBlockPos().getY(),
 							(float) entityData.zPos()));
 				}
 			}
-		}
-	}
-
-	@Override
-	public void getMenuData(CompoundTag tag) {
-
-		for (int i = 0; i < LOCATIONS.length; i++) {
-			LOCATIONS[i].serializeNbt(tag, "destination" + i);
-		}
-	}
-
-	@Override
-	public void readMenuData(CompoundTag tag) {
-
-		fillLocations(CLIENT_LOCATIONS);
-		for (int i = 0; i < CLIENT_LOCATIONS.length; i++) {
-			CLIENT_LOCATIONS[i].deserializeNbt(tag.getCompound("destination" + i));
-		}
-	}
-
-	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putInt("entities", currEntities.size());
-		for (int i = 0; i < currEntities.size(); i++) {
-			Entity entity = currEntities.get(i);
-			EntityDataWrapper wrapper = new EntityDataWrapper(entity.getBbHeight(), entity.getBbWidth(), entity.getX(),
-					entity.getZ());
-			wrapper.serializeNbt(tag, "entity" + i);
-		}
-	}
-
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientEntityData = new ArrayList<>();
-		int size = tag.getInt("entities");
-		for (int i = 0; i < size; i++) {
-			clientEntityData.add(EntityDataWrapper.fromNbt(tag.getCompound("entity" + i)));
 		}
 	}
 
@@ -286,9 +249,7 @@ public class TileTransporter extends GenericMachineTile {
 		additional.putDouble("matusage", getCurrentMatterUsage());
 		additional.putInt("cooldown", cooldownProp.get());
 		additional.putInt("dest", destinationProp.get());
-		for (int i = 0; i < LOCATIONS.length; i++) {
-			LOCATIONS[i].serializeNbt(additional, "destination" + i);
-		}
+		additional.put("locations", locationManager.serializeNbt());
 
 		tag.put("additional", additional);
 	}
@@ -306,9 +267,7 @@ public class TileTransporter extends GenericMachineTile {
 		setRange(additional.getDouble("radius"));
 		setMuffled(additional.getBoolean("muffled"));
 		destinationProp.set(additional.getInt("dest"));
-		for (int i = 0; i < LOCATIONS.length; i++) {
-			LOCATIONS[i].deserializeNbt(additional.getCompound("destination" + i));
-		}
+		locationManagerProp.set(additional.getCompound("locations"));
 	}
 	
 	@Override
@@ -352,19 +311,9 @@ public class TileTransporter extends GenericMachineTile {
 	public void setDestination(int index) {
 		destinationProp.set(index);
 	}
-
-	public TransporterLocationWrapper[] getServerLocations() {
-		return LOCATIONS;
-	}
-	
-	private void fillLocations(TransporterLocationWrapper[] holder) {
-		for(int i = 0; i < holder.length; i++) {
-			holder[i] = new TransporterLocationWrapper();
-		}
-	}
 	
 	private ServerLevel handleDimensionChange(Entity entity) {
-		ResourceKey<Level> dim = LOCATIONS[destinationProp.get()].getDimension();
+		ResourceKey<Level> dim = locationManager.getLocation(destinationProp.get()).getDimension();
 		if(dim != null) {
 			ServerLevel level = ServerLifecycleHooks.getCurrentServer().getLevel(dim);
 			entity.changeDimension(level, MANAGER);

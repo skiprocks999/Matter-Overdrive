@@ -284,19 +284,19 @@ public class NetworkMatter extends AbstractCableNetwork {
 		TileMatterReplicator found = null;
 		for(TileMatterReplicator replicator : replicators.values()) {
 			if(replicator != null && !replicator.isRemoved() && checkPowered ? replicator.isPowered(false) : true) {
-				int queueSize = replicator.getCurrOrders();
+				int queueSize = replicator.orderManager.size();
 				if(queueSize > smallestQueue) {
 					smallestQueue = queueSize;
 					found = replicator;
 					if(queueSize == 0) {
-						found.queueOrder(new QueuedReplication(pattern, count));
+						found.orderManager.addOrder(new QueuedReplication(pattern, count));
 						return true;
 					}
 				} 
 			}
 		}
 		if(found != null) {
-			found.queueOrder(new QueuedReplication(pattern, count));
+			found.orderManager.addOrder(new QueuedReplication(pattern, count));
 			return true;
 		}
 		return false;

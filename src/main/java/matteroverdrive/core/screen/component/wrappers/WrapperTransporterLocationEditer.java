@@ -65,7 +65,7 @@ public class WrapperTransporterLocationEditer {
 		int guiHeight = gui.getYPos();
 
 		nameBox = new EditBoxSuppliableName(gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
-			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getName().getString();
+			return transporterSupplier.get().locationManager.getLocation(currIndex).getName().getString();
 		});
 		nameBox.setTextColor(UtilsRendering.WHITE);
 		nameBox.setTextColorUneditable(UtilsRendering.WHITE);
@@ -79,7 +79,7 @@ public class WrapperTransporterLocationEditer {
 		});
 		
 		xCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 50 + yOffset, 70, 15, () -> {
-			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getX() + "";
+			return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getX() + "";
 		});
 		xCoordinateBox.setTextColor(UtilsRendering.WHITE);
 		xCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
@@ -95,7 +95,7 @@ public class WrapperTransporterLocationEditer {
 		});
 		
 		yCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 70 + yOffset, 70, 15, () -> {
-			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getY() + "";
+			return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getY() + "";
 		});
 		yCoordinateBox.setTextColor(UtilsRendering.WHITE);
 		yCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
@@ -110,7 +110,7 @@ public class WrapperTransporterLocationEditer {
 		});
 		
 		zCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 90 + yOffset, 70, 15, () -> {
-			return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination().getZ() + "";
+			return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getZ() + "";
 		});
 		zCoordinateBox.setTextColor(UtilsRendering.WHITE);
 		zCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
@@ -209,7 +209,7 @@ public class WrapperTransporterLocationEditer {
 	}
 	
 	private BlockPos getCurrentPos() {
-		return transporterSupplier.get().CLIENT_LOCATIONS[currIndex].getDestination();
+		return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination();
 	}
 	
 	private BlockPos makeNewPos(int coord, int val, BlockPos oldPos) {
@@ -232,19 +232,19 @@ public class WrapperTransporterLocationEditer {
 		TileTransporter transporter = transporterSupplier.get();
 		switch(coord) {
 		case 0:
-			int newX = transporter.CLIENT_LOCATIONS[currIndex].getDestination().getX() + sign;
+			int newX = transporter.locationManager.getLocation(currIndex).getDestination().getX() + sign;
 			NetworkHandler.CHANNEL.sendToServer(
 					new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(0, newX, getCurrentPos())));
 			xCoordinateBox.setValue(newX + "");
 			break;
 		case 1:
-			int newY = transporter.CLIENT_LOCATIONS[currIndex].getDestination().getY() + sign;
+			int newY = transporter.locationManager.getLocation(currIndex).getDestination().getY() + sign;
 			NetworkHandler.CHANNEL.sendToServer(
 					new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(1, newY, getCurrentPos())));
 			yCoordinateBox.setValue(newY + "");
 			break;
 		case 2:
-			int newZ = transporter.CLIENT_LOCATIONS[currIndex].getDestination().getZ() + sign;
+			int newZ = transporter.locationManager.getLocation(currIndex).getDestination().getZ() + sign;
 			NetworkHandler.CHANNEL.sendToServer(
 					new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(2, newZ, getCurrentPos())));
 			zCoordinateBox.setValue(newZ + "");

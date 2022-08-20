@@ -55,32 +55,36 @@ public class PacketUpdateTransporterLocationInfo {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.transporterPos);
 				if (tile instanceof TileTransporter transporter) {
-					TransporterLocationWrapper wrapper; 
+					TransporterLocationWrapper wrapper;
 					switch(message.packetType) {
 					case UPDATE_INDEX:
 						transporter.setDestination(message.destinationIndex);
+						transporter.setChanged();
 						break;
 					case RESET_DESTINATION:
-						wrapper = transporter.getServerLocations()[message.destinationIndex];
+						wrapper = transporter.locationManager.getLocation(message.destinationIndex).copy();
 						wrapper.setDestination(new BlockPos(0, -1000, 0));
 						wrapper.setName(TransporterLocationWrapper.DEFAULT_NAME.getString());
 						wrapper.setDimension(null);
+						transporter.locationManager.setLocation(message.destinationIndex, wrapper);
 						break;
 					case UPDATE_DESTINATION:
-						wrapper = transporter.getServerLocations()[message.destinationIndex];
+						wrapper = transporter.locationManager.getLocation(message.destinationIndex).copy();
 						wrapper.setDestination(message.newDestination);
+						transporter.locationManager.setLocation(message.destinationIndex, wrapper);
 						break;
 					case UPDATE_NAME:
-						wrapper = transporter.getServerLocations()[message.destinationIndex];
+						wrapper = transporter.locationManager.getLocation(message.destinationIndex).copy();
 						wrapper.setName(message.newName);
+						transporter.locationManager.setLocation(message.destinationIndex, wrapper);
 						break;
 					case UPDATE_DEST_AND_DIM:
-						wrapper = transporter.getServerLocations()[message.destinationIndex];
+						wrapper = transporter.locationManager.getLocation(message.destinationIndex).copy();
 						wrapper.setDestination(message.newDestination);
 						wrapper.setDimension(message.newDimension);
+						transporter.locationManager.setLocation(message.destinationIndex, wrapper);
 						break;
 					}
-					transporter.setChanged();
 				}
 			}
 		});

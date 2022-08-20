@@ -1,7 +1,6 @@
 package matteroverdrive.common.tile.matter_network.matter_replicator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +17,7 @@ import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.ReplicatorOrderManager;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.SoundHandlerReplicator;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -67,17 +67,15 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 	public static final int SOUND_TICKS = 92;
 	public static final int NEEDED_PLATES = 5;
 	
-	private List<QueuedReplication> orders = new ArrayList<>();
+	public ReplicatorOrderManager orderManager = new ReplicatorOrderManager();
 	private QueuedReplication currentOrder = QueuedReplication.EMPTY;
 	private boolean usingFused = false;
-	
-	//Menu data
-	public List<QueuedReplication> clientOrders;
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
 	public final Property<CompoundTag> currentOrderProp;
+	public final Property<CompoundTag> ordersProp;
 	
 	//Client only
 	private SoundHandlerReplicator soundHandler;
@@ -102,6 +100,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
 				tag -> getEnergyStorageCap().deserializeNBT(tag)));
 		currentOrderProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> currentOrder.writeToNbt(), tag -> currentOrder = QueuedReplication.readFromNbt(tag)));
+		ordersProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(orderManager::serializeNbt, orderManager::deserializeNbt));
 		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
 				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
@@ -113,16 +112,20 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 						(id, inv, play) -> new InventoryMatterReplicator(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 						getContainerName(TypeMachine.MATTER_REPLICATOR.id())));
 		setTickable();
-		setHasMenuData();
+		
+		orderManager.setVars(this, ordersProp);
+
 	}
 	
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
-		removeCompletedOrders();
+		
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
 		boolean flag = false;
+		
+		orderManager.removeCompletedOrders();
 		if(!canRun()) {
 			flag = setRunning(false);
 			flag |= setPowered(false);
@@ -158,19 +161,19 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		if(drive.isEmpty()) {
 			usingFused = false;
 		} else {
-			if(!usingFused && orders.size() > 0) {
-				orders.clear();
+			if(!usingFused && orderManager.size() > 0) {
+				orderManager.wipeOrders();
 			}
-			if(orders.isEmpty()) {
+			if(orderManager.isEmpty()) {
 				LazyOptional<ICapabilityItemPatternStorage> lazy = drive.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
 				if(lazy.isPresent()) {
-					orders.add(new QueuedReplication(((ICapabilityItemPatternStorage)(lazy.cast().resolve().get())).getStoredPatterns()[0], 1));
+					orderManager.addOrder(new QueuedReplication(((ICapabilityItemPatternStorage)(lazy.cast().resolve().get())).getStoredPatterns()[0], 1));
 				}
 			} 
 			usingFused = true;
 		}
 		
-		if(orders.size() <= 0) {
+		if(orderManager.isEmpty()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setCurrentOrder(QueuedReplication.EMPTY);
@@ -183,10 +186,10 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 			return;
 		}
 		
-		ItemStack stack = new ItemStack(orders.get(0).getItem());
+		ItemStack stack = new ItemStack(orderManager.getOrder(0).getItem());
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-		if(value <= 0.0 || orders.get(0).getPercentage() <= 0) {
-			orders.get(0).cancel();
+		if(value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
+			orderManager.cancelOrder(0);
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			flag |= setCurrentOrder(QueuedReplication.EMPTY);
@@ -199,7 +202,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 			return;
 		}
 		setRecipeValue(value);
-		currentOrderProp.set(orders.get(0).writeToNbt());
+		currentOrderProp.set(orderManager.getOrder(0).writeToNbt());
 		setChanged();
 		List<ItemStack> outputs = inv.getOutputs();
 		ItemStack dust = outputs.get(1);
@@ -266,9 +269,9 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 		
 		setProgress(0);
-		orders.get(0).decRemaining();
-		float progToFloat = (float) orders.get(0).getPercentage() / 100.0F;
-		setCurrentOrder(orders.get(0));
+		orderManager.decRemaining(0);
+		float progToFloat = (float) orderManager.getOrder(0).getPercentage() / 100.0F;
+		setCurrentOrder(orderManager.getOrder(0));
 		if(roll() < getCurrentFailure() / progToFloat) {
 			if(dustEmpty) {
 				ItemStack newDust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
@@ -327,56 +330,12 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 	}
 	
-	private void removeCompletedOrders() {
-		Iterator<QueuedReplication> it = orders.iterator();
-		int oldSize = orders.size();
-		QueuedReplication queued;
-		while(it.hasNext()) {
-			queued = it.next();
-			if(queued.isFinished()) {
-				it.remove();
-			}
-		}
-		if(oldSize > orders.size()) {
-			setChanged();
-		}
-	}
-
-	@Override
-	public void getMenuData(CompoundTag tag) {
-		int size = orders.size();
-		tag.putInt("orderCount", size);
-		QueuedReplication queued;
-		for(int i = 0; i < size; i++) {
-			queued = orders.get(i);
-			queued.setOwnerLoc(getBlockPos());
-			queued.setQueuePos(i);
-			tag.put("order" + i, queued.writeToNbt());
-		}
-		
-	}
-	
-	@Override
-	public void readMenuData(CompoundTag tag) {
-		int orderSize = tag.getInt("orderCount");
-		clientOrders = new ArrayList<>();
-		for(int i = 0; i < orderSize; i++) {
-			clientOrders.add(QueuedReplication.readFromNbt(tag.getCompound("order" + i)));
-		}
-		
-	}
-	
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		CompoundTag data = new CompoundTag();
 		
-		int size = orders.size();
-		data.putInt("orderCount", size);
-		for(int i = 0; i < size; i++) {
-			data.put("order" + i, orders.get(i).writeToNbt());
-		}
-		
+		data.put("orders", ordersProp.get());
 		data.putDouble("progress", getProgress());
 		data.putDouble("speed", getCurrentSpeed());
 		data.putFloat("failure", getCurrentFailure());
@@ -392,12 +351,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		super.load(tag);
 		CompoundTag data = tag.getCompound("data");
 		
-		int orderSize = data.getInt("orderCount");
-		orders = new ArrayList<>();
-		for(int i = 0; i < orderSize; i++) {
-			orders.add(QueuedReplication.readFromNbt(data.getCompound("order" + i)));
-		}
-		
+		ordersProp.set(data.getCompound("orders"));
 		setProgress(data.getDouble("progress"));
 		setSpeed(data.getDouble("speed"));
 		setFailure(data.getFloat("failure"));
@@ -447,11 +401,11 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		data.put(inv.getSaveKey(), inv.serializeNBT());
 		data.putBoolean("ispowered", isPowered());
 		
-		int size = orders.size();
+		int size = orderManager.size();
 		data.putInt("orderCount", size);
 		QueuedReplication replication;
 		for(int i = 0; i < size; i++) {
-			replication = orders.get(i);
+			replication = orderManager.getAllOrders().get(i);
 			replication.setOwnerLoc(getBlockPos());
 			replication.setQueuePos(i);
 			data.put("order" + i, replication.writeToNbt());
@@ -480,26 +434,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 	
 	private int getAdjustedTicks() {
 		return (int) Math.ceil(getProcessingTime() / (getCurrentSpeed() == 0 ? 1.0D : getCurrentSpeed()));
-	}
-	
-	public int getCurrOrders() {
-		return orders == null ? 0 : orders.size();
-	}
-	
-	//Serverside
-	public void queueOrder(QueuedReplication replication) {
-		if(orders == null) {
-			orders = new ArrayList<>();
-		}
-		orders.add(replication);
-		setChanged();
-	}
-	
-	public void cancelOrder(int index) {
-		orders.get(index).cancel();
-		setProgress(0);
-		setCurrentOrder(QueuedReplication.EMPTY);
-		setChanged();
 	}
 	
 	public void setSoundPlaying() {

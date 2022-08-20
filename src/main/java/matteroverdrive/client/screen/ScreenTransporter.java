@@ -467,7 +467,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 			TileTransporter transporter = getMenu().getTile();
 			Component extraComponent = Component.empty();
 			if(transporter != null) {
-				TransporterLocationWrapper wrapper = transporter.CLIENT_LOCATIONS[editor.getCurrIndex()];
+				TransporterLocationWrapper wrapper = transporter.locationManager.getLocation(editor.getCurrIndex());
 				String key = "";
 				if(wrapper.getDimension() == null) {
 					key = transporter.getLevel().dimension().location().getPath();

@@ -28,7 +28,7 @@ public class PacketCancelReplication {
 				BlockEntity entity = world.getBlockEntity(message.replicatorPos);
 				if(entity != null && entity instanceof TileMatterReplicator replicator) {
 					try {
-						replicator.cancelOrder(message.index);
+						replicator.orderManager.cancelOrder(message.index);
 					} catch(Exception e) {
 						MatterOverdrive.LOGGER.warn("Attempted to remove order from " + message.replicatorPos.toShortString() + " at index " + message.index + " and failed!");
 					}

@@ -30,7 +30,7 @@ public class PacketQueueReplication {
 			if(world != null) {
 				BlockEntity entity = world.getBlockEntity(message.replicatorPos);
 				if(entity != null && entity instanceof TileMatterReplicator replicator) {
-					replicator.queueOrder(new QueuedReplication(message.wrapper, message.amt));
+					replicator.orderManager.addOrder(new QueuedReplication(message.wrapper, message.amt));
 					
 				}
 			}

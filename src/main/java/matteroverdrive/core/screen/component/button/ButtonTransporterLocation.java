@@ -27,7 +27,7 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonTransporterLocation loc = (ButtonTransporterLocation) button;
 			TileTransporter transport = loc.transporter.get();
-			TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[loc.index];
+			TransporterLocationWrapper wrapper = transport.locationManager.getLocation(loc.index);
 			if (transport.validDestination(wrapper).getFirst()) {
 				loc.gui.renderTooltip(stack, Component.literal(wrapper.getDestination().toShortString()), mouseX, mouseY);
 			} else {
@@ -54,7 +54,7 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileTransporter transport = transporter.get();
-		TransporterLocationWrapper wrapper = transport.CLIENT_LOCATIONS[index];
+		TransporterLocationWrapper wrapper = transport.locationManager.getLocation(index);
 		int color = transport.validDestination(wrapper).getFirst() ? UtilsRendering.TEXT_BLUE : UtilsRendering.RED;
 		drawCenteredString(stack, gui.getFontRenderer(), wrapper.getName(), this.x + this.width / 2,
 				this.y + (this.height - 8) / 2, color);

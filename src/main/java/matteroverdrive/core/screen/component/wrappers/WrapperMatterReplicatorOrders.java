@@ -28,10 +28,10 @@ public class WrapperMatterReplicatorOrders extends AbstractWrapperReplicationQue
 	@Override
 	public List<QueuedReplication> getOrders() {
 		TileMatterReplicator replicator = ((ScreenMatterReplicator) screen).getMenu().getTile();
-		if(replicator == null || replicator.clientOrders == null) {
+		if(replicator == null) {
 			return Collections.emptyList();
 		}
-		return replicator.clientOrders;
+		return replicator.orderManager.getAllOrders();
 	}
 
 	@Override
