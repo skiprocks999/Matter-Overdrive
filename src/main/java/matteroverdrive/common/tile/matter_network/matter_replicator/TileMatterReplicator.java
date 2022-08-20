@@ -199,7 +199,8 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 			return;
 		}
 		setRecipeValue(value);
-		
+		currentOrderProp.set(orders.get(0).writeToNbt());
+		setChanged();
 		List<ItemStack> outputs = inv.getOutputs();
 		ItemStack dust = outputs.get(1);
 		boolean dustEmpty = dust.isEmpty();
@@ -259,9 +260,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 		
 		setChanged();
-		
-		
-		
+	
 		if(getProgress() < getRecipeValue() * MATTER_MULTIPLIER) {
 			return;
 		}
