@@ -76,7 +76,7 @@ public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel
 		}, () -> {
 			TileSolarPanel solar = getMenu().getTile();
 			if (solar != null) {
-				return solar.currRedstoneMode;
+				return solar.getCurrMode();
 			}
 			return 0;
 		});

@@ -75,7 +75,7 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 		}, () -> {
 			TilePatternStorage matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.currRedstoneMode;
+				return matter.getCurrMode();
 			}
 			return 0;
 		});

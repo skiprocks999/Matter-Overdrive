@@ -130,7 +130,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.currRedstoneMode;
+				return microwave.getCurrMode();
 			}
 			return 0;
 		});

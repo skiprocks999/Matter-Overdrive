@@ -19,7 +19,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public abstract class GenericMachineTile extends GenericSoundTile {
 
 	private boolean running = false;
-	private boolean isPowered = false;
+	private boolean powered = false;
 	private double progress = 0.0;
 	private double recipeValue = 0.0;
 	
@@ -30,15 +30,15 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	
 	protected GenericMachineTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		runningProp = getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> running, run -> running = run));
-		poweredProp = getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> isPowered, pow -> isPowered = pow));
-		progressProp = getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> progress, prog -> progress = prog));
-		recipeValueProp = getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> recipeValue, value -> recipeValue = value));
+		runningProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> running, run -> running = run));
+		poweredProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> powered, pow -> powered = pow));
+		progressProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> progress, prog -> progress = prog));
+		recipeValueProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> recipeValue, value -> recipeValue = value));
 	}
 	
 	public boolean setRunning(boolean running) {
 		runningProp.set(running);
-		return runningProp.isDirty();
+		return runningProp.isDirtyNoUpdate();
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	
 	public boolean setPowered(boolean powered) {
 		poweredProp.set(powered);
-		return poweredProp.isDirty();
+		return poweredProp.isDirtyNoUpdate();
 	}
 	
 	public boolean isPowered() {
@@ -57,7 +57,7 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	
 	public boolean setRecipeValue(double value) {
 		recipeValueProp.set(value);
-		return recipeValueProp.isDirty();
+		return recipeValueProp.isDirtyNoUpdate();
 	}
 	
 	public double getRecipeValue() {
@@ -66,12 +66,12 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	
 	public boolean setProgress(double progress) {
 		progressProp.set(progress);
-		return progressProp.isDirty();
+		return progressProp.isDirtyNoUpdate();
 	}
 	
 	public boolean incrementProgress(double increment) {
 		progressProp.set(getProgress() + increment);
-		return progressProp.isDirty();
+		return progressProp.isDirtyNoUpdate();
 	}
 	
 	public double getProgress() {

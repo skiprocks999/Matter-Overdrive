@@ -177,7 +177,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 		}, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			if (transporter != null) {
-				return transporter.currRedstoneMode;
+				return transporter.getCurrMode();
 			}
 			return 0;
 		});

@@ -186,7 +186,7 @@ public class ScreenMatterReplicator extends GenericOverdriveScreen<InventoryMatt
 		}, () -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.currRedstoneMode;
+				return matter.getCurrMode();
 			}
 			return 0;
 		});

@@ -10,14 +10,14 @@ public interface IRedstoneModeTile {
 
 	void setMode(int mode);
 
-	int getCurrMod();
+	int getCurrMode();
 
 	int getMaxMode();
 
 	boolean canRun();
 
 	default void saveMode(CompoundTag tag) {
-		tag.putInt("redmode", getCurrMod());
+		tag.putInt("redmode", getCurrMode());
 	}
 
 	default void loadMode(CompoundTag tag) {

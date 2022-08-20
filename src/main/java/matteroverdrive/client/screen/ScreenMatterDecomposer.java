@@ -144,7 +144,7 @@ public class ScreenMatterDecomposer extends GenericOverdriveScreen<InventoryMatt
 		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.currRedstoneMode;
+				return matter.getCurrMode();
 			}
 			return 0;
 		});

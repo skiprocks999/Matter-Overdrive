@@ -12,13 +12,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
 
-	public int currRedstoneMode = 0;
+	private int currRedstoneMode = 0;
 
 	public final Property<Integer> currRedstoneModeProp;
 	
 	protected GenericRedstoneTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.currRedstoneModeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(this::getCurrMod, this::setMode));
+		this.currRedstoneModeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(this::getCurrMode, this::setMode));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 	}
 
 	@Override
-	public int getCurrMod() {
+	public int getCurrMode() {
 		return currRedstoneMode;
 	}
 

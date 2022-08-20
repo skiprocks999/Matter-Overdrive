@@ -24,7 +24,7 @@ public class PacketUpdateRedstoneMode {
 			if (world != null) {
 				BlockEntity tile = world.getBlockEntity(message.pos);
 				if (tile instanceof IRedstoneModeTile mode) {
-					int nextMode = mode.getCurrMod() + 1;
+					int nextMode = mode.getCurrMode() + 1;
 					if (nextMode > mode.getMaxMode()) {
 						mode.setMode(0);
 					} else {

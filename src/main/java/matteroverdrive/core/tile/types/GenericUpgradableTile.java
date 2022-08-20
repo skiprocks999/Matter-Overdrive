@@ -42,13 +42,13 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	
 	public GenericUpgradableTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.currSpeedProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentSpeedGetter, this::speedSetter));
-		this.currMatterUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentMatterUsageGetter, this::matterUsageSetter));
-		this.currPowerUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentPowerUsageGetter, this::powerUsageSetter));
-		this.currRangeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::currentRangeGetter, this::rangeSetter));
-		this.currIsMuffled = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(this::muffledGetter, this::muffledSetter));
-		this.currSAMultiplier = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(this::acceleratorMultiplierGetter, this::acceleratorMultiplierSetter));
-		this.currFailureChance = this.getPropertyManager().addTrackedProperty(PropertyTypes.FLOAT.create(this::currentFailureGetter, this::failureSetter));
+		this.currSpeedProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentSpeed, speed -> currentSpeed = speed));
+		this.currMatterUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentMatterUsage, usage -> currentMatterUsage = usage));
+		this.currPowerUsage = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentPowerUsage, usage -> currentPowerUsage = usage));
+		this.currRangeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentRange, range -> currentRange = range));
+		this.currIsMuffled = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> isMuffled, muff -> isMuffled = muff));
+		this.currSAMultiplier = this.getPropertyManager().addTrackedProperty(PropertyTypes.DOUBLE.create(() -> saMultiplier, mult -> saMultiplier = mult));
+		this.currFailureChance = this.getPropertyManager().addTrackedProperty(PropertyTypes.FLOAT.create(() -> currentFailureChance, fail -> currentFailureChance = fail));
 	}
 	
 	//INTERFACE HANDLING
@@ -165,66 +165,6 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public double getProcessingTime() {
 		return defaultProcessingTime;
-	}
-	
-	//GETTERS
-	
-	private boolean muffledGetter() {
-		return this.isMuffled;
-	}
-
-	private double currentSpeedGetter() {
-		return this.currentSpeed;
-	}
-
-	private double currentMatterUsageGetter() {
-		return this.currentMatterUsage;
-	}
-
-	private float currentFailureGetter() {
-		return this.currentFailureChance;
-	}
-
-	private double currentPowerUsageGetter() {
-		return this.currentPowerUsage;
-	}
-
-	private double currentRangeGetter() {
-		return this.currentRange;
-	}
-
-	private double acceleratorMultiplierGetter() {
-		return saMultiplier;
-	}
-	
-	//SETTERS
-	
-	private void acceleratorMultiplierSetter(double multiplier) {
-		this.saMultiplier = multiplier;
-	}
-
-	private void speedSetter(double speed) {
-		this.currentSpeed = speed;
-	}
-
-	private void matterUsageSetter(double matter) {
-		this.currentMatterUsage = matter;
-	}
-
-	private void failureSetter(float failure) {
-		this.currentFailureChance = failure;
-	}
-
-	private void powerUsageSetter(double usage) {
-		this.currentPowerUsage = usage;
-	}
-
-	private void rangeSetter(double range) {
-		this.currentRange = range;
-	}
-
-	private void muffledSetter(boolean muffled) {
-		this.isMuffled = muffled;
 	}
 
 }

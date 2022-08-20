@@ -76,7 +76,7 @@ public class ScreenCharger extends GenericOverdriveScreen<InventoryCharger> {
 		}, () -> {
 			TileCharger charger = getMenu().getTile();
 			if (charger != null) {
-				return charger.currRedstoneMode;
+				return charger.getCurrMode();
 			}
 			return 0;
 		});

@@ -79,7 +79,7 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 		}, () -> {
 			TileMatterAnalyzer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.currRedstoneMode;
+				return matter.getCurrMode();
 			}
 			return 0;
 		});

@@ -130,7 +130,7 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.currRedstoneMode;
+				return inscriber.getCurrMode();
 			}
 			return 0;
 		});

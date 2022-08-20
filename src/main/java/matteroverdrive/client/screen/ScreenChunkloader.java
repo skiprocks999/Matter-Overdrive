@@ -76,7 +76,7 @@ public class ScreenChunkloader extends GenericOverdriveScreen<InventoryChunkload
 		}, () -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
-				return supply.currRedstoneMode;
+				return supply.getCurrMode();
 			}
 			return 0;
 		});

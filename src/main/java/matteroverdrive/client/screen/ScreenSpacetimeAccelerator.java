@@ -79,7 +79,7 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 		}, () -> {
 			TileSpacetimeAccelerator spacetime = getMenu().getTile();
 			if (spacetime != null) {
-				return spacetime.currRedstoneMode;
+				return spacetime.getCurrMode();
 			}
 			return 0;
 		});

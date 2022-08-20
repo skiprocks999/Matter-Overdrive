@@ -130,7 +130,7 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.currRedstoneMode;
+				return matter.getCurrMode();
 			}
 			return 0;
 		});

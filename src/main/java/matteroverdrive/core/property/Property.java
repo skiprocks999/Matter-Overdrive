@@ -75,6 +75,12 @@ public final class Property<T> {
     this.lastKnownValue = value;
     return dirty;
   }
+  
+  public boolean isDirtyNoUpdate() {
+	    T value = this.getter.get();
+	    boolean dirty = lastKnownValue == null || !propertyType.getEquals().test(value, lastKnownValue);
+	    return dirty;
+	  }
 
   /**
    * Gets the {@link Property} T value.
