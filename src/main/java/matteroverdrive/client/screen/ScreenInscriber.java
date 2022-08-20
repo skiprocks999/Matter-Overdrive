@@ -4,9 +4,7 @@ import java.util.HashSet;
 
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.tile.TileInscriber;
-import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -23,7 +21,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -31,7 +29,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> {
+public class ScreenInscriber extends GenericMachineScreen<InventoryInscriber> {
 
 	private static boolean EXTENDED = false;
 
@@ -122,18 +120,9 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(inscriber.getBlockPos()));
-			}
-		}, () -> {
-			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.getCurrMode();
-			}
-			return 0;
-		});
+		
+		redstone = redstoneButton(48, 32);
+		
 		items = new ButtonIOConfig(this, 48, 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;

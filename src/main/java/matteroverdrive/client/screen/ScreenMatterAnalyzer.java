@@ -2,8 +2,6 @@ package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -14,7 +12,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -22,7 +20,7 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatterAnalyzer> {
+public class ScreenMatterAnalyzer extends GenericMachineScreen<InventoryMatterAnalyzer> {
 
 	private static boolean EXTENDED = false;
 
@@ -71,18 +69,7 @@ public class ScreenMatterAnalyzer extends GenericOverdriveScreen<InventoryMatter
 			settings.isActivated = false;
 			redstone.visible = false;
 		}, MenuButtonType.UPGRADES, menu, false);
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileMatterAnalyzer matter = getMenu().getTile();
-			if (matter != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
-			}
-		}, () -> {
-			TileMatterAnalyzer matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 
 		addButton(close);
 		addButton(menu);

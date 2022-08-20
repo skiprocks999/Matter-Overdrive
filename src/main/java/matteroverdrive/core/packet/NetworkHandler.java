@@ -12,7 +12,6 @@ import matteroverdrive.core.packet.type.serverbound.PacketCancelReplication;
 import matteroverdrive.core.packet.type.serverbound.PacketQueueReplication;
 import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.property.message.*;
 import net.minecraft.resources.ResourceLocation;
@@ -36,9 +35,6 @@ public class NetworkHandler {
 
 		/* SERVER-BOUND */
 
-		CHANNEL.registerMessage(disc++, PacketUpdateRedstoneMode.class, PacketUpdateRedstoneMode::encode,
-				PacketUpdateRedstoneMode::decode, PacketUpdateRedstoneMode::handle,
-				Optional.of(NetworkDirection.PLAY_TO_SERVER));
 		CHANNEL.registerMessage(disc++, PacketUpdateCapabilitySides.class, PacketUpdateCapabilitySides::encode,
 				PacketUpdateCapabilitySides::decode, PacketUpdateCapabilitySides::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));

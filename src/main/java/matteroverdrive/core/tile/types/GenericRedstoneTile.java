@@ -15,10 +15,17 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 	private int currRedstoneMode = 0;
 
 	public final Property<Integer> currRedstoneModeProp;
-	
+
 	protected GenericRedstoneTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.currRedstoneModeProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(this::getCurrMode, this::setMode));
+		this.currRedstoneModeProp = this.getPropertyManager()
+				.addTrackedProperty(PropertyTypes.INTEGER.create(() -> currRedstoneMode, mode -> {
+					if (mode > getMaxMode()) {
+						currRedstoneMode = 0;
+					} else {
+						currRedstoneMode = mode;
+					}
+				}));
 	}
 
 	@Override
@@ -34,7 +41,7 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 		super.load(tag);
 		loadMode(tag.getCompound("redstone"));
 	}
-	
+
 	@Override
 	public void getFirstContactData(CompoundTag tag) {
 		saveAdditional(tag);
@@ -42,12 +49,12 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 
 	@Override
 	public void setMode(int mode) {
-		currRedstoneMode = mode;
+		currRedstoneModeProp.set(mode);
 	}
 
 	@Override
 	public int getCurrMode() {
-		return currRedstoneMode;
+		return currRedstoneModeProp.get();
 	}
 
 	@Override
@@ -55,7 +62,7 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 		boolean hasSignal = UtilsTile.adjacentRedstoneSignal(this);
 		return currRedstoneMode == 0 && !hasSignal || currRedstoneMode == 1 && hasSignal || currRedstoneMode == 2;
 	}
-	
+
 	@Override
 	public int getMaxMode() {
 		return 2;

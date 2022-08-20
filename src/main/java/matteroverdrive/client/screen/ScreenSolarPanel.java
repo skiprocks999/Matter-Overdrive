@@ -2,8 +2,6 @@ package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventorySolarPanel;
 import matteroverdrive.common.tile.TileSolarPanel;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -14,14 +12,14 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel> {
+public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> {
 
 	private static boolean EXTENDED = false;
 
@@ -68,18 +66,7 @@ public class ScreenSolarPanel extends GenericOverdriveScreen<InventorySolarPanel
 			redstone.visible = false;
 		}, MenuButtonType.UPGRADES, menu, false);
 
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(solar.getBlockPos()));
-			}
-		}, () -> {
-			TileSolarPanel solar = getMenu().getTile();
-			if (solar != null) {
-				return solar.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 
 		addButton(close);
 		addButton(menu);

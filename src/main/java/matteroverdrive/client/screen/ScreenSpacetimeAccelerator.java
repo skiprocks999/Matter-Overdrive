@@ -2,8 +2,6 @@ package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -13,7 +11,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -21,7 +19,7 @@ import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<InventorySpacetimeAccelerator> {
+public class ScreenSpacetimeAccelerator extends GenericMachineScreen<InventorySpacetimeAccelerator> {
 
 	private static boolean EXTENDED = false;
 
@@ -71,18 +69,7 @@ public class ScreenSpacetimeAccelerator extends GenericOverdriveScreen<Inventory
 			settings.isActivated = false;
 			redstone.visible = false;
 		}, MenuButtonType.UPGRADES, menu, false);
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(spacetime.getBlockPos()));
-			}
-		}, () -> {
-			TileSpacetimeAccelerator spacetime = getMenu().getTile();
-			if (spacetime != null) {
-				return spacetime.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 		
 		addButton(close);
 		addButton(menu);

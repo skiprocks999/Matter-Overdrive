@@ -200,7 +200,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	};
 
 	@Override
-	public PropertyManager getPropertyManager() {
+	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
 	}
 	

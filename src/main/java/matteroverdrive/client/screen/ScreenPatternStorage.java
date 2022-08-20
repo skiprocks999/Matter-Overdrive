@@ -6,8 +6,6 @@ import java.util.List;
 import matteroverdrive.common.inventory.InventoryPatternStorage;
 import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentFillArea;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
@@ -18,7 +16,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -27,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatternStorage> {
+public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternStorage> {
 
 	private static boolean EXTENDED = false;
 
@@ -67,18 +65,7 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 			redstone.visible = true;
 		}, MenuButtonType.SETTINGS, menu, false);
 		
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(matter.getBlockPos()));
-			}
-		}, () -> {
-			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 		
 		addButton(close);
 		addButton(menu);

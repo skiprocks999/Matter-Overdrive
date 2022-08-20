@@ -9,7 +9,6 @@ import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
@@ -30,7 +29,7 @@ import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButto
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.component.wrappers.WrapperTransporterLocationEditer;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -38,7 +37,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransporter> {
+public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter> {
 
 	private static boolean EXTENDED = false;
 
@@ -169,18 +168,7 @@ public class ScreenTransporter extends GenericOverdriveScreen<InventoryTransport
 				editButtons[i].visible = false;
 			}
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(transporter.getBlockPos()));
-			}
-		}, () -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 		items = new ButtonIOConfig(this, 48, 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;

@@ -4,9 +4,7 @@ import java.util.HashSet;
 
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.common.tile.TileMicrowave;
-import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateRedstoneMode;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
@@ -23,7 +21,7 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
-import matteroverdrive.core.screen.types.GenericOverdriveScreen;
+import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.core.BlockPos;
@@ -31,7 +29,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> {
+public class ScreenMicrowave extends GenericMachineScreen<InventoryMicrowave> {
 
 	private static boolean EXTENDED = false;
 
@@ -122,18 +120,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 			itemWrapper.hideButtons();
 			energyWrapper.hideButtons();
 		}, MenuButtonType.IO, menu, false);
-		redstone = new ButtonRedstoneMode(this, 48, 32, button -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				NetworkHandler.CHANNEL.sendToServer(new PacketUpdateRedstoneMode(microwave.getBlockPos()));
-			}
-		}, () -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return microwave.getCurrMode();
-			}
-			return 0;
-		});
+		redstone = redstoneButton(48, 32);
 		items = new ButtonIOConfig(this, 48, 32, button -> {
 			home.isActivated = false;
 			settings.isActivated = false;
