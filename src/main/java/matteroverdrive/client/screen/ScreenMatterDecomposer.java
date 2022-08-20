@@ -1,10 +1,8 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
-import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
-import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig;
@@ -198,13 +196,7 @@ public class ScreenMatterDecomposer extends GenericMachineScreen<InventoryMatter
 		energyWrapper.hideButtons();
 		matterWrapper.hideButtons();
 		
-		addScreenComponent(new ScreenComponentProgress(() -> {
-			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null) {
-				return (double) matter.getProgress() / (double) TileMatterDecomposer.OPERATING_TIME;
-			}
-			return 0;
-		}, this, 33, 48, new int[] { 0 }));
+		addScreenComponent(getProgressArrow(33, 48, new int[] {0}));
 		addScreenComponent(defaultEnergyBar(167, 35, new int[] {0}));
 		addScreenComponent(defaultRecipeMatterBar(95, 35, new int[] {0}).setGenerator());
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3 }));

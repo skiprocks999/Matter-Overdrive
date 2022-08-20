@@ -7,6 +7,7 @@ import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
+import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.tile.types.GenericMachineTile;
@@ -23,14 +24,14 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ButtonRedstoneMode redstoneButton(int x, int y) {
 		return new ButtonRedstoneMode(this, x, y, button -> {
-			GenericMachineTile charger = getMenu().getTile();
-			if (charger != null) {
-				charger.getPropertyManager().updateServerBlockEntity(charger.currRedstoneModeProp, charger.getCurrMode() + 1);
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				machine.getPropertyManager().updateServerBlockEntity(machine.currRedstoneModeProp, machine.getCurrMode() + 1);
 			}
 		}, () -> {
-			GenericMachineTile charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.getCurrMode();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.getCurrMode();
 			}
 			return 0;
 		});
@@ -38,9 +39,9 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentCharge defaultEnergyBar(int x, int y, int[] screenNumbers) {
 		return getEnergyBar(x, y, screenNumbers, () -> {
-			GenericMachineTile supply = getMenu().getTile();
-			if (supply != null && supply.isRunning()) {
-				return supply.getCurrentPowerUsage();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null && machine.isRunning()) {
+				return machine.getCurrentPowerUsage();
 			}
 			return 0;
 		});
@@ -48,15 +49,15 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentCharge getEnergyBar(int x, int y, int[] screenNumbers, DoubleSupplier getUsage) {
 		return new ScreenComponentCharge(() -> {
-			GenericMachineTile charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.getEnergyStorageCap().getEnergyStored();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.getEnergyStorageCap().getEnergyStored();
 			}
 			return 0;
 		}, () -> {
-			GenericMachineTile charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.getEnergyStorageCap().getMaxEnergyStored();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.getEnergyStorageCap().getMaxEnergyStored();
 			}
 			return 0;
 		}, getUsage, this, x, y, screenNumbers);
@@ -64,9 +65,9 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentCharge defaultRecipeMatterBar(int x, int y, int[] screenNumbers) {
 		return getMatterBar(x, y, screenNumbers, () -> {
-			GenericMachineTile matter = getMenu().getTile();
-			if (matter != null && matter.isRunning()) {
-				return matter.getRecipeValue();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null && machine.isRunning()) {
+				return machine.getRecipeValue();
 			}
 			return 0;
 		});
@@ -74,9 +75,9 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentCharge defaultUsageMatterBar(int x, int y, int[] screenNumbers) {
 		return getMatterBar(x, y, screenNumbers, () -> {
-			GenericMachineTile spacetime = getMenu().getTile();
-			if (spacetime != null && spacetime.isRunning()) {
-				return spacetime.getCurrentMatterUsage();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null && machine.isRunning()) {
+				return machine.getCurrentMatterUsage();
 			}
 			return 0;
 		});
@@ -84,15 +85,15 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentCharge getMatterBar(int x, int y, int[] screenNumbers, DoubleSupplier getUsage) {
 		return new ScreenComponentCharge(() -> {
-			GenericMachineTile matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getMatterStored();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.getMatterStorageCap().getMatterStored();
 			}
 			return 0;
 		}, () -> {
-			GenericMachineTile matter = getMenu().getTile();
-			if (matter != null) {
-				return matter.getMatterStorageCap().getMaxMatterStored();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.getMatterStorageCap().getMaxMatterStored();
 			}
 			return 0;
 		}, getUsage, this, x, y, screenNumbers).setMatter();
@@ -100,9 +101,9 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentIndicator getRunningIndicator(int x, int y, int[] screenNumbers) {
 		return new ScreenComponentIndicator(() -> {
-			GenericMachineTile charger = getMenu().getTile();
-			if (charger != null) {
-				return charger.isRunning();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.isRunning();
 			}
 			return false;
 		}, this, x, y, screenNumbers);
@@ -110,11 +111,21 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 	
 	public ScreenComponentIndicator getPoweredIndicator(int x, int y, int[] screenNumbers) {
 		return new ScreenComponentIndicator(() -> {
-			GenericMachineTile inscriber = getMenu().getTile();
-			if (inscriber != null) {
-				return inscriber.isPowered();
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				return machine.isPowered();
 			}
 			return false;
+		}, this, x, y, screenNumbers);
+	}
+	
+	public ScreenComponentProgress getProgressArrow(int x, int y, int[] screenNumbers) {
+		return new ScreenComponentProgress(() -> {
+			GenericMachineTile inscriber = getMenu().getTile();
+			if (inscriber != null && inscriber.getProcessingTime() > 0) {
+				return inscriber.getProgress() / inscriber.getProcessingTime();
+			}
+			return 0;
 		}, this, x, y, screenNumbers);
 	}
 	

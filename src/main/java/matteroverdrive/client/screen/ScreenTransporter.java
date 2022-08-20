@@ -9,7 +9,6 @@ import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
 import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
-import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonEditTransporterLocation;
@@ -296,13 +295,7 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 		
 		addScreenComponent(defaultEnergyBar(48, 35, new int[] {0}));
 		addScreenComponent(defaultUsageMatterBar(48, 94, new int[] {0}));
-		addScreenComponent(new ScreenComponentIndicator(() -> {
-			TileTransporter transporter = getMenu().getTile();
-			if (transporter != null) {
-				return transporter.isRunning();
-			}
-			return false;
-		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
+		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				UtilsRendering.TEXT_BLUE));

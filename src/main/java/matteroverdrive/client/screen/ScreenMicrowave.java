@@ -1,10 +1,8 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryMicrowave;
-import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
-import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonIO;
@@ -161,13 +159,7 @@ public class ScreenMicrowave extends GenericMachineScreen<InventoryMicrowave> {
 		itemWrapper.hideButtons();
 		energyWrapper.hideButtons();
 		
-		addScreenComponent(new ScreenComponentProgress(() -> {
-			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null) {
-				return (double) microwave.getProgress() / (double) TileMicrowave.OPERATING_TIME;
-			}
-			return 0;
-		}, this, 33, 48, new int[] { 0 }));
+		addScreenComponent(getProgressArrow(33, 48, new int[] {0}));
 		addScreenComponent(defaultEnergyBar(118, 35, new int[] {0}));
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3}));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
