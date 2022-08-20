@@ -42,7 +42,7 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileTransporter transport = transporter.get();
-		int tIndex = transport.clientDestination;
+		int tIndex = transport.destinationProp.get();
 		if (tIndex == index) {
 			isActivated = true;
 		} else {

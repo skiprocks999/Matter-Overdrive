@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
+import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.render.AbstractTileRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -36,11 +37,12 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 			int light, int overlay) {
 		ItemStack stack = ItemStack.EMPTY;
 		boolean shouldSpin = false;
-		if (replicator.isRunning() && replicator.clientCurrentOrder != null) {
-			stack = new ItemStack(replicator.clientCurrentOrder.getItem());
+		QueuedReplication replication = replicator.getCurrentOrder();
+		if (replicator.isRunning() && !replication.isEmpty()) {
+			stack = new ItemStack(replication.getItem());
 			shouldSpin = true;
 		} else {
-			stack = replicator.outputItem;
+			stack = replicator.getInventoryCap().getStackInSlot(2);
 		}
 		if (!stack.isEmpty()) {
 			// Copy Pasta time

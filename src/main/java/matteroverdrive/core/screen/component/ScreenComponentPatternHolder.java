@@ -55,7 +55,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 		progress.renderBackground(stack, mouseX, mouseY, partialTicks);
 		TileMatterReplicator replicator = this.replicator.get();
 		if(replicator != null) {
-			if(replicator.clientCurrentOrder != null) {
+			if(replicator.getCurrentOrder().isEmpty()) {
 				UtilsRendering.bindTexture(BIG_FULL);
 			} else {
 				UtilsRendering.bindTexture(BIG_EMPTY);
@@ -71,7 +71,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 		TileMatterReplicator replicator = this.replicator.get();
 		QueuedReplication order = null;
 		if(replicator != null) {
-			order = replicator.clientCurrentOrder;
+			order = replicator.getCurrentOrder();
 			if(order != null) {
 				itemRenderer.renderGuiItem(new ItemStack(order.getItem()), this.x + 3, this.y + 3);
 			}

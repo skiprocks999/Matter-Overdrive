@@ -14,6 +14,8 @@ public class QueuedReplication {
 	//only set for client
 	private BlockPos ownerLoc = new BlockPos(0, -1000, 0);
 	private int queuePos = -1;
+
+	public static final QueuedReplication EMPTY = new QueuedReplication(ItemPatternWrapper.EMPTY, 0, 0, BlockPos.ZERO, 0);
 	
 	public QueuedReplication(ItemPatternWrapper wrapper, int ordered) {
 		orderedItem = wrapper;
@@ -73,14 +75,18 @@ public class QueuedReplication {
 		return queuePos;
 	}
 	
-	public void writeToNbt(CompoundTag tag, String key) {
+	public boolean isEmpty() {
+		return this == EMPTY;
+	}
+	
+	public CompoundTag writeToNbt() {
 		CompoundTag data = new CompoundTag();
 		data.putInt("ordered", ordered);
 		data.putInt("remaining", remaining);
 		orderedItem.writeToNbt(data, "item");
 		data.putInt("queue", queuePos);
 		data.put("pos", NbtUtils.writeBlockPos(ownerLoc));
-		tag.put(key, data);
+		return data;
 	}
 	
 	public static QueuedReplication readFromNbt(CompoundTag tag) {

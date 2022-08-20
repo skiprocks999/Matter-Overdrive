@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -42,14 +43,14 @@ public class PropertyTypes {
   public static PropertyType<Double> DOUBLE = addType("double", Double.class, FriendlyByteBuf::readDouble,
           FriendlyByteBuf::writeDouble);
   
-  /**
-   * Default {@link PropertyType} implementation for {@link Double} values.
-   */
   public static PropertyType<Float> FLOAT = addType("float", Float.class, FriendlyByteBuf::readFloat,
           FriendlyByteBuf::writeFloat);
   
   public static PropertyType<CompoundTag> NBT = addType("nbt", CompoundTag.class, FriendlyByteBuf::readNbt,
           FriendlyByteBuf::writeNbt);
+  
+  public static PropertyType<ItemStack> ITEM_STACK = addType("itemstack", ItemStack.class, FriendlyByteBuf::readItem,
+          FriendlyByteBuf::writeItem, ItemStack::matches);
 
   /**
    * Add type method.

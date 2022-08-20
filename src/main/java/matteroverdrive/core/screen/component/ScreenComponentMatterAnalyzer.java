@@ -51,7 +51,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 			UtilsRendering.bindTexture(WHITE);
 			UtilsRendering.color(color);
 			
-			int seed = Item.getId(analyzer.clientScannedItem.getItem());
+			int seed = Item.getId(analyzer.scannedItemProp.get().getItem());
 			random.setSeed((long) seed);
 			int progress = (int) Math.ceil(26.0D * (analyzer.getProgress() / analyzer.getProcessingTime()));
 			

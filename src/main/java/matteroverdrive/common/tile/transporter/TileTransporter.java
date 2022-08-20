@@ -58,20 +58,20 @@ public class TileTransporter extends GenericMachineTile {
 	private static final int DEFAULT_RADIUS = 32;
 
 	private int cooldownTimer = 0;
-	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private int currDestination = -1;
+	private TransporterLocationWrapper[] LOCATIONS = new TransporterLocationWrapper[5];
 	private List<Entity> currEntities = new ArrayList<>();
 	
 	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
-	public int clientCooldown;
 	public TransporterLocationWrapper[] CLIENT_LOCATIONS = new TransporterLocationWrapper[5];
-	public int clientDestination = -1;
 	private List<EntityDataWrapper> clientEntityData = new ArrayList<>();
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
 	public final Property<CompoundTag> capMatterStorageProp;
+	public final Property<Integer> cooldownProp;
+	public final Property<Integer> destinationProp;
 
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
@@ -95,6 +95,9 @@ public class TileTransporter extends GenericMachineTile {
 				tag -> getMatterStorageCap().deserializeNBT(tag)));
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getEnergyStorageCap().serializeNBT(),
 				tag -> getEnergyStorageCap().deserializeNBT(tag)));
+		cooldownProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> cooldownTimer, timer -> cooldownTimer = timer));
+		destinationProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.INTEGER.create(() -> currDestination, dest -> currDestination = dest));
+		
 		
 		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
 				.setUpgrades(5).setOwner(this)
@@ -131,20 +134,19 @@ public class TileTransporter extends GenericMachineTile {
 		
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
-		if (cooldownTimer < COOLDOWN) {
-			cooldownTimer++;
-			flag = setRunning(false);
-			flag |= setProgress(0);
+		if (cooldownProp.get() < COOLDOWN) {
+			cooldownProp.set(cooldownProp.get() + 1);
+			setRunning(false);
+			setProgress(0);
 			currEntities.clear();
-			if(flag) {
-				setChanged();
-			}
+			setChanged();
+			
 			return;
 		} 
 		
 		List<Entity> entitiesAbove = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 		
-		if (entitiesAbove.size() <= 0 || currDestination < 0) {
+		if (entitiesAbove.size() <= 0 || destinationProp.get() < 0) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
 			currEntities.clear();
@@ -153,7 +155,7 @@ public class TileTransporter extends GenericMachineTile {
 			}
 			return;
 		} 
-		TransporterLocationWrapper curLoc = LOCATIONS[currDestination];
+		TransporterLocationWrapper curLoc = LOCATIONS[destinationProp.get()];
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 		
 		if (!validData.getFirst()) {
@@ -194,7 +196,7 @@ public class TileTransporter extends GenericMachineTile {
 		currEntities.clear();
 		currEntities.addAll(entitiesAbove.subList(0, size));
 		if (getProgress() >= BUILD_UP_TIME) {
-			cooldownTimer = 0;
+			cooldownProp.set(0);
 			matter.removeMatter(getCurrentMatterUsage());
 			setProgress(0);
 			double x = curLoc.getDestination().getX() + 0.5;
@@ -236,9 +238,6 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void getMenuData(CompoundTag tag) {
-		
-		tag.putInt("cooldown", cooldownTimer);
-		tag.putInt("dest", currDestination);
 
 		for (int i = 0; i < LOCATIONS.length; i++) {
 			LOCATIONS[i].serializeNbt(tag, "destination" + i);
@@ -247,9 +246,6 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void readMenuData(CompoundTag tag) {
-		
-		clientCooldown = tag.getInt("cooldown");
-		clientDestination = tag.getInt("dest");
 
 		fillLocations(CLIENT_LOCATIONS);
 		for (int i = 0; i < CLIENT_LOCATIONS.length; i++) {
@@ -288,8 +284,8 @@ public class TileTransporter extends GenericMachineTile {
 		additional.putBoolean("muffled", isMuffled());
 		additional.putDouble("radius", getCurrentRange());
 		additional.putDouble("matusage", getCurrentMatterUsage());
-		additional.putInt("cooldown", cooldownTimer);
-		additional.putInt("dest", currDestination);
+		additional.putInt("cooldown", cooldownProp.get());
+		additional.putInt("dest", destinationProp.get());
 		for (int i = 0; i < LOCATIONS.length; i++) {
 			LOCATIONS[i].serializeNbt(additional, "destination" + i);
 		}
@@ -306,10 +302,10 @@ public class TileTransporter extends GenericMachineTile {
 		setSpeed(additional.getDouble("speed"));
 		setPowerUsage(additional.getDouble("usage"));
 		setMatterUsage(additional.getDouble("matusage"));
-		cooldownTimer = additional.getInt("cooldown");
+		cooldownProp.set(additional.getInt("cooldown"));
 		setRange(additional.getDouble("radius"));
 		setMuffled(additional.getBoolean("muffled"));
-		currDestination = additional.getInt("dest");
+		destinationProp.set(additional.getInt("dest"));
 		for (int i = 0; i < LOCATIONS.length; i++) {
 			LOCATIONS[i].deserializeNbt(additional.getCompound("destination" + i));
 		}
@@ -354,11 +350,7 @@ public class TileTransporter extends GenericMachineTile {
 	}
 
 	public void setDestination(int index) {
-		currDestination = index;
-	}
-
-	public int getServerDestination() {
-		return currDestination;
+		destinationProp.set(index);
 	}
 
 	public TransporterLocationWrapper[] getServerLocations() {
@@ -372,7 +364,7 @@ public class TileTransporter extends GenericMachineTile {
 	}
 	
 	private ServerLevel handleDimensionChange(Entity entity) {
-		ResourceKey<Level> dim = LOCATIONS[currDestination].getDimension();
+		ResourceKey<Level> dim = LOCATIONS[destinationProp.get()].getDimension();
 		if(dim != null) {
 			ServerLevel level = ServerLifecycleHooks.getCurrentServer().getLevel(dim);
 			entity.changeDimension(level, MANAGER);
