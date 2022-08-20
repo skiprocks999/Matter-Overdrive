@@ -14,7 +14,7 @@ import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.sound.SoundBarrierMethods;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.TriPredicate;
 
-public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetworkMember {
+public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNetworkMember {
 
 	public static final int SLOT_COUNT = 6;
 	private static final int ENERGY_STORAGE = 512000;
@@ -40,13 +40,9 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	private static final int DEFAULT_SPEED = 1;
 	private static final int PERCENTAGE_PER_SCAN = 20;
 	
-	private double currProgress = 0;
-	
 	private ItemStack scannedItem = null;
 	private boolean shouldAnalyze = false;
 	
-	public boolean clientPowered;
-	public double clientProgress;
 	public ItemStack clientScannedItem = ItemStack.EMPTY;
 	
 	public final Property<CompoundTag> capInventoryProp;
@@ -61,6 +57,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
+		defaultProcessingTime = PROCESSING_TIME;
 		
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
 				tag -> getInventoryCap().deserializeNBT(tag)));
@@ -85,43 +82,56 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+		boolean flag = false;
 		if(!canRun()) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
 			scannedItem = null;
-			if (currState && !isRunning) {
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
 			scannedItem = null;
-			if (currState && !isRunning) {
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack scanned = inv.getStackInSlot(0);
 		if(scanned.isEmpty()) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
 			scannedItem = null;
-			if (currState && !isRunning) {
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
 		if(network == null || !hasAttachedDrives(network)) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
 			scannedItem = null;
-			if (currState && !isRunning) {
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
@@ -139,16 +149,19 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			
 		}
 		if(!shouldAnalyze) {
-			isRunning = false;
-			currProgress = 0;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		if(!UtilsItem.compareItems(scannedItem.getItem(), scanned.getItem())) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
 			scannedItem = scanned;
 			int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
@@ -157,19 +170,22 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			} else {
 				shouldAnalyze = true;
 			}
-			if (currState && !isRunning) {
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
-		isRunning = true;
-		currProgress += getCurrentSpeed();
+		setRunning(true);
+		incrementProgress(getCurrentSpeed());
 		energy.removeEnergy((int) getCurrentPowerUsage());
-		if (!currState && isRunning) {
+		if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		setChanged();
-		if(currProgress < PROCESSING_TIME) {
+		if(getProgress() < PROCESSING_TIME) {
 			return;
 		}
 		int[] stored = network.getHighestStorageLocationForItem(scannedItem.getItem(), true);
@@ -194,10 +210,10 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 			playFailureSound();
 		}
 		
-		currProgress = 0;
+		setProgress(0);
 		shouldAnalyze = false;
 		scannedItem = null;
-		isRunning = false;
+		setRunning(false);
 		setChanged();
 	}
 	
@@ -212,7 +228,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void getMenuData(CompoundTag tag) {
 		
-		tag.putDouble("progress", currProgress);
 		if(scannedItem != null && !scannedItem.isEmpty()) {
 			CompoundTag item = new CompoundTag();
 			scannedItem.save(item);
@@ -224,7 +239,6 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	@Override
 	public void readMenuData(CompoundTag tag) {
 		
-		clientProgress = tag.getDouble("progress");
 		if(tag.contains("item")) {
 			clientScannedItem = ItemStack.of(tag.getCompound("item"));
 		} else {
@@ -238,7 +252,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		super.saveAdditional(tag);
 		CompoundTag data = new CompoundTag();
 		
-		data.putDouble("progress", currProgress);
+		data.putDouble("progress", getProgress());
 		data.putDouble("speed", getCurrentSpeed());
 		data.putDouble("usage", getCurrentPowerUsage());
 		data.putBoolean("muffled", isMuffled());
@@ -251,7 +265,7 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 		super.load(tag);
 		CompoundTag data = tag.getCompound("data");
 		
-		currProgress = data.getDouble("progress");
+		setProgress(data.getDouble("progress"));
 		setSpeed(data.getDouble("speed"));
 		setPowerUsage(data.getDouble("usage"));
 		setMuffled(data.getBoolean("muffled"));
@@ -280,20 +294,10 @@ public class TileMatterAnalyzer extends GenericSoundTile implements IMatterNetwo
 	public boolean isPowered(boolean client) {
 		return true;
 	}
-
-	@Override
-	public double getCurrentPowerStorage() {
-		return getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
 	
 	@Override
-	public double getProcessingTime() {
-		return PROCESSING_TIME;
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 	
 	private boolean hasAttachedDrives(NetworkMatter matter) {

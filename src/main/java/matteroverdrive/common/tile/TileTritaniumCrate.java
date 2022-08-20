@@ -8,6 +8,7 @@ import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileTritaniumCrate extends GenericTile {
 
@@ -16,9 +17,9 @@ public class TileTritaniumCrate extends GenericTile {
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRITANIUM_CRATE.get(), pos, state);
 
-		addInventoryCap(new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
+		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
-				getInventoryCap(), getCoordsData()), getContainerName("tritanium_crate")));
+				exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()), getContainerName("tritanium_crate")));
 	}
 
 	public static enum CrateColors implements IBulkRegistryObject {

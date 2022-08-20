@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
@@ -73,8 +74,8 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (blockentity instanceof GenericTile generic && generic.hasInventoryCap()) {
-			CapabilityInventory inv = generic.getInventoryCap();
+		if (blockentity instanceof GenericTile generic && generic.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)) {
+			CapabilityInventory inv = generic.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 			if (MatterOverdriveConfig.machines_drop_items.get()) {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

@@ -105,7 +105,7 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 			return 0;
 		}, () -> {
 			TilePatternStorage matter = getMenu().getTile();
-			if (matter != null && matter.clientTilePowered) {
+			if (matter != null && matter.isPowered()) {
 				int drives = 0;
 				List<ItemStack> drivesList = matter.getInventoryCap() == null ? new ArrayList<>() : matter.getInventoryCap().getItems().subList(0, 6);
 				for(ItemStack stack : drivesList) {
@@ -123,7 +123,7 @@ public class ScreenPatternStorage extends GenericOverdriveScreen<InventoryPatter
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TilePatternStorage inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.clientTilePowered;
+				return inscriber.isPowered();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1}));

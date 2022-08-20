@@ -8,7 +8,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
-import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.core.utils.UtilsWorld;
@@ -20,7 +20,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class TileSpacetimeAccelerator extends GenericUpgradableTile {
+public class TileSpacetimeAccelerator extends GenericMachineTile {
 
 	public static final int SLOT_COUNT = 6;
 
@@ -30,10 +30,6 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 	public static final int ENERGY_CAPACITY = 512000;
 	public static final double MATTER_CAPACITY = 1024;
 	public static final double DEFAULT_MULTIPLIER = 1.5;
-
-	private boolean running = false;
-
-	public boolean clientRunning;
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -72,14 +68,17 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 				new SimpleMenuProvider((id, inv, play) -> new InventorySpacetimeAccelerator(id, play.getInventory(),
 						getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.SPACETIME_ACCELERATOR.id())));
 		setTickable();
-		setHasRenderData();
 	}
 
 	@Override
 	public void tickServer() {
+		boolean flag = false;
 		if (!canRun()) {
 			resetRadiusMultipliers();
-			running = false;
+			flag = setRunning(false);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
@@ -88,18 +87,24 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			resetRadiusMultipliers();
-			running = false;
+			flag = setRunning(false);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			resetRadiusMultipliers();
-			running = false;
+			flag = setRunning(false);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 
-		running = true;
+		setRunning(true);
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		matter.removeMatter(getCurrentMatterUsage());
 		if (ticks % 10 == 0) {
@@ -110,23 +115,13 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 
 	@Override
 	public void tickClient() {
-		if (clientRunning && ticks % (getCurrentRange() * 5) == 0) {
+		if (isRunning() && ticks % (getCurrentRange() * 5) == 0) {
 			ParticleOptionShockwave shockwave = new ParticleOptionShockwave();
 			shockwave.setMaxScale((float) getCurrentRange());
 			shockwave.setColor(191, 228, 230, 255);
 			BlockPos pos = getBlockPos();
 			getLevel().addParticle(shockwave, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0, 0);
 		}
-	}
-
-	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("running", running);
-	}
-
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientRunning = tag.getBoolean("running");
 	}
 
 	@Override
@@ -153,29 +148,14 @@ public class TileSpacetimeAccelerator extends GenericUpgradableTile {
 		setRange(additional.getDouble("radius"));
 
 	}
-
+	
 	@Override
-	public double getCurrentMatterStorage() {
-		return getMatterStorageCap().getMaxMatterStored();
-	}
-
-	@Override
-	public double getCurrentPowerStorage() {
-		return getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public void setMatterStorage(double storage) {
-		getMatterStorageCap().updateMaxMatterStorage(storage);
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 
 	private void resetRadiusMultipliers() {
-		if (running) {
+		if (isRunning()) {
 			updateSurroundingTileMultipliers(1.0);
 		}
 	}

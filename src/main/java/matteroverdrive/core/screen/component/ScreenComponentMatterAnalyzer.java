@@ -44,7 +44,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileMatterAnalyzer analyzer = supplier.get();
-		if(analyzer != null && analyzer.isRunning) {
+		if(analyzer != null && analyzer.isRunning()) {
 			int color = UtilsRendering.TITLE_BLUE;
 			
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -53,7 +53,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 			
 			int seed = Item.getId(analyzer.clientScannedItem.getItem());
 			random.setSeed((long) seed);
-			int progress = (int) Math.ceil(26.0D * (analyzer.clientProgress / analyzer.getProcessingTime()));
+			int progress = (int) Math.ceil(26.0D * (analyzer.getProgress() / analyzer.getProcessingTime()));
 			
 			int marginsTop = 8;
 			int marginsLeft = 7;

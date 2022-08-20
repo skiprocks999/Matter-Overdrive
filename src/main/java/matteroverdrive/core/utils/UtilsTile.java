@@ -17,12 +17,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class UtilsTile {
 
 	public static void outputEnergy(GenericTile tile) {
-		if (tile.hasEnergyStorageCap()) {
-			CapabilityEnergyStorage energy = tile.getEnergyStorageCap();
+		if (tile.hasCapability(CapabilityEnergy.ENERGY)) {
+			CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
 			if (energy.canExtract()) {
@@ -73,8 +74,8 @@ public class UtilsTile {
 	}
 
 	public static void drainElectricSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.getInventoryCap();
-		CapabilityEnergyStorage energy = tile.getEnergyStorageCap();
+		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
 		for (ItemStack stack : inv.getEnergyItems()) {
 			if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
 				IEnergyStorage storage = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve()
@@ -89,8 +90,8 @@ public class UtilsTile {
 	}
 
 	public static void outputMatter(GenericTile tile) {
-		if (tile.hasMatterStorageCap()) {
-			CapabilityMatterStorage matter = tile.getMatterStorageCap();
+		if (tile.hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE)) {
+			CapabilityMatterStorage matter = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
 			if (matter.canExtract() && matter.getMatterStored() > 0) {
@@ -134,8 +135,8 @@ public class UtilsTile {
 	}
 	
 	public static void drainMatterSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.getInventoryCap();
-		CapabilityMatterStorage energy = tile.getMatterStorageCap();
+		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		CapabilityMatterStorage energy = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 		for (ItemStack stack : inv.getMatterItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
 				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve()
@@ -150,8 +151,8 @@ public class UtilsTile {
 	}
 
 	public static void fillMatterSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.getInventoryCap();
-		CapabilityMatterStorage matter = tile.getMatterStorageCap();
+		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		CapabilityMatterStorage matter = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 		for (ItemStack stack : inv.getMatterItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
 				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack

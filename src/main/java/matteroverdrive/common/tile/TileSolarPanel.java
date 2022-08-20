@@ -6,7 +6,7 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
-import matteroverdrive.core.tile.types.GenericUpgradableTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,16 +16,12 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileSolarPanel extends GenericUpgradableTile {
+public class TileSolarPanel extends GenericMachineTile {
 
 	public static final int SLOT_COUNT = 2;
 	public static final int GENERATION = 5;
 
 	private static final int ENERGY_STORAGE = 64000;
-
-	private boolean generating = false;
-
-	public boolean clientGenerating;
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -48,7 +44,6 @@ public class TileSolarPanel extends GenericUpgradableTile {
 				(id, inv, play) -> new InventorySolarPanel(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.SOLAR_PANEL.id())));
 		setTickable();
-		setHasMenuData();
 	}
 
 	@Override
@@ -56,36 +51,19 @@ public class TileSolarPanel extends GenericUpgradableTile {
 		if (canRun()) {
 			if (ticks % 5 == 0) {
 				Level world = getLevel();
-				generating = world.isDay() && world.canSeeSky(getBlockPos());
+				setRunning(world.isDay() && world.canSeeSky(getBlockPos()));
 			}
-			if (generating) {
+			if (isRunning()) {
 				CapabilityEnergyStorage energy = getEnergyStorageCap();
 				energy.giveEnergy((int) (GENERATION * getAcceleratorMultiplier()));
 			}
 			UtilsTile.outputEnergy(this);
 			setChanged();
 		} else {
-			generating = false;
+			if(setRunning(false)) {
+				setChanged();
+			}
 		}
-	}
-
-	@Override
-	public void getMenuData(CompoundTag tag) {
-		tag.putBoolean("generating", generating);
-	}
-
-	public void readMenuData(CompoundTag tag) {
-		clientGenerating = tag.getBoolean("generating");
-	}
-
-	@Override
-	public double getCurrentPowerStorage() {
-		return getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
 	}
 
 }

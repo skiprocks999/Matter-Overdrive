@@ -13,7 +13,7 @@ import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.recipe.CountableIngredient;
 import matteroverdrive.core.sound.SoundBarrierMethods;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.TileRegistry;
@@ -24,7 +24,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileInscriber extends GenericSoundTile {
+public class TileInscriber extends GenericMachineTile {
 
 	public static final int SLOT_COUNT = 8;
 
@@ -32,10 +32,6 @@ public class TileInscriber extends GenericSoundTile {
 	private static final int USAGE_PER_TICK = 250;
 	private static final int ENERGY_STORAGE = 512000;
 	private static final int DEFAULT_SPEED = 1;
-
-	private double currProgress = 0;
-
-	public double clientProgress;
 
 	private InscriberRecipe cachedRecipe;
 	
@@ -51,6 +47,7 @@ public class TileInscriber extends GenericSoundTile {
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
+		defaultProcessingTime = OPERATING_TIME;
 		
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT.create(() -> getInventoryCap().serializeNBT(),
 				tag -> getInventoryCap().deserializeNBT(tag)));
@@ -73,9 +70,13 @@ public class TileInscriber extends GenericSoundTile {
 
 	@Override
 	public void tickServer() {
+		boolean flag = false;
 		if (!canRun()) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
@@ -84,8 +85,11 @@ public class TileInscriber extends GenericSoundTile {
 		ItemStack input1 = inputs.get(0);
 		ItemStack input2 = inputs.get(1);
 		if (input1.isEmpty() || input2.isEmpty()) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 		boolean matched = false;
@@ -100,24 +104,29 @@ public class TileInscriber extends GenericSoundTile {
 			matched = cachedRecipe.matchesRecipe(inv, 0);
 		}
 		if (!matched) {
-			isRunning = false;
-			currProgress = 0;
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if(flag) {
+				setChanged();
+			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			isRunning = false;
+			if(setRunning(false)) {
+				setChanged();
+			}
 			return;
 		}
 		ItemStack output = inv.getOutputs().get(0);
 		ItemStack result = cachedRecipe.getResultItem();
 		if ((output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-			isRunning = true;
-			currProgress += getCurrentSpeed();
+			setRunning(true);
+			incrementProgress(getCurrentSpeed());
 			energy.removeEnergy((int) getCurrentPowerUsage());
-			if (currProgress >= OPERATING_TIME) {
-				currProgress = 0;
+			if (getProgress() >= OPERATING_TIME) {
+				setProgress(0);
 				if (output.isEmpty()) {
 					inv.setStackInSlot(2, result.copy());
 				} else {
@@ -132,7 +141,9 @@ public class TileInscriber extends GenericSoundTile {
 			}
 			setChanged();
 		} else {
-			isRunning = false;
+			if(setRunning(false)) {
+				setChanged();
+			}
 		}
 	}
 
@@ -145,21 +156,11 @@ public class TileInscriber extends GenericSoundTile {
 	}
 
 	@Override
-	public void getMenuData(CompoundTag tag) {
-		tag.putDouble("progress", currProgress);
-	}
-
-	@Override
-	public void readMenuData(CompoundTag tag) {
-		clientProgress = tag.getDouble("progress");
-	}
-
-	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("progress", currProgress);
+		additional.putDouble("progress", getProgress());
 		additional.putDouble("speed", getCurrentSpeed());
 		additional.putDouble("usage", getCurrentPowerUsage());
 		tag.put("additional", additional);
@@ -170,24 +171,14 @@ public class TileInscriber extends GenericSoundTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		currProgress = additional.getDouble("progress");
+		setProgress(additional.getDouble("progress"));
 		setSpeed(additional.getDouble("speed"));
 		setPowerUsage(additional.getDouble("usage"));
 	}
 	
 	@Override
-	public double getCurrentPowerStorage() {
-		return getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
-
-	@Override
-	public double getProcessingTime() {
-		return OPERATING_TIME;
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 
 	private List<InscriberRecipe> getRecipes() {

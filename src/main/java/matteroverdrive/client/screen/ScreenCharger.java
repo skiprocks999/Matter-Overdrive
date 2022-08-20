@@ -102,7 +102,7 @@ public class ScreenCharger extends GenericOverdriveScreen<InventoryCharger> {
 			return 0;
 		}, () -> {
 			TileCharger charger = getMenu().getTile();
-			if (charger != null && charger.clientRunning) {
+			if (charger != null && charger.isRunning()) {
 				return charger.getCurrentPowerUsage();
 			}
 			return 0;
@@ -110,7 +110,7 @@ public class ScreenCharger extends GenericOverdriveScreen<InventoryCharger> {
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileCharger charger = getMenu().getTile();;
 			if (charger != null) {
-				return charger.clientRunning;
+				return charger.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2 }));

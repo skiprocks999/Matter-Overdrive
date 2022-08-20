@@ -29,6 +29,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockTritaniumCrate extends GenericEntityBlock {
 
@@ -79,7 +80,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof TileTritaniumCrate crate) {
-			CapabilityInventory inv = crate.getInventoryCap();
+			CapabilityInventory inv = crate.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 			if (MatterOverdriveConfig.crate_drop_items.get()) {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

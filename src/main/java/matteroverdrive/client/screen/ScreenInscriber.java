@@ -244,7 +244,7 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return (double) inscriber.clientProgress / (double) TileInscriber.OPERATING_TIME;
+				return (double) inscriber.getProgress() / (double) TileInscriber.OPERATING_TIME;
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
@@ -262,7 +262,7 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 			return 0;
 		}, () -> {
 			TileInscriber inscriber = getMenu().getTile();
-			if (inscriber != null && inscriber.isRunning) {
+			if (inscriber != null && inscriber.isRunning()) {
 				return inscriber.getCurrentPowerUsage();
 			}
 			return 0;
@@ -270,7 +270,7 @@ public class ScreenInscriber extends GenericOverdriveScreen<InventoryInscriber> 
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileInscriber inscriber = getMenu().getTile();
 			if (inscriber != null) {
-				return inscriber.isRunning;
+				return inscriber.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));

@@ -1,19 +1,13 @@
 package matteroverdrive.core.tile;
 
 import matteroverdrive.References;
-import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
-import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
-import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import matteroverdrive.core.tile.utils.ITickableTile;
 import matteroverdrive.core.tile.utils.IUpdatableTile;
-import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,16 +16,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.TriPredicate;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -110,10 +100,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		for(IOverdriveCapability cap : capabilities.values()) {
-			cap.onLoad(this);
-		}
 		if (!level.isClientSide()) {
+			for(IOverdriveCapability cap : capabilities.values()) {
+				cap.onLoad(this);
+			}
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
 	}
@@ -146,6 +136,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 		for (IOverdriveCapability cap : capabilities.values()) {
 			cap.deserializeNBT(tag.getCompound(cap.getSaveKey()));
 		}
+		
 	}
 	
 	@Override
@@ -154,7 +145,9 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 			//call me a butcher, because I'm hacking this game
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
-		return super.getUpdateTag();
+		CompoundTag tag = super.getUpdateTag();
+		getFirstContactData(tag);
+		return tag;
 	}
 
 	/**
@@ -205,56 +198,15 @@ public abstract class GenericTile extends BlockEntity implements Nameable, ITick
 	public void incrementTicks() {
 		ticks++;
 	};
-	
-	//Util methods
-	
-	public void addEnergyStorageCap(CapabilityEnergyStorage cap) {
-		addCapability(CapabilityEnergy.ENERGY, cap);
-	}
-	
-	public void addMatterStorageCap(CapabilityMatterStorage cap) {
-		addCapability(MatterOverdriveCapabilities.MATTER_STORAGE, cap);
-	}
-	
-	public void addInventoryCap(CapabilityInventory cap) {
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, cap);
-	}
-	
-	//Serverside only!
-	public CapabilityEnergyStorage getEnergyStorageCap() {
-		return (CapabilityEnergyStorage) capabilities.get(CapabilityEnergy.ENERGY);
-	}
-	
-	public CapabilityMatterStorage getMatterStorageCap() {
-		return (CapabilityMatterStorage) capabilities.get(MatterOverdriveCapabilities.MATTER_STORAGE);
-	}
-	
-	public CapabilityInventory getInventoryCap() {
-		return (CapabilityInventory) capabilities.get(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-	}
-	
-	public boolean hasInventoryCap() {
-		return hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-	}
-	
-	public boolean hasEnergyStorageCap() {
-		return hasCapability(CapabilityEnergy.ENERGY);
-	}
-	
-	public boolean hasMatterStorageCap() {
-		return hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
-	}
-	
-	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {
-		return (x, y, i) -> x < i.outputIndex()
-				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
-				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
-				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
-						&& i.isUpgradeValid(upgrade.type);
-	}
 
 	@Override
 	public PropertyManager getPropertyManager() {
 		return this.propertyManager;
 	}
+	
+	//Override this if your class overrides saveAdditional()
+	public void getFirstContactData(CompoundTag tag) {
+		
+	}
+	
 }

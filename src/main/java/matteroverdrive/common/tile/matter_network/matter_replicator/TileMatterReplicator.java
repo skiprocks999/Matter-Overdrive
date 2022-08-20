@@ -28,7 +28,7 @@ import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
-import matteroverdrive.core.tile.types.GenericSoundTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
@@ -54,7 +54,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
 
-public class TileMatterReplicator extends GenericSoundTile implements IMatterNetworkMember {
+public class TileMatterReplicator extends GenericMachineTile implements IMatterNetworkMember {
 
 	public static final int SLOT_COUNT = 10;
 	
@@ -67,22 +67,16 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	public static final int SOUND_TICKS = 92;
 	public static final int NEEDED_PLATES = 5;
 	
-	private boolean isPowered = false;
 	private List<QueuedReplication> orders = new ArrayList<>();
-	private double currRecipeValue = 0;
-	private double currProgress = 0;
 	private QueuedReplication currentOrder = null;
 	private boolean usingFused = false;
 	
 	//Render data
-	public boolean clientPowered;
-	public QueuedReplication clientCurrentOrder;
-	public double clientRecipeValue;
 	private SoundHandlerReplicator soundHandler;
+	public QueuedReplication clientCurrentOrder;
 	
 	//Menu data
 	public List<QueuedReplication> clientOrders;
-	public double clientProgress;
 	public ItemStack outputItem = ItemStack.EMPTY;
 	
 	public final Property<CompoundTag> capInventoryProp;
@@ -129,27 +123,34 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		UtilsTile.drainMatterSlot(this);
 		removeCompletedOrders();
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+		boolean flag = false;
 		if(!canRun()) {
-			isRunning = false;
-			isPowered = false;
-			currProgress = 0;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			flag |= setPowered(false);
+			flag |= setProgress(0);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if(energy.getEnergyStored() < getCurrentPowerUsage()) {
-			isRunning = false;
-			isPowered = false;
-			currProgress = 0;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			flag |= setPowered(false);
+			flag |= setProgress(0);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
-		isPowered = true;
+		setPowered(true);
 		
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack drive = inv.getStackInSlot(0);
@@ -169,10 +170,13 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		}
 		
 		if(orders.size() <= 0) {
-			isRunning = false;
-			currProgress = 0;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
@@ -182,22 +186,28 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 		if(value <= 0.0 || currentOrder == null || currentOrder.getPercentage() <= 0) {
 			currentOrder.cancel();
-			isRunning = false;
-			currProgress = 0;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			flag |= setProgress(0);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
-		currRecipeValue = value;
+		setRecipeValue(value);
 		
 		List<ItemStack> outputs = inv.getOutputs();
 		ItemStack dust = outputs.get(1);
 		boolean dustEmpty = dust.isEmpty();
 		if(!dustEmpty && !(UtilsNbt.readMatterVal(dust) == value && dust.getCount() < dust.getMaxStackSize())) {
-			isRunning = false;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
@@ -205,24 +215,30 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		ItemStack output = outputs.get(0);
 		boolean outputEmpty = output.isEmpty();
 		if(!outputEmpty && !(ItemStack.isSame(stack, output) && output.getCount() < output.getMaxStackSize())) {
-			isRunning = false;
-			if (currState && !isRunning) {
+			flag = setRunning(false);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		
 		CapabilityMatterStorage matter = getMatterStorageCap();
-		if(matter.getMatterStored() < currRecipeValue) {
-			isRunning = false;
-			if (currState && !isRunning) {
+		if(matter.getMatterStored() < getRecipeValue()) {
+			flag = setRunning(false);
+			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
+			}
+			if(flag) {
+				setChanged();
 			}
 			return;
 		}
 		
-		isRunning = true;
-		currProgress += getCurrentSpeed();
+		setRunning(true);
+		incrementProgress(getCurrentSpeed());
 		
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		int plateCount = inv.getStackInSlot(1).getCount();
@@ -236,7 +252,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			}
 		}
 		
-		if (!currState && isRunning) {
+		if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 		
@@ -244,18 +260,18 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		
 		
 		
-		if(currProgress < currRecipeValue * MATTER_MULTIPLIER) {
+		if(getProgress() < getRecipeValue() * MATTER_MULTIPLIER) {
 			return;
 		}
 		
-		currProgress = 0;
+		setProgress(0);
 		currentOrder.decRemaining();
 		float progToFloat = (float) currentOrder.getPercentage() / 100.0F;
 		
 		if(roll() < getCurrentFailure() / progToFloat) {
 			if(dustEmpty) {
 				ItemStack newDust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
-				UtilsNbt.writeMatterVal(newDust, currRecipeValue);
+				UtilsNbt.writeMatterVal(newDust, getRecipeValue());
 				inv.setStackInSlot(3, newDust.copy());
 			} else {
 				dust.grow(1);
@@ -269,9 +285,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			output.grow(1);
 		}
 		
-		matter.removeMatter(currRecipeValue);
+		matter.removeMatter(getRecipeValue());
 		currentOrder = null;
-		currRecipeValue = 0;
+		setRecipeValue(0);
 		setChanged();
 
 	}
@@ -282,11 +298,11 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			soundHandler = new SoundHandlerReplicator(this);
 		}
 		soundHandler.tick(getAdjustedTicks(), clientSoundPlaying);
-		if(isRunning && clientCurrentOrder != null) {
+		if(isRunning() && clientCurrentOrder != null) {
 			Level world = getLevel();
 			BlockPos blockPos = getBlockPos();
 			ItemEntity entity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.25, blockPos.getZ() + 0.5D, new ItemStack(clientCurrentOrder.getItem()));
-			float progress = (float) clientProgress / (float) (getProcessingTime() == 0 ? 1 : getProcessingTime());
+			float progress = (float) getProgress() / (float) (getProcessingTime() == 0 ? 1 : getProcessingTime());
 			Vector3f vec = new Vector3f((float) entity.getX(), (float) entity.getY(), (float) entity.getZ());
 			double entityRadius = entity.getBbWidth();
 			Random random = MatterOverdrive.RANDOM;
@@ -350,12 +366,9 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	@Override
 	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("powered", isPowered);
 		if(orders.size() > 0) {
 			orders.get(0).writeToNbt(tag, "order");
 		}
-		tag.putDouble("progress", currProgress);
-		tag.putDouble("recipe", currRecipeValue);
 		CapabilityInventory inv = getInventoryCap();
 		CompoundTag item = new CompoundTag();
 		inv.getStackInSlot(2).save(item);
@@ -364,14 +377,11 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	@Override
 	public void readRenderData(CompoundTag tag) {
-		clientPowered = tag.getBoolean("powered");
 		if(tag.contains("order")) {
 			clientCurrentOrder = QueuedReplication.readFromNbt(tag.getCompound("order"));
 		} else {
 			clientCurrentOrder = null;
 		}
-		clientRecipeValue = tag.getDouble("recipe");
-		clientProgress = tag.getDouble("progress");
 		outputItem = ItemStack.of(tag.getCompound("item"));
 	}
 	
@@ -386,7 +396,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			orders.get(i).writeToNbt(data, "order" + i);
 		}
 		
-		data.putDouble("progress", currProgress);
+		data.putDouble("progress", getProgress());
 		data.putDouble("speed", getCurrentSpeed());
 		data.putFloat("failure", getCurrentFailure());
 		data.putDouble("usage", getCurrentPowerUsage());
@@ -407,7 +417,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 			orders.add(QueuedReplication.readFromNbt(data.getCompound("order" + i)));
 		}
 		
-		currProgress = data.getDouble("progress");
+		setProgress(data.getDouble("progress"));
 		setSpeed(data.getDouble("speed"));
 		setFailure(data.getFloat("failure"));
 		setPowerUsage(data.getDouble("usage"));
@@ -416,28 +426,8 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	}
 
 	@Override
-	public double getCurrentMatterStorage() {
-		return getMatterStorageCap().getMaxMatterStored();
-	}
-
-	@Override
-	public double getCurrentPowerStorage() {
-		return getEnergyStorageCap().getMaxEnergyStored();
-	}
-
-	@Override
-	public void setMatterStorage(double storage) {
-		getMatterStorageCap().updateMaxMatterStorage(storage);
-	}
-
-	@Override
-	public void setPowerStorage(double storage) {
-		getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
-	}
-
-	@Override
 	public double getProcessingTime() {
-		return clientRecipeValue * MATTER_MULTIPLIER;
+		return getRecipeValue() * MATTER_MULTIPLIER;
 	}
 
 	@Override
@@ -461,7 +451,12 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	@Override
 	public boolean isPowered(boolean client) {
-		return client ? clientPowered : isPowered;
+		return isPowered();
+	}
+	
+	@Override
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 	
 	public CompoundTag getNetworkData() {
@@ -469,7 +464,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 		
 		CapabilityInventory inv = getInventoryCap();
 		data.put(inv.getSaveKey(), inv.serializeNBT());
-		data.putBoolean("ispowered", isPowered);
+		data.putBoolean("ispowered", isPowered());
 		
 		int size = orders.size();
 		data.putInt("orderCount", size);
@@ -521,7 +516,7 @@ public class TileMatterReplicator extends GenericSoundTile implements IMatterNet
 	
 	public void cancelOrder(int index) {
 		orders.get(index).cancel();
-		currProgress = 0;
+		setProgress(0);
 		currentOrder = null;
 		setChanged();
 	}

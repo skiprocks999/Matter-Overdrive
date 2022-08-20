@@ -22,8 +22,8 @@ public class SoundHandlerReplicator {
 	
 	public void tick(int adjustedTicks, boolean playing) {
 		
-		boolean playReplicateSound = ((replicator.getProcessingTime() - replicator.clientProgress) / (replicator.getCurrentSpeed() == 0 ? 1.0D : replicator.getCurrentSpeed())) <= TileMatterReplicator.SOUND_TICKS;
-		boolean continuous = (adjustedTicks <= TileMatterReplicator.SOUND_TICKS) || (replicator.clientRecipeValue <= 1);
+		boolean playReplicateSound = ((replicator.getProcessingTime() - replicator.getProgress()) / (replicator.getCurrentSpeed() == 0 ? 1.0D : replicator.getCurrentSpeed())) <= TileMatterReplicator.SOUND_TICKS;
+		boolean continuous = (adjustedTicks <= TileMatterReplicator.SOUND_TICKS) || (replicator.getRecipeValue() <= 1);
 		
 		
 		
@@ -53,7 +53,7 @@ public class SoundHandlerReplicator {
 			replicator.setSoundPlaying();
 		}
 		
-		if(replicator.clientProgress <= 12 && playing) {
+		if(replicator.getProgress() <= 12 && playing) {
 			playingReplicationSound = false;
 		}
 		

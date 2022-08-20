@@ -244,7 +244,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return (double) microwave.clientProgress / (double) TileMicrowave.OPERATING_TIME;
+				return (double) microwave.getProgress() / (double) TileMicrowave.OPERATING_TIME;
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
@@ -262,7 +262,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 			return 0;
 		}, () -> {
 			TileMicrowave microwave = getMenu().getTile();
-			if (microwave != null && microwave.isRunning) {
+			if (microwave != null && microwave.isRunning()) {
 				return microwave.getCurrentPowerUsage();
 			}
 			return 0;
@@ -270,7 +270,7 @@ public class ScreenMicrowave extends GenericOverdriveScreen<InventoryMicrowave> 
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMicrowave microwave = getMenu().getTile();
 			if (microwave != null) {
-				return microwave.isRunning;
+				return microwave.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));

@@ -104,7 +104,7 @@ public class ScreenChunkloader extends GenericOverdriveScreen<InventoryChunkload
 			return 0;
 		}, () -> {
 			TileChunkloader supply = getMenu().getTile();
-			if (supply != null && supply.clientRunning) {
+			if (supply != null && supply.isRunning()) {
 				return supply.getCurrentPowerUsage();
 			}
 			return 0;
@@ -112,7 +112,7 @@ public class ScreenChunkloader extends GenericOverdriveScreen<InventoryChunkload
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileChunkloader supply = getMenu().getTile();
 			if (supply != null) {
-				return supply.clientRunning;
+				return supply.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2 }));

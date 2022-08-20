@@ -33,9 +33,9 @@ public class NetworkHandler {
 			PROTOCOL_VERSION::equals);
 
 	public static void init() {
-		
+
 		/* SERVER-BOUND */
-		
+
 		CHANNEL.registerMessage(disc++, PacketUpdateRedstoneMode.class, PacketUpdateRedstoneMode::encode,
 				PacketUpdateRedstoneMode::decode, PacketUpdateRedstoneMode::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
@@ -54,18 +54,23 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketCancelReplication.class, PacketCancelReplication::encode,
 				PacketCancelReplication::decode, PacketCancelReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, UpdateServerContainerPropertyMessage.class, UpdateServerContainerPropertyMessage::encode,
-						UpdateServerContainerPropertyMessage::decode, UpdateServerContainerPropertyMessage::consume,
-						Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, UpdateServerEntityPropertyMessage.class, UpdateServerEntityPropertyMessage::encode,
-						UpdateServerEntityPropertyMessage::decode, UpdateServerEntityPropertyMessage::consume,
-						Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, UpdateServerBlockEntityPropertyMessage.class, UpdateServerBlockEntityPropertyMessage::encode,
-						UpdateServerBlockEntityPropertyMessage::decode, UpdateServerBlockEntityPropertyMessage::consume,
-						Optional.of(NetworkDirection.PLAY_TO_SERVER));
 		
+		CHANNEL.messageBuilder(UpdateServerContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(UpdateServerContainerPropertyMessage::encode)
+				.decoder(UpdateServerContainerPropertyMessage::decode)
+				.consumerNetworkThread(UpdateServerContainerPropertyMessage::consume).add();
+		
+		CHANNEL.messageBuilder(UpdateServerEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(UpdateServerEntityPropertyMessage::encode).decoder(UpdateServerEntityPropertyMessage::decode)
+				.consumerNetworkThread(UpdateServerEntityPropertyMessage::consume).add();
+		
+		CHANNEL.messageBuilder(UpdateServerBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(UpdateServerBlockEntityPropertyMessage::encode)
+				.decoder(UpdateServerBlockEntityPropertyMessage::decode)
+				.consumerNetworkThread(UpdateServerBlockEntityPropertyMessage::consume).add();
+
 		/* CLIENT-BOUND */
-		
+
 		CHANNEL.registerMessage(disc++, PacketUpdateTile.class, PacketUpdateTile::encode, PacketUpdateTile::decode,
 				PacketUpdateTile::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
@@ -74,24 +79,29 @@ public class NetworkHandler {
 		CHANNEL.registerMessage(disc++, PacketSyncClientEntityCapability.class,
 				PacketSyncClientEntityCapability::encode, PacketSyncClientEntityCapability::decode,
 				PacketSyncClientEntityCapability::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketClientMNData.class,
-				PacketClientMNData::encode, PacketClientMNData::decode,
-				PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class,
-				PacketPlayMatterScannerSound::encode, PacketPlayMatterScannerSound::decode,
-				PacketPlayMatterScannerSound::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, UpdateClientContainerPropertyMessage.class,
-						UpdateClientContainerPropertyMessage::encode, UpdateClientContainerPropertyMessage::decode,
-						UpdateClientContainerPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, UpdateClientEntityPropertyMessage.class,
-						UpdateClientEntityPropertyMessage::encode, UpdateClientEntityPropertyMessage::decode,
-						UpdateClientEntityPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, UpdateClientBlockEntityPropertyMessage.class,
-						UpdateClientBlockEntityPropertyMessage::encode, UpdateClientBlockEntityPropertyMessage::decode,
-						UpdateClientBlockEntityPropertyMessage::consume, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketClientMNData.class, PacketClientMNData::encode,
+				PacketClientMNData::decode, PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class, PacketPlayMatterScannerSound::encode,
+				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle,
+				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		
+		CHANNEL.messageBuilder(UpdateClientContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(UpdateClientContainerPropertyMessage::encode)
+				.decoder(UpdateClientContainerPropertyMessage::decode)
+				.consumerNetworkThread(UpdateClientContainerPropertyMessage::consume).add();
+		
+		CHANNEL.messageBuilder(UpdateClientEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(UpdateClientEntityPropertyMessage::encode).decoder(UpdateClientEntityPropertyMessage::decode)
+				.consumerNetworkThread(UpdateClientEntityPropertyMessage::consume).add();
+		
+		CHANNEL.messageBuilder(UpdateClientBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(UpdateClientBlockEntityPropertyMessage::encode)
+				.decoder(UpdateClientBlockEntityPropertyMessage::decode)
+				.consumerNetworkThread(UpdateClientBlockEntityPropertyMessage::consume).add();
 	}
 
-	public static void sendUpdateClientContainerProperties(ServerPlayer player, UpdateClientContainerPropertyMessage message) {
+	public static void sendUpdateClientContainerProperties(ServerPlayer player,
+			UpdateClientContainerPropertyMessage message) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
 	}
 
@@ -107,11 +117,13 @@ public class NetworkHandler {
 		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.noArg(), message);
 	}
 
-	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk, UpdateClientBlockEntityPropertyMessage message) {
+	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk,
+			UpdateClientBlockEntityPropertyMessage message) {
 		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 
-	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk, UpdateServerBlockEntityPropertyMessage message) {
+	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk,
+			UpdateServerBlockEntityPropertyMessage message) {
 		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 

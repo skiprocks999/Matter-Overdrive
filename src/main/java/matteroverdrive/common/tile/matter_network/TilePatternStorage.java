@@ -21,7 +21,7 @@ import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
-import matteroverdrive.core.tile.types.GenericRedstoneTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
@@ -41,7 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.TriPredicate;
 
-public class TilePatternStorage extends GenericRedstoneTile implements IMatterNetworkMember {
+public class TilePatternStorage extends GenericMachineTile implements IMatterNetworkMember {
 
 	private static final List<ItemStack> EMPTY_DRIVES = new ArrayList<>();
 	
@@ -54,14 +54,10 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		EMPTY_DRIVES.add(ItemStack.EMPTY);
 	}
 	
-	private boolean isPowered = false;
-	
 	public static final int SLOT_COUNT = 9;
 	private static final int ENERGY_STORAGE = 64000;
 	public static final int BASE_USAGE = 50;
 	public static final int USAGE_PER_DRIVE = 100;
-	
-	public boolean clientTilePowered;	
 	
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -83,13 +79,14 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 								getInventoryCap(), getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_STORAGE.id())));
 		setTickable();
-		setHasRenderData();
 	}
 	
 	@Override
 	public void tickServer() {
 		if(!canRun()) {
-			isPowered = false;
+			if(setPowered(false)) {
+				setChanged();
+			}
 			return;
 		} 
 
@@ -105,10 +102,12 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
 		
 		if(energy.getEnergyStored() < usage) {
-			isPowered = false;
+			if(setPowered(false)) {
+				setChanged();
+			}
 			return;
 		} 
-		isPowered = true;
+		setPowered(true);
 		energy.removeEnergy(usage);
 		
 		ItemStack scanner = inv.getStackInSlot(6);
@@ -122,21 +121,11 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public void tickClient() {
-		if(clientTilePowered && MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+		if(isPowered() && MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
 			Vector3f pos = UtilsMath.blockPosToVector(worldPosition);
 			pos.add(0.5F, 0.5F, 0.5F);
 			UtilsParticle.spawnVentParticles(pos, 0.03F, getFacing(), 1);
 		}
-	}
-	
-	@Override
-	public void getRenderData(CompoundTag tag) {
-		tag.putBoolean("isPowered", isPowered);
-	}
-	
-	@Override
-	public void readRenderData(CompoundTag tag) {
-		clientTilePowered = tag.getBoolean("isPowered");
 	}
 
 	@Override
@@ -158,7 +147,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 	
 	@Override
 	public boolean isPowered(boolean client) {
-		return client ? clientTilePowered : isPowered;
+		return isPowered();
 	}
 	
 	public CompoundTag getNetworkData() {
@@ -171,7 +160,7 @@ public class TilePatternStorage extends GenericRedstoneTile implements IMatterNe
 			wrappers.get(i).writeToNbt(data, "pattern" + i);
 		}
 		
-		data.putBoolean("ispowered", isPowered);
+		data.putBoolean("ispowered", isPowered());
 		
 		return data;
 	}

@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
+public abstract class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
 
 	public int currRedstoneMode = 0;
 
@@ -33,6 +33,11 @@ public class GenericRedstoneTile extends GenericTile implements IRedstoneModeTil
 	public void load(CompoundTag tag) {
 		super.load(tag);
 		loadMode(tag.getCompound("redstone"));
+	}
+	
+	@Override
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 
 	@Override

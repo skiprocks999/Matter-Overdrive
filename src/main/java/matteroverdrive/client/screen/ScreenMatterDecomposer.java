@@ -311,7 +311,7 @@ public class ScreenMatterDecomposer extends GenericOverdriveScreen<InventoryMatt
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
-				return (double) matter.clientProgress / (double) TileMatterDecomposer.OPERATING_TIME;
+				return (double) matter.getProgress() / (double) TileMatterDecomposer.OPERATING_TIME;
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
@@ -329,7 +329,7 @@ public class ScreenMatterDecomposer extends GenericOverdriveScreen<InventoryMatt
 			return 0;
 		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null && matter.isRunning) {
+			if (matter != null && matter.isRunning()) {
 				return matter.getCurrentPowerUsage();
 			}
 			return 0;
@@ -348,15 +348,15 @@ public class ScreenMatterDecomposer extends GenericOverdriveScreen<InventoryMatt
 			return 0;
 		}, () -> {
 			TileMatterDecomposer matter = getMenu().getTile();
-			if (matter != null && matter.isRunning) {
-				return matter.clientRecipeValue;
+			if (matter != null && matter.isRunning()) {
+				return matter.getRecipeValue();
 			}
 			return 0;
 		}, this, 95, 35, new int[] { 0 }).setGenerator().setMatter());
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterDecomposer matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.isRunning;
+				return matter.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));

@@ -17,6 +17,7 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	public double defaultPowerUsage = 0;
 	public double defaultRange = 0;
 	public float defaultFailureChance = 0;
+	public double defaultProcessingTime = 0;
 
 	// Currents
 	private double currentSpeed = 0;
@@ -159,6 +160,11 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public void setMuffled(boolean muffled) {
 		this.currIsMuffled.set(muffled);
+	}
+	
+	@Override
+	public double getProcessingTime() {
+		return defaultProcessingTime;
 	}
 	
 	//GETTERS

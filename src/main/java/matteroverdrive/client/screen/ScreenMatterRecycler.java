@@ -244,7 +244,7 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentProgress(() -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return (double) matter.clientProgress / (double) TileMatterRecycler.OPERATING_TIME;
+				return (double) matter.getProgress() / (double) TileMatterRecycler.OPERATING_TIME;
 			}
 			return 0;
 		}, this, 33, 48, new int[] { 0 }));
@@ -262,7 +262,7 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 			return 0;
 		}, () -> {
 			TileMatterRecycler matter = getMenu().getTile();
-			if (matter != null && matter.isRunning) {
+			if (matter != null && matter.isRunning()) {
 				return matter.getCurrentPowerUsage();
 			}
 			return 0;
@@ -270,7 +270,7 @@ public class ScreenMatterRecycler extends GenericOverdriveScreen<InventoryMatter
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterRecycler matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.isRunning;
+				return matter.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3 }));

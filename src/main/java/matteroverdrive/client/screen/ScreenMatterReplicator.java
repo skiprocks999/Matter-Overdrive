@@ -373,7 +373,7 @@ public class ScreenMatterReplicator extends GenericOverdriveScreen<InventoryMatt
 			return 0;
 		}, () -> {
 			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null && matter.isRunning) {
+			if (matter != null && matter.isRunning()) {
 				return matter.getCurrentPowerUsage();
 			}
 			return 0;
@@ -392,8 +392,8 @@ public class ScreenMatterReplicator extends GenericOverdriveScreen<InventoryMatt
 			return 0;
 		}, () -> {
 			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null && matter.isRunning) {
-				return matter.clientRecipeValue;
+			if (matter != null && matter.isRunning()) {
+				return matter.getRecipeValue();
 			}
 			return 0;
 		}, this, 133, 35, new int[] { 0 }).setMatter());
@@ -402,14 +402,14 @@ public class ScreenMatterReplicator extends GenericOverdriveScreen<InventoryMatt
 		}, itemRenderer, () -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
-				return (double) matter.clientProgress / matter.getProcessingTime();
+				return (double) matter.getProgress() / matter.getProcessingTime();
 			}
 			return 0;
 		}));
 		addScreenComponent(new ScreenComponentIndicator(() -> {
 			TileMatterReplicator matter = getMenu().getTile();
 			if (matter != null) {
-				return matter.isRunning;
+				return matter.isRunning();
 			}
 			return false;
 		}, this, 6, 159, new int[] { 0, 1, 2, 3, 4 }));
