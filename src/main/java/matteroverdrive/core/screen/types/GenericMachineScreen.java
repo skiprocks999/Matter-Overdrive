@@ -21,9 +21,6 @@ import net.minecraft.world.entity.player.Inventory;
 public abstract class GenericMachineScreen<T extends GenericInventoryTile<? extends GenericMachineTile>>
 		extends GenericOverdriveScreen<T> {
 
-	protected int menuOptionStartHeight = 0;
-	protected int menuOptionSeperation = 0;
-
 	public GenericMachineScreen(T menu, Inventory playerinventory, Component title) {
 		super(menu, playerinventory, title);
 	}

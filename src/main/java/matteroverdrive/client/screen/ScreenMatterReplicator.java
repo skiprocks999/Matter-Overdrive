@@ -1,7 +1,6 @@
 package matteroverdrive.client.screen;
 
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
-import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentPatternHolder;
@@ -249,15 +248,7 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 
 		addScreenComponent(defaultEnergyBar(167, 35, new int[] { 0 }));
 		addScreenComponent(defaultRecipeMatterBar(133, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentPatternHolder(this, 5, 45, new int[] { 0 }, () -> {
-			return getMenu().getTile();
-		}, itemRenderer, () -> {
-			TileMatterReplicator matter = getMenu().getTile();
-			if (matter != null) {
-				return (double) matter.getProgress() / matter.getProcessingTime();
-			}
-			return 0;
-		}));
+		addScreenComponent(new ScreenComponentPatternHolder(this, 5, 45, new int[] { 0 }, itemRenderer));
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),

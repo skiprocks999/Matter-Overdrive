@@ -6,9 +6,7 @@ import java.util.function.Supplier;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.transporter.TileTransporter;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
+import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
@@ -94,7 +92,7 @@ public class WrapperTransporterLocationEditer {
 			xCoordinateBox.setFocus(true);
 			yCoordinateBox.setFocus(false);
 			zCoordinateBox.setFocus(false);
-			sendCoordinateChange(string, 0, currIndex, getCurrentPos());
+			sendCoordinateChange(string, 0, currIndex);
 		});
 
 		yCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 70 + yOffset, 70, 15,
@@ -111,7 +109,7 @@ public class WrapperTransporterLocationEditer {
 			xCoordinateBox.setFocus(false);
 			yCoordinateBox.setFocus(true);
 			zCoordinateBox.setFocus(false);
-			sendCoordinateChange(string, 1, currIndex, getCurrentPos());
+			sendCoordinateChange(string, 1, currIndex);
 		});
 
 		zCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 90 + yOffset, 70, 15,
@@ -128,7 +126,7 @@ public class WrapperTransporterLocationEditer {
 			xCoordinateBox.setFocus(false);
 			yCoordinateBox.setFocus(false);
 			zCoordinateBox.setFocus(true);
-			sendCoordinateChange(string, 2, currIndex, getCurrentPos());
+			sendCoordinateChange(string, 2, currIndex);
 		});
 
 		for (int i = 0; i < incButtons.length; i++) {
@@ -145,30 +143,36 @@ public class WrapperTransporterLocationEditer {
 		}
 		resetLocation = new ButtonOverdrive(gui, 133 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("resetpos"),
 				button -> {
-					nameBox.setValue("");
-					xCoordinateBox.setValue("0");
-					yCoordinateBox.setValue("-1000");
-					zCoordinateBox.setValue("0");
-					NetworkHandler.CHANNEL.sendToServer(new PacketUpdateTransporterLocationInfo(
-							transporterSupplier.get().getBlockPos(), currIndex, PacketType.RESET_DESTINATION));
+					TileTransporter transporter = transporterSupplier.get();
+					if(transporter != null) {
+						nameBox.setValue(UtilsText.gui("unknown").getString());
+						xCoordinateBox.setValue("0");
+						yCoordinateBox.setValue("-1000");
+						zCoordinateBox.setValue("0");
+						transporter.locationManager.getAllLocations()[currIndex] = new TransporterLocationWrapper();
+						transporter.getPropertyManager().updateServerBlockEntity(transporter.locationManagerProp, transporter.locationManager.serializeNbt());
+					}
 				}).setSound(getDefaultSound());
 
 		importFlashdriveData = new ButtonOverdrive(gui, 57 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("importpos"),
 				button -> {
 					TileTransporter transporter = transporterSupplier.get();
-					ItemStack flashdrive = transporter.getInventoryCap().getStackInSlot(0);
-					if (!flashdrive.isEmpty() && flashdrive.hasTag()
-							&& flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
-						CompoundTag tag = flashdrive.getTag();
-						BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS));
-						ResourceKey<Level> dimension = UtilsNbt
-								.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION));
-						xCoordinateBox.setValue(pos.getX() + "");
-						yCoordinateBox.setValue(pos.getY() + "");
-						zCoordinateBox.setValue(pos.getZ() + "");
-						NetworkHandler.CHANNEL.sendToServer(
-								new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(),
-										currIndex, PacketType.UPDATE_DESTINATION, pos, dimension));
+					if(transporter != null) {
+						ItemStack flashdrive = transporter.getInventoryCap().getStackInSlot(0);
+						if (!flashdrive.isEmpty() && flashdrive.hasTag()
+								&& flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
+							CompoundTag tag = flashdrive.getTag();
+							BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS));
+							ResourceKey<Level> dimension = UtilsNbt
+									.readDimensionFromTag(tag.getCompound(UtilsNbt.DIMENSION));
+							xCoordinateBox.setValue(pos.getX() + "");
+							yCoordinateBox.setValue(pos.getY() + "");
+							zCoordinateBox.setValue(pos.getZ() + "");
+							TransporterLocationWrapper wrapper = transporter.locationManager.getLocation(currIndex);
+							wrapper.setDestination(pos);
+							wrapper.setDimension(dimension);
+							transporter.getPropertyManager().updateServerBlockEntity(transporter.locationManagerProp, transporter.locationManager.serializeNbt());
+						}
 					}
 				}).setSound(getDefaultSound());
 	}
@@ -207,64 +211,60 @@ public class WrapperTransporterLocationEditer {
 	}
 
 	private void sendNameChange(String name) {
-		NetworkHandler.CHANNEL.sendToServer(new PacketUpdateTransporterLocationInfo(
-				transporterSupplier.get().getBlockPos(), currIndex, PacketType.UPDATE_NAME, name));
-	}
-
-	private void sendCoordinateChange(String coordinate, int coord, int currIndex, BlockPos oldPos) {
-		int val = 0;
-		if (coordinate.length() > 0 && !(coordinate.length() == 1 && coordinate.charAt(0) == '-')) {
-			val = Integer.valueOf(coordinate);
+		TileTransporter transporter = transporterSupplier.get();
+		if(transporter != null) {
+			TransporterLocationWrapper wrapper = transporter.locationManager.getLocation(currIndex);
+			wrapper.setName(name);
+			transporter.getPropertyManager().updateServerBlockEntity(transporter.locationManagerProp, transporter.locationManager.serializeNbt());
 		}
-		NetworkHandler.CHANNEL
-				.sendToServer(new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(),
-						currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(coord, val, oldPos)));
 	}
 
-	private BlockPos getCurrentPos() {
-		return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination();
-	}
-
-	private BlockPos makeNewPos(int coord, int val, BlockPos oldPos) {
-		BlockPos newPos = null;
-		switch (coord) {
-		case 0: // X
-			newPos = new BlockPos(val, oldPos.getY(), oldPos.getZ());
-			break;
-		case 1: // Y
-			newPos = new BlockPos(oldPos.getX(), val, oldPos.getZ());
-			break;
-		case 2: // Z
-			newPos = new BlockPos(oldPos.getX(), oldPos.getY(), val);
-			break;
+	private void sendCoordinateChange(String coordinate, int coord, int currIndex) {
+		TileTransporter transporter = transporterSupplier.get();
+		if(transporter != null) {
+			int val = 0;
+			if (coordinate.length() > 0 && !(coordinate.length() == 1 && coordinate.charAt(0) == '-')) {
+				val = Integer.valueOf(coordinate);
+			}
+			TransporterLocationWrapper wrapper = transporter.locationManager.getLocation(currIndex);
+			BlockPos pos = wrapper.getDestination();
+			switch (coord) {
+			case 0: // X
+				pos = new BlockPos(val, pos.getY(), pos.getZ());
+				break;
+			case 1: // Y
+				pos = new BlockPos(pos.getX(), val, pos.getZ());
+				break;
+			case 2: // Z
+				pos = new BlockPos(pos.getX(), pos.getY(), val);
+				break;
+			}
+			wrapper.setDestination(pos);
+			transporter.getPropertyManager().updateServerBlockEntity(transporter.locationManagerProp, transporter.locationManager.serializeNbt());
 		}
-		return newPos;
 	}
 
 	private void handleIncDec(int coord, int sign) {
 		TileTransporter transporter = transporterSupplier.get();
-		switch (coord) {
-		case 0:
-			int newX = transporter.locationManager.getLocation(currIndex).getDestination().getX() + sign;
-			NetworkHandler.CHANNEL
-					.sendToServer(new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(),
-							currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(0, newX, getCurrentPos())));
-			xCoordinateBox.setValue(newX + "");
-			break;
-		case 1:
-			int newY = transporter.locationManager.getLocation(currIndex).getDestination().getY() + sign;
-			NetworkHandler.CHANNEL
-					.sendToServer(new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(),
-							currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(1, newY, getCurrentPos())));
-			yCoordinateBox.setValue(newY + "");
-			break;
-		case 2:
-			int newZ = transporter.locationManager.getLocation(currIndex).getDestination().getZ() + sign;
-			NetworkHandler.CHANNEL
-					.sendToServer(new PacketUpdateTransporterLocationInfo(transporterSupplier.get().getBlockPos(),
-							currIndex, PacketType.UPDATE_DESTINATION, makeNewPos(2, newZ, getCurrentPos())));
-			zCoordinateBox.setValue(newZ + "");
-			break;
+		if(transporter != null) {
+			TransporterLocationWrapper wrapper = transporter.locationManager.getLocation(currIndex);
+			BlockPos pos = wrapper.getDestination();
+			switch (coord) {
+			case 0:
+				pos.offset(sign, 0, 0);
+				xCoordinateBox.setValue(pos.getX() + "");
+				break;
+			case 1:
+				pos.offset(0, sign, 0);
+				yCoordinateBox.setValue(pos.getY() + "");
+				break;
+			case 2:
+				pos.offset(0, 0, sign);
+				zCoordinateBox.setValue(pos.getZ() + "");
+				break;
+			}
+			wrapper.setDestination(pos);
+			transporter.getPropertyManager().updateServerBlockEntity(transporter.locationManagerProp, transporter.locationManager.serializeNbt());
 		}
 	}
 

@@ -1,13 +1,13 @@
 package matteroverdrive.core.screen.component;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
+import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsMath;
@@ -24,15 +24,12 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 
 	private static final int NUM_BARS = 26;
 
-	private final Supplier<TileMatterAnalyzer> supplier;
 	private final Random random;
 
 	private float[] values = new float[NUM_BARS];
 
-	public ScreenComponentMatterAnalyzer(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
-			Supplier<TileMatterAnalyzer> supplier) {
+	public ScreenComponentMatterAnalyzer(GenericScreen<?> gui, int x, int y, int[] screenNumbers) {
 		super(SCREEN, gui, x, y, 118, 48, screenNumbers);
-		this.supplier = supplier;
 		random = new Random();
 	}
 
@@ -44,7 +41,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		TileMatterAnalyzer analyzer = supplier.get();
+		TileMatterAnalyzer analyzer = (TileMatterAnalyzer) ((GenericInventoryTile<?>)gui.getMenu()).getTile();
 		if (analyzer != null && analyzer.isRunning()) {
 			int color = UtilsRendering.TITLE_BLUE;
 

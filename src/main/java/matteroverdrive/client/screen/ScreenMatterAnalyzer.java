@@ -76,9 +76,7 @@ public class ScreenMatterAnalyzer extends GenericMachineScreen<InventoryMatterAn
 
 		redstone.visible = false;
 
-		addScreenComponent(new ScreenComponentMatterAnalyzer(this, 52, 33, new int[] { 0 }, () -> {
-			return getMenu().getTile();
-		}));
+		addScreenComponent(new ScreenComponentMatterAnalyzer(this, 52, 33, new int[] { 0 }));
 		addScreenComponent(defaultEnergyBar(180, 35, new int[] { 0 }));
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));

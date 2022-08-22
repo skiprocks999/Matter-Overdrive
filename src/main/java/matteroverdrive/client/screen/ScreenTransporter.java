@@ -5,9 +5,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateTransporterLocationInfo.PacketType;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentUpgradeInfo;
@@ -213,11 +210,9 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 						TileTransporter transporter = getMenu().getTile();
 						if (transporter != null) {
 							if (locationButtons[locationButton.index].isActivated) {
-								NetworkHandler.CHANNEL.sendToServer(new PacketUpdateTransporterLocationInfo(
-										transporter.getBlockPos(), -1, PacketType.UPDATE_INDEX));
+								transporter.getPropertyManager().updateServerBlockEntity(transporter.destinationProp, -1);
 							} else {
-								NetworkHandler.CHANNEL.sendToServer(new PacketUpdateTransporterLocationInfo(
-										transporter.getBlockPos(), locationButton.index, PacketType.UPDATE_INDEX));
+								transporter.getPropertyManager().updateServerBlockEntity(transporter.destinationProp, locationButton.index);
 							}
 							for (int j = 0; j < locationButtons.length; j++) {
 								if (j != locationButton.index) {

@@ -2,13 +2,12 @@ package matteroverdrive.core.screen.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
+import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
@@ -29,17 +28,21 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 	private static final ResourceLocation BIG_EMPTY = new ResourceLocation(SlotType.BIG.getTextureLoc());
 	private static final ResourceLocation BIG_FULL = new ResourceLocation(SlotType.BIG_DARK.getTextureLoc());
 
-	private final Supplier<TileMatterReplicator> replicator;
 	private final ItemRenderer itemRenderer;
 
 	private final ScreenComponentProgress progress;
 
 	public ScreenComponentPatternHolder(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
-			Supplier<TileMatterReplicator> replicator, ItemRenderer itemRenderer, DoubleSupplier progSupplier) {
+			ItemRenderer itemRenderer) {
 		super(NO_RESOURCE, gui, x, y, 37, 22, screenNumbers);
-		this.replicator = replicator;
 		this.itemRenderer = itemRenderer;
-		progress = new ScreenComponentProgress(progSupplier, gui, x + 28, y + 3, screenNumbers);
+		progress = new ScreenComponentProgress(() -> {
+			TileMatterReplicator matter = (TileMatterReplicator) ((GenericInventoryTile<?>)gui.getMenu()).getTile();
+			if (matter != null) {
+				return (double) matter.getProgress() / matter.getProcessingTime();
+			}
+			return 0;
+		}, gui, x + 28, y + 3, screenNumbers);
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 		UtilsRendering.bindTexture(MAIN_EMPTY);
 		blit(stack, x, y, 37, 22, 0, 0, 37, 22, 37, 22);
 		progress.renderBackground(stack, mouseX, mouseY, partialTicks);
-		TileMatterReplicator replicator = this.replicator.get();
+		TileMatterReplicator replicator = (TileMatterReplicator) ((GenericInventoryTile<?>)gui.getMenu()).getTile();
 		if (replicator != null) {
 			if (replicator.getCurrentOrder().isEmpty()) {
 				UtilsRendering.bindTexture(BIG_FULL);
@@ -68,7 +71,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		TileMatterReplicator replicator = this.replicator.get();
+		TileMatterReplicator replicator = (TileMatterReplicator) ((GenericInventoryTile<?>)gui.getMenu()).getTile();
 		QueuedReplication order = null;
 		if (replicator != null) {
 			order = replicator.getCurrentOrder();

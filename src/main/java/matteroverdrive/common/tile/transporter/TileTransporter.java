@@ -314,10 +314,6 @@ public class TileTransporter extends GenericMachineTile {
 
 	}
 
-	public void setDestination(int index) {
-		destinationProp.set(index);
-	}
-
 	private ServerLevel handleDimensionChange(Entity entity) {
 		ResourceKey<Level> dim = locationManager.getLocation(destinationProp.get()).getDimension();
 		if (dim != null) {
