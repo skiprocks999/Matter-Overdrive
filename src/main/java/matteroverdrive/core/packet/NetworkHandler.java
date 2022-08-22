@@ -106,7 +106,7 @@ public class NetworkHandler {
 	}
 
 	public static void sendUpdateServerEntityProperties(UpdateServerEntityPropertyMessage message) {
-		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.noArg(), message);
+		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
 	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk,

@@ -43,7 +43,7 @@ public abstract class AbstractWrapperReplicationQueue {
 
 		int xOff = -2;
 		int yOff = 10;
-
+		
 		for (int i = 0; i < 6; i++) {
 			final int index = i;
 			orders[i] = new ScreenComponentQueuedOrder(screen, x + xOff, y + yOff + i * 21, screenNumbers, renderer);
