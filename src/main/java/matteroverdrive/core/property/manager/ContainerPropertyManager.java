@@ -4,9 +4,8 @@ import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.PropertyType;
-import matteroverdrive.core.property.message.UpdateClientContainerPropertyMessage;
-import matteroverdrive.core.property.message.UpdateServerContainerPropertyMessage;
-
+import matteroverdrive.core.property.packet.clientbound.PacketUpdateClientContainerProperty;
+import matteroverdrive.core.property.packet.serverbound.PacketUpdateServerContainerProperty;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerListener;
 import org.apache.commons.compress.utils.Lists;
@@ -48,7 +47,7 @@ public class ContainerPropertyManager extends PropertyManager {
 		}
 		property.set(value);
 		NetworkHandler.sendUpdateServerContainerProperties(
-				new UpdateServerContainerPropertyMessage(menuId, property.getPropertyType(), propertyId, value));
+				new PacketUpdateServerContainerProperty(menuId, property.getPropertyType(), propertyId, value));
 	}
 
 	/**
@@ -79,7 +78,7 @@ public class ContainerPropertyManager extends PropertyManager {
 			if (!dirtyProperties.isEmpty()) {
 				for (ServerPlayer playerEntity : playerListeners) {
 					NetworkHandler.sendUpdateClientContainerProperties(playerEntity,
-							new UpdateClientContainerPropertyMessage(menuId, dirtyProperties));
+							new PacketUpdateClientContainerProperty(menuId, dirtyProperties));
 				}
 			}
 		}

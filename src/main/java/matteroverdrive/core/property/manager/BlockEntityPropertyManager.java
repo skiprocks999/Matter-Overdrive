@@ -5,8 +5,8 @@ import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.PropertyType;
-import matteroverdrive.core.property.message.UpdateClientBlockEntityPropertyMessage;
-import matteroverdrive.core.property.message.UpdateServerBlockEntityPropertyMessage;
+import matteroverdrive.core.property.packet.clientbound.PacketUpdateClientTileProperty;
+import matteroverdrive.core.property.packet.serverbound.PacketUpdateServerTileProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;
@@ -47,7 +47,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
 		property.set(value);
 		NetworkHandler.sendUpdateServerBlockEntityProperties(
 				blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()),
-				new UpdateServerBlockEntityPropertyMessage(blockEntity.getBlockPos(), property.getPropertyType(),
+				new PacketUpdateServerTileProperty(blockEntity.getBlockPos(), property.getPropertyType(),
 						propertyId, value));
 	}
 
@@ -68,7 +68,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
 		if (!dirtyProperties.isEmpty() && blockEntity.getLevel() != null) {
 			NetworkHandler.sendUpdateClientBlockEntityProperties(
 					blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()),
-					new UpdateClientBlockEntityPropertyMessage(blockPos, dirtyProperties));
+					new PacketUpdateClientTileProperty(blockPos, dirtyProperties));
 		}
 	}
 }

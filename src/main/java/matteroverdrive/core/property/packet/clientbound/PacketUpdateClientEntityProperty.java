@@ -1,4 +1,4 @@
-package matteroverdrive.core.property.message;
+package matteroverdrive.core.property.packet.clientbound;
 
 import com.google.common.collect.Lists;
 import matteroverdrive.MatterOverdrive;
@@ -16,12 +16,12 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class UpdateClientEntityPropertyMessage {
+public class PacketUpdateClientEntityProperty {
 
 	private final int entityId;
 	private final List<Triple<PropertyType<?>, Short, Object>> updates;
 
-	public UpdateClientEntityPropertyMessage(int entityId, List<Triple<PropertyType<?>, Short, Object>> updates) {
+	public PacketUpdateClientEntityProperty(int entityId, List<Triple<PropertyType<?>, Short, Object>> updates) {
 		this.entityId = entityId;
 		this.updates = updates;
 	}
@@ -61,7 +61,7 @@ public class UpdateClientEntityPropertyMessage {
 		return true;
 	}
 
-	public static UpdateClientEntityPropertyMessage decode(FriendlyByteBuf packetBuffer) {
+	public static PacketUpdateClientEntityProperty decode(FriendlyByteBuf packetBuffer) {
 		int entityUUID = packetBuffer.readInt();
 		short updateAmount = packetBuffer.readShort();
 		List<Triple<PropertyType<?>, Short, Object>> updates = Lists.newArrayList();
@@ -71,7 +71,7 @@ public class UpdateClientEntityPropertyMessage {
 			Object object = propertyType.getReader().apply(packetBuffer);
 			updates.add(Triple.of(propertyType, propertyLocation, object));
 		}
-		return new UpdateClientEntityPropertyMessage(entityUUID, updates);
+		return new PacketUpdateClientEntityProperty(entityUUID, updates);
 	}
 
 }

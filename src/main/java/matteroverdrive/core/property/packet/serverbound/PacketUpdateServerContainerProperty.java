@@ -1,4 +1,4 @@
-package matteroverdrive.core.property.message;
+package matteroverdrive.core.property.packet.serverbound;
 
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.PropertyType;
@@ -10,13 +10,13 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class UpdateServerContainerPropertyMessage {
+public class PacketUpdateServerContainerProperty {
 	private final short windowId;
 	private final PropertyType<?> propertyType;
 	private final short property;
 	private final Object value;
 
-	public UpdateServerContainerPropertyMessage(short windowId, PropertyType<?> propertyType, short property,
+	public PacketUpdateServerContainerProperty(short windowId, PropertyType<?> propertyType, short property,
 			Object value) {
 		this.windowId = windowId;
 		this.propertyType = propertyType;
@@ -24,12 +24,12 @@ public class UpdateServerContainerPropertyMessage {
 		this.value = value;
 	}
 
-	public static UpdateServerContainerPropertyMessage decode(FriendlyByteBuf packetBuffer) {
+	public static PacketUpdateServerContainerProperty decode(FriendlyByteBuf packetBuffer) {
 		short windowId = packetBuffer.readShort();
 		PropertyType<?> propertyType = PropertyTypes.getByIndex(packetBuffer.readShort());
 		short property = packetBuffer.readShort();
 		Object value = propertyType.getReader().apply(packetBuffer);
-		return new UpdateServerContainerPropertyMessage(windowId, propertyType, property, value);
+		return new PacketUpdateServerContainerProperty(windowId, propertyType, property, value);
 	}
 
 	public void encode(FriendlyByteBuf packetBuffer) {

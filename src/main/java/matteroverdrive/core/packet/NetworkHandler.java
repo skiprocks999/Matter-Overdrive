@@ -3,16 +3,10 @@ package matteroverdrive.core.packet;
 import java.util.Optional;
 
 import matteroverdrive.References;
-import matteroverdrive.core.packet.type.clientbound.PacketClientMNData;
-import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
-import matteroverdrive.core.packet.type.clientbound.PacketPlayMatterScannerSound;
-import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
-import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
-import matteroverdrive.core.packet.type.serverbound.PacketCancelReplication;
-import matteroverdrive.core.packet.type.serverbound.PacketQueueReplication;
-import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
-import matteroverdrive.core.property.message.*;
+import matteroverdrive.core.packet.type.serverbound.*;
+import matteroverdrive.core.property.packet.serverbound.*;
+import matteroverdrive.core.packet.type.clientbound.*;
+import matteroverdrive.core.property.packet.clientbound.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -47,19 +41,19 @@ public class NetworkHandler {
 				PacketCancelReplication::decode, PacketCancelReplication::handle,
 				Optional.of(NetworkDirection.PLAY_TO_SERVER));
 
-		CHANNEL.messageBuilder(UpdateServerContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(UpdateServerContainerPropertyMessage::encode)
-				.decoder(UpdateServerContainerPropertyMessage::decode)
-				.consumerNetworkThread(UpdateServerContainerPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateServerContainerProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(PacketUpdateServerContainerProperty::encode)
+				.decoder(PacketUpdateServerContainerProperty::decode)
+				.consumerNetworkThread(PacketUpdateServerContainerProperty::consume).add();
 
-		CHANNEL.messageBuilder(UpdateServerEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(UpdateServerEntityPropertyMessage::encode).decoder(UpdateServerEntityPropertyMessage::decode)
-				.consumerNetworkThread(UpdateServerEntityPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateServerEntityProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(PacketUpdateServerEntityProperty::encode).decoder(PacketUpdateServerEntityProperty::decode)
+				.consumerNetworkThread(PacketUpdateServerEntityProperty::consume).add();
 
-		CHANNEL.messageBuilder(UpdateServerBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(UpdateServerBlockEntityPropertyMessage::encode)
-				.decoder(UpdateServerBlockEntityPropertyMessage::decode)
-				.consumerNetworkThread(UpdateServerBlockEntityPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateServerTileProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(PacketUpdateServerTileProperty::encode)
+				.decoder(PacketUpdateServerTileProperty::decode)
+				.consumerNetworkThread(PacketUpdateServerTileProperty::consume).add();
 
 		/* CLIENT-BOUND */
 
@@ -77,45 +71,45 @@ public class NetworkHandler {
 				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle,
 				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-		CHANNEL.messageBuilder(UpdateClientContainerPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(UpdateClientContainerPropertyMessage::encode)
-				.decoder(UpdateClientContainerPropertyMessage::decode)
-				.consumerNetworkThread(UpdateClientContainerPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateClientContainerProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(PacketUpdateClientContainerProperty::encode)
+				.decoder(PacketUpdateClientContainerProperty::decode)
+				.consumerNetworkThread(PacketUpdateClientContainerProperty::consume).add();
 
-		CHANNEL.messageBuilder(UpdateClientEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(UpdateClientEntityPropertyMessage::encode).decoder(UpdateClientEntityPropertyMessage::decode)
-				.consumerNetworkThread(UpdateClientEntityPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateClientEntityProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(PacketUpdateClientEntityProperty::encode).decoder(PacketUpdateClientEntityProperty::decode)
+				.consumerNetworkThread(PacketUpdateClientEntityProperty::consume).add();
 
-		CHANNEL.messageBuilder(UpdateClientBlockEntityPropertyMessage.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(UpdateClientBlockEntityPropertyMessage::encode)
-				.decoder(UpdateClientBlockEntityPropertyMessage::decode)
-				.consumerNetworkThread(UpdateClientBlockEntityPropertyMessage::consume).add();
+		CHANNEL.messageBuilder(PacketUpdateClientTileProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(PacketUpdateClientTileProperty::encode)
+				.decoder(PacketUpdateClientTileProperty::decode)
+				.consumerNetworkThread(PacketUpdateClientTileProperty::consume).add();
 	}
 
 	public static void sendUpdateClientContainerProperties(ServerPlayer player,
-			UpdateClientContainerPropertyMessage message) {
+			PacketUpdateClientContainerProperty message) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
 	}
 
-	public static void sendUpdateServerContainerProperties(UpdateServerContainerPropertyMessage message) {
+	public static void sendUpdateServerContainerProperties(PacketUpdateServerContainerProperty message) {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
-	public static void sendUpdateClientEntityProperties(Entity entity, UpdateClientEntityPropertyMessage message) {
+	public static void sendUpdateClientEntityProperties(Entity entity, PacketUpdateClientEntityProperty message) {
 		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
 	}
 
-	public static void sendUpdateServerEntityProperties(UpdateServerEntityPropertyMessage message) {
+	public static void sendUpdateServerEntityProperties(PacketUpdateServerEntityProperty message) {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
 	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk,
-			UpdateClientBlockEntityPropertyMessage message) {
+			PacketUpdateClientTileProperty message) {
 		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 
 	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk,
-			UpdateServerBlockEntityPropertyMessage message) {
+			PacketUpdateServerTileProperty message) {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 

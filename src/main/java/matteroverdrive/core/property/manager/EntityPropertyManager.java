@@ -4,8 +4,8 @@ import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.PropertyType;
-import matteroverdrive.core.property.message.UpdateClientEntityPropertyMessage;
-import matteroverdrive.core.property.message.UpdateServerEntityPropertyMessage;
+import matteroverdrive.core.property.packet.clientbound.PacketUpdateClientEntityProperty;
+import matteroverdrive.core.property.packet.serverbound.PacketUpdateServerEntityProperty;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Triple;
@@ -45,7 +45,7 @@ public class EntityPropertyManager extends PropertyManager {
 		}
 		property.set(value);
 		NetworkHandler.sendUpdateServerEntityProperties(
-				new UpdateServerEntityPropertyMessage(entityId, property.getPropertyType(), propertyId, value));
+				new PacketUpdateServerEntityProperty(entityId, property.getPropertyType(), propertyId, value));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class EntityPropertyManager extends PropertyManager {
 
 		if (!dirtyProperties.isEmpty()) {
 			NetworkHandler.sendUpdateClientEntityProperties(entity,
-					new UpdateClientEntityPropertyMessage(entityId, dirtyProperties));
+					new PacketUpdateClientEntityProperty(entityId, dirtyProperties));
 		}
 	}
 }
