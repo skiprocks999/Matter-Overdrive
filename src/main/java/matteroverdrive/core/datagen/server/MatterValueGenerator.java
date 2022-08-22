@@ -32,6 +32,7 @@ public class MatterValueGenerator implements DataProvider {
 		try {
 			String s = GSON.toJson(json);
 			Files.createDirectories(path.getParent());
+			Files.createFile(path);
 			BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
 
 			try {
