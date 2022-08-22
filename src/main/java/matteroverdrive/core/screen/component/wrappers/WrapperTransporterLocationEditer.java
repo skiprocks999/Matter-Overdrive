@@ -251,15 +251,15 @@ public class WrapperTransporterLocationEditer {
 			BlockPos pos = wrapper.getDestination();
 			switch (coord) {
 			case 0:
-				pos.offset(sign, 0, 0);
+				pos = pos.offset(sign, 0, 0);
 				xCoordinateBox.setValue(pos.getX() + "");
 				break;
 			case 1:
-				pos.offset(0, sign, 0);
+				pos = pos.offset(0, sign, 0);
 				yCoordinateBox.setValue(pos.getY() + "");
 				break;
 			case 2:
-				pos.offset(0, 0, sign);
+				pos = pos.offset(0, 0, sign);
 				zCoordinateBox.setValue(pos.getZ() + "");
 				break;
 			}
