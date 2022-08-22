@@ -1,7 +1,7 @@
 {
 	"parent" : "block/cube",
 	"loader": "forge:obj",
-	"render_type" : "cutout",
+	"render_type": "minecraft:cutout",
 	"model": "matteroverdrive:models/block/matter_replicator.obj",
 	"flip_v": true,
 	"textures": {
