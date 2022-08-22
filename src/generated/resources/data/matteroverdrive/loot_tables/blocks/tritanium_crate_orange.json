@@ -2,8 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "tritanium_crate_orange",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -15,34 +13,36 @@
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "inventory",
-                  "target": "BlockEntityTag.inventory",
-                  "op": "replace"
+                  "target": "BlockEntityTag.inventory"
                 },
                 {
+                  "op": "replace",
                   "source": "additional",
-                  "target": "BlockEntityTag.additional",
-                  "op": "replace"
+                  "target": "BlockEntityTag.additional"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
-              "function": "minecraft:set_contents",
               "type": "matteroverdrive:tritanium_crate",
               "entries": [
                 {
                   "type": "minecraft:dynamic",
                   "name": "minecraft:contents"
                 }
-              ]
+              ],
+              "function": "minecraft:set_contents"
             }
           ],
           "name": "matteroverdrive:tritanium_crate_orange"
         }
-      ]
+      ],
+      "name": "tritanium_crate_orange",
+      "rolls": 1.0
     }
   ]
 }

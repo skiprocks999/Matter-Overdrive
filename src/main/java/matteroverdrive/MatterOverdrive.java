@@ -89,7 +89,6 @@ public class MatterOverdrive {
 
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
-		ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
 		for (RegistryObject<Block> block : BlockRegistry.BLOCKS.getEntries()) {
 			if (block.get() instanceof BlockCustomGlass) {
 				ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout());

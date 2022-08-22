@@ -2,8 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "industrial_glass",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -25,7 +23,9 @@
           ],
           "name": "matteroverdrive:industrial_glass"
         }
-      ]
+      ],
+      "name": "industrial_glass",
+      "rolls": 1.0
     }
   ]
 }

@@ -2,8 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "transporter",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -15,39 +13,41 @@
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "inventory",
-                  "target": "BlockEntityTag.inventory",
-                  "op": "replace"
+                  "target": "BlockEntityTag.inventory"
                 },
                 {
+                  "op": "replace",
                   "source": "energy",
-                  "target": "BlockEntityTag.energy",
-                  "op": "replace"
+                  "target": "BlockEntityTag.energy"
                 },
                 {
+                  "op": "replace",
                   "source": "additional",
-                  "target": "BlockEntityTag.additional",
-                  "op": "replace"
+                  "target": "BlockEntityTag.additional"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
-              "function": "minecraft:set_contents",
               "type": "matteroverdrive:transporter",
               "entries": [
                 {
                   "type": "minecraft:dynamic",
                   "name": "minecraft:contents"
                 }
-              ]
+              ],
+              "function": "minecraft:set_contents"
             }
           ],
           "name": "matteroverdrive:transporter"
         }
-      ]
+      ],
+      "name": "transporter",
+      "rolls": 1.0
     }
   ]
 }
