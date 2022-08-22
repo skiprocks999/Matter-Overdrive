@@ -21,7 +21,7 @@ public class DefaultGeneratorConsumers {
 					for (ItemStack stack : ing.getItems()) {
 						double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 						if (value <= 0.0) {
-							value = generatedValues.get(stack.getItem());
+							value = generatedValues.getOrDefault(stack.getItem(), 0.0);
 						}
 						if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
 							double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
@@ -48,7 +48,7 @@ public class DefaultGeneratorConsumers {
 						for (ItemStack stack : ing.getItems()) {
 							double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 							if (value <= 0.0) {
-								value = generatedValues.get(stack.getItem());
+								value = generatedValues.getOrDefault(stack.getItem(), 0.0);
 							}
 							if (value > 0.0) {
 								sum += value * stack.getCount();
@@ -84,7 +84,7 @@ public class DefaultGeneratorConsumers {
 						for (ItemStack stack : ing.getItems()) {
 							double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 							if (value <= 0.0) {
-								value = generatedValues.get(stack.getItem());
+								value = generatedValues.getOrDefault(stack.getItem(), 0.0);
 							}
 							if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
 								sum += value * stack.getCount();

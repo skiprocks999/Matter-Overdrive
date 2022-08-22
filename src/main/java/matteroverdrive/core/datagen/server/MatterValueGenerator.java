@@ -1,23 +1,26 @@
 package matteroverdrive.core.datagen.server;
 
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.GsonHelper;
 
 public class MatterValueGenerator implements DataProvider {
 
 	private static final String DATA_LOC = "data/matteroverdrive/matter/values.json";
-	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 	private DataGenerator gen;
 
 	public MatterValueGenerator(DataGenerator gen) {
@@ -30,29 +33,15 @@ public class MatterValueGenerator implements DataProvider {
 		addValues(json);
 		Path path = gen.getOutputFolder().resolve(DATA_LOC);
 		try {
-			String s = GSON.toJson(json);
-			Files.createDirectories(path.getParent());
-			Files.createFile(path);
-			BufferedWriter bufferedwriter = Files.newBufferedWriter(path);
-
-			try {
-				bufferedwriter.write(s);
-			} catch (Throwable throwable1) {
-				if (bufferedwriter != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable) {
-						throwable1.addSuppressed(throwable);
-					}
-				}
-
-				throw throwable1;
-			}
-
-			if (bufferedwriter != null) {
-				bufferedwriter.close();
-			}
-
+			ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+			HashingOutputStream hash = new HashingOutputStream(Hashing.sha1(), byteArray);
+			Writer writer = new OutputStreamWriter(hash, StandardCharsets.UTF_8);
+			JsonWriter jsonWriter = new JsonWriter(writer);
+			jsonWriter.setSerializeNulls(false);
+			jsonWriter.setIndent("  ");
+			GsonHelper.writeValue(jsonWriter, json, KEY_COMPARATOR);
+			jsonWriter.close();
+			cache.writeIfNeeded(path, byteArray.toByteArray(), hash.hash());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -126,31 +126,6 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 
 			map.add(Pair.of(jsonIdentifier, unmergedRaws));
 		}
-		/*
-		 * for (ResourceLocation resourceLocation : resources) { final String namespace
-		 * = resourceLocation.getNamespace(); final String filePath =
-		 * resourceLocation.getPath(); final String dataPath =
-		 * filePath.substring(this.folderName.length() + 1, filePath.length() -
-		 * JSON_EXTENSION_LENGTH);
-		 * 
-		 * final ResourceLocation jsonIdentifier = new ResourceLocation(namespace,
-		 * dataPath); final List<JsonObject> unmergedRaws = new ArrayList<>();
-		 * 
-		 * try { for (Resource resource :
-		 * resourceManager.getResources(resourceLocation)) { try (final InputStream
-		 * inputStream = resource.getInputStream(); final Reader reader = new
-		 * BufferedReader( new InputStreamReader(inputStream, StandardCharsets.UTF_8));)
-		 * { final JsonObject jsonElement = (JsonObject) GsonHelper.fromJson(GSON,
-		 * reader, JsonElement.class); unmergedRaws.add(jsonElement); } catch
-		 * (RuntimeException | IOException exception) { this.logger.
-		 * error("Data loader for {} could not read data {} from file {} in data pack {}"
-		 * , this.folderName, jsonIdentifier, resourceLocation,
-		 * resource.getSourceName(), exception); } finally {
-		 * IOUtils.closeQuietly(resource); } } } catch (IOException exception) {
-		 * this.logger.error("Data loader for {} could not read data {} from file {}",
-		 * this.folderName, jsonIdentifier, resourceLocation, exception); }
-		 * map.add(Pair.of(jsonIdentifier, unmergedRaws)); }
-		 */
 		JsonObject merged = new JsonObject();
 		map.forEach(pair -> {
 			pair.getSecond().forEach(list -> {
@@ -241,5 +216,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public static List<BiConsumer<HashMap<Item, Double>, RecipeManager>> getConsumers() {
 		return GEN_MATTER_CONSUMERS;
 	}
+	
+	public static void init() {}
 
 }

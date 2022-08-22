@@ -59,7 +59,7 @@ public class MatterOverdrive {
 		ParticleRegistry.PARTICLES.register(bus);
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
-
+		MatterRegister.init();
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON_CONFIG,
 				"matteroverdrive/matteroverdrive.common.toml");
 		ModLoadingContext.get().registerConfig(Type.CLIENT, MatterOverdriveConfig.CLIENT_CONFIG,
