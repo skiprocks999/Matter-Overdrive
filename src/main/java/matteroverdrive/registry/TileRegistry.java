@@ -1,5 +1,6 @@
 package matteroverdrive.registry;
 
+import matteroverdrive.common.tile.station.TileAndroidStation;
 import org.apache.commons.compress.utils.Sets;
 
 import matteroverdrive.References;
@@ -81,5 +82,9 @@ public class TileRegistry {
 	public static final RegistryObject<BlockEntityType<TileMatterReplicator>> TILE_MATTER_REPLICATOR = TILES
 			.register(TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockEntityType<>(TileMatterReplicator::new,
 					Sets.newHashSet(BlockRegistry.BLOCK_MATTER_REPLICATOR.get()), null));
+
+	public static final RegistryObject<BlockEntityType<TileAndroidStation>> TILE_ANDROID_STATION = TILES
+					.register(TypeMachine.ANDROID_STATION.id(), () -> new BlockEntityType<>(TileAndroidStation::new,
+									Sets.newHashSet(BlockRegistry.BLOCK_ANDROID_STATION.get()), null));
 
 }

@@ -113,4 +113,12 @@ public class NetworkHandler {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
+	public static void sendToPlayer(Object obj, ServerPlayer player) {
+		CHANNEL.sendTo(obj, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+	}
+
+	public static void sendToServer(Object obj) {
+		CHANNEL.sendToServer(obj);
+	}
+
 }

@@ -1,5 +1,6 @@
 package matteroverdrive.core.capability;
 
+import matteroverdrive.core.android.api.ICapabilityAndroid;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
@@ -23,11 +24,14 @@ public class MatterOverdriveCapabilities {
 			.get(new CapabilityToken<>() {
 			});
 
+	public static final Capability<ICapabilityAndroid> ANDROID_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+
 	public static void register(RegisterCapabilitiesEvent event) {
 		event.register(ICapabilityMatterStorage.class);
 		event.register(ICapabilityEntityData.class);
 		event.register(ICapabilityOverworldData.class);
 		event.register(ICapabilityItemPatternStorage.class);
+		event.register(ICapabilityAndroid.class);
 	}
 
 }
