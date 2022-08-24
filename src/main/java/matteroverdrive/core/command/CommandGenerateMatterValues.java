@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.References;
@@ -34,19 +35,20 @@ public class CommandGenerateMatterValues {
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
 		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2))
-				.then(Commands.literal("genmatterfile").executes(source -> generateMatterFile(source.getSource()))));
+				.then(Commands.literal("genmatterfile").executes(source -> generateMatterFile(source.getSource(), 300))
+						.then(Commands.argument("loops", IntegerArgumentType.integer(1))
+								.executes(source -> generateMatterFile(source.getSource(), IntegerArgumentType.getInteger(source, "loops"))))));
 
 	}
 
-	private static int generateMatterFile(CommandSourceStack source) {
+	private static int generateMatterFile(CommandSourceStack source, int loops) {
 
 		source.sendSuccess(Component.translatable("command.matteroverdrive.startmattercalc"), true);
-
 		RecipeManager manager = source.getRecipeManager();
 		HashMap<Item, Double> generatedValues = new HashMap<>();
 
 		List<BiConsumer<HashMap<Item, Double>, RecipeManager>> consumers = MatterRegister.getConsumers();
-		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < loops; i++) {
 			for (BiConsumer<HashMap<Item, Double>, RecipeManager> consumer : consumers) {
 				consumer.accept(generatedValues, manager);
 			}

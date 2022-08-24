@@ -129,8 +129,8 @@ public class ItemMatterContainer extends OverdriveItem {
 			stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).ifPresent(h -> {
 				double max = h.getMaxMatterStored();
 				int base = UtilsText.getBigBase(max);
-				String stored = UtilsText.getFormattedBig(h.getMatterStored(), base);
-				String maxE = UtilsText.getFormattedBig(max, base);
+				String stored = UtilsText.getFormattedBigMatter(h.getMatterStored(), base);
+				String maxE = UtilsText.getFormattedBigMatter(max, base);
 				tooltips.add(UtilsText.tooltip("matterstored", stored, maxE, UtilsText.getPrefixForBase(base))
 						.withStyle(ChatFormatting.AQUA));
 			});

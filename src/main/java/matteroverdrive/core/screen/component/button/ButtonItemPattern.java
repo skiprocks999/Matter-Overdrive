@@ -57,7 +57,7 @@ public class ButtonItemPattern extends ButtonHoldPress {
 				}
 				List<FormattedCharSequence> tooltips = new ArrayList<>();
 				tooltips.add(UtilsText.tooltip("storedpattern", name.withStyle(color),
-						UtilsText.SINGLE_DECIMAL.format(percentage) + "%").getVisualOrderText());
+						UtilsText.formatPercentage(percentage)).getVisualOrderText());
 				double val = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(item));
 				tooltips.add(
 						val <= 0.0

@@ -64,8 +64,10 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		List<FormattedCharSequence> components = new ArrayList<>();
 		String storeLoc = isMatter ? "matterstored" : "energystored";
+		String formattedNum = isMatter ? UtilsText.MATTER_FORMAT.format(currStorage.getAsDouble()) : UtilsText.POWER_FORMAT.format(currStorage.getAsDouble());
+		String formattedDenom = isMatter ? UtilsText.MATTER_FORMAT.format(maxStorage.getAsDouble()) : UtilsText.POWER_FORMAT.format(maxStorage.getAsDouble());
 		components.add(UtilsText
-				.tooltip(storeLoc, UtilsText.MIN_FORMAT.format(currStorage.getAsDouble()), maxStorage.getAsDouble())
+				.tooltip(storeLoc, formattedNum, formattedDenom)
 				.getVisualOrderText());
 
 		double use = usage.getAsDouble();

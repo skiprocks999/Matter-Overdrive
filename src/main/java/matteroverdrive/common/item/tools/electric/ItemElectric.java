@@ -108,8 +108,8 @@ public class ItemElectric extends OverdriveItem {
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
 			int max = h.getMaxEnergyStored();
 			int base = UtilsText.getBigBase(max);
-			String stored = UtilsText.getFormattedBig(h.getEnergyStored(), base);
-			String maxE = UtilsText.getFormattedBig(max, base);
+			String stored = UtilsText.getFormattedBigPower(h.getEnergyStored(), base);
+			String maxE = UtilsText.getFormattedBigPower(max, base);
 			tooltips.add(UtilsText.tooltip("energystored", stored, maxE, UtilsText.getPrefixForBase(base))
 					.withStyle(ChatFormatting.YELLOW));
 		});

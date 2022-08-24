@@ -77,7 +77,7 @@ public class BlockMachine<T extends GenericTile> extends GenericMachineBlock {
 		if (blockentity instanceof GenericTile generic
 				&& generic.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)) {
 			CapabilityInventory inv = generic.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-			if (MatterOverdriveConfig.machines_drop_items.get()) {
+			if (MatterOverdriveConfig.MACHINES_DROP_ITEMS.get()) {
 				Containers.dropContents(generic.getLevel(), generic.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));
 			}

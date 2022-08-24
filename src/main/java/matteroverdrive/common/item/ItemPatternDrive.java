@@ -68,7 +68,7 @@ public class ItemPatternDrive extends OverdriveItem {
 						color = ChatFormatting.RED;
 					}
 					tooltips.add(
-							UtilsText.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%")
+							UtilsText.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage))
 									.withStyle(color));
 					double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
 					// datapack fuckery prevention
@@ -108,8 +108,7 @@ public class ItemPatternDrive extends OverdriveItem {
 								color = ChatFormatting.RED;
 							}
 							tooltips.add(UtilsText
-									.tooltip("storedpattern", name, UtilsText.SINGLE_DECIMAL.format(percentage) + "%")
-									.withStyle(color));
+									.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage)).withStyle(color));
 						} else {
 							tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
 						}
