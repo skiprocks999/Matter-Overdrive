@@ -13,6 +13,8 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> VALIDATE_MATTER_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATORS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATOR_CORRECTIONS;
 	
 	public static final ForgeConfigSpec CLIENT_CONFIG;
 	public static final ForgeConfigSpec.ConfigValue<Integer> MATTER_DECIMALS;
@@ -54,6 +56,23 @@ public final class MatterOverdriveConfig {
 				" ",
 				"default value = false"
 				).define("accurate_transporter", false);
+		USE_DEFAULT_GENERATORS = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default the matter value generator consumers found in the DefaultGeneratorConsumers",
+				"class will be used. NOTE: if you disable them without replacing them, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_default_generators", true);
+		USE_DEFAULT_GENERATOR_CORRECTIONS = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default corrections applied to the matter value generator consumers found",
+				"in the DefaultGeneratorConsumers class will be applied. NOTE: if they are removed, and are not replced",
+				"properly, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_default_corrections", true);
 		
 		COMMON_CONFIG = COMMON_BUILDER.build();
 		

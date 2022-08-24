@@ -13,7 +13,6 @@ import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.registry.BlockRegistry;
@@ -59,15 +58,12 @@ public class MatterOverdrive {
 		ParticleRegistry.PARTICLES.register(bus);
 		RecipeInit.RECIPE_TYPES.register(bus);
 		RecipeInit.RECIPE_SERIALIZER.register(bus);
-		MatterRegister.init();
 		ModLoadingContext.get().registerConfig(Type.COMMON, MatterOverdriveConfig.COMMON_CONFIG,
 				"matteroverdrive/matteroverdrive.common.toml");
 		ModLoadingContext.get().registerConfig(Type.CLIENT, MatterOverdriveConfig.CLIENT_CONFIG,
 				"matteroverdrive/matteroverdrive.client.toml");
-
+		MatterRegister.init();
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
-		DefaultGeneratorConsumers.init();
-
 		ServerEventHandler.init();
 
 	}

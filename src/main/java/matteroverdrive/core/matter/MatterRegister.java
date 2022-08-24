@@ -20,11 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -62,7 +62,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
-	private static final List<BiConsumer<HashMap<Item, Double>, RecipeManager>> GEN_MATTER_CONSUMERS = new ArrayList<>();
+	private static final List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> GEN_MATTER_CONSUMERS = new ArrayList<>();
 
 	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Double> parsedTags = new HashMap<>();
@@ -209,11 +209,11 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		this.CLIENT_VALUES = valueMap;
 	}
 
-	public static void addGeneratorConsumer(BiConsumer<HashMap<Item, Double>, RecipeManager> consumer) {
+	public static void addGeneratorConsumer(TriConsumer<HashMap<Item, Double>, RecipeManager, Integer> consumer) {
 		GEN_MATTER_CONSUMERS.add(consumer);
 	}
 
-	public static List<BiConsumer<HashMap<Item, Double>, RecipeManager>> getConsumers() {
+	public static List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> getConsumers() {
 		return GEN_MATTER_CONSUMERS;
 	}
 	
