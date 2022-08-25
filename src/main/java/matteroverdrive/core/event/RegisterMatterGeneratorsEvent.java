@@ -27,6 +27,15 @@ public class RegisterMatterGeneratorsEvent extends Event {
 		matterGeneratorConsumers.put(recipeType, generator);
 	}
 	
+	/**
+	 * 
+	 * @param recipeType
+	 * @return True if the RecipeType was present, False if not present
+	 */
+	public boolean removeGenerator(RecipeType<?> recipeType) {
+		return matterGeneratorConsumers.remove(recipeType) != null;
+	}
+	
 	public ImmutableMap<RecipeType<?>, AbstractMatterValueGenerator> getGenerators(){
 		return ImmutableMap.copyOf(matterGeneratorConsumers);
 	}
