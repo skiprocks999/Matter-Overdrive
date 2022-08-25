@@ -1,4 +1,4 @@
-package matteroverdrive.core.eventhandler.client;
+package matteroverdrive.core.event.handler.client;
 
 import java.util.List;
 

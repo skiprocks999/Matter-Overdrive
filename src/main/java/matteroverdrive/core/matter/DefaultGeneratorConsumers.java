@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.event.RegisterMatterGeneratorsEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,113 +25,128 @@ public class DefaultGeneratorConsumers {
 	private static final HashSet<Pair<Item, BiPredicate<Integer, HashMap<Item, Double>>>> CRAFTING_CORRECTION_ITEMS = new HashSet<>();
 	private static final HashSet<Pair<Item, BiPredicate<Integer, HashMap<Item, Double>>>> SMITHING_CORRECTION_ITEMS = new HashSet<>();
 	
-	public static void init() {
+	public static void gatherGenerators(RegisterMatterGeneratorsEvent event) {
 		if(MatterOverdriveConfig.USE_DEFAULT_GENERATORS.get()) {
-			MatterRegister.addGeneratorConsumer((generatedValues, recipeManager, loopInteval) -> {
-				recipeManager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
-					ItemStack result = recipe.getResultItem();
-					if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
-						Ingredient ing = recipe.getIngredients().get(0);
+			if(MatterOverdriveConfig.USE_SMELTING_GENERATOR.get()) {
+				event.addGenerator((generatedValues, recipeManager, loopInteval) -> {
+					recipeManager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
+						ItemStack result = recipe.getResultItem();
+						if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
+							Ingredient ing = recipe.getIngredients().get(0);
 
-						for (ItemStack stack : ing.getItems()) {
-							double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-							if (value <= 0.0) {
-								value = generatedValues.getOrDefault(stack.getItem(), 0.0);
-							}
-							if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
-								double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
-								generatedValues.put(result.getItem(), matterValue);
-								break;
-							}
-						}
-					}
-				});
-				applySmeltingGeneratorCorrections(generatedValues, loopInteval);
-			});
-
-			MatterRegister.addGeneratorConsumer((generatedValues, recipeManager, loopInteval) -> {
-				recipeManager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
-					ItemStack result = recipe.getResultItem();
-					if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0
-							&& generatedValues.get(result.getItem()) == null) {
-						List<Ingredient> ings = recipe.getIngredients();
-						double sum = 0;
-						boolean failed = false;
-						for (Ingredient ing : ings) {
-							if (failed) {
-								break;
-							}
-							for (ItemStack stack : ing.getItems()) {
-								double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
-								if (value <= 0.0) {
-									value = generatedValues.getOrDefault(stack.getItem(), 0.0);
-								}
-								if (value > 0.0) {
-									sum += value * stack.getCount();
-									failed = false;
-									break;
-								}
-								failed = true;
-							}
-						}
-						if (!failed) {
-							double matterValue = (double) sum / (double) result.getCount();
-							generatedValues.put(result.getItem(), matterValue);
-						}
-					}
-				});
-				
-				applyCraftingGeneratorCorrections(generatedValues, loopInteval);
-			});
-
-			MatterRegister.addGeneratorConsumer((generatedValues, recipeManager, loopInteval) -> {
-				recipeManager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
-					UpgradeRecipe upgrade = recipe;
-					ItemStack result = upgrade.getResultItem();
-					if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
-						List<Ingredient> ings = new ArrayList<>();
-						// AT
-						ings.add(upgrade.base);
-						ings.add(upgrade.addition);
-						double sum = 0;
-						boolean failed = false;
-						for (Ingredient ing : ings) {
-							if (failed) {
-								break;
-							}
 							for (ItemStack stack : ing.getItems()) {
 								double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 								if (value <= 0.0) {
 									value = generatedValues.getOrDefault(stack.getItem(), 0.0);
 								}
 								if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
-									sum += value * stack.getCount();
-									failed = false;
+									double matterValue = ((double) (stack.getCount() * value)) / (double) result.getCount();
+									generatedValues.put(result.getItem(), matterValue);
 									break;
 								}
-								failed = true;
 							}
 						}
-						if (!failed) {
-							double matterValue = (double) sum / (double) result.getCount();
-							generatedValues.put(result.getItem(), matterValue);
-						}
-					}
+					});
+					applySmeltingGeneratorCorrections(generatedValues, loopInteval);
 				});
-				
-				applySmithingGeneratorCorrections(generatedValues, loopInteval);
-			});
+			}
+			
+			if(MatterOverdriveConfig.USE_CRAFTING_GENERATOR.get()) {
+				event.addGenerator((generatedValues, recipeManager, loopInteval) -> {
+					recipeManager.getAllRecipesFor(RecipeType.CRAFTING).forEach(recipe -> {
+						ItemStack result = recipe.getResultItem();
+						if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0
+								&& generatedValues.get(result.getItem()) == null) {
+							List<Ingredient> ings = recipe.getIngredients();
+							double sum = 0;
+							boolean failed = false;
+							for (Ingredient ing : ings) {
+								if (failed) {
+									break;
+								}
+								for (ItemStack stack : ing.getItems()) {
+									double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+									if (value <= 0.0) {
+										value = generatedValues.getOrDefault(stack.getItem(), 0.0);
+									}
+									if (value > 0.0) {
+										sum += value * stack.getCount();
+										failed = false;
+										break;
+									}
+									failed = true;
+								}
+							}
+							if (!failed) {
+								double matterValue = (double) sum / (double) result.getCount();
+								generatedValues.put(result.getItem(), matterValue);
+							}
+						}
+					});
+					
+					applyCraftingGeneratorCorrections(generatedValues, loopInteval);
+				});
+			}
+			
+			if(MatterOverdriveConfig.USE_SMITHING_GENERATOR.get()) {
+				event.addGenerator((generatedValues, recipeManager, loopInteval) -> {
+					recipeManager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
+						UpgradeRecipe upgrade = recipe;
+						ItemStack result = upgrade.getResultItem();
+						if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {
+							List<Ingredient> ings = new ArrayList<>();
+							// AT
+							ings.add(upgrade.base);
+							ings.add(upgrade.addition);
+							double sum = 0;
+							boolean failed = false;
+							for (Ingredient ing : ings) {
+								if (failed) {
+									break;
+								}
+								for (ItemStack stack : ing.getItems()) {
+									double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
+									if (value <= 0.0) {
+										value = generatedValues.getOrDefault(stack.getItem(), 0.0);
+									}
+									if (value > 0.0 && !generatedValues.containsKey(result.getItem())) {
+										sum += value * stack.getCount();
+										failed = false;
+										break;
+									}
+									failed = true;
+								}
+							}
+							if (!failed) {
+								double matterValue = (double) sum / (double) result.getCount();
+								generatedValues.put(result.getItem(), matterValue);
+							}
+						}
+					});
+					
+					applySmithingGeneratorCorrections(generatedValues, loopInteval);
+				});
+			}
+
 			if(MatterOverdriveConfig.USE_DEFAULT_GENERATOR_CORRECTIONS.get()) {
-				addSmeltingGeneratorCorrection(Items.IRON_NUGGET, (loopInterval, existingValueMap) -> {
-					double ironIngotValue = existingValueMap.getOrDefault(Items.IRON_INGOT, 0.0);
-					if(ironIngotValue > 0) {
-						double ironNuggetValue = existingValueMap.getOrDefault(Items.IRON_NUGGET, 0.0);
-						if(existingValueMap.containsKey(Items.IRON_NUGGET) && ironNuggetValue != (ironIngotValue / 9.0D) ) {
-							return true;
+				if(MatterOverdriveConfig.USE_DEFAULT_SMELTING_CORRECTIONS.get()) {
+					addSmeltingGeneratorCorrection(Items.IRON_NUGGET, (loopInterval, existingValueMap) -> {
+						double ironIngotValue = existingValueMap.getOrDefault(Items.IRON_INGOT, 0.0);
+						if(ironIngotValue > 0) {
+							double ironNuggetValue = existingValueMap.getOrDefault(Items.IRON_NUGGET, 0.0);
+							if(existingValueMap.containsKey(Items.IRON_NUGGET) && ironNuggetValue != (ironIngotValue / 9.0D) ) {
+								return true;
+							}
 						}
-					}
-					return false;
-				});
+						return false;
+					});
+				}
+				if(MatterOverdriveConfig.USE_DEFAULT_CRAFTING_CORRECTIONS.get()) {
+					
+				}
+				if(MatterOverdriveConfig.USE_DEFAULT_SMITHING_CORRECTIONS.get()) {
+					
+				}
 			}
 		}
 	}

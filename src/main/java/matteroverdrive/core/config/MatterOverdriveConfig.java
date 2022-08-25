@@ -14,7 +14,13 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATORS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_SMELTING_GENERATOR;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_CRAFTING_GENERATOR;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_SMITHING_GENERATOR;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATOR_CORRECTIONS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_SMELTING_CORRECTIONS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_CRAFTING_CORRECTIONS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_SMITHING_CORRECTIONS;
 	
 	public static final ForgeConfigSpec CLIENT_CONFIG;
 	public static final ForgeConfigSpec.ConfigValue<Integer> MATTER_DECIMALS;
@@ -59,15 +65,66 @@ public final class MatterOverdriveConfig {
 		USE_DEFAULT_GENERATORS = COMMON_BUILDER.comment(
 				" ",
 				" ",
-				"Controls whether or not the default the matter value generator consumers found in the DefaultGeneratorConsumers",
+				"Controls whether or not all of the default matter value generator consumers found in the DefaultGeneratorConsumers",
 				"class will be used. NOTE: if you disable them without replacing them, things may not work!",
 				" ",
 				"default value = true"
 				).define("use_default_generators", true);
+		USE_SMELTING_GENERATOR = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default smelting matter value generator consumer found in the DefaultGeneratorConsumers",
+				"class will be used. NOTE: if you disable this without replacing it, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_smelting_generator", true);
+		USE_CRAFTING_GENERATOR = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default crafting matter value generator consumers found in the DefaultGeneratorConsumers",
+				"class will be used. NOTE: if you disable this without replacing it, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_crafting_generator", true);
+		USE_SMITHING_GENERATOR = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default smithing matter value generator consumers found in the DefaultGeneratorConsumers",
+				"class will be used. NOTE: if you disable this without replacing it, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_smithing_generator", true);
 		USE_DEFAULT_GENERATOR_CORRECTIONS = COMMON_BUILDER.comment(
 				" ",
 				" ",
 				"Controls whether or not the default corrections applied to the matter value generator consumers found",
+				"in the DefaultGeneratorConsumers class will be applied. NOTE: if they are removed, and are not replced",
+				"properly, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_default_corrections", true);
+		USE_DEFAULT_SMELTING_CORRECTIONS = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default corrections applied to the smelting matter value generator consumer found",
+				"in the DefaultGeneratorConsumers class will be applied. NOTE: if they are removed, and are not replced",
+				"properly, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_default_corrections", true);
+		USE_DEFAULT_CRAFTING_CORRECTIONS = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default corrections applied to the crafting matter value generator consumer found",
+				"in the DefaultGeneratorConsumers class will be applied. NOTE: if they are removed, and are not replced",
+				"properly, things may not work!",
+				" ",
+				"default value = true"
+				).define("use_default_corrections", true);
+		USE_DEFAULT_SMITHING_CORRECTIONS = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the default corrections applied to the smithing matter value generator consumer found",
 				"in the DefaultGeneratorConsumers class will be applied. NOTE: if they are removed, and are not replced",
 				"properly, things may not work!",
 				" ",

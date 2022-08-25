@@ -14,7 +14,7 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
 import matteroverdrive.core.capability.types.overworld_data.ICapabilityOverworldData;
-import matteroverdrive.core.eventhandler.server.AbstractServerTickHandler;
+import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
 import matteroverdrive.core.utils.UtilsMath;

@@ -1,4 +1,4 @@
-package matteroverdrive.core.eventhandler.client;
+package matteroverdrive.core.event.handler.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;

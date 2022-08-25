@@ -10,7 +10,7 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;

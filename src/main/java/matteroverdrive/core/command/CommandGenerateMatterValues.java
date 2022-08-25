@@ -20,7 +20,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.References;
-import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -35,7 +34,6 @@ public class CommandGenerateMatterValues {
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		DefaultGeneratorConsumers.init();
 		dispatcher.register(Commands.literal(References.ID).requires(source -> source.hasPermission(2))
 				.then(Commands.literal("genmatterfile").executes(source -> generateMatterFile(source.getSource(), 300))
 						.then(Commands.argument("loops", IntegerArgumentType.integer(1))
@@ -49,7 +47,7 @@ public class CommandGenerateMatterValues {
 		RecipeManager manager = source.getRecipeManager();
 		HashMap<Item, Double> generatedValues = new HashMap<>();
 
-		List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> consumers = MatterRegister.getConsumers();
+		List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> consumers = MatterRegister.INSTANCE.getConsumers();
 		for (int i = 0; i < loops; i++) {
 			for (TriConsumer<HashMap<Item, Double>, RecipeManager, Integer> consumer : consumers) {
 				consumer.accept(generatedValues, manager, i);

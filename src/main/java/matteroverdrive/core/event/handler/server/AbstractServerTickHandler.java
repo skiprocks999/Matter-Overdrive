@@ -1,4 +1,4 @@
-package matteroverdrive.core.eventhandler.server;
+package matteroverdrive.core.event.handler.server;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.TickEvent.Phase;

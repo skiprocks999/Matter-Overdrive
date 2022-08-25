@@ -62,7 +62,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
-	private static final List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> GEN_MATTER_CONSUMERS = new ArrayList<>();
+	private List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> matterGeneratorConsumers;
 
 	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Double> parsedTags = new HashMap<>();
@@ -77,6 +77,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public MatterRegister() {
 		folderName = "matter";
 		logger = MatterOverdrive.LOGGER;
+		matterGeneratorConsumers = new ArrayList<>();
 	}
 
 	@Nullable
@@ -208,15 +209,15 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public void setClientValues(HashMap<Item, Double> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
-
-	public static void addGeneratorConsumer(TriConsumer<HashMap<Item, Double>, RecipeManager, Integer> consumer) {
-		GEN_MATTER_CONSUMERS.add(consumer);
+	
+	//Only mess with this if you know damn well what you're doing :D
+	@Deprecated
+	public void setGeneratorList(List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> list){
+		matterGeneratorConsumers = list;
 	}
 
-	public static List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> getConsumers() {
-		return GEN_MATTER_CONSUMERS;
+	public List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> getConsumers() {
+		return Collections.unmodifiableList(matterGeneratorConsumers);
 	}
 	
-	public static void init() {}
-
 }

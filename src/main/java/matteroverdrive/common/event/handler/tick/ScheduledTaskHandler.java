@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
 
-import matteroverdrive.core.eventhandler.server.AbstractServerTickHandler;
+import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.TickEvent.Phase;
 

@@ -11,7 +11,9 @@ import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.overworld_data.CapabilityOverworldData;
 import matteroverdrive.core.command.CommandGenerateMatterValues;
 import matteroverdrive.core.command.CommandManualMatterValue;
-import matteroverdrive.core.eventhandler.server.AbstractServerTickHandler;
+import matteroverdrive.core.event.RegisterMatterGeneratorsEvent;
+import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
+import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -34,6 +36,7 @@ public class ServerEventHandler {
 	private static final List<AbstractServerTickHandler> TICK_HANDLERS = new ArrayList<>();
 
 	public static final ScheduledTaskHandler TASK_HANDLER = new ScheduledTaskHandler();
+	public static final ServerEventPostManager EVENT_POST_MANAGER = new ServerEventPostManager();
 
 	public static void init() {
 		TICK_HANDLERS.add(new TeleporterArrivalHandler());
@@ -54,6 +57,7 @@ public class ServerEventHandler {
 	public static void registerCommands(RegisterCommandsEvent event) {
 		CommandGenerateMatterValues.register(event.getDispatcher());
 		CommandManualMatterValue.register(event.getDispatcher());
+		EVENT_POST_MANAGER.postRegisterMatterGeneratorsEvent();
 	}
 
 	@SubscribeEvent
@@ -83,6 +87,11 @@ public class ServerEventHandler {
 			handler.handleTick(server, phase, enoughTime);
 		}
 
+	}
+	
+	@SubscribeEvent
+	public static void registerDefaultMatterGenerators(RegisterMatterGeneratorsEvent event) {
+		DefaultGeneratorConsumers.gatherGenerators(event);
 	}
 
 }

@@ -62,7 +62,6 @@ public class MatterOverdrive {
 				"matteroverdrive/matteroverdrive.common.toml");
 		ModLoadingContext.get().registerConfig(Type.CLIENT, MatterOverdriveConfig.CLIENT_CONFIG,
 				"matteroverdrive/matteroverdrive.client.toml");
-		MatterRegister.init();
 		MatterRegister.INSTANCE = new MatterRegister().subscribeAsSyncable(NetworkHandler.CHANNEL);
 		ServerEventHandler.init();
 
