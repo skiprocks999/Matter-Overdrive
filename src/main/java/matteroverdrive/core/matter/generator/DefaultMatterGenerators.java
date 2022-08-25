@@ -1,4 +1,4 @@
-package matteroverdrive.core.matter;
+package matteroverdrive.core.matter.generator;
 
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.event.RegisterMatterGeneratorsEvent;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.RecipeType;
  * @author skip999
  *
  */
-public class DefaultGeneratorConsumers {
+public class DefaultMatterGenerators {
 
 	public static CraftingMatterValueGenerator CRAFTING_MATTER_GENERATOR;
 	public static SmeltingMatterValueGenerator SMELTING_MATTER_GENERATOR;

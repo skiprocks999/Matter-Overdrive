@@ -13,8 +13,8 @@ import matteroverdrive.core.command.CommandGenerateMatterValues;
 import matteroverdrive.core.command.CommandManualMatterValue;
 import matteroverdrive.core.event.RegisterMatterGeneratorsEvent;
 import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
-import matteroverdrive.core.matter.DefaultGeneratorConsumers;
 import matteroverdrive.core.matter.MatterRegister;
+import matteroverdrive.core.matter.generator.DefaultMatterGenerators;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
@@ -91,7 +91,7 @@ public class ServerEventHandler {
 	
 	@SubscribeEvent
 	public static void registerDefaultMatterGenerators(RegisterMatterGeneratorsEvent event) {
-		DefaultGeneratorConsumers.gatherGenerators(event);
+		DefaultMatterGenerators.gatherGenerators(event);
 	}
 
 }
