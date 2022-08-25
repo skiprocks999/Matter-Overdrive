@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.logging.log4j.util.TriConsumer;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -21,6 +19,7 @@ import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.References;
 import matteroverdrive.core.matter.MatterRegister;
+import matteroverdrive.core.matter.generator.AbstractMatterValueGenerator;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -47,10 +46,10 @@ public class CommandGenerateMatterValues {
 		RecipeManager manager = source.getRecipeManager();
 		HashMap<Item, Double> generatedValues = new HashMap<>();
 
-		List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> consumers = MatterRegister.INSTANCE.getConsumers();
+		List<AbstractMatterValueGenerator> generators = MatterRegister.INSTANCE.getConsumers();
 		for (int i = 0; i < loops; i++) {
-			for (TriConsumer<HashMap<Item, Double>, RecipeManager, Integer> consumer : consumers) {
-				consumer.accept(generatedValues, manager, i);
+			for (AbstractMatterValueGenerator generator : generators) {
+				generator.handleGeneration(generatedValues, manager, i);
 			}
 		}
 

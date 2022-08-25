@@ -12,7 +12,7 @@ public final class ServerEventPostManager {
 	protected void postRegisterMatterGeneratorsEvent() {
 		RegisterMatterGeneratorsEvent event = new RegisterMatterGeneratorsEvent();
 		MinecraftForge.EVENT_BUS.post(event);
-		MatterRegister.INSTANCE.setGeneratorList(event.getGenerators());
+		MatterRegister.INSTANCE.setGeneratorMap(event.getGenerators());
 	}
 	
 }

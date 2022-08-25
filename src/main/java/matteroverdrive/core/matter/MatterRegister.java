@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -35,6 +34,7 @@ import com.mojang.datafixers.util.Pair;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.matter.generator.AbstractMatterValueGenerator;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Registry;
@@ -49,7 +49,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
@@ -62,7 +62,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
-	private List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> matterGeneratorConsumers;
+	private Map<RecipeType<?>, AbstractMatterValueGenerator> matterGeneratorConsumers;
 
 	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Double> parsedTags = new HashMap<>();
@@ -77,7 +77,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public MatterRegister() {
 		folderName = "matter";
 		logger = MatterOverdrive.LOGGER;
-		matterGeneratorConsumers = new ArrayList<>();
+		matterGeneratorConsumers = new HashMap<>();
 	}
 
 	@Nullable
@@ -212,12 +212,12 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	
 	//Only mess with this if you know damn well what you're doing :D
 	@Deprecated
-	public void setGeneratorList(List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> list){
-		matterGeneratorConsumers = list;
+	public void setGeneratorMap(Map<RecipeType<?>, AbstractMatterValueGenerator> matterGeneratorConsumers){
+		this.matterGeneratorConsumers = matterGeneratorConsumers;
 	}
 
-	public List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> getConsumers() {
-		return Collections.unmodifiableList(matterGeneratorConsumers);
+	public List<AbstractMatterValueGenerator> getConsumers() {
+		return Collections.unmodifiableList(new ArrayList<>(matterGeneratorConsumers.values()));
 	}
 	
 }

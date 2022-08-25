@@ -1,14 +1,11 @@
 package matteroverdrive.core.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.logging.log4j.util.TriConsumer;
+import com.google.common.collect.ImmutableMap;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.RecipeManager;
+import matteroverdrive.core.matter.generator.AbstractMatterValueGenerator;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
@@ -20,18 +17,18 @@ import net.minecraftforge.eventbus.api.Event;
  */
 public class RegisterMatterGeneratorsEvent extends Event {
 	
-	private List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> generatorConsumers;
+	private HashMap<RecipeType<?>, AbstractMatterValueGenerator> matterGeneratorConsumers;
 	
 	public RegisterMatterGeneratorsEvent() {
-		generatorConsumers = new ArrayList<>();
+		matterGeneratorConsumers = new HashMap<>();
 	}
 	
-	public void addGenerator(TriConsumer<HashMap<Item, Double>, RecipeManager, Integer> generator) {
-		generatorConsumers.add(generator);
+	public void addGenerator(RecipeType<?> recipeType, AbstractMatterValueGenerator generator) {
+		matterGeneratorConsumers.put(recipeType, generator);
 	}
 	
-	public List<TriConsumer<HashMap<Item, Double>, RecipeManager, Integer>> getGenerators(){
-		return Collections.unmodifiableList(generatorConsumers);
+	public ImmutableMap<RecipeType<?>, AbstractMatterValueGenerator> getGenerators(){
+		return ImmutableMap.copyOf(matterGeneratorConsumers);
 	}
 
 }
