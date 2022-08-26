@@ -58,20 +58,59 @@ ship it directly with your mod, or make a datapack from it!
 
 Now, you might be disappointed, as the generator can only handle Vanilla Recipes. Wrong! The generator
 can handle any recipe type as long as you provide a consumer for it. To add your own recipe handling, 
-to the generator, first add Matter Overdrive as a dependency to your mod. Next, in a place of your choosing, 
-call the method 
+to the generator, first add Matter Overdrive as a dependency to your mod. Next, subscribe to 
+RegisterMatterGeneratorsEvent on the FORGE bus. The event collects generators with a HashMap, using the
+RecipeType of the generator as the key and any extension of AbstractMatterValueGenerator as the value. 
+To add a generator, simply call:
+	
+	RegisterMatterGeneratorsEvent.addGenerator()
+	
+passing in the required arguments. The event also allows you to remove generators registered for 
+specific RecipeTypes using the RegisterMatterGeneratorsEvent.removeGenerator() method. The method
+will return a boolean indicating whether or not the generator was present in the map and removed.
+It is important to note that there is no guarantee that your mod will get access to the event before
+another mod, so plan accordingly. The added benefit of using a HashMap is that you can simply 
+override a value if it already existst in the map. However, keep in mind other mods can do this
+to your generator in theory as well.
 
-    MatterRegister.addGeneratorConsumer(BiConsumer)
+Any extension of AbstractMatterValueGenerator must provide an implementation as to how the recipe it
+is associated with will have values assigned to its, well recipes. This is accomplished by implementing
+AbstractMatterValueGenerator.run() in your subclass. See CraftingMatterValueGenerator and the other
+default vanilla generators for examples of how this might look.
 
-The method takes a BiConsumer with the two input arguments being:
+Matter generators are not perfect however, and can make mistakes, since often items can have multiple 
+recipes. This is why AbstractMatterValueGenerator has the option to add and remove corrections to the
+values assigned after run() is called. Corrections are intended to be open-ended and highly flexible
+by design. The default implementation of the correction method simply removes an item if true. However,
+applyGeneratorCorrections() gives direct access to the item-value map, meaning any alterations to it
+are valid.
 
-A) A HashMap of the values created by the generator when you run the command
-B) The RecipeManager for the world you are in when you run the command
+MatterOverdrive ships with default implementations of the Crafting, Smelting, and Smithing recipes as
+mentioned earlier. However, MO also provides extensive configuration options to disable and enable these
+generators and their accompanying corrections. In order to access the instances of these generators, simply
+call the variables found in the DefaultMatterGenerators class. NOTE THESE ARE NOT INSTANTIATED UNTIL RIGHT
+BEFORE THE EVENT IS POSTED, SO MAKE SURE TO ACCOUNT FOR THIS. I would recommend modifying these during
+your handling of the event. Make sure if you disable a default generator you provide a new implementation
+of it, as otherwise things will not generate properly.
 
-Simply provide a BiConsumer of how to handle a particular recipe type and add the resulting value to the 
-input HashMap. See DefaultGeneratorConsumers under main/java/matteroverdrive/core/matter/DefaultGeneratorConsumers 
-for examples of how this implementation would look. Then simply ensure the consumer is added by the time
-the command is run.
+It must be stressed at this point however that the concept behind the generator is for it to be used in a
+development environment and not necessarily as a shipped feature for a mod. The concept behind the generator 
+is for it to be highly versatile and customizable as you have to directly code them. Then you simply generate
+the JSON file and ship that in the data pack for your mod. I encourage mod authors who plan to ship implementations 
+of generators with their mod to add an option to disable them in the spirit of this. 
+
+However for modpack authors who might be looking at having to alter 100+ config files in order to add your
+own generators for a custom progression modpack, fear not as there is also a more streamlined solution for 
+disabling default generators en mass. Matter Overdrive has an option in it's config file to disable the 
+RegisterMatterGeneratorsEvent and instead switch to a specialized event designed for use for just a situation
+like this. In the common config file, set "post_default_generator_event" to false and set "post_special_generator_event" 
+to true. NOTE, "post_default_generator_event" must be false for this to work.
+
+Setting these variables will cause Matter Overdrive to post a specialized event to the FORGE event bus called
+RegisterSpecialGeneratorsEvent, where you can then register the custom matter value generators you need to.
+This event is ONLY intended for use cases such as this, and should not be used otherwise. If you are a mod
+author needing to use this event, then you are doing something VERY wrong!
+
 
 3. To help you with manually assigning matter values to items, the command 
 
@@ -92,7 +131,7 @@ hand, the command would look like this:
 Note, the command supports the double primitive type!
 
 4. If you want to completely customize matter values, then it is within your power. Simply create a data
-pack with a higher priority than 8, and it will override all the preset values shipped with Matter Overdrive
+pack with a higher priority than 9, and it will override all the preset values shipped with Matter Overdrive
 and other mods. However, due to the limitations of data packs, the only difference in priority is
 the higher priority packs get parsed before the lower ones. In short, this means if you want to 
 remove the matter value from an item added from a lower data pack, you will need to tell the parser
@@ -103,7 +142,18 @@ In your custom json file, you would add the line:
     "minecraft:dirt" : 0
 
 Any integer less than or equal to zero will technically work! Remember the tag rules from above also
-would still apply here.
+would still apply here. To help with some of the tediousness of making sure you account for all items
+that need to be set to zero, the command:
+
+	/matteroverdrive genzerovalues 
+	
+exists to help alleviate some of the "did I make sure to do that one" from the equation. The command will
+generate a file containing all items in the game assigned a value of 0 under:
+
+	Matter Overdrive/zeros.json
+	
+in your save folder. Instead of having to add every item in the game, you simply remove items that you want
+to still have values.
 
 
 

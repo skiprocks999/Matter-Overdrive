@@ -206,6 +206,8 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		};
 	}
 
+	//Only call this if you know what you're doing 
+	@Deprecated
 	public void setClientValues(HashMap<Item, Double> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
@@ -216,6 +218,8 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		this.matterGeneratorConsumers = matterGeneratorConsumers;
 	}
 
+	//Only call this if you know what you're doing
+	@Deprecated
 	public List<AbstractMatterValueGenerator> getConsumers() {
 		return Collections.unmodifiableList(new ArrayList<>(matterGeneratorConsumers.values()));
 	}

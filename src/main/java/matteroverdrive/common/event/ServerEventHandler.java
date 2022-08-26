@@ -10,6 +10,7 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.entity_data.CapabilityEntityData;
 import matteroverdrive.core.capability.types.overworld_data.CapabilityOverworldData;
 import matteroverdrive.core.command.CommandGenerateMatterValues;
+import matteroverdrive.core.command.CommandGenerateZeroValues;
 import matteroverdrive.core.command.CommandManualMatterValue;
 import matteroverdrive.core.event.RegisterMatterGeneratorsEvent;
 import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
@@ -57,6 +58,7 @@ public class ServerEventHandler {
 	public static void registerCommands(RegisterCommandsEvent event) {
 		CommandGenerateMatterValues.register(event.getDispatcher());
 		CommandManualMatterValue.register(event.getDispatcher());
+		CommandGenerateZeroValues.register(event.getDispatcher());
 		EVENT_POST_MANAGER.postRegisterMatterGeneratorsEvent();
 	}
 

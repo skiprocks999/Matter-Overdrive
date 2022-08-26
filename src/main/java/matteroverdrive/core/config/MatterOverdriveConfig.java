@@ -13,6 +13,7 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> VALIDATE_MATTER_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
+	//matter generator options
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATORS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_SMELTING_GENERATOR;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_CRAFTING_GENERATOR;
@@ -21,6 +22,9 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_SMELTING_CORRECTIONS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_CRAFTING_CORRECTIONS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_SMITHING_CORRECTIONS;
+	//matter event options
+	public static final ForgeConfigSpec.ConfigValue<Boolean> POST_DEFAULT_GENERATOR_EVENT;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> POST_SPECIAL_GENERATOR_EVENT;
 	
 	public static final ForgeConfigSpec CLIENT_CONFIG;
 	public static final ForgeConfigSpec.ConfigValue<Integer> MATTER_DECIMALS;
@@ -130,6 +134,40 @@ public final class MatterOverdriveConfig {
 				" ",
 				"default value = true"
 				).define("use_default_corrections", true);
+		POST_DEFAULT_GENERATOR_EVENT = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"THIS SHOULD BE TRUE IN MOST CIRCUMSTANES!",
+				" ",
+				"Controls whether or not the RegisterMatterGeneratorsEvent will be posted to the event bus, there by",
+				"preventing all AbstractMatterValueGenerator instances collected by it from being added. All mods creating",
+				"a generator should add their generators using the event. ",
+				" ",
+				"DO NOT SET THIS TO FALSE UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING!",
+				" ",
+				"This feature is intended for modpack authors who indend to do heavy custom progression with the matter",
+				"system and need to ensure only their generators are registered.",
+				" ",
+				"default value = true"
+				).define("post_default_generator_event", true);
+		POST_SPECIAL_GENERATOR_EVENT = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"THIS SHOULD BE FALSE IN MOST CIRCUMSTANCES!",
+				" ",
+				"Controls whether or not the RegisterSpecialGeneratorsEvent will be posted to the event bus, there by giving",
+				"a way to still register AbstractMatterValueGenerator instances when \"post_default_generator_event\" is false. If",
+				"you are a mod author looking to register an instance, then do not use this event!",
+				" ",
+				"DO NOT SET THIS TO TRUE UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING!",
+				" ",
+				"This feature is intended for modpack authors who indend to do heavy custom progression with the matter",
+				"system and need to ensure only their generators are registered.",
+				" ",
+				"Note this event will only post when \"post_default_generator_event\" is false,",
+				" ",
+				"default value = false"
+				).define("post_special_generator_event", false);
 		
 		COMMON_CONFIG = COMMON_BUILDER.build();
 		

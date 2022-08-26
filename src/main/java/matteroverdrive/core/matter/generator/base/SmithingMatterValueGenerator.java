@@ -24,7 +24,7 @@ public class SmithingMatterValueGenerator extends AbstractMatterValueGenerator {
 	}
 	
 	@Override
-	protected void run(HashMap<Item, Double> generatedValues, RecipeManager recipeManager, int loopIteration) {
+	public void run(HashMap<Item, Double> generatedValues, RecipeManager recipeManager, int loopIteration) {
 		recipeManager.getAllRecipesFor(RecipeType.SMITHING).forEach(recipe -> {
 			UpgradeRecipe upgrade = recipe;
 			ItemStack result = upgrade.getResultItem();

@@ -31,7 +31,7 @@ public class SmeltingMatterValueGenerator extends AbstractMatterValueGenerator {
 	}
 	
 	@Override
-	protected void run(HashMap<Item, Double> generatedValues, RecipeManager recipeManager, int loopIteration) {
+	public void run(HashMap<Item, Double> generatedValues, RecipeManager recipeManager, int loopIteration) {
 		recipeManager.getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
 			ItemStack result = recipe.getResultItem();
 			if (MatterRegister.INSTANCE.getServerMatterValue(result) <= 0.0) {

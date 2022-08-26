@@ -207,6 +207,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addCommand("mainhandempty", "You must be holding an item");
 			addCommand("assignedvalue", "Assigned %1$s kM to %2$s");
 			addCommand("endmanualassign", "Saved under \"Matter Overdrive/manual.json\"");
+			addCommand("startzeroscommand", "Starting Zeros Command...");
+			addCommand("endzeroscommand", "Finshed writing zeros file. Saved under \"Matter Overdrive/zeros.json\"");
 
 			addSubtitle("crate_open", "Tritanium Crate Opens");
 			addSubtitle("crate_close", "Tritanium Crate Closes");
