@@ -58,7 +58,6 @@ public class ClientRegister {
 	/* MODELS */
 
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
-	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
 	/* TEXTURES */
 
@@ -195,7 +194,6 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void onModelEvent(ModelEvent.RegisterAdditional event) {
 		event.register(MODEL_CHARGER);
-		event.register(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent

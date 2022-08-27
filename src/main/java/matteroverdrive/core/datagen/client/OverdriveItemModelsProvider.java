@@ -2,8 +2,11 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.References;
 import matteroverdrive.common.block.OverdriveBlockColors;
+import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
+import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.data.DataGenerator;
@@ -32,13 +35,28 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 			withExistingParent(blockPath(BlockRegistry.BLOCK_FLOOR_TILES.get(color)),
 					modLoc("block/floor_tiles_colorless"));
 		}
+		for(CrateColors color : CrateColors.values()) {
+			withExistingParent(blockPath(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color)), modLoc("block/" + color.id()));
+		}
 		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");
 		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
 		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
 		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, "block/charger_child");
 		withExistingParent(blockPath(BlockRegistry.BLOCK_TRANSPORTER), modLoc("block/transporter"));
 		withExistingParent(blockPath(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
-
+		withExistingParent(blockPath(BlockRegistry.BLOCK_CHARGER), modLoc("block/charger_item"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_CHUNKLOADER), modLoc("block/chunkloader"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_INSCRIBER), modLoc("block/inscriber"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_ANALYZER), modLoc("block/matter_analyzer"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY)), modLoc("block/cable/matter_conduit_heavy_none_seamless_ns"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR)), modLoc("block/cable/matter_conduit_regular_none_seamless_ns"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_REPLICATOR), modLoc("block/matter_replicator"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MICROWAVE), modLoc("block/microwave"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR)), modLoc("block/cable/network_cable_regular_none_seamless_ns"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_PATTERN_MONITOR), modLoc("block/pattern_monitor"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_PATTERN_STORAGE), modLoc("block/pattern_storage"));
+		
+		
 		withExistingParent(blockPath(BlockRegistry.BLOCK_INDUSTRIAL_GLASS), modLoc("block/industrial_glass"));
 
 		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_OPEN), modLoc("block/vent_open"));
