@@ -10,7 +10,6 @@ public final class MatterOverdriveConfig {
 
 	public static final ForgeConfigSpec COMMON_CONFIG;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> CRATE_DROP_ITEMS;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> VALIDATE_MATTER_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
 	//matter generator options
@@ -45,14 +44,6 @@ public final class MatterOverdriveConfig {
 				" ", 
 				"default value = false"
 				).define("drop_crate_items", false);
-		VALIDATE_MATTER_ITEMS = COMMON_BUILDER.comment(
-				" ",
-				" ",
-				"Controls if there will be dupe checks on items with matter values.", 
-				"NOTE THIS WILL ALLOW SERIOUS DUPING IF DISABLED!", 
-				" ", 
-				"default value = true"
-				).define("enable_checking", true);
 		MACHINES_DROP_ITEMS = COMMON_BUILDER.comment(
 				" ",
 				" ",
