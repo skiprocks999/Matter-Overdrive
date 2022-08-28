@@ -3,6 +3,7 @@
   "flip_v": true,
   "loader": "forge:obj",
   "model": "matteroverdrive:models/block/matter_replicator.obj",
+  "render_type": "minecraft:cutout",
   "textures": {
     "back": "matteroverdrive:block/network_port",
     "bottom": "matteroverdrive:block/base",

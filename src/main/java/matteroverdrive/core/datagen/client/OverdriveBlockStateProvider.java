@@ -73,7 +73,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_RECYCLER.get(), matterRecycler);
 		horrRotatedBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR.get(), getObjModel("matter_replicator", "block/matter_replicator")
 				.texture("bottom", modLoc("block/base")).texture("back", modLoc("block/network_port")).texture("sides", modLoc("block/vent"))
-				.texture("front", modLoc("block/matter_replicator")).texture("particle", "#bottom"));
+				.texture("front", modLoc("block/matter_replicator")).texture("particle", "#bottom").renderType("cutout"));
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE.get(), microwave);
 		horrRotatedBlock(BlockRegistry.BLOCK_PATTERN_STORAGE.get(), getObjModel("pattern_storage", "block/pattern_storage")
 				.texture("base", modLoc("block/pattern_storage")).texture("vent", modLoc("block/vent")).texture("particle", "#base"));
