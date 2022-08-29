@@ -1,0 +1,19 @@
+{
+  "type": "matteroverdrive:inscriber_recipe",
+  "experience": 0.0,
+  "iteminputs": {
+    "0": {
+      "count": 1,
+      "tag": "forge:circuits/elite"
+    },
+    "1": {
+      "count": 1,
+      "tag": "forge:gems/emerald"
+    },
+    "count": 2
+  },
+  "output": {
+    "count": 1,
+    "item": "matteroverdrive:isolinear_circuit_tier4"
+  }
+}

@@ -1,22 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "boat",
-  "pattern": [
-    "I",
-    "R",
-    "G"
-  ],
   "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
     "I": {
       "tag": "forge:ingots/iron"
     },
     "R": {
       "tag": "forge:dusts/redstone"
-    },
-    "G": {
-      "tag": "forge:glass"
     }
   },
+  "pattern": [
+    "I",
+    "R",
+    "G"
+  ],
   "result": {
     "item": "matteroverdrive:isolinear_circuit_tier1"
   }
