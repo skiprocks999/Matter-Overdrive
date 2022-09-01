@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class LootTablesProvider extends AbstractLootTableProvider {
+public class OverdriveLootTablesProvider extends AbstractLootTableProvider {
 
-	public LootTablesProvider(DataGenerator generator) {
+	public OverdriveLootTablesProvider(DataGenerator generator) {
 		super(generator);
 	}
 

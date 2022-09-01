@@ -18,12 +18,12 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.GsonHelper;
 
-public class MatterValueGenerator implements DataProvider {
+public class OverdriveMatterValueGenerator implements DataProvider {
 
 	private static final String DATA_LOC = "data/matteroverdrive/matter/values.json";
 	private DataGenerator gen;
 
-	public MatterValueGenerator(DataGenerator gen) {
+	public OverdriveMatterValueGenerator(DataGenerator gen) {
 		this.gen = gen;
 	}
 

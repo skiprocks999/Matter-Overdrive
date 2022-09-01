@@ -4,13 +4,15 @@ import matteroverdrive.References;
 import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class MinableTagsProvider extends BlockTagsProvider {
+public class OverdriveBlockTagsProvider extends BlockTagsProvider {
 
-	public MinableTagsProvider(DataGenerator pGenerator, ExistingFileHelper existingFileHelper) {
+	public OverdriveBlockTagsProvider(DataGenerator pGenerator, ExistingFileHelper existingFileHelper) {
 		super(pGenerator, References.ID, existingFileHelper);
 	}
 
@@ -45,6 +47,10 @@ public class MinableTagsProvider extends BlockTagsProvider {
 				.add(BlockRegistry.BLOCK_CHUNKLOADER.get()).add(BlockRegistry.BLOCK_MATTER_ANALYZER.get())
 				.add(BlockRegistry.BLOCK_PATTERN_STORAGE.get()).add(BlockRegistry.BLOCK_PATTERN_MONITOR.get())
 				.add(BlockRegistry.BLOCK_MATTER_REPLICATOR.get());
+	}
+	
+	private static TagKey<Block> forgeTag(String name){
+		return BlockTags.create(new ResourceLocation("forge", name));
 	}
 
 }

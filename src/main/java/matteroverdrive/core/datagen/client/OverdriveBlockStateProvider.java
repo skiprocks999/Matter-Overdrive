@@ -6,7 +6,6 @@ import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.core.block.GenericEntityBlock;
-import matteroverdrive.core.datagen.utils.ExistingLightableModel;
 import matteroverdrive.registry.BlockRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
@@ -31,10 +30,6 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 	private final ExistingModelFile chunkloader;
 	private final ExistingModelFile spacetimeAccelerator;
 	private final ExistingModelFile patternMonitor;
-	private final ExistingLightableModel matterAnalyzer;
-	private final ExistingLightableModel matterDecomposer;
-	private final ExistingLightableModel matterRecycler;
-	private final ExistingLightableModel microwave;
 	
 
 	public OverdriveBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -45,10 +40,6 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		chunkloader = existingBlock("chunkloader", exFileHelper);
 		spacetimeAccelerator = existingBlock("spacetime_accelerator", exFileHelper);
 		patternMonitor = existingBlock("pattern_monitor", exFileHelper);
-		matterAnalyzer = new ExistingLightableModel("matter_analyzer", exFileHelper);
-		matterDecomposer = new ExistingLightableModel("matter_decomposer", exFileHelper);
-		matterRecycler = new ExistingLightableModel("matter_recycler", exFileHelper);
-		microwave = new ExistingLightableModel("microwave", exFileHelper);
 	}
 
 	@Override
@@ -68,13 +59,13 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		bottomSlabBlock(BlockRegistry.BLOCK_SOLAR_PANEL.get(), "matteroverdrive:block/base", "matteroverdrive:block/base",
 				"matteroverdrive:block/solar_panel");
 		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD.get());
-		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_ANALYZER.get(), matterAnalyzer);
-		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_DECOMPOSER.get(), matterDecomposer);
-		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_RECYCLER.get(), matterRecycler);
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_ANALYZER.get(), getMatAnaBase("", ""), getMatAnaBase("_on", "_on"));
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_DECOMPOSER.get(), getMatDecomBase("", "empty"), getMatDecomBase("_on", "full"));
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_RECYCLER.get(), getMatRecBase("", ""), getMatRecBase("_on", "_anim"));
 		horrRotatedBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR.get(), getObjModel("matter_replicator", "block/matter_replicator")
 				.texture("bottom", modLoc("block/base")).texture("back", modLoc("block/network_port")).texture("sides", modLoc("block/vent"))
 				.texture("front", modLoc("block/matter_replicator")).texture("particle", "#bottom").renderType("cutout"));
-		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE.get(), microwave);
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE.get(), getMicroBase("", ""), getMicroBase("_on", "_on"));
 		horrRotatedBlock(BlockRegistry.BLOCK_PATTERN_STORAGE.get(), getObjModel("pattern_storage", "block/pattern_storage")
 				.texture("base", modLoc("block/pattern_storage")).texture("vent", modLoc("block/vent")).texture("particle", "#base"));
 		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR.get(), spacetimeAccelerator);
@@ -113,16 +104,16 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).modelForState().modelFile(modelFile).rotationY(270).addModel();
 	}
 	
-	private void horrRotatedLitBlock(Block block, ExistingLightableModel existing) {
+	private void horrRotatedLitBlock(Block block, ModelFile off, ModelFile on) {
 		getVariantBuilder(block)
-			.partialState().with(GenericEntityBlock.FACING, Direction.NORTH).with(BlockStateProperties.LIT, false).modelForState().modelFile(existing.off).rotationY(0).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.EAST).with(BlockStateProperties.LIT, false).modelForState().modelFile(existing.off).rotationY(90).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(BlockStateProperties.LIT, false).modelForState().modelFile(existing.off).rotationY(180).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(BlockStateProperties.LIT, false).modelForState().modelFile(existing.off).rotationY(270).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.NORTH).with(BlockStateProperties.LIT, true).modelForState().modelFile(existing.on).rotationY(0).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.EAST).with(BlockStateProperties.LIT, true).modelForState().modelFile(existing.on).rotationY(90).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(BlockStateProperties.LIT, true).modelForState().modelFile(existing.on).rotationY(180).addModel()
-			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(BlockStateProperties.LIT, true).modelForState().modelFile(existing.on).rotationY(270).addModel();
+			.partialState().with(GenericEntityBlock.FACING, Direction.NORTH).with(BlockStateProperties.LIT, false).modelForState().modelFile(off).rotationY(0).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.EAST).with(BlockStateProperties.LIT, false).modelForState().modelFile(off).rotationY(90).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(BlockStateProperties.LIT, false).modelForState().modelFile(off).rotationY(180).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(BlockStateProperties.LIT, false).modelForState().modelFile(off).rotationY(270).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.NORTH).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(0).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.EAST).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(90).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(180).addModel()
+			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(270).addModel();
 	}
 	
 	private void omniDirBlock(Block block, ModelFile model) {
@@ -154,6 +145,29 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 	private BlockModelBuilder blockTopBottom(RegistryObject<Block> block, String top, String bottom, String side) {
 		return models().cubeBottomTop(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), new ResourceLocation(References.ID, side),
 				new ResourceLocation(References.ID, bottom), new ResourceLocation(References.ID, top));
+	}
+	
+	private BlockModelBuilder getMatAnaBase(String name, String frontText) {
+		return models().withExistingParent("block/matter_analyzer" + name, modLoc("block/parent/matter_analyzer_base"))
+				.texture("bottom", modLoc("block/base")).texture("top", modLoc("block/matter_analyzer/matter_analyzer_top"))
+				.texture("side", modLoc("block/vent_closed")).texture("back", modLoc("block/network_port"))
+				.texture("particle", "block/matter_analyzer/matter_analyzer_front").texture("front", modLoc("block/matter_analyzer/matter_analyzer_front"));
+	}
+	
+	private BlockModelBuilder getMatDecomBase(String name, String frontText) {
+		return models().orientableWithBottom("block/matter_decomposer" + name, modLoc("block/base_stripes"), modLoc("block/tank_" + frontText), 
+				modLoc("block/vent_closed"), modLoc("block/decomposer_top"));
+	}
+	
+	private BlockModelBuilder getMatRecBase(String name, String frontText) {
+		return models().orientableWithBottom("block/matter_recycler" + name, modLoc("block/base_stripes"), modLoc("block/recycler_front" + frontText), 
+				modLoc("block/vent_closed"), modLoc("block/decomposer_top"));
+	}
+	
+	private BlockModelBuilder getMicroBase(String name, String frontText) {
+		return models().withExistingParent("block/microwave" + name, modLoc("block/parent/microwave_base"))
+				.texture("0", modLoc("block/microwave/microwave")).texture("1", modLoc("block/microwave/microwave_front" + frontText))
+				.texture("2", modLoc("block/microwave/microwave_back")).texture("particle", "#0");
 	}
 
 	private ResourceLocation key(Block block) {
