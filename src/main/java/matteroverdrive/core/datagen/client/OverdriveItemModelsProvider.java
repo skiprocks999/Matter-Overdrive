@@ -51,6 +51,12 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 				itemLoc("matter_scanner/matter_scanner_on")
 				});
 		
+		toggleableItem(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "_stored", Parent.GENERATED, Parent.GENERATED, new ResourceLocation[] {
+				itemLoc("flashdrive/flashdrive_transporter_empty")
+		}, new ResourceLocation[] {
+				itemLoc("flashdrive/flashdrive_transporter_stored")
+				});
+		
 	}
 	
 	private void layeredItem(RegistryObject<Item> item, Parent parent, ResourceLocation...textures) {
