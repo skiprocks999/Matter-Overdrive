@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
+import matteroverdrive.References;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -202,6 +203,20 @@ public class UtilsRendering {
 
 	public static RenderType beaconType() {
 		return RenderType.beaconBeam(new ResourceLocation("textures/entity/beacon_beam.png"), true);
+	}
+	
+	public static class BlockTextures {
+		
+		public static final ResourceLocation BASE = moBlock("base");
+		
+		private static ResourceLocation moLoc(String texture) {
+			return new ResourceLocation(References.ID, texture);
+		}
+		
+		private static ResourceLocation moBlock(String texture) {
+			return moLoc("block/" + texture);
+		}
+		
 	}
 
 }

@@ -1,8 +1,3 @@
 {
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "matteroverdrive:block/base",
-    "side": "matteroverdrive:block/base",
-    "top": "matteroverdrive:block/solar_panel"
-  }
+  "parent": "matteroverdrive:block/solar_panel"
 }

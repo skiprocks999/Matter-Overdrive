@@ -53,7 +53,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientRegister {
 
-	private static final ResourceLocation CHARGE = new ResourceLocation("charge");
+	public static final ResourceLocation CHARGE = new ResourceLocation("charge");
 
 	/* MODELS */
 

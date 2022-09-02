@@ -1,6 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "matteroverdrive:item/matter_scanner/matter_scanner_on"
-	}
-}

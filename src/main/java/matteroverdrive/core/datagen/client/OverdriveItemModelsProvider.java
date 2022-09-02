@@ -1,18 +1,18 @@
 package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.References;
-import matteroverdrive.common.block.OverdriveBlockColors;
+import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
-import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -26,73 +26,93 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(blockPath(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING), modLoc("block/tritanium_plating"));
-		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
-			withExistingParent(blockPath(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color)),
-					modLoc("block/tritanium_plating_colorless"));
-			withExistingParent(blockPath(BlockRegistry.BLOCK_FLOOR_TILE.get(color)),
-					modLoc("block/floor_tile_colorless"));
-			withExistingParent(blockPath(BlockRegistry.BLOCK_FLOOR_TILES.get(color)),
-					modLoc("block/floor_tiles_colorless"));
-		}
-		for(CrateColors color : CrateColors.values()) {
-			withExistingParent(blockPath(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color)), modLoc("block/" + color.id()));
-		}
-		modSlab("solar_panel", "block/base", "block/base", "block/solar_panel");
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_DECOMPOSER), modLoc("block/matter_decomposer"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_RECYCLER), modLoc("block/matter_recycler"));
-		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, "block/charger_child");
-		withExistingParent(blockPath(BlockRegistry.BLOCK_TRANSPORTER), modLoc("block/transporter"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), modLoc("block/spacetime_accelerator"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_CHARGER), modLoc("block/charger_item"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_CHUNKLOADER), modLoc("block/chunkloader"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_INSCRIBER), modLoc("block/inscriber"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_ANALYZER), modLoc("block/matter_analyzer"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY)), modLoc("block/cable/matter_conduit_heavy_none_seamless_ns"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR)), modLoc("block/cable/matter_conduit_regular_none_seamless_ns"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_REPLICATOR), modLoc("block/matter_replicator"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MICROWAVE), modLoc("block/microwave"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR)), modLoc("block/cable/network_cable_regular_none_seamless_ns"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_PATTERN_MONITOR), modLoc("block/pattern_monitor"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_PATTERN_STORAGE), modLoc("block/pattern_storage"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_CHARGER), blockLoc("charger_item"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY)), blockLoc("cable/matter_conduit_heavy_none_seamless_ns"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR)), blockLoc("cable/matter_conduit_regular_none_seamless_ns"));
+		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR)), blockLoc("cable/network_cable_regular_none_seamless_ns"));
 		
-		
-		withExistingParent(blockPath(BlockRegistry.BLOCK_INDUSTRIAL_GLASS), modLoc("block/industrial_glass"));
-
-		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_OPEN), modLoc("block/vent_open"));
-
-		withExistingParent(blockPath(BlockRegistry.BLOCK_VENT_CLOSED), modLoc("block/vent_closed"));
-
-		simpleItem(ItemRegistry.ITEM_RAW_MATTER_DUST, "item/raw_matter_dust");
-		simpleItem(ItemRegistry.ITEM_MATTER_DUST, "item/matter_dust");
-		simpleItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "item/tritanium_plate");
-		simpleItem(ItemRegistry.ITEM_BASE_UPGRADE, "item/upgrade/upgrade_base");
+		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));
+		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));
+		layeredItem(ItemRegistry.ITEM_TRITANIUM_PLATE, Parent.GENERATED, itemLoc("tritanium_plate"));
+		layeredItem(ItemRegistry.ITEM_BASE_UPGRADE, Parent.GENERATED, itemLoc("upgrade/upgrade_base"));
 		for (UpgradeType type : UpgradeType.values()) {
-			simpleItem(ItemRegistry.ITEM_UPGRADES.get(type), "item/upgrade/upgrade_" + type.toString().toLowerCase());
+			layeredItem(ItemRegistry.ITEM_UPGRADES.get(type), Parent.GENERATED, itemLoc("upgrade/upgrade_" + type.toString().toLowerCase()));
 		}
 		for (TypeIsolinearCircuit circuit : TypeIsolinearCircuit.values()) {
-			simpleItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(circuit), "item/isolinear_circuit/" + circuit.id());
+			layeredItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(circuit), Parent.GENERATED, itemLoc("isolinear_circuit/" + circuit.id()));
 		}
-
-		simpleItem(ItemRegistry.ITEM_LEAD_PLATE, "item/lead_plate");
+		layeredItem(ItemRegistry.ITEM_LEAD_PLATE, Parent.GENERATED, itemLoc("lead_plate"));
+		layeredItem(ItemRegistry.ITEM_PATTERN_DRIVE, Parent.GENERATED, itemLoc("pattern_drive/pattern_drive_base"),
+				itemLoc("pattern_drive/bottom_light"), itemLoc("pattern_drive/middle_light"), itemLoc("pattern_drive/left_light"));
+		
+		toggleableItem(ItemRegistry.ITEM_MATTER_SCANNER, "_on", Parent.GENERATED, Parent.GENERATED, new ResourceLocation[] {
+				itemLoc("matter_scanner/matter_scanner_off")
+		}, new ResourceLocation[] {
+				itemLoc("matter_scanner/matter_scanner_on")
+				});
+		
+	}
+	
+	private void layeredItem(RegistryObject<Item> item, Parent parent, ResourceLocation...textures) {
+		layeredItem(name(item), parent, textures);
+	}
+	
+	private void layeredItem(String name, Parent parent, ResourceLocation...textures) {
+		layeredBuilder(name, parent, textures);
+	}
+	
+	private void toggleableItem(RegistryObject<Item> item, String toggle, Parent parentOff, Parent parentOn, ResourceLocation[] offText, ResourceLocation[] onText) {
+		toggleableItem(name(item), toggle, parentOff, parentOn, offText, onText);
+	}
+	
+	private void toggleableItem(String name, String toggle, Parent parentOff, Parent parentOn, ResourceLocation[] offText, ResourceLocation[] onText) {
+		ItemModelBuilder off = layeredBuilder(name, parentOff, offText);
+		ItemModelBuilder on = layeredBuilder(name + toggle, parentOn, onText);
+		off.override().predicate(ClientRegister.CHARGE, 1.0F).model(on).end();
+	}
+	
+	private ItemModelBuilder layeredBuilder(String name, Parent parent, ResourceLocation...textures) {
+		if(textures == null || textures.length == 0) {
+			throw new UnsupportedOperationException("You need to provide at least one texture");
+		}
+		ItemModelBuilder builder = withExistingParent(name, parent.loc());
+		int counter = 0;
+		for(ResourceLocation location : textures) {
+			builder.texture("layer" + counter, location);
+			counter++;
+		}
+		return builder;
 	}
 
 	private String blockPath(RegistryObject<Block> block) {
 		return ForgeRegistries.BLOCKS.getKey(block.get()).getPath();
 	}
-
-	private void modSlab(String name, String side, String bottom, String top) {
-		slab(name, new ResourceLocation(References.ID, side), new ResourceLocation(References.ID, bottom),
-				new ResourceLocation(References.ID, top));
+	
+	private ResourceLocation itemLoc(String texture) {
+		return modLoc("item/" + texture);
 	}
-
-	private void simpleItem(RegistryObject<Item> item, String textureLoc) {
-		singleTexture(ForgeRegistries.ITEMS.getKey(item.get()).getPath(), new ResourceLocation("item/generated"),
-				"layer0", new ResourceLocation(References.ID, textureLoc));
+	
+	private ResourceLocation blockLoc(String texture) {
+		return modLoc("block/" + texture);
 	}
-
-	private void simpleBlock(RegistryObject<Block> block, String textureLoc) {
-		cubeAll(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), new ResourceLocation(References.ID, textureLoc));
+	
+	private String name(RegistryObject<Item> item) {
+		return ForgeRegistries.ITEMS.getKey(item.get()).getPath();
 	}
-
+	
+	private static enum Parent {
+		
+		GENERATED(true);
+		
+		private final boolean isVanilla;
+		
+		private Parent(boolean isVanilla) {
+			this.isVanilla = isVanilla;
+		}
+		
+		public ResourceLocation loc() {
+			return isVanilla ? new ResourceLocation(toString().toLowerCase()) : new ResourceLocation(References.ID, toString().toLowerCase());
+		}
+	}
+	
 }
