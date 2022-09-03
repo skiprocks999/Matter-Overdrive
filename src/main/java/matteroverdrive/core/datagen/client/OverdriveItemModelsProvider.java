@@ -2,7 +2,6 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.References;
 import matteroverdrive.client.ClientRegister;
-import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
@@ -34,9 +33,6 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	@Override
 	protected void registerModels() {
 		withExistingParent(blockPath(BlockRegistry.BLOCK_CHARGER), blockLoc("charger_item"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY)), blockLoc("cable/matter_conduit_heavy_none_seamless_ns"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR)), blockLoc("cable/matter_conduit_regular_none_seamless_ns"));
-		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR)), blockLoc("cable/network_cable_regular_none_seamless_ns"));
 		
 		layeredItem(ItemRegistry.ITEM_MATTER_DUST, Parent.GENERATED, itemLoc("matter_dust"));
 		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));

@@ -1,7 +1,0 @@
-{
-	"parent": "matteroverdrive:block/parent/network_cable_side",
-	"textures": {
-		"particle": "matteroverdrive:block/network_cable/network_cable_side",
-		"texture": "matteroverdrive:block/network_cable/network_cable_side"
-	}
-}

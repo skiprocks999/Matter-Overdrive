@@ -3,7 +3,10 @@ package matteroverdrive.core.datagen.client;
 import matteroverdrive.References;
 import matteroverdrive.common.block.OverdriveBlockColors;
 import matteroverdrive.common.block.OverdriveBlockStates;
+import matteroverdrive.common.block.OverdriveBlockStates.CableConnectionType;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
+import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.registry.BlockRegistry;
@@ -23,7 +26,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveBlockStateProvider extends BlockStateProvider {
-
+	
 	private final ExistingModelFile coloredTritaniumPlatingFile;
 	private final ExistingModelFile floorTileFile;
 	private final ExistingModelFile floorTilesFile;
@@ -31,7 +34,6 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 	private final ExistingModelFile spacetimeAccelerator;
 	private final ExistingModelFile patternMonitor;
 	
-
 	public OverdriveBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
 		super(gen, References.ID, exFileHelper);
 		coloredTritaniumPlatingFile = existingBlock("tritanium_plating_colorless", exFileHelper);
@@ -40,10 +42,14 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		chunkloader = existingBlock("chunkloader", exFileHelper);
 		spacetimeAccelerator = existingBlock("spacetime_accelerator", exFileHelper);
 		patternMonitor = existingBlock("pattern_monitor", exFileHelper);
+		
+		
+		
 	}
 
 	@Override
 	protected void registerStatesAndModels() {
+		
 		simpleBlock(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING, models().cubeAll("tritanium_plating", blockLoc("decorative/tritanium_plating")), true);
 		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
 			simpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color), coloredTritaniumPlatingFile, true);
@@ -79,6 +85,79 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, spacetimeAccelerator, true);
 		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, patternMonitor, true);
 		
+		genMatterConduits();
+		genNetworkCables();
+		
+	}
+	
+	private void genMatterConduits() {
+		
+		String id = TypeMatterConduit.REGULAR.id();
+		String parent = "parent/" + id;
+		String cable = "block/cable/" + id;
+		String text = "matter_conduit/" + id;
+		String noneText = text + "_none";
+		
+		cable(
+			BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), 
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText)),
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+				.texture("texture", blockLoc(text + "_side")),
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ns")),
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ew")),
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ud")),
+			true
+		);
+		
+		id = TypeMatterConduit.HEAVY.id();
+		parent = "parent/" + id;
+		cable = "block/cable/" + id;
+		text = "matter_conduit/" + id;
+		noneText = text + "_none";
+		
+		cable(
+			BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), 
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText)),
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+				.texture("texture", blockLoc(text + "_side")),
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ns")),
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ew")),
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ud")),
+			true
+		);
+	
+	}
+	
+	private void genNetworkCables() {
+		
+		String id = TypeMatterNetworkCable.REGULAR.id();
+		String parent = "parent/" + id;
+		String cable = "block/cable/" + id;
+		String text = "network_cable/" + id;
+		String noneText = text + "_none";
+		
+		cable(
+			BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), 
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText)),
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+				.texture("texture", blockLoc(text + "_side")),
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ns")),
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ew")),
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", "#texture")
+				.texture("texture", blockLoc(noneText + "_seamless_ud")),
+			true
+		);
 		
 	}
 	
@@ -147,6 +226,51 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.DOWN).modelForState().modelFile(model).rotationY(180).rotationX(90).addModel()
 			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(OverdriveBlockStates.VERTICAL_FACING, VerticalFacing.DOWN).modelForState().modelFile(model).rotationY(270).rotationX(90).addModel();
 		if(registerItem) simpleBlockItem(block.get(), model);
+	}
+	
+	private void cable(RegistryObject<Block> block, ModelFile none, ModelFile side, ModelFile ns, ModelFile ew, ModelFile ud, boolean registerItem) {
+		getMultipartBuilder(block.get())
+			.part().modelFile(none).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_UP, CableConnectionType.NONE)
+				.condition(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.NONE)
+				.condition(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.NONE)
+				.condition(OverdriveBlockStates.CABLE_EAST, CableConnectionType.NONE)
+				.condition(OverdriveBlockStates.CABLE_SOUTH, CableConnectionType.NONE)
+				.condition(OverdriveBlockStates.CABLE_WEST, CableConnectionType.NONE)
+				.end()
+			.part().modelFile(ns).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_EAST, CableConnectionType.NONE_SEAMLESS)
+				.condition(OverdriveBlockStates.CABLE_WEST, CableConnectionType.NONE_SEAMLESS)
+				.end()
+			.part().modelFile(ew).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_UP, CableConnectionType.NONE_SEAMLESS)
+				.condition(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.NONE_SEAMLESS)
+				.end()
+			.part().modelFile(ud).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.NONE_SEAMLESS)
+				.condition(OverdriveBlockStates.CABLE_SOUTH, CableConnectionType.NONE_SEAMLESS)
+				.end()
+			.part().rotationX(270).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_UP, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end()
+			.part().rotationX(90).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_DOWN, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end()
+			.part().rotationY(0).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_NORTH, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end()
+			.part().rotationY(90).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_EAST, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end()
+			.part().rotationY(180).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_SOUTH, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end()
+			.part().rotationY(270).modelFile(side).addModel().useOr()
+				.condition(OverdriveBlockStates.CABLE_WEST, CableConnectionType.CABLE, CableConnectionType.INVENTORY)
+				.end();
+		
+		if(registerItem) simpleBlockItem(block.get(), ns);
+		
 	}
 	
 	private BlockModelBuilder getObjModel(String name, String modelLoc, String texture) {
