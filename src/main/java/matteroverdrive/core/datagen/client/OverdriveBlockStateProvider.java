@@ -61,7 +61,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		
 		simpleBlock(BlockRegistry.BLOCK_CHUNKLOADER, chunkloader, true);
-		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, false);
+		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, true);
 		simpleBlock(BlockRegistry.BLOCK_TRANSPORTER, blockTopBottom(BlockRegistry.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
 				"block/transporter/transporter_bottom", "block/transporter/transporter_side"), true);
 		airBlock(BlockRegistry.BLOCK_CHARGER, "block/charger", false);

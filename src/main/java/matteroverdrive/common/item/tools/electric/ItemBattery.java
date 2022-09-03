@@ -27,7 +27,7 @@ public class ItemBattery extends ItemElectric {
 
 	private static final List<ItemBattery> BATTERIES = new ArrayList<>();
 
-	private BatteryType type;
+	public final BatteryType type;
 
 	public ItemBattery(BatteryType type) {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN), type.maxStorage, true, true);

@@ -1,0 +1,35 @@
+{
+  "parent": "matteroverdrive:item/battery/battery0",
+  "overrides": [
+    {
+      "model": "matteroverdrive:item/battery/battery1",
+      "predicate": {
+        "minecraft:charge": 1.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/battery/battery2",
+      "predicate": {
+        "minecraft:charge": 2.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/battery/battery3",
+      "predicate": {
+        "minecraft:charge": 3.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/battery/battery4",
+      "predicate": {
+        "minecraft:charge": 4.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/battery/battery5",
+      "predicate": {
+        "minecraft:charge": 5.0
+      }
+    }
+  ]
+}

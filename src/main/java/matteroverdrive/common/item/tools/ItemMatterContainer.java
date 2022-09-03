@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ItemMatterContainer extends OverdriveItem {
 
 	private static final List<ItemMatterContainer> CONTAINERS = new ArrayList<>();
-	private ContainerType container;
+	public final ContainerType container;
 
 	public ItemMatterContainer(ContainerType type) {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN));

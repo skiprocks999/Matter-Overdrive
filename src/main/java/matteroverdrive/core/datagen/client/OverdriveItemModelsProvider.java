@@ -5,6 +5,10 @@ import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.common.item.tools.ItemMatterContainer;
+import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
+import matteroverdrive.common.item.tools.electric.ItemBattery;
+import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
@@ -20,6 +24,9 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveItemModelsProvider extends ItemModelProvider {
 
+	public static final int BATTERY_MODEL_COUNT = 6;
+	public static final int MATTER_CONTAINER_MODEL_COUNT = 9;
+	
 	public OverdriveItemModelsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
 		super(generator, References.ID, existingFileHelper);
 	}
@@ -31,7 +38,7 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR)), blockLoc("cable/matter_conduit_regular_none_seamless_ns"));
 		withExistingParent(blockPath(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR)), blockLoc("cable/network_cable_regular_none_seamless_ns"));
 		
-		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));
+		layeredItem(ItemRegistry.ITEM_MATTER_DUST, Parent.GENERATED, itemLoc("matter_dust"));
 		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));
 		layeredItem(ItemRegistry.ITEM_TRITANIUM_PLATE, Parent.GENERATED, itemLoc("tritanium_plate"));
 		layeredItem(ItemRegistry.ITEM_BASE_UPGRADE, Parent.GENERATED, itemLoc("upgrade/upgrade_base"));
@@ -57,6 +64,50 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 				itemLoc("flashdrive/flashdrive_transporter_stored")
 				});
 		
+		generateBatteries();
+		generateMatterContainers();
+		
+	}
+	
+	private void generateBatteries() {
+		ResourceLocation batteryBase = itemLoc("battery/battery");
+		String battBarBase = "battery/battery_overlay";
+		ItemModelBuilder[] batteries = new ItemModelBuilder[BATTERY_MODEL_COUNT];
+		batteries[0] = layeredBuilder("item/battery/battery0", Parent.GENERATED, batteryBase);
+		for(int i = 1; i < BATTERY_MODEL_COUNT; i++) {
+			batteries[i] = layeredBuilder("item/battery/battery" + i, Parent.GENERATED, batteryBase, itemLoc(battBarBase + (i - 1)));
+		}
+		for(RegistryObject<Item> battery : ItemRegistry.ITEM_BATTERIES.getAll()) {
+			if(((ItemBattery)battery.get()).type == BatteryType.CREATIVE) {
+				withExistingParent(name(battery), Parent.CREATIVE_BATTERY.loc());
+			} else {
+				ItemModelBuilder bat = withExistingParent(name(battery), Parent.BATTERY.loc());
+				for(int i = 1; i < BATTERY_MODEL_COUNT; i++) {
+					bat = bat.override().model(batteries[i]).predicate(ClientRegister.CHARGE, (float)i).end();
+				}
+			}
+		}
+	}
+	
+	private void generateMatterContainers() {
+		ResourceLocation containerBase = itemLoc("matter_container/container");
+		ResourceLocation containerStripe = itemLoc("matter_container/container_bottom_overlay");
+		String containerBarBase = "matter_container/container_overlay";
+		ItemModelBuilder[] matterContainers = new ItemModelBuilder[MATTER_CONTAINER_MODEL_COUNT];
+		matterContainers[0] = layeredBuilder("item/matter_container/matter_container0", Parent.GENERATED, containerBase, containerStripe);
+		for(int i = 1; i < MATTER_CONTAINER_MODEL_COUNT; i++) {
+			matterContainers[i] = layeredBuilder("item/matter_container/matter_container" + i, Parent.GENERATED, containerBase, containerStripe, itemLoc(containerBarBase + (i - 1)));
+		}
+		for(RegistryObject<Item> container : ItemRegistry.ITEM_MATTER_CONTAINERS.getAll()) {
+			if(((ItemMatterContainer)container.get()).container == ContainerType.CREATIVE) {
+				withExistingParent(name(container), Parent.CREATIVE_MATTER_CONTAINER.loc());
+			} else {
+				ItemModelBuilder bat = withExistingParent(name(container), Parent.MATTER_CONTAINER.loc());
+				for(int i = 1; i < MATTER_CONTAINER_MODEL_COUNT; i++) {
+					bat = bat.override().model(matterContainers[i]).predicate(ClientRegister.CHARGE, (float)i).end();
+				}
+			}
+		}
 	}
 	
 	private void layeredItem(RegistryObject<Item> item, Parent parent, ResourceLocation...textures) {
@@ -108,16 +159,24 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 	
 	private static enum Parent {
 		
-		GENERATED(true);
+		GENERATED(true), BATTERY("item/battery/battery0"), CREATIVE_BATTERY("item/battery/battery5"),
+		MATTER_CONTAINER("item/matter_container/matter_container0"), CREATIVE_MATTER_CONTAINER("item/matter_container/matter_container8");
 		
 		private final boolean isVanilla;
+		private final String loc;
 		
 		private Parent(boolean isVanilla) {
 			this.isVanilla = isVanilla;
+			loc = "";
+		}
+		
+		private Parent(String loc) {
+			isVanilla = false;
+			this.loc = loc;
 		}
 		
 		public ResourceLocation loc() {
-			return isVanilla ? new ResourceLocation(toString().toLowerCase()) : new ResourceLocation(References.ID, toString().toLowerCase());
+			return isVanilla ? new ResourceLocation(toString().toLowerCase()) : new ResourceLocation(References.ID, loc);
 		}
 	}
 	
