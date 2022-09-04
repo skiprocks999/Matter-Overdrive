@@ -93,7 +93,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void handlerTransporterArrival(MovementInputUpdateEvent event) {
 		Entity entity = event.getEntity();
-		if (MatterOverdriveConfig.accurate_transporter.get()) {
+		if (MatterOverdriveConfig.ACCURATE_TRANSPORTER.get()) {
 			entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
 				if (h.getTransporterTimer() > 0) {
 					Input input = event.getInput();

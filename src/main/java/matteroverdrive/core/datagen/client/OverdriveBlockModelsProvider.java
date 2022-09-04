@@ -18,8 +18,7 @@ public class OverdriveBlockModelsProvider extends BlockModelProvider {
 
 	@Override
 	protected void registerModels() {
-		blockTopBottom(BlockRegistry.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
-				"block/transporter/transporter_bottom", "block/transporter/transporter_side");
+
 	}
 
 	private void blockTopBottom(RegistryObject<Block> block, String top, String bottom, String side) {

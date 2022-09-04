@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "matteroverdrive:block/vent_closed",
+    "front": "matteroverdrive:block/tank_empty",
+    "side": "matteroverdrive:block/base_stripes",
+    "top": "matteroverdrive:block/decomposer_top"
+  }
+}

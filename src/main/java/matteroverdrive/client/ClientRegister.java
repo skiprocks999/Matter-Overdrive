@@ -30,14 +30,12 @@ import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.utils.UtilsNbt;
-import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.registry.ItemRegistry;
 import matteroverdrive.registry.MenuRegistry;
 import matteroverdrive.registry.ParticleRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -55,12 +53,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientRegister {
 
-	private static final ResourceLocation CHARGE = new ResourceLocation("charge");
+	public static final ResourceLocation CHARGE = new ResourceLocation("charge");
 
 	/* MODELS */
 
 	public static final ResourceLocation MODEL_CHARGER = blockModel("charger_renderer");
-	public static final ResourceLocation MODEL_MATTER_REPLICATOR_INTERIOR = blockModel("matter_replicator_interior");
 
 	/* TEXTURES */
 
@@ -180,8 +177,7 @@ public class ClientRegister {
 		});
 
 		ClientEventHandler.init();
-		
-		ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLOCK_MATTER_REPLICATOR.get(), RenderType.cutout());
+		UtilsText.init();
 
 	}
 
@@ -198,7 +194,6 @@ public class ClientRegister {
 	@SubscribeEvent
 	public static void onModelEvent(ModelEvent.RegisterAdditional event) {
 		event.register(MODEL_CHARGER);
-		event.register(MODEL_MATTER_REPLICATOR_INTERIOR);
 	}
 
 	@SubscribeEvent

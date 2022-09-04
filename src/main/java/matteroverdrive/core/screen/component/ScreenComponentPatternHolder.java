@@ -95,7 +95,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 				}
 
 				tooltips.add(UtilsText.tooltip("storedpattern", name.withStyle(color),
-						UtilsText.SINGLE_DECIMAL.format(percentage) + "%").getVisualOrderText());
+						UtilsText.formatPercentage(percentage)).getVisualOrderText());
 				tooltips.add(UtilsText
 						.tooltip("reporder", UtilsText.tooltip("orderabv").withStyle(ChatFormatting.AQUA),
 								Component.literal(order.getOrderedCount() + "").withStyle(ChatFormatting.BOLD),

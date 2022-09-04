@@ -9,50 +9,13 @@ import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class UtilsMatter {
-
-	public static boolean validateItem(ItemStack item) {
-
-		if (item.isEnchanted())
-			return false;
-		if (item.isDamaged())
-			return false;
-		if (item.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
-			return false;
-		if (item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
-			boolean isFilled = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get()
-					.drain(Integer.MAX_VALUE, FluidAction.EXECUTE).getAmount() > 0;
-			if (isFilled)
-				return false;
-		}
-		if (item.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-			IEnergyStorage storage = item.getCapability(CapabilityEnergy.ENERGY).resolve().get();
-			if (storage.getEnergyStored() == 0)
-				return false;
-		}
-		CompoundTag tag = BlockItem.getBlockEntityData(item);
-		if (tag != null) {
-			if (tag.contains("LootTable", 8))
-				return false;
-			if (tag.contains("Items", 9))
-				return false;
-		}
-
-		return true;
-	}
 
 	public static boolean isDust(ItemStack item) {
 		return isRawDust(item) || isRefinedDust(item);

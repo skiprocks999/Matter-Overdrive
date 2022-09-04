@@ -2,7 +2,7 @@ package matteroverdrive.client.render.tooltip;
 
 import java.util.List;
 
-import matteroverdrive.core.eventhandler.client.AbstractTooltipHandler;
+import matteroverdrive.core.event.handler.client.AbstractTooltipHandler;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;

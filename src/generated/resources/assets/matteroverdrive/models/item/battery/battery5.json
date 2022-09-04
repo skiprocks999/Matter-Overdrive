@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "matteroverdrive:item/battery/battery",
+    "layer1": "matteroverdrive:item/battery/battery_overlay4"
+  }
+}

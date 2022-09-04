@@ -1,0 +1,53 @@
+{
+  "parent": "matteroverdrive:item/matter_container/matter_container0",
+  "overrides": [
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container1",
+      "predicate": {
+        "minecraft:charge": 1.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container2",
+      "predicate": {
+        "minecraft:charge": 2.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container3",
+      "predicate": {
+        "minecraft:charge": 3.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container4",
+      "predicate": {
+        "minecraft:charge": 4.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container5",
+      "predicate": {
+        "minecraft:charge": 5.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container6",
+      "predicate": {
+        "minecraft:charge": 6.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container7",
+      "predicate": {
+        "minecraft:charge": 7.0
+      }
+    },
+    {
+      "model": "matteroverdrive:item/matter_container/matter_container8",
+      "predicate": {
+        "minecraft:charge": 8.0
+      }
+    }
+  ]
+}

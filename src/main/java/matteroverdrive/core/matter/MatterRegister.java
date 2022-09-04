@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -34,9 +33,8 @@ import com.mojang.datafixers.util.Pair;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
-import matteroverdrive.core.config.MatterOverdriveConfig;
+import matteroverdrive.core.matter.generator.AbstractMatterValueGenerator;
 import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
-import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +47,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
@@ -62,7 +60,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	protected static final String JSON_EXTENSION = ".json";
 	protected static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
 
-	private static final List<BiConsumer<HashMap<Item, Double>, RecipeManager>> GEN_MATTER_CONSUMERS = new ArrayList<>();
+	private Map<RecipeType<?>, AbstractMatterValueGenerator> matterGeneratorConsumers;
 
 	private HashMap<Item, Double> SERVER_VALUES = new HashMap<>();
 	private HashMap<TagKey<Item>, Double> parsedTags = new HashMap<>();
@@ -77,21 +75,16 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	public MatterRegister() {
 		folderName = "matter";
 		logger = MatterOverdrive.LOGGER;
+		matterGeneratorConsumers = new HashMap<>();
 	}
 
 	@Nullable
 	public double getServerMatterValue(ItemStack item) {
-		if (MatterOverdriveConfig.validate_matter_items.get()) {
-			return UtilsMatter.validateItem(item) ? SERVER_VALUES.getOrDefault(item.getItem(), 0.0) : 0.0;
-		}
 		return SERVER_VALUES.getOrDefault(item.getItem(), 0.0);
 	}
 
 	@Nullable
 	public double getClientMatterValue(ItemStack item) {
-		if (MatterOverdriveConfig.validate_matter_items.get()) {
-			return UtilsMatter.validateItem(item) ? CLIENT_VALUES.getOrDefault(item.getItem(), 0.0) : 0.0;
-		}
 		return CLIENT_VALUES.getOrDefault(item.getItem(), 0.0);
 	}
 
@@ -205,18 +198,22 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 		};
 	}
 
+	//Only call this if you know what you're doing 
+	@Deprecated
 	public void setClientValues(HashMap<Item, Double> valueMap) {
 		this.CLIENT_VALUES = valueMap;
 	}
-
-	public static void addGeneratorConsumer(BiConsumer<HashMap<Item, Double>, RecipeManager> consumer) {
-		GEN_MATTER_CONSUMERS.add(consumer);
+	
+	//Only mess with this if you know damn well what you're doing :D
+	@Deprecated
+	public void setGeneratorMap(Map<RecipeType<?>, AbstractMatterValueGenerator> matterGeneratorConsumers){
+		this.matterGeneratorConsumers = matterGeneratorConsumers;
 	}
 
-	public static List<BiConsumer<HashMap<Item, Double>, RecipeManager>> getConsumers() {
-		return GEN_MATTER_CONSUMERS;
+	//Only call this if you know what you're doing
+	@Deprecated
+	public List<AbstractMatterValueGenerator> getConsumers() {
+		return Collections.unmodifiableList(new ArrayList<>(matterGeneratorConsumers.values()));
 	}
 	
-	public static void init() {}
-
 }

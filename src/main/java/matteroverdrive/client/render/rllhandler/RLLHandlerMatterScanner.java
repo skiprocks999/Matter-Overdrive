@@ -10,7 +10,7 @@ import com.mojang.math.Vector3f;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -110,7 +110,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 			translateToPos(matrix, pos, cam);
 
-			text = Component.literal(UtilsText.SINGLE_DECIMAL.format(scannerStatus.percent) + "%");
+			text = Component.literal(UtilsText.formatPercentage(scannerStatus.percent));
 
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
 

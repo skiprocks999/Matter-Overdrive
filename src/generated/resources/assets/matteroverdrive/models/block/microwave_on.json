@@ -1,0 +1,9 @@
+{
+  "parent": "matteroverdrive:block/parent/microwave_base",
+  "textures": {
+    "0": "matteroverdrive:block/microwave/microwave",
+    "1": "matteroverdrive:block/microwave/microwave_front_on",
+    "2": "matteroverdrive:block/microwave/microwave_back",
+    "particle": "#0"
+  }
+}

@@ -3,53 +3,76 @@ package matteroverdrive.core.utils;
 import java.text.DecimalFormat;
 
 import matteroverdrive.References;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class UtilsText {
+	
+	public static final int MIN_DECIMAL_PLACES = 1;
+	public static final int MAX_DECIMAL_PLACES = 10;
 
-	public static final DecimalFormat FORMAT = new DecimalFormat("0.00");
-	public static final DecimalFormat MIN_FORMAT = new DecimalFormat("0.#");
-	public static final DecimalFormat SINGLE_DECIMAL = new DecimalFormat("0.0");
+	public static DecimalFormat MATTER_FORMAT;
+	public static DecimalFormat TIME_FORMAT;
+	public static DecimalFormat POWER_FORMAT;
+	public static DecimalFormat PERCENTAGE_FORMAT;
 
 	public static final String GUI_BASE = "gui";
 	public static final String TOOLTIP_BASE = "tooltip";
 	public static final String DIMENSION_BASE = "dimension";
 
+	public static void init() {
+		MATTER_FORMAT = new DecimalFormat("0." + getAdditionalDigits(MatterOverdriveConfig.MATTER_DECIMALS.get()));
+		TIME_FORMAT = new DecimalFormat("0." + getAdditionalDigits(MatterOverdriveConfig.TIME_DECIMALS.get()));
+		POWER_FORMAT = new DecimalFormat("0." + getAdditionalDigits(MatterOverdriveConfig.POWER_DECIMALS.get()));
+		PERCENTAGE_FORMAT = new DecimalFormat("0." + getAdditionalDigits(MatterOverdriveConfig.PERCENT_DECIMALS.get()));
+	}
+	
+	private static String getAdditionalDigits(int configVal) {
+		if(configVal < MIN_DECIMAL_PLACES) {
+			configVal = MIN_DECIMAL_PLACES;
+		}
+		String digits = "0";
+		for(int i = 0; i < (configVal - MIN_DECIMAL_PLACES); i++) {
+			digits += "#";
+		}
+		return digits;
+	}
+	
 	public static String formatMatterValue(double matterValue) {
 		if (matterValue < 1000) {
-			return FORMAT.format(matterValue) + " kM";
+			return MATTER_FORMAT.format(matterValue) + " kM";
 		}
 		if (matterValue < 1000000) {
-			return FORMAT.format(matterValue / 1000.0) + "k kM";
+			return MATTER_FORMAT.format(matterValue / 1000.0) + "k kM";
 		} else {
-			return FORMAT.format(matterValue / 1000000.0) + "M kM";
+			return MATTER_FORMAT.format(matterValue / 1000000.0) + "M kM";
 		}
 	}
 
 	public static String formatTimeValue(double time) {
 		if (time > 0.1) {
-			return FORMAT.format(time) + " s";
+			return TIME_FORMAT.format(time) + " s";
 		}
 
 		time = time * 1000;
-		return FORMAT.format(time) + " ms";
+		return TIME_FORMAT.format(time) + " ms";
 	}
 
 	public static String formatPowerValue(double power) {
 		if (power < 1000) {
-			return FORMAT.format(power) + " FE";
+			return POWER_FORMAT.format(power) + " FE";
 		}
 		if (power < 1000000) {
-			return FORMAT.format(power / 1000.0) + "k FE";
+			return POWER_FORMAT.format(power / 1000.0) + "k FE";
 		} else {
-			return FORMAT.format(power / 1000000.0) + "M FE";
+			return POWER_FORMAT.format(power / 1000000.0) + "M FE";
 		}
 	}
 
 	public static String formatPercentage(double percentage) {
-		return FORMAT.format(percentage) + "%";
+		return PERCENTAGE_FORMAT.format(percentage) + "%";
 	}
 
 	public static int getBigBase(double val) {
@@ -81,9 +104,17 @@ public class UtilsText {
 			return "";
 		}
 	}
+	
+	public static String getFormattedBigMatter(double val, int base) {
+		return getFormattedBig(val, base, MATTER_FORMAT);
+	}
+	
+	public static String getFormattedBigPower(double val, int base) {
+		return getFormattedBig(val, base, POWER_FORMAT);
+	}
 
-	public static String getFormattedBig(double val, int base) {
-		return FORMAT.format(val / Math.pow(1000, base));
+	private static String getFormattedBig(double val, int base, DecimalFormat format) {
+		return format.format(val / Math.pow(1000, base));
 	}
 
 	public static MutableComponent tooltip(String key, Object... additional) {

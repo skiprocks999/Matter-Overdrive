@@ -1,7 +1,0 @@
-{
-	"parent": "matteroverdrive:block/parent/network_cable_seamless_ud",
-	"textures": {
-		"particle": "matteroverdrive:block/network_cable/network_cable_seamless_ud",
-		"texture": "matteroverdrive:block/network_cable/network_cable_seamless_ud"
-	}
-}
