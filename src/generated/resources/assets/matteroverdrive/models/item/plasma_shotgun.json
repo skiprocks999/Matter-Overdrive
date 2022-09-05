@@ -1,0 +1,124 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        9,
+        15,
+        -6
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -15,
+        15,
+        -6
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -12.5,
+        4,
+        9.75
+      ]
+    },
+    "ground": {
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        7.5,
+        5
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -12.5,
+        4,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        12,
+        -10
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -12,
+        12,
+        -10
+      ]
+    }
+  },
+  "flip_v": true,
+  "loader": "forge:obj",
+  "model": "matteroverdrive:models/item/plasma_shotgun.obj",
+  "textures": {
+    "texture0": "matteroverdrive:item/plasma_shotgun"
+  }
+}

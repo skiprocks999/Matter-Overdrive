@@ -1,0 +1,119 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        9,
+        15,
+        -6
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -15,
+        15,
+        -6
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "translation": [
+        -6,
+        5,
+        7
+      ]
+    },
+    "ground": {
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        7.5,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "translation": [
+        -5,
+        4,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        12,
+        -10
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -12,
+        12,
+        -10
+      ]
+    }
+  },
+  "flip_v": true,
+  "loader": "forge:obj",
+  "model": "matteroverdrive:models/item/ion_sniper.obj",
+  "textures": {
+    "texture0": "matteroverdrive:item/ion_sniper"
+  }
+}

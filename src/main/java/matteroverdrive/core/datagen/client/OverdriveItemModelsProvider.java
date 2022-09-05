@@ -2,7 +2,6 @@ package matteroverdrive.core.datagen.client;
 
 import matteroverdrive.References;
 import matteroverdrive.client.ClientRegister;
-import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
@@ -11,12 +10,14 @@ import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.loaders.ObjModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -62,9 +63,203 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		
 		generateBatteries();
 		generateMatterContainers();
+		generateGuns();
 		
 	}
 	
+	private void generateGuns() {
+		getObjModel(name(ItemRegistry.ITEM_PHASER), "item/phaser", itemLoc("phaser"))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-20.0F, 3.0F, 0.0F)
+					.scale(2.0F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 0.0F, 0.0F)
+					.translation(12.0F, 7.5F, 9.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-20.0F, 4.0F, 15.0F)
+					.scale(2.0F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-15.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(9.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end();
+		
+		getObjModel(name(ItemRegistry.ITEM_ION_SNIPER), "item/ion_sniper", itemLoc("ion_sniper"))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-5.0F, 4.0F, 0.0F)
+					.scale(0.8F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 0.0F, 0.0F)
+					.translation(12.0F, 7.5F, 0.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-6.0F, 5.0F, 7.0F)
+					.scale(1.0F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-15.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(9.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end();
+		
+		getObjModel(name(ItemRegistry.ITEM_OMNI_TOOL), "item/omni_tool", itemLoc("omni_tool"))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-15.5F, 5.5F, 0.0F)
+					.scale(2.0F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 0.0F, 0.0F)
+					.translation(12.0F, 7.5F, 5.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-16.0F, 5.0F, 15.0F)
+					.scale(2.0F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-12.0F, 12.0F, -8.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(12.0F, 12.0F, -8.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-15.0F, 15.0F, -4.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(9.0F, 15.0F, -4.0F)
+					.scale(1.5F)
+					.end();
+
+		getObjModel(name(ItemRegistry.ITEM_PHASER_RIFLE), "item/phaser_rifle", itemLoc("phaser_rifle"))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-10.5F, 2.0F, 0.0F)
+					.scale(1.25F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 0.0F, 0.0F)
+					.translation(12.0F, 10.0F, 8.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-11.0F, 2.0F, 9.75F)
+					.scale(1.25F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-14.0F, 14.0F, -11.6725F)
+					.scale(1.75F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(14.0F, 14.0F, -11.6725F)
+					.scale(1.75F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-17.0F, 17.0F, -7.0F)
+					.scale(1.75F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(10.5F, 17.5F, -7.0F)
+					.scale(1.75F)
+					.end();
+		
+		getObjModel(name(ItemRegistry.ITEM_PLASMA_SHOTGUN), "item/plasma_shotgun", itemLoc("plasma_shotgun"))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-12.5F, 4.0F, 0.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 0.0F, 0.0F)
+					.translation(12.0F, 7.5F, 5.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(90.0F, -45.0F, 90.0F)
+					.translation(-12.5F, 4.0F, 9.75F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(12.0F, 12.0F, -10.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(-15.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 180.0F, 0.0F)
+					.translation(9.0F, 15.0F, -6.0F)
+					.scale(1.5F)
+					.end();
+	
+	}
+
 	private void generateBatteries() {
 		ResourceLocation batteryBase = itemLoc("battery/battery");
 		String battBarBase = "battery/battery_overlay";
@@ -135,6 +330,11 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 			counter++;
 		}
 		return builder;
+	}
+	
+	private ItemModelBuilder getObjModel(String name, String modelLoc, ResourceLocation texture) {
+		return getBuilder("item/" + name).customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/" + modelLoc + ".obj")).flipV(true).end()
+			.texture("texture0", texture);
 	}
 
 	private String blockPath(RegistryObject<Block> block) {

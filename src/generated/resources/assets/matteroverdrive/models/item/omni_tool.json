@@ -1,0 +1,124 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        9,
+        15,
+        -4
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -15,
+        15,
+        -4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "translation": [
+        -16,
+        5,
+        15
+      ]
+    },
+    "ground": {
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        7.5,
+        5
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "translation": [
+        -15.5,
+        5.5,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        12,
+        -8
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        -12,
+        12,
+        -8
+      ]
+    }
+  },
+  "flip_v": true,
+  "loader": "forge:obj",
+  "model": "matteroverdrive:models/item/omni_tool.obj",
+  "textures": {
+    "texture0": "matteroverdrive:item/omni_tool"
+  }
+}

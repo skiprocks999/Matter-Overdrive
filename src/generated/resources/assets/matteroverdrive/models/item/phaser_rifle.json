@@ -1,0 +1,124 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.75,
+        1.75,
+        1.75
+      ],
+      "translation": [
+        10.5,
+        17.5,
+        -7
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.75,
+        1.75,
+        1.75
+      ],
+      "translation": [
+        -17,
+        17,
+        -7
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ],
+      "translation": [
+        -11,
+        2,
+        9.75
+      ]
+    },
+    "ground": {
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "translation": [
+        12,
+        10,
+        8
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ],
+      "translation": [
+        -10.5,
+        2,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.75,
+        1.75,
+        1.75
+      ],
+      "translation": [
+        14,
+        14,
+        -11.6725
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        1.75,
+        1.75,
+        1.75
+      ],
+      "translation": [
+        -14,
+        14,
+        -11.6725
+      ]
+    }
+  },
+  "flip_v": true,
+  "loader": "forge:obj",
+  "model": "matteroverdrive:models/item/phaser_rifle.obj",
+  "textures": {
+    "texture0": "matteroverdrive:item/phaser_rifle"
+  }
+}
