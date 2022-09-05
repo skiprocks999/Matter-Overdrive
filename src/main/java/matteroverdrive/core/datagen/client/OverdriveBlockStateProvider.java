@@ -27,32 +27,30 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveBlockStateProvider extends BlockStateProvider {
 	
-	private final ExistingModelFile coloredTritaniumPlatingFile;
-	private final ExistingModelFile floorTileFile;
-	private final ExistingModelFile floorTilesFile;
-	private final ExistingModelFile chunkloader;
-	private final ExistingModelFile spacetimeAccelerator;
-	private final ExistingModelFile patternMonitor;
-	
 	public OverdriveBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
 		super(gen, References.ID, exFileHelper);
-		coloredTritaniumPlatingFile = existingBlock("tritanium_plating_colorless", exFileHelper);
-		floorTileFile = existingBlock("floor_tile_colorless", exFileHelper);
-		floorTilesFile = existingBlock("floor_tiles_colorless", exFileHelper);
-		chunkloader = existingBlock("chunkloader", exFileHelper);
-		spacetimeAccelerator = existingBlock("spacetime_accelerator", exFileHelper);
-		patternMonitor = existingBlock("pattern_monitor", exFileHelper);
-		
 	}
 
 	@Override
 	protected void registerStatesAndModels() {
 		
+		BlockModelBuilder cubeColoredAll = models().withExistingParent("cube_colored_all", blockLoc("parent/cube_colored"))
+				.texture("particle", "#all").texture("down", "#all").texture("up", "#all").texture("north", "#all")
+				.texture("east", "#all").texture("south", "#all").texture("west", "#all");
+		
+		BlockModelBuilder floorTileColorless = models().getBuilder("floor_tile_colorless").parent(cubeColoredAll)
+				.texture("all", blockLoc("decorative/floor_tile_colorless"));
+		BlockModelBuilder floorTilesColorless = models().getBuilder("floor_tiles_colorless").parent(cubeColoredAll)
+				.texture("all", blockLoc("decorative/floor_tiles_colorless"));
+		BlockModelBuilder tritaniumPlatingColorless = models().getBuilder("tritanium_plating_colorless").parent(cubeColoredAll)
+				.texture("all", blockLoc("decorative/tritanium_plating_colorless"));
+		
+		
 		simpleBlock(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING, models().cubeAll("tritanium_plating", blockLoc("decorative/tritanium_plating")), true);
 		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
-			simpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color), coloredTritaniumPlatingFile, true);
-			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILE.get(color), floorTileFile, true);
-			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILES.get(color), floorTilesFile, true);
+			simpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color), tritaniumPlatingColorless, true);
+			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILE.get(color), floorTileColorless, true);
+			simpleBlock(BlockRegistry.BLOCK_FLOOR_TILES.get(color), floorTilesColorless, true);
 		}
 		for(CrateColors color : CrateColors.values()) {
 			String name = color.id();
@@ -64,7 +62,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		
 		
-		simpleBlock(BlockRegistry.BLOCK_CHUNKLOADER, chunkloader, true);
+		simpleBlock(BlockRegistry.BLOCK_CHUNKLOADER, existingBlock(BlockRegistry.BLOCK_CHUNKLOADER), true);
 		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, true);
 		simpleBlock(BlockRegistry.BLOCK_TRANSPORTER, blockTopBottom(BlockRegistry.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
 				"block/transporter/transporter_bottom", "block/transporter/transporter_side"), true);
@@ -80,11 +78,10 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE, getMicroBase("", ""), getMicroBase("_on", "_on"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_PATTERN_STORAGE, getObjModel("pattern_storage", "block/pattern_storage")
 				.texture("base", blockLoc("pattern_storage")).texture("vent", blockLoc("vent")).texture("particle", "#base"), true);
-		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, spacetimeAccelerator, true);
-		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, patternMonitor, true);
+		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, existingBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), true);
+		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, existingBlock(BlockRegistry.BLOCK_PATTERN_MONITOR), true);
 		//charger TileRenderer JSON
 		getObjModel("charger_renderer", "block/charger", "block/charger");
-		
 		
 		genMatterConduits();
 		genNetworkCables();
@@ -320,8 +317,12 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		return key(block).getPath();
 	}
 	
-	private ExistingModelFile existingBlock(String loc, ExistingFileHelper exFileHelper) {
-		return new ExistingModelFile(new ResourceLocation(References.ID + ":block/" + loc), exFileHelper);
+	private ExistingModelFile existingBlock(RegistryObject<Block> block) {
+		return existingBlock(block.getId());
+	}
+	
+	private ExistingModelFile existingBlock(ResourceLocation loc) {
+		return models().getExistingFile(loc);
 	}
 	
 	private ResourceLocation blockLoc(String texture) {
