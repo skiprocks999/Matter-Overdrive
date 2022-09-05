@@ -8,13 +8,11 @@ import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
-import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.loaders.ObjModelBuilder;
@@ -33,7 +31,6 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(blockPath(BlockRegistry.BLOCK_CHARGER), blockLoc("charger_item"));
 		
 		layeredItem(ItemRegistry.ITEM_MATTER_DUST, Parent.GENERATED, itemLoc("matter_dust"));
 		layeredItem(ItemRegistry.ITEM_RAW_MATTER_DUST, Parent.GENERATED, itemLoc("raw_matter_dust"));
@@ -64,7 +61,48 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		generateBatteries();
 		generateMatterContainers();
 		generateGuns();
+		generateCharger();
 		
+	}
+	
+	private void generateCharger() {
+		getObjModel("charger", "block/charger", modLoc("block/charger")).parent(getExistingFile(mcLoc("block/cube")))
+			.transforms()
+				.transform(TransformType.GUI)
+					.rotation(30.0F, 315.0F, 0.0F)
+					.translation(0.0F, -5.0F, 0.0F)
+					.scale(0.375F)
+					.end()
+				.transform(TransformType.GROUND)
+					.rotation(0.0F, 90.0F, 0.0F)
+					.translation(2.0F, 3.0F, -2.0F)
+					.scale(0.25F)
+					.end()
+				.transform(TransformType.FIXED)
+					.rotation(0.0F, 95.0F, 0.0F)
+					.translation(4.0F, -5.0F, -7.0F)
+					.scale(0.5F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_RIGHT_HAND)
+					.rotation(75.0F, 125.0F, 0.0F)
+					.translation(1.0F, 6.0F, 0.0F)
+					.scale(0.375F)
+					.end()
+				.transform(TransformType.THIRD_PERSON_LEFT_HAND)
+					.rotation(75.0F, -45.0F, 0.0F)
+					.translation(-4.5F, 2.0F, 0.0F)
+					.scale(0.375F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_RIGHT_HAND)
+					.rotation(0.0F, 125.0F, 0.0F)
+					.translation(-2.0F, 0.0F, -2.0F)
+					.scale(0.4F)
+					.end()
+				.transform(TransformType.FIRST_PERSON_LEFT_HAND)
+					.rotation(0.0F, 315.0F, 0.0F)
+					.translation(-7.0F, 0.0F, -2.0F)
+					.scale(0.4F)
+					.end();
 	}
 	
 	private void generateGuns() {
@@ -336,17 +374,9 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		return getBuilder("item/" + name).customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/" + modelLoc + ".obj")).flipV(true).end()
 			.texture("texture0", texture);
 	}
-
-	private String blockPath(RegistryObject<Block> block) {
-		return ForgeRegistries.BLOCKS.getKey(block.get()).getPath();
-	}
 	
 	private ResourceLocation itemLoc(String texture) {
 		return modLoc("item/" + texture);
-	}
-	
-	private ResourceLocation blockLoc(String texture) {
-		return modLoc("block/" + texture);
 	}
 	
 	private String name(RegistryObject<Item> item) {

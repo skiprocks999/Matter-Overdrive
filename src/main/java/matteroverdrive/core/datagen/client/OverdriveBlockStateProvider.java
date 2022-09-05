@@ -43,8 +43,6 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		spacetimeAccelerator = existingBlock("spacetime_accelerator", exFileHelper);
 		patternMonitor = existingBlock("pattern_monitor", exFileHelper);
 		
-		
-		
 	}
 
 	@Override
@@ -84,6 +82,9 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 				.texture("base", blockLoc("pattern_storage")).texture("vent", blockLoc("vent")).texture("particle", "#base"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, spacetimeAccelerator, true);
 		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, patternMonitor, true);
+		//charger TileRenderer JSON
+		getObjModel("charger_renderer", "block/charger", "block/charger");
+		
 		
 		genMatterConduits();
 		genNetworkCables();
