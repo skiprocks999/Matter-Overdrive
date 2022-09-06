@@ -2,6 +2,7 @@ package matteroverdrive.core.datagen.utils.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -33,9 +34,13 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 	
 	private double experience = 0.0;
 	
-	protected AbstractOverdriveFinishedRecipe(RecipeSerializer<?> serializer, ResourceLocation id) {
+	protected AbstractOverdriveFinishedRecipe(RecipeSerializer<?> serializer) {
 		this.serializer = serializer;
-		this.id = id;
+	}
+	
+	public AbstractOverdriveFinishedRecipe name(RecipeCategory category, String parent, String name) {
+		id = new ResourceLocation(parent, category.category() + "/" + name);
+		return this;
 	}
 	
 	public AbstractOverdriveFinishedRecipe addItemStackInput(ItemStack stack) {
@@ -43,8 +48,8 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 		return this;
 	}
 	
-	public AbstractOverdriveFinishedRecipe addItemTagInput(Pair<ResourceLocation, Integer> tag) {
-		tagItemIngredients.add(tag);
+	public AbstractOverdriveFinishedRecipe addItemTagInput(String parent, String tag, int count) {
+		tagItemIngredients.add(Pair.of(new ResourceLocation(parent, tag), count));
 		return this;
 	}
 	
@@ -53,8 +58,8 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 		return this;
 	}
 	
-	public AbstractOverdriveFinishedRecipe addFluidTagInput(Pair<ResourceLocation, Integer> tag) {
-		tagFluidIngredients.add(tag);
+	public AbstractOverdriveFinishedRecipe addFluidTagInput(String parent, String tag, int count) {
+		tagFluidIngredients.add(Pair.of(new ResourceLocation(parent, tag), count));
 		return this;
 	}
 	
@@ -67,6 +72,11 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 		fluidBiproducts.add(biproduct);
 		return this;
 	}
+
+	public void complete(Consumer<FinishedRecipe> consumer) {
+		consumer.accept(this);
+	}
+	
 	
 	@Override
 	public void serializeRecipeData(JsonObject recipeJson) {

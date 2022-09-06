@@ -2,9 +2,7 @@ package matteroverdrive.core.datagen.utils.recipe;
 
 import com.google.gson.JsonObject;
 
-import matteroverdrive.References;
 import matteroverdrive.common.recipe.AbstractOverdriveRecipeSerializer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -13,8 +11,8 @@ public class FinishedRecipeFluidOutput extends AbstractOverdriveFinishedRecipe {
 
 	private FluidStack output;
 	
-	private FinishedRecipeFluidOutput(RecipeSerializer<?> serializer, ResourceLocation id, FluidStack stack) {
-		super(serializer, id);
+	private FinishedRecipeFluidOutput(RecipeSerializer<?> serializer, FluidStack stack) {
+		super(serializer);
 		this.output = stack;
 	}
 
@@ -26,9 +24,13 @@ public class FinishedRecipeFluidOutput extends AbstractOverdriveFinishedRecipe {
 		recipeJson.add(AbstractOverdriveRecipeSerializer.OUTPUT, output);
 	}
 	
-	public static FinishedRecipeFluidOutput of(RecipeSerializer<?> serializer, FluidStack output, RecipeCategory category, String machine, String name) {
-		ResourceLocation loc = new ResourceLocation(References.ID, category.category() + "/" + machine + "/" + name);
-		return new FinishedRecipeFluidOutput(serializer, loc, output);
+	@Override
+	public FinishedRecipeFluidOutput name(RecipeCategory category, String parent, String name) {
+		return (FinishedRecipeFluidOutput) super.name(category, parent, name);
+	}
+	
+	public static FinishedRecipeFluidOutput of(RecipeSerializer<?> serializer, FluidStack output) {
+		return new FinishedRecipeFluidOutput(serializer, output);
 	}
 
 }
