@@ -1,13 +1,6 @@
 package matteroverdrive.core.tile.utils;
 
-import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.clientbound.PacketUpdateTile;
-import matteroverdrive.core.tile.GenericTile;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkDirection;
 
 public interface ITickableTile {
 
@@ -15,25 +8,18 @@ public interface ITickableTile {
 
 	void incrementTicks();
 
-	// DO NOT OVERRIDE
-	default void tick(Level world, GenericTile tile) {
+	/**
+	 * Do not override this unless you know exactly what you're doing
+	 * @param world The world the ticker is in
+	 */
+	@Deprecated
+	default void tick(Level world) {
 		tickCommon();
 		incrementTicks();
 		if (world.isClientSide) {
 			tickClient();
 		} else {
 			tickServer();
-			if (getTicks() % 2 == 0 && tile.hasRenderData) {
-				Level level = tile.getLevel();
-				BlockPos pos = tile.getBlockPos();
-				if (level instanceof ServerLevel server) {
-					PacketUpdateTile packet = new PacketUpdateTile(pos, tile, false);
-					server.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p -> {
-						NetworkHandler.CHANNEL.sendTo(packet, p.connection.getConnection(),
-								NetworkDirection.PLAY_TO_CLIENT);
-					});
-				}
-			}
 		}
 	}
 
@@ -48,5 +34,15 @@ public interface ITickableTile {
 	default void tickClient() {
 
 	}
+	
+	/**
+	 * This should only be called when the BlockEntityTicker is created. It allows
+	 * for a simple filter option for tiles that might be an instance of this 
+	 * interface but are not intended to tick. Note, if the logic that affects this
+	 * is modified from an internal tick method, then the block might cease to tick!
+	 * @return
+	 */
+	@Deprecated
+	boolean canTick();
 
 }

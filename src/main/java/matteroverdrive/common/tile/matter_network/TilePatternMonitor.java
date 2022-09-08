@@ -47,7 +47,6 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 								CapabilityInventory.EMPTY, getCoordsData()),
 						getContainerName(TypeMachine.PATTERN_MONITOR.id())));
 		setTickable();
-		setHasMenuData();
 	}
 
 	@Override

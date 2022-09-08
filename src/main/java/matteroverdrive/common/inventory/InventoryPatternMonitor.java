@@ -37,13 +37,17 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 	public int[] getPlayerInvNumbers() {
 		return new int[] {};
 	}
-
+	
 	@Override
-	public void sendAdditional(TilePatternMonitor tile, ServerPlayer player) {
-		NetworkMatter network = tile.getConnectedNetwork();
-		if (network != null && tile.getTicks() % 2 == 0) {
-			NetworkHandler.CHANNEL.sendTo(new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()),
-					player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		TilePatternMonitor tile = getTile();
+		if (player instanceof ServerPlayer server && tile != null) {
+			NetworkMatter network = tile.getConnectedNetwork();
+			if (network != null && tile.getTicks() % 2 == 0) {
+				NetworkHandler.CHANNEL.sendTo(new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()),
+						server.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+			}
 		}
 	}
 

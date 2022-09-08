@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.utils.ITickableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -104,8 +105,8 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return (world, pos, blockstate, tile) -> {
-			if (tile instanceof GenericTile generic && generic.isTickable) {
-				generic.tick(world, generic);
+			if (tile instanceof ITickableTile tickable && tickable.canTick()) {
+				tickable.tick(world);
 			}
 		};
 	}

@@ -68,6 +68,7 @@ public class PacketBarrierMethods {
 	}
 
 	public static void handlePacketUpdateTile(CompoundTag data, boolean isGui, BlockPos pos) {
+		/*
 		ClientLevel world = Minecraft.getInstance().level;
 		if (world != null) {
 			BlockEntity tile = world.getBlockEntity(pos);
@@ -79,6 +80,7 @@ public class PacketBarrierMethods {
 				}
 			}
 		}
+		*/
 	}
 
 }

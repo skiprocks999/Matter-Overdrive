@@ -4,10 +4,8 @@ import matteroverdrive.References;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.property.IPropertyManaged;
-import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import matteroverdrive.core.tile.utils.ITickableTile;
-import matteroverdrive.core.tile.utils.IUpdatableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,17 +26,14 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public abstract class GenericTile extends BlockEntity
-		implements Nameable, ITickableTile, IUpdatableTile, IPropertyManaged {
+		implements Nameable, ITickableTile, IPropertyManaged {
 
 	private HashMap<Capability<?>, IOverdriveCapability> capabilities = new HashMap<>();
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
 
-	public boolean isTickable = false;
-
-	public boolean hasMenuData = false;
-	public boolean hasRenderData = false;
+	private boolean isTickable = false;
 
 	protected long ticks = 0;
 
@@ -66,13 +61,10 @@ public abstract class GenericTile extends BlockEntity
 	public void setTickable() {
 		isTickable = true;
 	}
-
-	public void setHasMenuData() {
-		hasMenuData = true;
-	}
-
-	public void setHasRenderData() {
-		hasRenderData = true;
+	
+	@Override
+	public boolean canTick() {
+		return isTickable;
 	}
 
 	@Override

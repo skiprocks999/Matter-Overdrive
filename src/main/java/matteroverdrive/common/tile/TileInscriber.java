@@ -66,7 +66,6 @@ public class TileInscriber extends GenericMachineTile {
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryInscriber(id, play.getInventory(), getInventoryCap(), getCoordsData()),
 				getContainerName(TypeMachine.INSCRIBER.id())));
-		setHasMenuData();
 		setTickable();
 	}
 
