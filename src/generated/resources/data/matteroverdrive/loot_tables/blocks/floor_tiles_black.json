@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "matteroverdrive:floor_tiles_black"
+        }
+      ],
+      "name": "floor_tiles_black",
+      "rolls": 1.0
+    }
+  ]
+}

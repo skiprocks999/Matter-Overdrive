@@ -141,7 +141,7 @@ public class BlockAndroidChargerChild extends BlockOverdrive {
 
 	public BlockAndroidChargerChild() {
 		super(BlockBehaviour.Properties.of(Material.GLASS).strength(3.5F).sound(SoundType.METAL)
-				.isRedstoneConductor((a, b, c) -> false).noOcclusion(), false);
+				.isRedstoneConductor((a, b, c) -> false).noOcclusion());
 		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH)
 				.setValue(OverdriveBlockStates.CHARGER_POS, ChargerBlockPos.BOTTOM)
 				.setValue(BlockStateProperties.WATERLOGGED, false));

@@ -5,9 +5,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import matteroverdrive.MatterOverdrive;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -15,7 +12,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -36,8 +32,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 public abstract class AbstractLootTableProvider extends LootTableProvider {
-
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
 	protected final Map<Block, LootTable.Builder> lootTables = new HashMap<>();
 	private final DataGenerator generator;
@@ -73,6 +67,7 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 								.withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents")))));
 		return LootTable.lootTable().withPool(builder);
 	}
+	
 
 	protected LootTable.Builder energyTable(String name, Block block, BlockEntityType<?> type) {
 		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem
@@ -137,6 +132,12 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 		);
 		return LootTable.lootTable().withPool(builder);
 	}
+	
+	protected LootTable.Builder createSimpleBlockTable(String name, Block block) {
+		LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1))
+				.add(LootItem.lootTableItem(block));
+		return LootTable.lootTable().withPool(builder);
+	}
 
 	@Override
 	public void run(CachedOutput cache) {
@@ -147,10 +148,6 @@ public abstract class AbstractLootTableProvider extends LootTableProvider {
 			tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootContextParamSets.BLOCK).build());
 		}
 
-		writeTables(cache, tables);
-	}
-
-	private void writeTables(CachedOutput cache, Map<ResourceLocation, LootTable> tables) {
 		Path outputFolder = this.generator.getOutputFolder();
 		tables.forEach((key, lootTable) -> {
 			Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");

@@ -1,5 +1,6 @@
 package matteroverdrive.core.datagen.server;
 
+import matteroverdrive.common.block.OverdriveBlockColors;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileMatterDecomposer;
@@ -31,7 +32,19 @@ public class OverdriveLootTablesProvider extends AbstractLootTableProvider {
 
 	@Override
 	protected void addTables() {
-
+		
+		addSimpleBlock(BlockRegistry.BLOCK_REGULAR_TRITANIUM_PLATING);
+		
+		for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
+			addSimpleBlock(BlockRegistry.BLOCK_COLORED_TRITANIUM_PLATING.get(color));
+			addSimpleBlock(BlockRegistry.BLOCK_FLOOR_TILE.get(color));
+			addSimpleBlock(BlockRegistry.BLOCK_FLOOR_TILES.get(color));
+		}
+		
+		addSilkTouchOnlyTable(BlockRegistry.BLOCK_INDUSTRIAL_GLASS);
+		addSimpleBlock(BlockRegistry.BLOCK_VENT_CLOSED);
+		addSimpleBlock(BlockRegistry.BLOCK_VENT_OPEN);
+		
 		for (RegistryObject<Block> crate : BlockRegistry.BLOCK_TRITANIUM_CRATES.getAll()) {
 			this.<TileTritaniumCrate>addITable(crate, TileRegistry.TILE_TRITANIUM_CRATE);
 		}
@@ -51,26 +64,26 @@ public class OverdriveLootTablesProvider extends AbstractLootTableProvider {
 		this.<TileMatterReplicator>addIEMTable(BlockRegistry.BLOCK_MATTER_REPLICATOR,
 				TileRegistry.TILE_MATTER_REPLICATOR);
 
-		this.addSilkTouchOnlyTable(BlockRegistry.BLOCK_INDUSTRIAL_GLASS);
+		
+		
 	}
 
 	private <T extends GenericTile> void addITable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemOnlyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
+		lootTables.put(block, itemOnlyTable(name(block), block, tilereg.get()));
 	}
 
 	private <T extends GenericTile> void addIETable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block, itemAndEnergyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
+		lootTables.put(block, itemAndEnergyTable(name(block), block, tilereg.get()));
 	}
 
 	private <T extends GenericTile> void addIEMTable(RegistryObject<Block> reg,
 			RegistryObject<BlockEntityType<T>> tilereg) {
 		Block block = reg.get();
-		lootTables.put(block,
-				itemEnergyMatterTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, tilereg.get()));
+		lootTables.put(block,itemEnergyMatterTable(name(block), block, tilereg.get()));
 	}
 
 	/**
@@ -81,7 +94,16 @@ public class OverdriveLootTablesProvider extends AbstractLootTableProvider {
 	 */
 	private void addSilkTouchOnlyTable(RegistryObject<Block> reg) {
 		Block block = reg.get();
-		lootTables.put(block, createSilkTouchOnlyTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block));
+		lootTables.put(block, createSilkTouchOnlyTable(name(block), block));
+	}
+	
+	private void addSimpleBlock(RegistryObject<Block> reg) {
+		Block block = reg.get();
+		lootTables.put(block, createSimpleBlockTable(name(block), block));
+	}
+	
+	private String name(Block block) {
+		return ForgeRegistries.BLOCKS.getKey(block).getPath();
 	}
 
 }

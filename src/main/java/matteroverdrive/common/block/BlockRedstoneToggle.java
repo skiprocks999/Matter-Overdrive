@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class BlockRedstoneToggle extends BlockOverdrive {
 
-	public BlockRedstoneToggle(Properties properties, boolean useLootTable) {
-		super(properties, useLootTable);
+	public BlockRedstoneToggle(Properties properties) {
+		super(properties);
 		registerDefaultState(defaultBlockState().setValue(BlockStateProperties.LIT, false));
 	}
 

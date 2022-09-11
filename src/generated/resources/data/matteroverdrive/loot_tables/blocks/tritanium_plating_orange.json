@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "matteroverdrive:tritanium_plating_orange"
+        }
+      ],
+      "name": "tritanium_plating_orange",
+      "rolls": 1.0
+    }
+  ]
+}

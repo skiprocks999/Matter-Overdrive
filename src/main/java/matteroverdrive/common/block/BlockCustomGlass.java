@@ -17,7 +17,7 @@ public class BlockCustomGlass extends BlockOverdrive {
 
 	public BlockCustomGlass(float hardness, float resistance) {
 		super(BlockBehaviour.Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(hardness, resistance)
-				.isRedstoneConductor((x, y, z) -> false).noOcclusion(), true);
+				.isRedstoneConductor((x, y, z) -> false).noOcclusion());
 	}
 
 	@Override

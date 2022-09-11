@@ -59,27 +59,26 @@ public class BlockRegistry {
 	// Decoration Blocks
 
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-					false));
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)));
 	public static final BulkRegister<Block> BLOCK_COLORED_TRITANIUM_PLATING = bulkBlock(
 			color -> registerColoredBlock(((OverdriveBlockColors) color).id("tritanium_plating_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-							((OverdriveBlockColors) color).color, false),
+							((OverdriveBlockColors) color).color),
 					((OverdriveBlockColors) color).color),
 			OverdriveBlockColors.values());
 	public static final BulkRegister<Block> BLOCK_FLOOR_TILE = bulkBlock(
 			color -> registerColoredBlock(((OverdriveBlockColors) color).id("floor_tile_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-							((OverdriveBlockColors) color).color, false),
+							((OverdriveBlockColors) color).color),
 					((OverdriveBlockColors) color).color),
 			OverdriveBlockColors.values());
 	public static final BulkRegister<Block> BLOCK_FLOOR_TILES = bulkBlock(
 			color -> registerColoredBlock(((OverdriveBlockColors) color).id("floor_tiles_"),
 					() -> new BlockColored(
 							Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-							((OverdriveBlockColors) color).color, false),
+							((OverdriveBlockColors) color).color),
 					((OverdriveBlockColors) color).color),
 			OverdriveBlockColors.values());
 
@@ -87,12 +86,10 @@ public class BlockRegistry {
 			() -> new BlockCustomGlass(0.3F, 0.3F));
 
 	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
-			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-					false));
+			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)));
 
 	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
-			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
-					false));
+			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)));
 
 	// Crates
 

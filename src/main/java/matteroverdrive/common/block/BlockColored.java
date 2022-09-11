@@ -13,16 +13,14 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class BlockColored extends BlockOverdrive {
 
 	private static final List<BlockColored> BLOCKS = new ArrayList<>();
 
 	private int color;
 
-	public BlockColored(Properties properties, int color, boolean useLootTable) {
-		super(properties, useLootTable);
+	public BlockColored(Properties properties, int color) {
+		super(properties);
 		this.color = color;
 		BLOCKS.add(this);
 	}
@@ -41,8 +39,7 @@ public class BlockColored extends BlockOverdrive {
 
 		@SubscribeEvent
 		public static void registerColoredBlocks(RegisterColorHandlersEvent.Block event) {
-			BLOCKS.forEach(block -> event.getBlockColors().register((state, level, pos, tintIndex) -> block.getColor(),
-					block));
+			BLOCKS.forEach(block -> event.register((state, level, pos, tintIndex) -> block.getColor(), block));
 		}
 	}
 
