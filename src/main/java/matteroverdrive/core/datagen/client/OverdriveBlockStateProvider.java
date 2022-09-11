@@ -57,8 +57,12 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 			horrRotatedBlock(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), getObjModel(name, "block/" + name, "block/crate/" + name), true);
 		}
 		glassBlock(BlockRegistry.BLOCK_INDUSTRIAL_GLASS, true);
-		simpleBlock(BlockRegistry.BLOCK_VENT_OPEN, true);
-		simpleBlock(BlockRegistry.BLOCK_VENT_CLOSED, true);
+		
+		ModelFile ventOff = cubeAll(BlockRegistry.BLOCK_VENT_OPEN.get());
+		ModelFile ventOn = cubeAll(BlockRegistry.BLOCK_VENT_CLOSED.get());
+		
+		redstoneToggleBlock(BlockRegistry.BLOCK_VENT_OPEN, ventOff, ventOn, true);
+		redstoneToggleBlock(BlockRegistry.BLOCK_VENT_CLOSED, ventOn, ventOff, true);
 		
 		
 		
@@ -205,6 +209,14 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 			.partialState().with(GenericEntityBlock.FACING, Direction.EAST).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(90).addModel()
 			.partialState().with(GenericEntityBlock.FACING, Direction.SOUTH).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(180).addModel()
 			.partialState().with(GenericEntityBlock.FACING, Direction.WEST).with(BlockStateProperties.LIT, true).modelForState().modelFile(on).rotationY(270).addModel();
+		if(registerItem) simpleBlockItem(block.get(), off);
+		
+	}
+	
+	private void redstoneToggleBlock(RegistryObject<Block> block, ModelFile off, ModelFile on, boolean registerItem) {
+		getVariantBuilder(block.get())
+			.partialState().with(BlockStateProperties.LIT, false).modelForState().modelFile(off).addModel()
+			.partialState().with(BlockStateProperties.LIT, true).modelForState().modelFile(on).addModel();
 		if(registerItem) simpleBlockItem(block.get(), off);
 		
 	}

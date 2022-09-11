@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "lit=false": {
       "model": "matteroverdrive:block/vent_closed"
+    },
+    "lit=true": {
+      "model": "matteroverdrive:block/vent_open"
     }
   }
 }

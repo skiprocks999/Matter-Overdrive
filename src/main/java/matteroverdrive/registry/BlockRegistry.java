@@ -8,6 +8,7 @@ import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockCustomGlass;
 import matteroverdrive.common.block.BlockMachine;
 import matteroverdrive.common.block.BlockOverdrive;
+import matteroverdrive.common.block.BlockRedstoneToggle;
 import matteroverdrive.common.block.BlockTritaniumCrate;
 import matteroverdrive.common.block.OverdriveBlockColors;
 import matteroverdrive.common.block.cable.types.BlockMatterConduit;
@@ -86,11 +87,11 @@ public class BlockRegistry {
 			() -> new BlockCustomGlass(0.3F, 0.3F));
 
 	public static final RegistryObject<Block> BLOCK_VENT_OPEN = registerBlock("vent_open",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
 
 	public static final RegistryObject<Block> BLOCK_VENT_CLOSED = registerBlock("vent_closed",
-			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
+			() -> new BlockRedstoneToggle(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F),
 					false));
 
 	// Crates
