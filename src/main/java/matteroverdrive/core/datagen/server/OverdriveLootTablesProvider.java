@@ -1,6 +1,8 @@
 package matteroverdrive.core.datagen.server;
 
 import matteroverdrive.common.block.OverdriveBlockColors;
+import matteroverdrive.common.block.type.TypeMatterConduit;
+import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.tile.TileCharger;
 import matteroverdrive.common.tile.TileChunkloader;
 import matteroverdrive.common.tile.TileMatterDecomposer;
@@ -64,6 +66,13 @@ public class OverdriveLootTablesProvider extends AbstractLootTableProvider {
 		this.<TileMatterReplicator>addIEMTable(BlockRegistry.BLOCK_MATTER_REPLICATOR,
 				TileRegistry.TILE_MATTER_REPLICATOR);
 
+		for(TypeMatterNetworkCable type : TypeMatterNetworkCable.values()) {
+			addSimpleBlock(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(type));
+		}
+		
+		for(TypeMatterConduit type : TypeMatterConduit.values()) {
+			addSimpleBlock(BlockRegistry.BLOCK_MATTER_CONDUITS.get(type));
+		}
 		
 		
 	}

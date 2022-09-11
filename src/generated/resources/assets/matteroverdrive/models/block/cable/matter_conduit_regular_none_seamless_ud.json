@@ -1,7 +1,7 @@
 {
   "parent": "matteroverdrive:block/parent/matter_conduit_regular_none",
   "textures": {
-    "particle": "#texture",
+    "particle": "matteroverdrive:block/base",
     "texture": "matteroverdrive:block/matter_conduit/matter_conduit_regular_none_seamless_ud"
   }
 }

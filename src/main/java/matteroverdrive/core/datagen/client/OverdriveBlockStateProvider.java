@@ -102,15 +102,15 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		cable(
 			BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), 
-			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText)),
-			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(text + "_side")),
-			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent + "_none")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ns")),
-			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent + "_none")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ew")),
-			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent + "_none")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ud")),
 			true
 		);
@@ -123,15 +123,15 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		cable(
 			BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), 
-			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", blockLoc("base_stripes"))
 				.texture("texture", blockLoc(noneText)),
-			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", blockLoc("base_stripes"))
 				.texture("texture", blockLoc(text + "_side")),
-			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", blockLoc("base_stripes"))
 				.texture("texture", blockLoc(noneText + "_seamless_ns")),
-			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", blockLoc("base_stripes"))
 				.texture("texture", blockLoc(noneText + "_seamless_ew")),
-			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", blockLoc("base_stripes"))
 				.texture("texture", blockLoc(noneText + "_seamless_ud")),
 			true
 		);
@@ -148,15 +148,15 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		cable(
 			BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), 
-			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", "#texture")
+			models().withExistingParent(cable + "_none", blockLoc(parent + "_none")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText)),
-			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_side", blockLoc(parent +  "_side")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(text + "_side")),
-			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ns", blockLoc(parent +  "_none_seamless_ns")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ns")),
-			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ew", blockLoc(parent +  "_none_seamless_ew")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ew")),
-			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", "#texture")
+			models().withExistingParent(cable +  "_none_seamless_ud", blockLoc(parent +  "_none_seamless_ud")).texture("particle", blockLoc("base"))
 				.texture("texture", blockLoc(noneText + "_seamless_ud")),
 			true
 		);

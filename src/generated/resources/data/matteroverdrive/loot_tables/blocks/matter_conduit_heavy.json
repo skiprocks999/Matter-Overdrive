@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "matteroverdrive:matter_conduit_heavy"
+        }
+      ],
+      "name": "matter_conduit_heavy",
+      "rolls": 1.0
+    }
+  ]
+}
