@@ -26,7 +26,7 @@ import net.minecraft.world.phys.HitResult.Type;
 public class ItemTransporterFlashdrive extends OverdriveItem {
 
 	public ItemTransporterFlashdrive() {
-		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
+		super(new Item.Properties().stacksTo(1).tab(References.MAIN), true);
 	}
 
 	@Override
@@ -53,8 +53,7 @@ public class ItemTransporterFlashdrive extends OverdriveItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltips, TooltipFlag advanced) {
-		super.appendHoverText(stack, world, tooltips, advanced);
+	public void appendPostSuperTooltip(ItemStack stack, Level world, List<Component> tooltips, TooltipFlag advanced) {
 		if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 			CompoundTag tag = stack.getTag();
 			tooltips.add(Component.literal(NbtUtils.readBlockPos(tag.getCompound(UtilsNbt.BLOCK_POS)).toShortString())

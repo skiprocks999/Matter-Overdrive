@@ -50,7 +50,7 @@ public class ItemMatterScanner extends ItemElectric {
 	private static final int AMT_PER_SCAN = 10;
 
 	public ItemMatterScanner() {
-		super(new Item.Properties().stacksTo(1).tab(References.MAIN), MAX_STORAGE, true, false);
+		super(new Item.Properties().stacksTo(1).tab(References.MAIN), true, MAX_STORAGE, true, false);
 	}
 
 	@Override
@@ -220,8 +220,7 @@ public class ItemMatterScanner extends ItemElectric {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		super.appendHoverText(stack, level, tooltips, advanced);
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 			tooltips.add(UtilsText
 					.tooltip("has_storage_loc",

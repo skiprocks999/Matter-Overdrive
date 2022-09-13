@@ -17,6 +17,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class OverdriveLangKeyProvider extends LanguageProvider {
@@ -159,6 +160,43 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("noorder", "No Orders Queued");
 			addTooltip("fused", "Fused");
 			addTooltip("effectiveuses", "Uses: %s");
+			addTooltip("hasshifttip", "Hold %s for info...");
+			addTooltip("shiftkey", "Shift");
+			
+			addItemDescTooltip(ItemRegistry.ITEM_RAW_MATTER_DUST, "A failure, but recyclable");
+			addItemDescTooltip(ItemRegistry.ITEM_MATTER_DUST, "Ready to decompose");
+			addItemDescTooltip(ItemRegistry.ITEM_ION_SNIPER, "The zombie is WAY over there");
+			addItemDescTooltip(ItemRegistry.ITEM_PHASER_RIFLE, "There are many zombies");
+			addItemDescTooltip(ItemRegistry.ITEM_PLASMA_SHOTGUN, "There is a big zombie next to me");
+			addItemDescTooltip(ItemRegistry.ITEM_PHASER, "There is one zombie plus B E A M");
+			addItemDescTooltip(ItemRegistry.ITEM_OMNI_TOOL, "Like a pocket multi-tool but better");
+			addItemDescTooltip(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Right-click to store a location");
+			addItemDescTooltip(ItemRegistry.ITEM_PATTERN_DRIVE, "Stores up to 3 unique patterns");
+			addItemDescTooltip(ItemRegistry.ITEM_MATTER_SCANNER, "A portable Matter Analyzer with perks");
+			
+			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
+				addBlockItemDescTooltip(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), "Retains items when broken");
+			}
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_SOLAR_PANEL, "E=MC^2 if you think about it");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_DECOMPOSER, "Converts items to matter");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_RECYCLER, "Makes raw matter dust usable again");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_CHARGER, "Wireless charging for androids");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_MICROWAVE, "A 24th century smoker");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_INSCRIBER, "Makes ciruits n' stuff");
+			for(TypeMatterConduit conduit : TypeMatterConduit.values()) {
+				addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_CONDUITS.get(conduit), "Capacity: " + conduit.capacity + "kM");
+			}
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_TRANSPORTER, "Say the line Kirk");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, "Speeds up machines around it");
+			for(TypeMatterNetworkCable cable : TypeMatterNetworkCable.values()) {
+				addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(cable), "It's not an AE cable you guys");
+			}
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_CHUNKLOADER, "The bane of servers");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_ANALYZER, "Scans a block's matter content");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_PATTERN_STORAGE, "Holds 6 Pattern Drives");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_PATTERN_MONITOR, "Queues Replication tasks");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_REPLICATOR, "Makes ordered items from matter");
+			
 
 			addGuiLabel("redstonelow", "Low");
 			addGuiLabel("redstonehigh", "High");
@@ -243,6 +281,14 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	private void addTooltip(String key, String translation) {
 		add("tooltip." + References.ID + "." + key, translation);
 	}
+	
+	private void addItemDescTooltip(RegistryObject<Item> reg, String translation) {
+		addTooltip(name(reg.get()) + ".desc", translation);
+	}
+	
+	private void addBlockItemDescTooltip(RegistryObject<Block> reg, String translation) {
+		addTooltip(name(reg.get().asItem()) + ".desc", translation);
+	}
 
 	private void addContainer(String key, String translation) {
 		add("container." + key, translation);
@@ -271,8 +317,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	private void addKeyLabel(String key, String translation) {
 		add("key." + References.ID + "." + key, translation);
 	}
+	
+	private String name(Item item) {
+		return ForgeRegistries.ITEMS.getKey(item).getPath();
+	}
 
-	private static String getNameFromEnum(String baseString) {
+	private String getNameFromEnum(String baseString) {
 		String name = baseString.toLowerCase();
 		if (name.contains("_")) {
 			String[] split = name.split("_");

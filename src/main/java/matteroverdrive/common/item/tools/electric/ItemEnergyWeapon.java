@@ -12,9 +12,9 @@ public class ItemEnergyWeapon extends ItemElectric {
 
 	private int defaultUsage = 0;
 
-	public ItemEnergyWeapon(Properties properties, int maxStorage, boolean hasInput, boolean hasOutput,
+	public ItemEnergyWeapon(Properties properties, boolean hasShiftTip, int maxStorage, boolean hasInput, boolean hasOutput,
 			int defaultUsage) {
-		super(properties, maxStorage, hasInput, hasOutput);
+		super(properties, hasShiftTip, maxStorage, hasInput, hasOutput);
 		this.defaultUsage = defaultUsage;
 	}
 

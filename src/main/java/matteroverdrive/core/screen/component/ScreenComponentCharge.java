@@ -66,9 +66,7 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 		String storeLoc = isMatter ? "matterstored" : "energystored";
 		String formattedNum = isMatter ? UtilsText.MATTER_FORMAT.format(currStorage.getAsDouble()) : UtilsText.POWER_FORMAT.format(currStorage.getAsDouble());
 		String formattedDenom = isMatter ? UtilsText.MATTER_FORMAT.format(maxStorage.getAsDouble()) : UtilsText.POWER_FORMAT.format(maxStorage.getAsDouble());
-		components.add(UtilsText
-				.tooltip(storeLoc, formattedNum, formattedDenom)
-				.getVisualOrderText());
+		components.add(UtilsText.tooltip(storeLoc, formattedNum, formattedDenom).getVisualOrderText());
 
 		double use = usage.getAsDouble();
 		if (use > 0) {

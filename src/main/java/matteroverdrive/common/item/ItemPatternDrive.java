@@ -40,7 +40,7 @@ public class ItemPatternDrive extends OverdriveItem {
 	private static final String FUSED_KEY = "fused";
 
 	public ItemPatternDrive() {
-		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
+		super(new Item.Properties().stacksTo(1).tab(References.MAIN), true);
 		CONTAINERS.add(this);
 	}
 
@@ -50,8 +50,7 @@ public class ItemPatternDrive extends OverdriveItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		super.appendHoverText(stack, level, tooltips, advanced);
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		if (isFused(stack)) {
 			tooltips.add(UtilsText.tooltip("fused").withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW));
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {

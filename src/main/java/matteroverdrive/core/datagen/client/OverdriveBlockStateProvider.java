@@ -302,7 +302,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		return models().withExistingParent("block/matter_analyzer" + name, modLoc("block/parent/matter_analyzer_base"))
 				.texture("bottom", modLoc("block/base")).texture("top", modLoc("block/matter_analyzer/matter_analyzer_top"))
 				.texture("side", modLoc("block/vent_closed")).texture("back", modLoc("block/network_port"))
-				.texture("particle", "block/matter_analyzer/matter_analyzer_front").texture("front", modLoc("block/matter_analyzer/matter_analyzer_front"));
+				.texture("particle", "block/matter_analyzer/matter_analyzer_front").texture("front", modLoc("block/matter_analyzer/matter_analyzer_front" + frontText));
 	}
 	
 	private BlockModelBuilder getMatDecomBase(String name, String frontText) {

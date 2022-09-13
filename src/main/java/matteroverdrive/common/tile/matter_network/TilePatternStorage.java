@@ -65,6 +65,11 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 	public TilePatternStorage(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_PATTERN_STORAGE.get(), pos, state);
 
+		setPowerUsage(BASE_USAGE);
+
+		defaultPowerStorage = ENERGY_STORAGE;
+		defaultPowerUsage = BASE_USAGE;
+		
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
@@ -96,13 +101,17 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		CapabilityInventory inv = getInventoryCap();
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		int drives = 0;
-		for (ItemStack stack : inv.getInputs()) {
-			if (stack.getItem() instanceof ItemPatternDrive) {
+		for (ItemStack stack : getDrives()) {
+			if (!stack.isEmpty()) {
 				drives++;
 			}
 		}
 		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
+		boolean activeFlag = getCurrentPowerUsage() != usage;
 		setPowerUsage(usage);
+		if(activeFlag) {
+			setChanged();
+		}
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			flag = setPowered(false);
 			setPowerUsage(0);
@@ -112,8 +121,10 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 			}
 			return;
 		}
-		setPowered(true);
-		energy.removeEnergy(usage);
+		if(setPowered(true)) {
+			setChanged();
+		}
+		energy.removeEnergy((int) getCurrentPowerUsage());
 
 		ItemStack scanner = inv.getStackInSlot(6);
 		if (!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
@@ -121,7 +132,6 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 			inv.setStackInSlot(7, scanner.copy());
 			scanner.shrink(1);
 		}
-		setChanged();
 	}
 
 	@Override

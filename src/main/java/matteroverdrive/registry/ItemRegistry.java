@@ -14,6 +14,7 @@ import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
+import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
@@ -30,28 +31,28 @@ public class ItemRegistry {
 	/* ITEMS */
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
-			() -> new Item(new Item.Properties().tab(References.MAIN)));
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
 	public static final RegistryObject<Item> ITEM_MATTER_DUST = ITEMS.register("matter_dust",
-			() -> new Item(new Item.Properties().tab(References.MAIN)));
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
 	public static final RegistryObject<Item> ITEM_BASE_UPGRADE = ITEMS.register("upgrade_base",
-			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(16)));
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN).stacksTo(16), false));
 	public static final BulkRegister<Item> ITEM_UPGRADES = bulkItem(
 			upgrade -> ITEMS.register(((UpgradeType) upgrade).id(), () -> new ItemUpgrade((UpgradeType) upgrade)),
 			UpgradeType.values());
 	public static final RegistryObject<Item> ITEM_ION_SNIPER = ITEMS.register("ion_sniper",
-			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
+			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), true, 10000, true,
 					true, 1000));
 	public static final RegistryObject<Item> ITEM_PHASER_RIFLE = ITEMS.register("phaser_rifle",
-			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
+			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), true, 10000, true,
 					true, 1000));
 	public static final RegistryObject<Item> ITEM_PHASER = ITEMS.register("phaser",
-			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
+			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), true, 10000, true,
 					true, 1000));
 	public static final RegistryObject<Item> ITEM_PLASMA_SHOTGUN = ITEMS.register("plasma_shotgun",
-			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
+			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), true, 10000, true,
 					true, 1000));
 	public static final RegistryObject<Item> ITEM_OMNI_TOOL = ITEMS.register("omni_tool",
-			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), 10000, true,
+			() -> new ItemEnergyWeapon(new Item.Properties().tab(References.MAIN).rarity(Rarity.UNCOMMON), true, 10000, true,
 					true, 1000));
 	public static final BulkRegister<Item> ITEM_BATTERIES = bulkItem(
 			battery -> ITEMS.register(((BatteryType) battery).id(), () -> new ItemBattery((BatteryType) battery)),

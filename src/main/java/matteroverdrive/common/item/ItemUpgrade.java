@@ -19,13 +19,12 @@ public class ItemUpgrade extends OverdriveItem {
 	public UpgradeType type;
 
 	public ItemUpgrade(UpgradeType type) {
-		super(new Item.Properties().tab(References.MAIN).stacksTo(16));
+		super(new Item.Properties().tab(References.MAIN).stacksTo(16), false);
 		this.type = type;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag isAdvanced) {
-		super.appendHoverText(stack, level, tooltips, isAdvanced);
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag isAdvanced) {
 		if (Screen.hasShiftDown()) {
 			if (type.speedBonus != 1.0) {
 				tooltips.add(UtilsText.tooltip("speedbonus", (int) (type.speedBonus * 100) + "%")

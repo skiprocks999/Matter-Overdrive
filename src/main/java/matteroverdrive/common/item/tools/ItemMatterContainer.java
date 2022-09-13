@@ -34,7 +34,7 @@ public class ItemMatterContainer extends OverdriveItem {
 	public final ContainerType container;
 
 	public ItemMatterContainer(ContainerType type) {
-		super(new Item.Properties().stacksTo(1).tab(References.MAIN));
+		super(new Item.Properties().stacksTo(1).tab(References.MAIN), false);
 		container = type;
 		CONTAINERS.add(this);
 	}
@@ -90,12 +90,6 @@ public class ItemMatterContainer extends OverdriveItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		super.appendHoverText(stack, level, tooltips, advanced);
-		applyTooltip(stack, level, tooltips, advanced);
-	}
-
-	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		CompoundTag tag = super.getShareTag(stack);
 		if (tag == null) {
@@ -122,7 +116,8 @@ public class ItemMatterContainer extends OverdriveItem {
 		super.readShareTag(stack, nbt);
 	}
 
-	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
+	@Override
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		if (container == ContainerType.CREATIVE) {
 			tooltips.add(UtilsText.tooltip("creativeenergystored").withStyle(ChatFormatting.AQUA));
 		} else {

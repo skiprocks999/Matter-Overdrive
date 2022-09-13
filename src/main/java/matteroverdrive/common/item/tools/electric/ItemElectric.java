@@ -24,8 +24,8 @@ public class ItemElectric extends OverdriveItem {
 	private boolean hasInput;
 	private boolean hasOutput;
 
-	public ItemElectric(Properties pProperties, int maxStorage, boolean hasInput, boolean hasOutput) {
-		super(pProperties);
+	public ItemElectric(Properties properties, boolean hasShiftTip, int maxStorage, boolean hasInput, boolean hasOutput) {
+		super(properties, hasShiftTip);
 		this.maxStorage = maxStorage;
 		this.hasInput = hasInput;
 		this.hasOutput = hasOutput;
@@ -72,12 +72,6 @@ public class ItemElectric extends OverdriveItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		super.appendHoverText(stack, level, tooltips, advanced);
-		applyTooltip(stack, level, tooltips, advanced);
-	}
-
-	@Override
 	public CompoundTag getShareTag(ItemStack stack) {
 		CompoundTag tag = super.getShareTag(stack);
 		if (tag == null) {
@@ -104,7 +98,8 @@ public class ItemElectric extends OverdriveItem {
 		super.readShareTag(stack, nbt);
 	}
 
-	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
+	@Override
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
 			int max = h.getMaxEnergyStored();
 			int base = UtilsText.getBigBase(max);

@@ -4,23 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import matteroverdrive.References;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import net.minecraft.world.item.Item.Properties;
-
-public class BlockItemColored extends BlockItem {
+public class BlockItemColored extends OverdriveBlockItem {
 
 	private static final List<BlockItemColored> BLOCK_ITEMS = new ArrayList<>();
 
 	private int color;
 
-	public BlockItemColored(Block block, Properties properties, int color) {
-		super(block, properties);
+	public BlockItemColored(Block block, Properties properties, boolean hasShiftTip, int color) {
+		super(block, properties, hasShiftTip);
 		this.color = color;
 		BLOCK_ITEMS.add(this);
 	}
@@ -34,7 +31,7 @@ public class BlockItemColored extends BlockItem {
 
 		@SubscribeEvent
 		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
-			BLOCK_ITEMS.forEach(item -> event.getItemColors().register((stack, index) -> item.getColor(), item));
+			BLOCK_ITEMS.forEach(item -> event.register((stack, index) -> item.getColor(), item));
 		}
 	}
 

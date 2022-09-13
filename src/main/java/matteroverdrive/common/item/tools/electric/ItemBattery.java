@@ -30,7 +30,7 @@ public class ItemBattery extends ItemElectric {
 	public final BatteryType type;
 
 	public ItemBattery(BatteryType type) {
-		super(new Item.Properties().stacksTo(1).tab(References.MAIN), type.maxStorage, true, true);
+		super(new Item.Properties().stacksTo(1).tab(References.MAIN), false, type.maxStorage, true, true);
 		this.type = type;
 		BATTERIES.add(this);
 	}
@@ -67,12 +67,12 @@ public class ItemBattery extends ItemElectric {
 	}
 
 	@Override
-	public void applyTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
+	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
 		ItemBattery battery = (ItemBattery) stack.getItem();
 		if (battery.type == BatteryType.CREATIVE) {
 			tooltips.add(UtilsText.tooltip("creativeenergystored").withStyle(ChatFormatting.YELLOW));
 		} else {
-			super.applyTooltip(stack, level, tooltips, advanced);
+			super.appendPostSuperTooltip(stack, level, tooltips, advanced);
 		}
 	}
 

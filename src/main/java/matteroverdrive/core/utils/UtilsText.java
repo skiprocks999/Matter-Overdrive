@@ -7,6 +7,8 @@ import matteroverdrive.core.config.MatterOverdriveConfig;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class UtilsText {
 	
@@ -115,6 +117,10 @@ public class UtilsText {
 
 	private static String getFormattedBig(double val, int base, DecimalFormat format) {
 		return format.format(val / Math.pow(1000, base));
+	}
+	
+	public static MutableComponent itemTooltip(Item item) {
+		return tooltip(ForgeRegistries.ITEMS.getKey(item).getPath() + ".desc");
 	}
 
 	public static MutableComponent tooltip(String key, Object... additional) {
