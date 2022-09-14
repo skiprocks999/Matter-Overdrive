@@ -138,7 +138,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("ioback", "Back");
 			addTooltip("io", "%1$s (%2$s)");
 			addTooltip("upgradeinfo", "Hold %s for Details");
-			addTooltip("upgradeshift", "Shift");
+			addTooltip("controlkey", "Ctrl");
 			addTooltip("speedbonus", "Speed: %s");
 			addTooltip("mattstorebonus", "Matter Storage: %s");
 			addTooltip("mattusebonus", "Matter Usage: %s");
@@ -184,7 +184,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_MICROWAVE, "A 24th century smoker");
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_INSCRIBER, "Makes ciruits n' stuff");
 			for(TypeMatterConduit conduit : TypeMatterConduit.values()) {
-				addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_CONDUITS.get(conduit), "Capacity: " + conduit.capacity + "kM");
+				addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_CONDUITS.get(conduit), "XFER Limit: " + conduit.capacity + "kM");
 			}
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_TRANSPORTER, "Say the line Kirk");
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, "Speeds up machines around it");

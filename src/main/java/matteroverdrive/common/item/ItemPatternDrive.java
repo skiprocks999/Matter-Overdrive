@@ -54,7 +54,7 @@ public class ItemPatternDrive extends OverdriveItem {
 		if (isFused(stack)) {
 			tooltips.add(UtilsText.tooltip("fused").withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW));
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
-				if (Screen.hasShiftDown()) {
+				if (Screen.hasControlDown()) {
 					ItemPatternWrapper wrapper = cap.getStoredPatterns()[0];
 					MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 					ChatFormatting color = ChatFormatting.RED;
@@ -93,7 +93,7 @@ public class ItemPatternDrive extends OverdriveItem {
 			});
 		} else {
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
-				if (Screen.hasShiftDown()) {
+				if (Screen.hasControlDown()) {
 					for (ItemPatternWrapper wrapper : cap.getStoredPatterns()) {
 						if (wrapper.isNotAir()) {
 							MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());

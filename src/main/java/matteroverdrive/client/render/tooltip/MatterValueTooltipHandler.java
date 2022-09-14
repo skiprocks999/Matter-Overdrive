@@ -17,7 +17,7 @@ public class MatterValueTooltipHandler extends AbstractTooltipHandler {
 
 	@Override
 	public void handleTooltips(List<Component> tooltips, ItemStack stack, Player player) {
-		if (Screen.hasShiftDown()) {
+		if (Screen.hasControlDown()) {
 			tooltips.add(getMatterTooltip(stack));
 		}
 	}

@@ -25,7 +25,7 @@ public class ItemUpgrade extends OverdriveItem {
 
 	@Override
 	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag isAdvanced) {
-		if (Screen.hasShiftDown()) {
+		if (Screen.hasControlDown()) {
 			if (type.speedBonus != 1.0) {
 				tooltips.add(UtilsText.tooltip("speedbonus", (int) (type.speedBonus * 100) + "%")
 						.withStyle(type.speedBonus < 1 ? ChatFormatting.RED : ChatFormatting.GREEN));
@@ -59,7 +59,7 @@ public class ItemUpgrade extends OverdriveItem {
 			}
 		} else {
 			tooltips.add(
-					UtilsText.tooltip("upgradeinfo", UtilsText.tooltip("upgradeshift").withStyle(ChatFormatting.YELLOW))
+					UtilsText.tooltip("upgradeinfo", UtilsText.tooltip("controlkey").withStyle(ChatFormatting.YELLOW))
 							.withStyle(ChatFormatting.GRAY));
 		}
 
