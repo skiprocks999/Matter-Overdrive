@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import matteroverdrive.References;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.recipe.RecipeInit;
+import matteroverdrive.common.tags.OverdriveTags;
 import matteroverdrive.core.datagen.utils.recipe.AbstractOverdriveFinishedRecipe.RecipeCategory;
 import matteroverdrive.core.datagen.utils.recipe.FinishedRecipeItemOutput;
 import matteroverdrive.core.datagen.utils.recipe.OverdriveShapedCraftingRecipe;
@@ -40,11 +41,11 @@ public class OverdriveRecipeProvider extends RecipeProvider {
 	private void addInscriberRecipes(Consumer<FinishedRecipe> consumer) {
 		
 		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2).get()), "isolinear_circuit_tier2")
-			.addItemTagInput("forge", "circuits/basic", 1).addItemTagInput("forge", "ingots/gold", 1).complete(consumer);
+			.addItemTagInput(OverdriveTags.Items.CIRCUITS_BASIC, 1).addItemTagInput(OverdriveTags.Items.GOLD_INGOT, 1).complete(consumer);
 		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3).get()), "isolinear_circuit_tier3")
-			.addItemTagInput("forge", "circuits/advanecd", 1).addItemTagInput("forge", "gems/diamond", 1).complete(consumer);
+			.addItemTagInput(OverdriveTags.Items.CIRCUITS_ADVANCED, 1).addItemTagInput(OverdriveTags.Items.DIAMOND_GEM, 1).complete(consumer);
 		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4).get()), "isolinear_circuit_tier4")
-			.addItemTagInput("forge", "circuits/elite", 1).addItemTagInput("forge", "gems/emerald", 1).complete(consumer);
+			.addItemTagInput(OverdriveTags.Items.CIRCUITS_ELITE, 1).addItemTagInput(OverdriveTags.Items.EMERALD_GEM, 1).complete(consumer);
 	
 	}
 	

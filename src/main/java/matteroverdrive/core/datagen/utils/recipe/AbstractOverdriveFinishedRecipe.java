@@ -14,8 +14,11 @@ import matteroverdrive.core.recipe.ProbableFluid;
 import matteroverdrive.core.recipe.ProbableItem;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -28,9 +31,9 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 	private List<ProbableFluid> fluidBiproducts = new ArrayList<>();
 	
 	private List<ItemStack> itemIngredients = new ArrayList<>();
-	private List<Pair<ResourceLocation, Integer>> tagItemIngredients = new ArrayList<>();
+	private List<Pair<TagKey<Item>, Integer>> tagItemIngredients = new ArrayList<>();
 	private List<FluidStack> fluidIngredients = new ArrayList<>();
-	private List<Pair<ResourceLocation, Integer>> tagFluidIngredients = new ArrayList<>();
+	private List<Pair<TagKey<Fluid>, Integer>> tagFluidIngredients = new ArrayList<>();
 	
 	private double experience = 0.0;
 	
@@ -48,8 +51,8 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 		return this;
 	}
 	
-	public AbstractOverdriveFinishedRecipe addItemTagInput(String parent, String tag, int count) {
-		tagItemIngredients.add(Pair.of(new ResourceLocation(parent, tag), count));
+	public AbstractOverdriveFinishedRecipe addItemTagInput(TagKey<Item> tag, int count) {
+		tagItemIngredients.add(Pair.of(tag, count));
 		return this;
 	}
 	
@@ -58,8 +61,8 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 		return this;
 	}
 	
-	public AbstractOverdriveFinishedRecipe addFluidTagInput(String parent, String tag, int count) {
-		tagFluidIngredients.add(Pair.of(new ResourceLocation(parent, tag), count));
+	public AbstractOverdriveFinishedRecipe addFluidTagInput(TagKey<Fluid> tag, int count) {
+		tagFluidIngredients.add(Pair.of(tag, count));
 		return this;
 	}
 	
@@ -96,9 +99,9 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 				itemInputs.add(index + "", itemJson);
 				index++;
 			}
-			for(Pair<ResourceLocation, Integer> itemTags: tagItemIngredients) {
+			for(Pair<TagKey<Item>, Integer> itemTags: tagItemIngredients) {
 				itemJson = new JsonObject();
-				itemJson.addProperty("tag", itemTags.getFirst().toString());
+				itemJson.addProperty("tag", itemTags.getFirst().registry().registry().toString());
 				itemJson.addProperty(AbstractOverdriveRecipeSerializer.COUNT, itemTags.getSecond());
 				itemInputs.add(index + "", itemJson);
 				index++;
@@ -120,9 +123,9 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 				fluidInputs.add(index + "", fluidJson);
 				index++;
 			}
-			for(Pair<ResourceLocation, Integer> itemTags: tagFluidIngredients) {
+			for(Pair<TagKey<Fluid>, Integer> itemTags: tagFluidIngredients) {
 				fluidJson = new JsonObject();
-				fluidJson.addProperty("tag", itemTags.getFirst().getNamespace());
+				fluidJson.addProperty("tag", itemTags.getFirst().registry().registry().toString());
 				fluidJson.addProperty("amount", itemTags.getSecond());
 				fluidInputs.add(index + "", fluidJson);
 				index++;

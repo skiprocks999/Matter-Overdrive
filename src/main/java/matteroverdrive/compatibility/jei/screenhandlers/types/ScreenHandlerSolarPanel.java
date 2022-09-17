@@ -1,9 +1,9 @@
-package matteroverdrive.compatibility.jei.screen_handlers.types;
+package matteroverdrive.compatibility.jei.screenhandlers.types;
 
 import java.util.List;
 
 import matteroverdrive.client.screen.ScreenSolarPanel;
-import matteroverdrive.compatibility.jei.screen_handlers.AbstractScreenHandler;
+import matteroverdrive.compatibility.jei.screenhandlers.AbstractScreenHandler;
 import net.minecraft.client.renderer.Rect2i;
 
 public class ScreenHandlerSolarPanel extends AbstractScreenHandler<ScreenSolarPanel> {

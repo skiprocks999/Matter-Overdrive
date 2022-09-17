@@ -1,4 +1,4 @@
-package matteroverdrive.compatibility.jei.screen_handlers;
+package matteroverdrive.compatibility.jei.screenhandlers;
 
 import java.util.List;
 

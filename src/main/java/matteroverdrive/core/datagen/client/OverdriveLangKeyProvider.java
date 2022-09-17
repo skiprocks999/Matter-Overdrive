@@ -9,6 +9,7 @@ import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
+import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.registry.BlockRegistry;
@@ -267,6 +268,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			addKeyCategory("main", "Matter Overdrive - Main");
 			addKeyLabel("togglematterscanner", "Toggle Matter Scanner");
+			
+			addJei(InscriberRecipe.RECIPE_GROUP, "Inscriber");
 		}
 	}
 
@@ -316,6 +319,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 	private void addKeyLabel(String key, String translation) {
 		add("key." + References.ID + "." + key, translation);
+	}
+	
+	private void addJei(String key, String translation) {
+		add("jei." + References.ID + "." + key, translation);
 	}
 	
 	private String name(Item item) {

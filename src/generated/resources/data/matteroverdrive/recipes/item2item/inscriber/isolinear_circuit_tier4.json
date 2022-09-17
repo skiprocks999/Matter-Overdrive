@@ -4,11 +4,11 @@
   "iteminputs": {
     "0": {
       "count": 1,
-      "tag": "forge:circuits/elite"
+      "tag": "minecraft:root"
     },
     "1": {
       "count": 1,
-      "tag": "forge:gems/emerald"
+      "tag": "minecraft:root"
     },
     "count": 2
   },
