@@ -11,8 +11,8 @@ public class EditBoxSuppliableName extends EditBoxOverdrive {
 	private Supplier<String> suppliedText;
 	private boolean firstRender = true;
 
-	public EditBoxSuppliableName(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<String> text) {
-		super(gui, x, y, width, height);
+	public EditBoxSuppliableName(EditBoxTextures texture, GenericScreen<?> gui, int x, int y, int width, int height, Supplier<String> text) {
+		super(texture, gui, x, y, width, height);
 		suppliedText = text;
 	}
 

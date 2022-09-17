@@ -6,13 +6,11 @@ import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
 public class ScreenComponentCharge extends OverdriveScreenComponent {
@@ -33,8 +31,7 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 	public ScreenComponentCharge(final DoubleSupplier currStorage, final DoubleSupplier maxStorage,
 			final DoubleSupplier generation, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, WIDTH, HEIGHT,
-				screenNumbers);
+		super(OverdriveTextures.PROGRESS_BARS, gui, x, y, WIDTH, HEIGHT, screenNumbers);
 		this.maxStorage = maxStorage;
 		this.currStorage = currStorage;
 		this.usage = generation;
@@ -98,7 +95,7 @@ public class ScreenComponentCharge extends OverdriveScreenComponent {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		UtilsRendering.bindTexture(resource);
+		UtilsRendering.bindTexture(resource.getTexture());
 		double progress = maxStorage.getAsDouble() > 0
 				? Math.min(1.0, (double) currStorage.getAsDouble() / (double) maxStorage.getAsDouble())
 				: 0;

@@ -6,7 +6,7 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated.StartDirection;
 public class ArrowLeftAnimatedWrapper extends ArrowAnimatedWrapper {
 
 	public ArrowLeftAnimatedWrapper(int xStart, int yStart) {
-		super(ARROWS, xStart, yStart, 22, 15, 22, 15, new ArrowLeftStaticWrapper(xStart, yStart));
+		super(JeiTexture.PROGRESS_BARS, xStart, yStart, 22, 15, 22, 15, new ArrowLeftStaticWrapper(xStart, yStart));
 	}
 
 	@Override

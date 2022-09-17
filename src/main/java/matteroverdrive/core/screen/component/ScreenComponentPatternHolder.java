@@ -24,9 +24,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 
-	private static final ResourceLocation MAIN_EMPTY = new ResourceLocation(SlotType.MAIN.getTextureLoc());
-	private static final ResourceLocation BIG_EMPTY = new ResourceLocation(SlotType.BIG.getTextureLoc());
-	private static final ResourceLocation BIG_FULL = new ResourceLocation(SlotType.BIG_DARK.getTextureLoc());
+	private static final ResourceLocation MAIN_EMPTY = SlotType.MAIN.getTexture();
+	private static final ResourceLocation BIG_EMPTY = SlotType.BIG.getTexture();
+	private static final ResourceLocation BIG_FULL = SlotType.BIG_DARK.getTexture();
 
 	private final ItemRenderer itemRenderer;
 
@@ -34,7 +34,7 @@ public class ScreenComponentPatternHolder extends OverdriveScreenComponent {
 
 	public ScreenComponentPatternHolder(GenericScreen<?> gui, int x, int y, int[] screenNumbers,
 			ItemRenderer itemRenderer) {
-		super(NO_RESOURCE, gui, x, y, 37, 22, screenNumbers);
+		super(OverdriveTextures.NONE, gui, x, y, 37, 22, screenNumbers);
 		this.itemRenderer = itemRenderer;
 		progress = new ScreenComponentProgress(() -> {
 			TileMatterReplicator matter = (TileMatterReplicator) ((GenericInventoryTile<?>)gui.getMenu()).getTile();

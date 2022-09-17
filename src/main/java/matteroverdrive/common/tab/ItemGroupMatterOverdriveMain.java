@@ -12,7 +12,7 @@ public class ItemGroupMatterOverdriveMain extends CreativeModeTab {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(BlockRegistry.BLOCK_TRANSPORTER.get());
+		return new ItemStack(BlockRegistry.BLOCK_CHUNKLOADER.get());
 	}
 
 }

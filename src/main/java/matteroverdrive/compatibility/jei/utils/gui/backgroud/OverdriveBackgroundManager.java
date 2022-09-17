@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
-import net.minecraft.resources.ResourceLocation;
+import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper.JeiTexture;
 
 public class OverdriveBackgroundManager {
 	
@@ -17,12 +17,12 @@ public class OverdriveBackgroundManager {
 	
 	private static final int WIDTH = 132;
 	
-	private final ResourceLocation texture;
+	private final JeiTexture texture;
 	private final int height;
 	private final int xStart;
 	private final int yStart;
 	
-	public OverdriveBackgroundManager(ResourceLocation texture, int height, int xStart, int yStart) {
+	public OverdriveBackgroundManager(JeiTexture texture, int height, int xStart, int yStart) {
 		this.texture = texture;
 		if(height < MIN_HEIGHT) {
 			throw new UnsupportedOperationException("Minimum height needs to be " + MIN_HEIGHT);

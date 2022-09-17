@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.button.ButtonOverdrive;
+import matteroverdrive.core.screen.component.utils.ITexture;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -17,11 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class EditBoxOverdrive extends EditBox {
-
-	protected GenericScreen<?> gui;
-
-	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
-			"textures/gui/button/edit_box.png");
 
 	private static final char[] VALID_NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-' };
 	private static final char[] VALID_POSITIVE_NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -85,11 +81,14 @@ public class EditBoxOverdrive extends EditBox {
 
 		return true;
 	};
+	
+	protected GenericScreen<?> gui;
+	protected EditBoxTextures texture;
 
-	public EditBoxOverdrive(GenericScreen<?> gui, int x, int y, int width, int height) {
+	public EditBoxOverdrive(EditBoxTextures texture, GenericScreen<?> gui, int x, int y, int width, int height) {
 		super(gui.getFontRenderer(), x, y, width, height, Component.empty());
 		this.gui = gui;
-
+		this.texture = texture;
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class EditBoxOverdrive extends EditBox {
 
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			UtilsRendering.bindTexture(TEXTURE);
+			UtilsRendering.bindTexture(texture.getTexture());
 			ButtonOverdrive.drawButton(stack, this.x, this.y, this.width, this.height);
 
 			int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
@@ -151,6 +150,37 @@ public class EditBoxOverdrive extends EditBox {
 				this.renderHighlight(k1, i1 - 1, l1 - 1, i1 + 1 + 9);
 			}
 
+		}
+	}
+	
+public static enum EditBoxTextures implements ITexture {
+		
+		OVERDRIVE_EDIT_BOX(new ResourceLocation(References.ID, "textures/gui/button/edit_box.png"), 18, 18),
+		SEARCH_BAR(new ResourceLocation(References.ID, "textures/gui/guidebook/search_field.png"), 166, 14);
+		
+		private final ResourceLocation texture;
+		private final int textureWidth;
+		private final int textureHeight;
+		
+		private EditBoxTextures(ResourceLocation texture, int textureWidth, int textureHeight) {
+			this.texture = texture;
+			this.textureWidth = textureWidth;
+			this.textureHeight = textureHeight;
+		}
+		
+		@Override
+		public ResourceLocation getTexture() {
+			return texture;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return textureWidth;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return textureHeight;
 		}
 	}
 

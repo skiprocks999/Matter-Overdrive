@@ -126,36 +126,6 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		}
 	}
 
-	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-
-		CompoundTag additional = new CompoundTag();
-		additional.putDouble("speed", getCurrentSpeed());
-		additional.putDouble("usage", getCurrentPowerUsage());
-		additional.putDouble("radius", getCurrentRange());
-		additional.putDouble("matusage", getCurrentMatterUsage());
-
-		tag.put("additional", additional);
-	}
-
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-
-		CompoundTag additional = tag.getCompound("additional");
-		setSpeed(additional.getDouble("speed"));
-		setPowerUsage(additional.getDouble("usage"));
-		setMatterUsage(additional.getDouble("matusage"));
-		setRange(additional.getDouble("radius"));
-
-	}
-
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
 	private void resetRadiusMultipliers() {
 		if (isRunning()) {
 			updateSurroundingTileMultipliers(1.0);

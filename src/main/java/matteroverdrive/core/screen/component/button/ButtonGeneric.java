@@ -3,7 +3,6 @@ package matteroverdrive.core.screen.component.button;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
@@ -12,13 +11,10 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 public class ButtonGeneric extends AbstractOverdriveButton {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
-			"textures/gui/button/buttons.png");
 	private ButtonType type;
 
 	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, Component message, OnPress onPress,
@@ -36,7 +32,7 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		UtilsRendering.bindTexture(TEXTURE);
+		UtilsRendering.bindTexture(ButtonTextures.GENERIC_BUTTONS.getTexture());
 		int x = type.xOffset;
 		int y = type.yOffset;
 
@@ -55,7 +51,7 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 		}
 	}
 
-	public enum ButtonType {
+	public static enum ButtonType {
 
 		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),
 		CLOSE_RED(0, 0, 18, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),

@@ -9,6 +9,7 @@ import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.utils.UtilsCapability;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -149,6 +150,38 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
+	}
+	
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+		
+		CompoundTag additional = new CompoundTag();
+		
+		additional.putBoolean("isRunning", runningProp.get());
+		additional.putBoolean("isPowered", poweredProp.get());
+		additional.putDouble("currProgress", progressProp.get());
+		additional.putDouble("currRecipeValue", recipeValueProp.get());
+		
+		tag.put("genericmachineinfo", additional);
+		
+	}
+	
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+		
+		CompoundTag additional = tag.getCompound("genericmachineinfo");
+		
+		setRunning(additional.getBoolean("isRunning"));
+		setPowered(additional.getBoolean("isPowered"));
+		setProgress(additional.getDouble("currProgress"));
+		setRecipeValue(additional.getDouble("currRecipeValue"));
+	}
+	
+	@Override
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 
 }

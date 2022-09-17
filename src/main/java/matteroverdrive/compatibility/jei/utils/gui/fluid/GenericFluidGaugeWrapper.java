@@ -1,13 +1,12 @@
 package matteroverdrive.compatibility.jei.utils.gui.fluid;
 
 import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
-import net.minecraft.resources.ResourceLocation;
 
 public abstract class GenericFluidGaugeWrapper extends ScreenObjectWrapper {
 
 	private int amount;
 
-	public GenericFluidGaugeWrapper(ResourceLocation texture, int amount, int xStart, int yStart, int textX, int textY, int height, int width) {
+	public GenericFluidGaugeWrapper(JeiTexture texture, int amount, int xStart, int yStart, int textX, int textY, int height, int width) {
 		super(texture, xStart, yStart, textX, textY, height, width);
 		this.amount = amount;
 	}

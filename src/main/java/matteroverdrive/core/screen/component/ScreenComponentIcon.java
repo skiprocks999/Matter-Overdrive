@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
+import matteroverdrive.core.screen.component.utils.ITexture;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.resources.ResourceLocation;
@@ -14,22 +15,21 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 
 	private IconType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
-	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/icon/";
+	private static final String BASE_TEXTURE_LOC = "textures/gui/icon/";
 
 	public ScreenComponentIcon(@Nonnull IconType type, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height,
-				screenNumbers);
+		super(type, gui, x, y, type.width, type.height, screenNumbers);
 		this.type = type;
 	}
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (type != IconType.NONE) {
-			UtilsRendering.bindTexture(resource);
+			UtilsRendering.bindTexture(resource.getTexture());
 			UtilsRendering.color(color);
-			blit(stack, this.x, this.y, type.getTextureX(), type.getTextureY(), type.getTextWidth(),
-					type.getTextHeight(), type.getTextWidth(), type.getTextHeight());
+			blit(stack, this.x, this.y, type.getTextureU(), type.getTextureV(), type.getUWidth(),
+					type.getVHeight(), type.getTextureWidth(), type.getTextureHeight());
 			UtilsRendering.color(color);
 		}
 	}
@@ -38,7 +38,7 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 		return type;
 	}
 
-	public enum IconType {
+	public static enum IconType implements ITexture {
 
 		NONE(""),
 
@@ -54,14 +54,14 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 		private final int height;
 		private final int textureX;
 		private final int textureY;
-		private final String name;
+		private final ResourceLocation texture;
 
 		private IconType(int width, int height, int textureX, int textureY, String name) {
 			this.width = width;
 			this.height = height;
 			this.textureX = textureX;
 			this.textureY = textureY;
-			this.name = name + ".png";
+			this.texture = new ResourceLocation(References.ID, BASE_TEXTURE_LOC + name + ".png");
 		}
 
 		private IconType(int width, int height, String name) {
@@ -72,28 +72,35 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 			this(16, 16, 0, 0, name);
 		}
 
-		public int getTextWidth() {
-			return width;
+		@Override
+		public ResourceLocation getTexture() {
+			return texture;
 		}
 
-		public int getTextHeight() {
-			return height;
-		}
-
-		public int getTextureX() {
+		public int getTextureU() {
 			return textureX;
 		}
 
-		public int getTextureY() {
+		public int getTextureV() {
 			return textureY;
 		}
 
-		public String getName() {
-			return name;
+		public int getUWidth() {
+			return width;
 		}
 
-		public String getTextureLoc() {
-			return BASE_TEXTURE_LOC + getName();
+		public int getVHeight() {
+			return height;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return width;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return height;
 		}
 	}
 

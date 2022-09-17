@@ -188,37 +188,6 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		}
 	}
 
-	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-
-		CompoundTag additional = new CompoundTag();
-		additional.putDouble("progress", getProgress());
-		additional.putDouble("speed", getCurrentSpeed());
-		additional.putFloat("failure", getCurrentFailure());
-		additional.putDouble("usage", getCurrentPowerUsage());
-		additional.putBoolean("muffled", isMuffled());
-
-		tag.put("additional", additional);
-	}
-
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-
-		CompoundTag additional = tag.getCompound("additional");
-		setProgress(additional.getDouble("progress"));
-		setSpeed(additional.getDouble("speed"));
-		setFailure(additional.getFloat("failure"));
-		setPowerUsage(additional.getDouble("usage"));
-		setMuffled(additional.getBoolean("muffled"));
-	}
-
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
 	private float roll() {
 		return MatterOverdrive.RANDOM.nextFloat();
 	}

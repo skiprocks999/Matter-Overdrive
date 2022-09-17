@@ -26,8 +26,8 @@ public class ButtonItemPattern extends ButtonHoldPress {
 	private static final SlotType REG = SlotType.BIG;
 	private static final SlotType HOV = SlotType.BIG_DARK;
 
-	private static final ResourceLocation REGULAR = new ResourceLocation(REG.getTextureLoc());
-	private static final ResourceLocation HOVERED = new ResourceLocation(HOV.getTextureLoc());
+	private static final ResourceLocation REGULAR = REG.getTexture();
+	private static final ResourceLocation HOVERED = HOV.getTexture();
 
 	private boolean shouldHover = true;
 
@@ -99,8 +99,8 @@ public class ButtonItemPattern extends ButtonHoldPress {
 			UtilsRendering.bindTexture(REGULAR);
 			type = REG;
 		}
-		blit(stack, this.x, this.y, type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight(),
-				type.getWidth(), type.getHeight());
+		blit(stack, this.x, this.y, type.getTextureU(), type.getTextureV(), type.getUWidth(), type.getVHeight(),
+				type.getTextureWidth(), type.getTextureHeight());
 	}
 
 	@Override

@@ -28,13 +28,13 @@ public class ButtonHoldPress extends ButtonOverdrive {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		if (isActivated) {
-			UtilsRendering.bindTexture(pressedText);
+			UtilsRendering.bindTexture(pressedText.getTexture());
 
 		} else {
 			if (isHoveredOrFocused()) {
-				UtilsRendering.bindTexture(hoveredText);
+				UtilsRendering.bindTexture(hoveredText.getTexture());
 			} else {
-				UtilsRendering.bindTexture(defaultText);
+				UtilsRendering.bindTexture(defaultText.getTexture());
 			}
 		}
 

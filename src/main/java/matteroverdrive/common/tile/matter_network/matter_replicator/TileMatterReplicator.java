@@ -342,11 +342,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		CompoundTag data = new CompoundTag();
 
 		data.put("orders", ordersProp.get());
-		data.putDouble("progress", getProgress());
-		data.putDouble("speed", getCurrentSpeed());
-		data.putFloat("failure", getCurrentFailure());
-		data.putDouble("usage", getCurrentPowerUsage());
-		data.putBoolean("muffled", isMuffled());
 		data.putBoolean("fused", usingFused);
 
 		tag.put("data", data);
@@ -358,11 +353,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		CompoundTag data = tag.getCompound("data");
 
 		ordersProp.set(data.getCompound("orders"));
-		setProgress(data.getDouble("progress"));
-		setSpeed(data.getDouble("speed"));
-		setFailure(data.getFloat("failure"));
-		setPowerUsage(data.getDouble("usage"));
-		setMuffled(data.getBoolean("muffled"));
 		usingFused = data.getBoolean("fused");
 	}
 

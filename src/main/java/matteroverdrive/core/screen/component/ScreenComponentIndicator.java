@@ -4,11 +4,9 @@ import java.util.function.BooleanSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
-import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentIndicator extends OverdriveScreenComponent {
 
@@ -20,8 +18,7 @@ public class ScreenComponentIndicator extends OverdriveScreenComponent {
 
 	public ScreenComponentIndicator(final BooleanSupplier supplier, final GenericScreen<?> gui, final int x,
 			final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/base/indicator.png"), gui, x, y, WIDTH, HEIGHT,
-				screenNumbers);
+		super(OverdriveTextures.RUNNING_INDICATOR, gui, x, y, WIDTH, HEIGHT, screenNumbers);
 		active = supplier;
 	}
 
@@ -33,7 +30,7 @@ public class ScreenComponentIndicator extends OverdriveScreenComponent {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 
-		UtilsRendering.bindTexture(resource);
+		UtilsRendering.bindTexture(resource.getTexture());
 
 		blit(stack, this.x, this.y, 0, 0, this.width, this.height);
 

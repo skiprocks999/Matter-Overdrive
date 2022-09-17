@@ -4,6 +4,7 @@ import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -172,6 +173,40 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public double getProcessingTime() {
 		return defaultProcessingTime;
+	}
+	
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
+		
+		CompoundTag additional = new CompoundTag();
+		additional.putDouble("currSpeed", currSpeedProp.get());
+		additional.putDouble("currMatterUsage", currMatterUsage.get());
+		additional.putDouble("currPowerUsage", currPowerUsage.get());
+		additional.putDouble("currRange", currRangeProp.get());
+		additional.putBoolean("currIsMuffled", currIsMuffled.get());
+		additional.putFloat("currFailure", currFailureChance.get());
+		
+		tag.put("upgradeinfo", additional);
+	}
+	
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+		
+		CompoundTag additional = tag.getCompound("upgradeinfo");
+		
+		setSpeed(additional.getDouble("currSpeed"));
+		setMatterUsage(additional.getDouble("currMatterUsage"));
+		setPowerUsage(additional.getDouble("currPowerUsage"));
+		setRange(additional.getDouble("currRange"));
+		setFailure(additional.getFloat("currFailure"));
+		setMuffled(additional.getBoolean("currIsMuffled"));
+	}
+	
+	@Override
+	public void getFirstContactData(CompoundTag tag) {
+		saveAdditional(tag);
 	}
 
 }

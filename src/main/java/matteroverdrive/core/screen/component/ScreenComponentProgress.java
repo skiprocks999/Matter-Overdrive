@@ -4,11 +4,9 @@ import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
-import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentProgress extends OverdriveScreenComponent {
 
@@ -32,8 +30,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	public ScreenComponentProgress(final DoubleSupplier progress, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(References.ID + ":textures/gui/progress/progress.png"), gui, x, y, HOR_WIDTH,
-				HOR_HEIGHT, screenNumbers);
+		super(OverdriveTextures.PROGRESS_BARS, gui, x, y, HOR_WIDTH, HOR_HEIGHT, screenNumbers);
 		this.progress = progress;
 	}
 
@@ -51,7 +48,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		UtilsRendering.bindTexture(resource);
+		UtilsRendering.bindTexture(resource.getTexture());
 		UtilsRendering.color(color);
 		double progress = Math.min(1.0, this.progress.getAsDouble());
 		if (vertical) {

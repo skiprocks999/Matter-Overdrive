@@ -3,18 +3,13 @@ package matteroverdrive.core.screen.component.edit_box;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 
 public class EditBoxSearchbar extends EditBoxOverdrive {
-
-	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
-			"textures/gui/guidebook/search_field.png");
 
 	private static final double RS_WIDTH_COEFF = 0.13855421686746987951807228915663; // 23/166
 	private static final double LS_WIDTH_COEFF = 0.07228915662650602409638554216867; // 12/166
@@ -22,7 +17,7 @@ public class EditBoxSearchbar extends EditBoxOverdrive {
 	private final int totalWidth;
 
 	public EditBoxSearchbar(GenericScreen<?> gui, int x, int y, int width, int height, int totalWidth) {
-		super(gui, x, y, width, height);
+		super(EditBoxTextures.SEARCH_BAR, gui, x, y, width, height);
 		this.totalWidth = totalWidth;
 	}
 
@@ -33,7 +28,7 @@ public class EditBoxSearchbar extends EditBoxOverdrive {
 
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			UtilsRendering.bindTexture(TEXTURE);
+			UtilsRendering.bindTexture(texture.getTexture());
 			int leftSide = (int) ((double) this.totalWidth * LS_WIDTH_COEFF);
 			int rightSide = (int) ((double) this.totalWidth * RS_WIDTH_COEFF);
 

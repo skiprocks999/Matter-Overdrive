@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
@@ -17,12 +16,8 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public class ButtonIO extends AbstractOverdriveButton {
-
-	private static final ResourceLocation TEXTURE = new ResourceLocation(
-			References.ID + ":textures/gui/button/buttons.png");
 
 	private static final int X_START = 0;
 	private static final int Y_START = 9;
@@ -64,7 +59,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 		}
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		UtilsRendering.bindTexture(TEXTURE);
+		UtilsRendering.bindTexture(ButtonTextures.GENERIC_BUTTONS.getTexture());
 		int x;
 		int y;
 		switch (mode) {

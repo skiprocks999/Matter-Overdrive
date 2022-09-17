@@ -2,6 +2,7 @@ package matteroverdrive.core.screen.component.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,13 +20,11 @@ import net.minecraft.resources.ResourceLocation;
  */
 public abstract class OverdriveScreenComponent extends AbstractWidget {
 
-	protected ResourceLocation resource;
+	protected ITexture resource;
 	protected GenericScreen<?> gui;
 	protected int[] screenNumbers;
 
-	protected static final ResourceLocation NO_RESOURCE = new ResourceLocation("");
-
-	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
+	protected OverdriveScreenComponent(ITexture resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers) {
 		super(x, y, width, height, Component.empty());
 		this.resource = resource;
@@ -33,7 +32,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 		this.screenNumbers = screenNumbers;
 	}
 
-	protected OverdriveScreenComponent(ResourceLocation resource, GenericScreen<?> gui, int x, int y, int width,
+	protected OverdriveScreenComponent(ITexture resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers, Component component) {
 		super(x, y, width, height, component);
 		this.resource = resource;
@@ -138,6 +137,46 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 
 	@Override
 	public void playDownSound(SoundManager pHandler) {
+	}
+	
+	public static enum OverdriveTextures implements ITexture {
+		
+		NONE(new ResourceLocation(""), 0, 0),
+		PROGRESS_BARS(new ResourceLocation(References.ID, "textures/gui/progress/progress.png"), 256, 256),
+		WHITE(new ResourceLocation("forge", "textures/white.png"), 256, 256),
+		HOTBAR_BAR(new ResourceLocation(References.ID, "textures/gui/base/hotbar_bar.png"), 5, 169),
+		RUNNING_INDICATOR(new ResourceLocation(References.ID, "textures/gui/base/indicator.png"), 256, 256),
+		TABLET_SCREEN(new ResourceLocation(References.ID, "textures/gui/misc/screen.png"), 118, 48),
+		ORDER_SEARCH_BAR(new ResourceLocation(References.ID, "textures/gui/misc/order_bar.png"), 158, 20),
+		VERTICAL_SLIDER_BG(new ResourceLocation(References.ID, "textures/gui/slider/vertical_slider_bg.png"), 15, 30),
+		VERTICAL_SLIDER_ACTIVE(new ResourceLocation(References.ID, "textures/gui/slider/vertical_slider_active.png"), 15, 15),
+		VERTICAL_SLIDER_INACTIVE(new ResourceLocation(References.ID, "textures/gui/slider/vertical_slider_inactive.png"), 15, 15);
+
+		private final ResourceLocation texture;
+		private final int textureWidth;
+		private final int textureHeight;
+		
+		private OverdriveTextures(ResourceLocation texture, int textureWidth, int textureHeight) {
+			this.texture = texture;
+			this.textureWidth = textureWidth;
+			this.textureHeight = textureHeight;
+		}
+		
+		@Override
+		public ResourceLocation getTexture() {
+			return texture;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return textureWidth;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return textureHeight;
+		}
+		
 	}
 
 }

@@ -9,6 +9,7 @@ import matteroverdrive.References;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
+import matteroverdrive.core.screen.component.utils.ITexture;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.ItemRegistry;
@@ -21,7 +22,7 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	private final SlotType type;
 	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
-	private static final String BASE_TEXTURE_LOC = References.ID + ":textures/gui/slot/";
+	private static final String BASE_TEXTURE_LOC = "textures/gui/slot/";
 	private IconType icon = null;
 	private ScreenComponentIcon iconComp = null;
 
@@ -29,15 +30,13 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	public ScreenComponentSlot(final SlotType type, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height,
-				screenNumbers);
+		super(type, gui, x, y, type.width, type.height, screenNumbers);
 		this.type = type;
 	}
 
 	public ScreenComponentSlot(final SlotType type, final IconType icon, final GenericScreen<?> gui, final int x,
 			final int y, final int[] screenNumbers) {
-		super(new ResourceLocation(BASE_TEXTURE_LOC + type.getName()), gui, x, y, type.width, type.height,
-				screenNumbers);
+		super(type, gui, x, y, type.width, type.height, screenNumbers);
 		this.type = type;
 		this.icon = icon;
 	}
@@ -48,11 +47,11 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 		if (icon != IconType.NONE) {
 			int widthOffset;
 			if (isMainSlot()) {
-				widthOffset = (int) ((22 - icon.getTextWidth()) / 2);
+				widthOffset = (int) ((22 - icon.getTextureWidth()) / 2);
 			} else {
-				widthOffset = (int) ((type.getWidth() - icon.getTextWidth()) / 2);
+				widthOffset = (int) ((type.getTextureWidth() - icon.getTextureWidth()) / 2);
 			}
-			int heightOffset = (int) ((type.getHeight() - icon.getTextHeight()) / 2);
+			int heightOffset = (int) ((type.getTextureHeight() - icon.getTextureHeight()) / 2);
 			this.iconComp = new ScreenComponentIcon(icon, gui, this.x + widthOffset + type.getXOffset(),
 					this.y + heightOffset + type.getYOffset(), this.screenNumbers);
 		}
@@ -66,10 +65,10 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (type != SlotType.NONE) {
-			UtilsRendering.bindTexture(resource);
+			UtilsRendering.bindTexture(resource.getTexture());
 			UtilsRendering.color(color);
-			blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(), type.getTextureX(), type.getTextureY(),
-					type.getWidth(), type.getHeight(), type.getWidth(), type.getHeight());
+			blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(), type.getTextureU(), type.getTextureV(),
+					type.getUWidth(), type.getVHeight(), type.getTextureWidth(), type.getTextureHeight());
 
 			UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 			if (iconComp != null) {
@@ -94,7 +93,7 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 		return type == SlotType.MAIN || type == SlotType.MAIN_ACTIVE || type == SlotType.MAIN_DARK;
 	}
 
-	public enum SlotType {
+	public static enum SlotType implements ITexture {
 		NONE(""), SMALL("slot_small"), BIG(22, 22, 0, 0, "slot_big", -2, -2),
 		BIG_DARK(22, 22, 0, 0, "slot_big_dark", -2, -2), HOLO("slot_holo"), HOLO_BG("slot_holo_with_bg"),
 		MAIN(37, 22, 0, 0, "slot_big_main", -2, -2), MAIN_DARK(37, 22, 0, 0, "slot_big_main_dark", -2, -2),
@@ -106,14 +105,14 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 		private final int textureY;
 		private final int xOffset;
 		private final int yOffset;
-		private final String name;
+		private final ResourceLocation name;
 
 		private SlotType(int width, int height, int textureX, int textureY, String name, int xOffset, int yOffset) {
 			this.width = width;
 			this.height = height;
 			this.textureX = textureX;
 			this.textureY = textureY;
-			this.name = name + ".png";
+			this.name = new ResourceLocation(References.ID, BASE_TEXTURE_LOC + name + ".png");
 			this.xOffset = xOffset;
 			this.yOffset = yOffset;
 		}
@@ -122,36 +121,43 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 			this(18, 18, 0, 0, name, 0, 0);
 		}
 
-		public int getWidth() {
-			return width;
-		}
-
-		public int getHeight() {
-			return height;
-		}
-
-		public int getTextureX() {
-			return textureX;
-		}
-
-		public int getTextureY() {
-			return textureY;
-		}
-
-		public String getName() {
+		@Override
+		public ResourceLocation getTexture() {
 			return name;
 		}
 
+		public int getTextureU() {
+			return textureX;
+		}
+
+		public int getTextureV() {
+			return textureY;
+		}
+
+		public int getUWidth() {
+			return width;
+		}
+
+		public int getVHeight() {
+			return height;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return width;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return height;
+		}
+		
 		public int getXOffset() {
 			return xOffset;
 		}
 
 		public int getYOffset() {
 			return yOffset;
-		}
-
-		public String getTextureLoc() {
-			return BASE_TEXTURE_LOC + getName();
 		}
 
 	}

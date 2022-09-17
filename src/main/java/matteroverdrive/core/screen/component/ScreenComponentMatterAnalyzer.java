@@ -5,7 +5,6 @@ import java.util.Random;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
@@ -13,14 +12,9 @@ import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
 public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
-
-	private static final ResourceLocation SCREEN = new ResourceLocation(
-			References.ID + ":textures/gui/misc/screen.png");
-	private static final ResourceLocation WHITE = new ResourceLocation("forge:textures/white.png");
 
 	private static final int NUM_BARS = 26;
 
@@ -29,13 +23,13 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 	private float[] values = new float[NUM_BARS];
 
 	public ScreenComponentMatterAnalyzer(GenericScreen<?> gui, int x, int y, int[] screenNumbers) {
-		super(SCREEN, gui, x, y, 118, 48, screenNumbers);
+		super(OverdriveTextures.TABLET_SCREEN, gui, x, y, 118, 48, screenNumbers);
 		random = new Random();
 	}
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		UtilsRendering.bindTexture(resource);
+		UtilsRendering.bindTexture(resource.getTexture());
 		blit(stack, x, y, width, height, 0, 0, width, height, width, height);
 	}
 
@@ -46,7 +40,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 			int color = UtilsRendering.TITLE_BLUE;
 
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			UtilsRendering.bindTexture(WHITE);
+			UtilsRendering.bindTexture(OverdriveTextures.WHITE.getTexture());
 			UtilsRendering.color(color);
 
 			int seed = Item.getId(analyzer.scannedItemProp.get().getItem());

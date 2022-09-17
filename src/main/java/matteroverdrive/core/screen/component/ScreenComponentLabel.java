@@ -8,7 +8,6 @@ import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentLabel extends OverdriveScreenComponent {
 
@@ -22,7 +21,7 @@ public class ScreenComponentLabel extends OverdriveScreenComponent {
 
 	public ScreenComponentLabel(final GenericScreen<?> gui, final int x, final int y, final int[] screenNumbers,
 			final Supplier<Component> component, final int color) {
-		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
+		super(OverdriveTextures.NONE, gui, x, y, 0, 0, screenNumbers);
 		this.component = component;
 		fontColor = color;
 	}

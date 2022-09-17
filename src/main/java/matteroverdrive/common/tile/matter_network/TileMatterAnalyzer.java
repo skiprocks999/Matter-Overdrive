@@ -225,30 +225,6 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-		CompoundTag data = new CompoundTag();
-
-		data.putDouble("progress", getProgress());
-		data.putDouble("speed", getCurrentSpeed());
-		data.putDouble("usage", getCurrentPowerUsage());
-		data.putBoolean("muffled", isMuffled());
-
-		tag.put("data", data);
-	}
-
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-		CompoundTag data = tag.getCompound("data");
-
-		setProgress(data.getDouble("progress"));
-		setSpeed(data.getDouble("speed"));
-		setPowerUsage(data.getDouble("usage"));
-		setMuffled(data.getBoolean("muffled"));
-	}
-
-	@Override
 	public boolean canConnectToFace(Direction face) {
 		Direction facing = getFacing();
 		Direction back = Direction.NORTH;
@@ -270,11 +246,6 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	@Override
 	public boolean isPowered(boolean client) {
 		return true;
-	}
-
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
 	}
 
 	public boolean setScannedItem(ItemStack item) {

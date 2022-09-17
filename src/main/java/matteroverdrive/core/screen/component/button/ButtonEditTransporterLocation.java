@@ -9,7 +9,6 @@ import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class ButtonEditTransporterLocation extends ButtonOverdrive {
 
@@ -23,11 +22,11 @@ public class ButtonEditTransporterLocation extends ButtonOverdrive {
 
 	@Override
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		UtilsRendering.bindTexture(new ResourceLocation(ICON.getTextureLoc()));
-		int widthOffset = (int) ((20 - ICON.getTextWidth()) / 2);
-		int heightOffset = (int) ((20 - ICON.getTextHeight()) / 2);
-		blit(stack, this.x + widthOffset, this.y + heightOffset, ICON.getTextureX(), ICON.getTextureY(),
-				ICON.getTextWidth(), ICON.getTextHeight(), ICON.getTextHeight(), ICON.getTextWidth());
+		UtilsRendering.bindTexture(ICON.getTexture());
+		int widthOffset = (int) ((20 - ICON.getTextureWidth()) / 2);
+		int heightOffset = (int) ((20 - ICON.getTextureHeight()) / 2);
+		blit(stack, this.x + widthOffset, this.y + heightOffset, ICON.getTextureU(), ICON.getTextureV(),
+				ICON.getUWidth(), ICON.getVHeight(), ICON.getTextureHeight(), ICON.getTextureWidth());
 	}
 
 	@Override

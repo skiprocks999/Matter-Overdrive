@@ -23,8 +23,8 @@ public class ButtonIOConfig extends ButtonHoldPress {
 	public ButtonIOConfig(GenericScreen<?> gui, int x, int y, OnPress onPress, IOConfigButtonType type) {
 		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress);
 		this.type = type;
-		iconDarkLoc = new ResourceLocation(type.iconDark.getTextureLoc());
-		iconLightLoc = new ResourceLocation(type.iconLight.getTextureLoc());
+		iconDarkLoc = type.iconDark.getTexture();
+		iconLightLoc = type.iconLight.getTexture();
 	}
 
 	@Override
@@ -37,10 +37,10 @@ public class ButtonIOConfig extends ButtonHoldPress {
 			icon = type.iconDark;
 			UtilsRendering.bindTexture(iconDarkLoc);
 		}
-		int widthOffset = (int) ((WIDTH - icon.getTextWidth()) / 2);
-		int heightOffset = (int) ((HEIGHT - icon.getTextHeight()) / 2);
-		blit(stack, this.x + widthOffset, this.y + heightOffset, icon.getTextureX(), icon.getTextureY(),
-				icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
+		int widthOffset = (int) ((WIDTH - icon.getTextureWidth()) / 2);
+		int heightOffset = (int) ((HEIGHT - icon.getTextureHeight()) / 2);
+		blit(stack, this.x + widthOffset, this.y + heightOffset, icon.getTextureU(), icon.getTextureV(),
+				icon.getUWidth(), icon.getVHeight(), icon.getTextureHeight(), icon.getTextureWidth());
 	}
 
 	@Override

@@ -59,31 +59,6 @@ public class TileCharger extends GenericMachineTile {
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
-
-		CompoundTag additional = new CompoundTag();
-		additional.putDouble("usage", getCurrentPowerUsage());
-		additional.putDouble("radius", getCurrentRange());
-
-		tag.put("additional", additional);
-	}
-
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-
-		CompoundTag additional = tag.getCompound("additional");
-		setPowerUsage(additional.getInt("usage"));
-		setRange(additional.getInt("radius"));
-	}
-
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
-	@Override
 	public AABB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().inflate(2);
 	}

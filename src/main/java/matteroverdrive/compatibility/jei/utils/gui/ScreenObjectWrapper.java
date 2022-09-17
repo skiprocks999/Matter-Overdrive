@@ -1,22 +1,14 @@
 package matteroverdrive.compatibility.jei.utils.gui;
 
 import matteroverdrive.References;
+import matteroverdrive.core.screen.component.utils.ITexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class ScreenObjectWrapper {
-
-	public static final ResourceLocation VANILLA_BACKGROUND = 
-			new ResourceLocation(References.ID, "textures/jei/vanilla_background.png");
-	public static final ResourceLocation OVERDRIVE_BACKGROUND_BAR = 
-			new ResourceLocation(References.ID, "textures/jei/overdrive_background_bar.png");
 	
 	public static final String FLUID_GAUGES = "fluidgauges";
-	public static final ResourceLocation ARROWS = 
-			new ResourceLocation(References.ID, "textures/gui/progress/progress.png");
-	public static final ResourceLocation MISC = 
-			new ResourceLocation(References.ID, "textures/jei/misc_resources.png");
 
-	private ResourceLocation texture;
+	private ITexture texture;
 
 	private int xPos;
 	private int yPos;
@@ -26,7 +18,7 @@ public class ScreenObjectWrapper {
 	private int length;
 	private int width;
 
-	public ScreenObjectWrapper(ResourceLocation texture, int xStart, int yStart, int textX, int textY, int height, int width) {
+	public ScreenObjectWrapper(ITexture texture, int xStart, int yStart, int textX, int textY, int height, int width) {
 		this.texture = texture;
 
 		xPos = xStart;
@@ -63,15 +55,49 @@ public class ScreenObjectWrapper {
 	}
 	
 	public int getTextureWidth() {
-		return 256;
+		return texture.getTextureWidth();
 	}
 	
 	public int getTextureHeight() {
-		return 256;
+		return texture.getTextureHeight();
 	}
 
 	public ResourceLocation getTexture() {
-		return texture;
+		return texture.getTexture();
+	}
+	
+	public static enum JeiTexture implements ITexture {
+		
+		VANILLA_BACKGROUND(new ResourceLocation(References.ID, "textures/jei/vanilla_background.png"), 256, 256),
+		OVERDRIVE_BACKGROUND(new ResourceLocation(References.ID, "textures/jei/overdrive_background.png"), 132, 19),
+		OVERDRIVE_BACKGROUND_BAR(new ResourceLocation(References.ID, "textures/jei/overdrive_background_bar.png"), 132, 19),
+		PROGRESS_BARS(new ResourceLocation(References.ID, "textures/gui/progress/progress.png"), 256, 256),
+		MISC_TEXTURES(new ResourceLocation(References.ID, "textures/jei/misc_resources.png"), 256, 256);
+		
+		private final int textWidth;
+		private final int textHeight;
+		private final ResourceLocation texture;
+		
+		private JeiTexture(ResourceLocation texture, int textWidth, int textHeight) {
+			this.texture = texture;
+			this.textWidth = textWidth;
+			this.textHeight = textHeight;
+		}
+
+		@Override
+		public ResourceLocation getTexture() {
+			return texture;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return textWidth;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return textHeight;
+		}
 	}
 
 }

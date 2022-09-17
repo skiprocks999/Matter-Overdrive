@@ -1,8 +1,6 @@
 package matteroverdrive.compatibility.jei.utils.gui.item;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
-import net.minecraft.resources.ResourceLocation;
 
 public class DefaultItemSlotWrapper extends GenericItemSlotWrapper {
 
@@ -13,21 +11,17 @@ public class DefaultItemSlotWrapper extends GenericItemSlotWrapper {
 	private final int itemXOffset;
 	private final int itemYOffset;
 	private final boolean isVisibleOnly;
-	private final int textureWidth;
-	private final int textureHeight;
 	
 	public DefaultItemSlotWrapper(SlotType type, int xStart, int yStart, boolean isVisibleOnly) {
-		super(new ResourceLocation(References.ID + ":textures/gui/slot/" + type.getName()), xStart, yStart, type.getTextureX(), type.getTextureY(), type.getWidth(), type.getHeight());
+		super(type, xStart, yStart, type.getTextureU(), type.getTextureV(), type.getUWidth(), type.getVHeight());
 		this.type = type;
 		if (isMainSlot()) {
 			itemXOffset = (int) ((22 - ITEM_WIDTH) / 2);
 		} else {
-			itemXOffset = (int) ((type.getWidth() - ITEM_WIDTH) / 2);
+			itemXOffset = (int) ((type.getTextureWidth() - ITEM_WIDTH) / 2);
 		}
-		itemYOffset = (type.getHeight() - ITEM_WIDTH) / 2;
+		itemYOffset = (type.getTextureHeight() - ITEM_WIDTH) / 2;
 		this.isVisibleOnly = isVisibleOnly;
-		textureWidth = type.getWidth();
-		textureHeight = type.getHeight();
 	}
 
 	@Override
@@ -43,16 +37,6 @@ public class DefaultItemSlotWrapper extends GenericItemSlotWrapper {
 	@Override
 	public boolean isVisibleOnly() {
 		return isVisibleOnly;
-	}
-	
-	@Override
-	public int getTextureWidth() {
-		return textureWidth;
-	}
-	
-	@Override
-	public int getTextureHeight() {
-		return textureHeight;
 	}
 	
 	private boolean isMainSlot() {

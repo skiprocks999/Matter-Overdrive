@@ -4,8 +4,6 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -14,38 +12,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class ButtonOverdrive extends AbstractOverdriveButton {
 
-	private static final String BASE_TEXTURE_LOC = "textures/gui/button/";
-
-	protected static final ResourceLocation DEFAULT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_normal.png");
-	protected static final ResourceLocation HOVERED = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over.png");
-	protected static final ResourceLocation PRESSED = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over_dark.png");
-
-	protected static final ResourceLocation DEFAULT_LEFT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_normal_left.png");
-	protected static final ResourceLocation HOVERED_LEFT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over_left.png");
-	protected static final ResourceLocation PRESSED_LEFT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over_dark_left.png");
-
-	protected static final ResourceLocation DEFAULT_RIGHT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_normal_right.png");
-	protected static final ResourceLocation HOVERED_RIGHT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over_right.png");
-	protected static final ResourceLocation PRESSED_RIGHT = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "button_over_dark_right.png");
-
 	public boolean isPressed;
 
-	protected ResourceLocation defaultText;
-	protected ResourceLocation hoveredText;
-	protected ResourceLocation pressedText;
+	protected ButtonTextures defaultText;
+	protected ButtonTextures hoveredText;
+	protected ButtonTextures pressedText;
 
 	protected int textColor = UtilsRendering.TEXT_BLUE;
 	protected Consumer<SoundManager> downSound = null;
@@ -53,30 +27,30 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
 			OnPress onPress, OnTooltip onTooltip) {
 		super(gui, x, y, width, height, message, onPress, onTooltip);
-		defaultText = DEFAULT;
-		hoveredText = HOVERED;
-		pressedText = PRESSED;
+		defaultText = ButtonTextures.OVERDRIVE_NONE_REG;
+		hoveredText = ButtonTextures.OVERDRIVE_HOVER_REG;
+		pressedText = ButtonTextures.OVERDRIVE_PRESS_REG;
 	}
 
 	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
 			OnPress onPress) {
 		super(gui, x, y, width, height, message, onPress);
-		defaultText = DEFAULT;
-		hoveredText = HOVERED;
-		pressedText = PRESSED;
+		defaultText = ButtonTextures.OVERDRIVE_NONE_REG;
+		hoveredText = ButtonTextures.OVERDRIVE_HOVER_REG;
+		pressedText = ButtonTextures.OVERDRIVE_PRESS_REG;
 	}
 
 	public ButtonOverdrive setLeft() {
-		defaultText = DEFAULT_LEFT;
-		hoveredText = HOVERED_LEFT;
-		pressedText = PRESSED_LEFT;
+		defaultText = ButtonTextures.OVERDRIVE_NONE_LEFT;
+		hoveredText = ButtonTextures.OVERDRIVE_HOVER_LEFT;
+		pressedText = ButtonTextures.OVERDRIVE_PRESS_LEFT;
 		return this;
 	}
 
 	public ButtonOverdrive setRight() {
-		defaultText = DEFAULT_RIGHT;
-		hoveredText = HOVERED_RIGHT;
-		pressedText = PRESSED_RIGHT;
+		defaultText = ButtonTextures.OVERDRIVE_NONE_RIGHT;
+		hoveredText = ButtonTextures.OVERDRIVE_HOVER_RIGHT;
+		pressedText = ButtonTextures.OVERDRIVE_PRESS_RIGHT;
 		return this;
 	}
 
@@ -97,11 +71,11 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		if (isPressed) {
-			UtilsRendering.bindTexture(pressedText);
+			UtilsRendering.bindTexture(pressedText.getTexture());
 		} else if (isHoveredOrFocused()) {
-			UtilsRendering.bindTexture(hoveredText);
+			UtilsRendering.bindTexture(hoveredText.getTexture());
 		} else {
-			UtilsRendering.bindTexture(defaultText);
+			UtilsRendering.bindTexture(defaultText.getTexture());
 		}
 
 		drawButton(stack, this.x, this.y, this.width, this.height);

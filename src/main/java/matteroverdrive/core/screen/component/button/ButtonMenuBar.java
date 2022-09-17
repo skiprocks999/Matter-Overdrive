@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.References;
 import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
@@ -14,13 +13,10 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class ButtonMenuBar extends AbstractOverdriveButton {
 
 	public static final int EXTEND_DISTANCE = 32;
-	private static final ResourceLocation TEXTURE = new ResourceLocation(References.ID,
-			"textures/gui/button/menu_bar.png");
 
 	public boolean isExtended;
 	private boolean isPressed;
@@ -44,7 +40,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		UtilsRendering.bindTexture(TEXTURE);
+		UtilsRendering.bindTexture(ButtonTextures.MENU_BAR.getTexture());
 
 		if (isPressed) {
 			this.blit(stack, this.x, this.y, 16, 0, 16, 143);

@@ -11,6 +11,7 @@ import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSuppliableName;
+import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
@@ -63,7 +64,7 @@ public class WrapperTransporterLocationEditer {
 		int guiWidth = gui.getXPos();
 		int guiHeight = gui.getYPos();
 
-		nameBox = new EditBoxSuppliableName(gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
+		nameBox = new EditBoxSuppliableName(EditBoxTextures.OVERDRIVE_EDIT_BOX, gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
 			return transporterSupplier.get().locationManager.getLocation(currIndex).getName().getString();
 		});
 		nameBox.setTextColor(UtilsRendering.WHITE);
@@ -77,7 +78,7 @@ public class WrapperTransporterLocationEditer {
 			sendNameChange(string);
 		});
 
-		xCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 50 + yOffset, 70, 15,
+		xCoordinateBox = new EditBoxSuppliableName(EditBoxTextures.OVERDRIVE_EDIT_BOX, gui, guiWidth + 94 + xOffset, guiHeight + 50 + yOffset, 70, 15,
 				() -> {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getX()
 							+ "";
@@ -95,7 +96,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 0, currIndex);
 		});
 
-		yCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 70 + yOffset, 70, 15,
+		yCoordinateBox = new EditBoxSuppliableName(EditBoxTextures.OVERDRIVE_EDIT_BOX, gui, guiWidth + 94 + xOffset, guiHeight + 70 + yOffset, 70, 15,
 				() -> {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getY()
 							+ "";
@@ -112,7 +113,7 @@ public class WrapperTransporterLocationEditer {
 			sendCoordinateChange(string, 1, currIndex);
 		});
 
-		zCoordinateBox = new EditBoxSuppliableName(gui, guiWidth + 94 + xOffset, guiHeight + 90 + yOffset, 70, 15,
+		zCoordinateBox = new EditBoxSuppliableName(EditBoxTextures.OVERDRIVE_EDIT_BOX, gui, guiWidth + 94 + xOffset, guiHeight + 90 + yOffset, 70, 15,
 				() -> {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getZ()
 							+ "";

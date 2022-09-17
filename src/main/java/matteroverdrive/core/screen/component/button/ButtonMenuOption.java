@@ -36,9 +36,9 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 		this.bar = bar;
 		this.visible = bar.getIsExtended();
 		this.isActivated = isActivated;
-		defaultLoc = new ResourceLocation(type.defaultSlot.getTextureLoc());
-		activeLoc = new ResourceLocation(type.activeSlot.getTextureLoc());
-		iconLoc = new ResourceLocation(type.icon.getTextureLoc());
+		defaultLoc = type.defaultSlot.getTexture();
+		activeLoc = type.activeSlot.getTexture();
+		iconLoc = type.icon.getTexture();
 	}
 
 	@Override
@@ -50,25 +50,25 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 			if (isActivated || isHoveredOrFocused()) {
 				SlotType slot = type.activeSlot;
 				UtilsRendering.bindTexture(activeLoc);
-				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(), slot.getHeight(),
-						slot.getHeight(), slot.getWidth());
+				blit(stack, x, y, slot.getTextureU(), slot.getTextureV(), slot.getUWidth(), slot.getVHeight(),
+						slot.getTextureHeight(), slot.getTextureWidth());
 				IconType icon = type.icon;
-				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
-				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
+				int widthOffset = (int) ((slot.getTextureWidth() - icon.getTextureWidth()) / 2);
+				int heightOffset = (int) ((slot.getTextureHeight() - icon.getTextureHeight()) / 2);
 				UtilsRendering.bindTexture(iconLoc);
-				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureX(), icon.getTextureY(),
-						icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
+				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureU(), icon.getTextureV(),
+						icon.getUWidth(), icon.getVHeight(), icon.getTextureHeight(), icon.getTextureWidth());
 			} else {
 				SlotType slot = type.defaultSlot;
 				UtilsRendering.bindTexture(defaultLoc);
-				blit(stack, x, y, slot.getTextureX(), slot.getTextureY(), slot.getWidth(), slot.getHeight(),
-						slot.getHeight(), slot.getWidth());
+				blit(stack, x, y, slot.getTextureU(), slot.getTextureV(), slot.getUWidth(), slot.getVHeight(),
+						slot.getTextureHeight(), slot.getTextureWidth());
 				IconType icon = type.icon;
-				int widthOffset = (int) ((slot.getWidth() - icon.getTextWidth()) / 2);
-				int heightOffset = (int) ((slot.getHeight() - icon.getTextHeight()) / 2);
+				int widthOffset = (int) ((slot.getTextureWidth() - icon.getTextureWidth()) / 2);
+				int heightOffset = (int) ((slot.getTextureHeight() - icon.getTextureHeight()) / 2);
 				UtilsRendering.bindTexture(iconLoc);
-				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureX(), icon.getTextureY(),
-						icon.getTextWidth(), icon.getTextHeight(), icon.getTextHeight(), icon.getTextWidth());
+				blit(stack, x + widthOffset, y + heightOffset, icon.getTextureU(), icon.getTextureV(),
+						icon.getUWidth(), icon.getVHeight(), icon.getTextureHeight(), icon.getTextureWidth());
 			}
 		}
 	}

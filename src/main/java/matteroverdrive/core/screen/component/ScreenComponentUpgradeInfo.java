@@ -10,7 +10,6 @@ import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 
@@ -20,7 +19,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 	private String customTimeKey = null;
 
 	public ScreenComponentUpgradeInfo(GenericScreen<?> gui, int x, int y, int[] screenNumbers) {
-		super(new ResourceLocation(""), gui, x, y, 0, 0, screenNumbers);
+		super(OverdriveTextures.NONE, gui, x, y, 0, 0, screenNumbers);
 	}
 
 	public ScreenComponentUpgradeInfo setMatterPerTick() {

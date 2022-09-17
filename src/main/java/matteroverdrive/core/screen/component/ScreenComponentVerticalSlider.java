@@ -4,22 +4,11 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.References;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
-import net.minecraft.resources.ResourceLocation;
 
 public class ScreenComponentVerticalSlider extends OverdriveScreenComponent {
-
-	private static final String BASE_TEXTURE_LOC = "textures/gui/slider/";
-
-	private static final ResourceLocation SLIDER_BACKGROUND = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "vertical_slider_bg.png");
-	private static final ResourceLocation SLIDER_ON = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "vertical_slider_active.png");
-	private static final ResourceLocation SLIDER_OFF = new ResourceLocation(References.ID,
-			BASE_TEXTURE_LOC + "vertical_slider_inactive.png");
 
 	private int sliderYOffset = 0;
 	private boolean active = false;
@@ -30,7 +19,7 @@ public class ScreenComponentVerticalSlider extends OverdriveScreenComponent {
 	private Consumer<Integer> sliderClickConsumer;
 
 	public ScreenComponentVerticalSlider(GenericScreen<?> gui, int x, int y, int height, int[] screenNumbers) {
-		super(new ResourceLocation(""), gui, x, y, 15, height < 30 ? 30 : height, screenNumbers);
+		super(OverdriveTextures.NONE, gui, x, y, 15, height < 30 ? 30 : height, screenNumbers);
 	}
 
 	public void setDragConsumer(Consumer<Integer> responder) {
@@ -76,7 +65,7 @@ public class ScreenComponentVerticalSlider extends OverdriveScreenComponent {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		UtilsRendering.bindTexture(SLIDER_BACKGROUND);
+		UtilsRendering.bindTexture(OverdriveTextures.VERTICAL_SLIDER_BG.getTexture());
 		blit(stack, x - 1, y, 15, 6, 0, 0, 15, 6, 15, 30);
 		int permutations = (int) ((double) (height - 12) / 18.0D);
 		int remainder = height - permutations * 18 - 12;
@@ -86,9 +75,9 @@ public class ScreenComponentVerticalSlider extends OverdriveScreenComponent {
 		blit(stack, x - 1, y + 6 + 18 * permutations, 15, remainder, 0, 6, 15, remainder, 15, 30);
 		blit(stack, x - 1, y + height - 6, 15, 6, 0, 24, 15, 6, 15, 30);
 		if (active) {
-			UtilsRendering.bindTexture(SLIDER_ON);
+			UtilsRendering.bindTexture(OverdriveTextures.VERTICAL_SLIDER_ACTIVE.getTexture());
 		} else {
-			UtilsRendering.bindTexture(SLIDER_OFF);
+			UtilsRendering.bindTexture(OverdriveTextures.VERTICAL_SLIDER_INACTIVE.getTexture());
 		}
 		blit(stack, x - 1, y + 2 + sliderYOffset, 15, 15, 0, 0, 15, 15, 15, 15);
 	}

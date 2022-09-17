@@ -19,6 +19,7 @@ import matteroverdrive.core.screen.component.button.ButtonItemPattern;
 import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSearchbar;
+import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.client.Minecraft;
@@ -70,7 +71,7 @@ public class WrapperPatternMonitorScreen {
 		searchbar.setTextColor(UtilsRendering.WHITE);
 		searchbar.setTextColorUneditable(UtilsRendering.WHITE);
 
-		orderQuantityBox = new EditBoxOverdrive(screen, guiWidth + x + 44, guiHeight + y + 123, 54, 15);
+		orderQuantityBox = new EditBoxOverdrive(EditBoxTextures.OVERDRIVE_EDIT_BOX, screen, guiWidth + x + 44, guiHeight + y + 123, 54, 15);
 		orderQuantityBox.setTextColor(UtilsRendering.WHITE);
 		orderQuantityBox.setTextColorUneditable(UtilsRendering.WHITE);
 		orderQuantityBox.setMaxLength(4);

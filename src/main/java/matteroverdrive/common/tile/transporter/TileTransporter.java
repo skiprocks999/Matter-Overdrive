@@ -247,12 +247,6 @@ public class TileTransporter extends GenericMachineTile {
 		super.saveAdditional(tag);
 
 		CompoundTag additional = new CompoundTag();
-		additional.putDouble("progress", getProgress());
-		additional.putDouble("speed", getCurrentSpeed());
-		additional.putDouble("usage", getCurrentPowerUsage());
-		additional.putBoolean("muffled", isMuffled());
-		additional.putDouble("radius", getCurrentRange());
-		additional.putDouble("matusage", getCurrentMatterUsage());
 		additional.putInt("cooldown", cooldownProp.get());
 		additional.putInt("dest", destinationProp.get());
 		additional.put("locations", locationManager.serializeNbt());
@@ -265,13 +259,7 @@ public class TileTransporter extends GenericMachineTile {
 		super.load(tag);
 
 		CompoundTag additional = tag.getCompound("additional");
-		setProgress(additional.getDouble("progress"));
-		setSpeed(additional.getDouble("speed"));
-		setPowerUsage(additional.getDouble("usage"));
-		setMatterUsage(additional.getDouble("matusage"));
 		cooldownProp.set(additional.getInt("cooldown"));
-		setRange(additional.getDouble("radius"));
-		setMuffled(additional.getBoolean("muffled"));
 		destinationProp.set(additional.getInt("dest"));
 		locationManagerProp.set(additional.getCompound("locations"));
 	}
