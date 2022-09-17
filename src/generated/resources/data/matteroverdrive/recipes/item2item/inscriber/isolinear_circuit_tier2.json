@@ -4,11 +4,11 @@
   "iteminputs": {
     "0": {
       "count": 1,
-      "tag": "minecraft:root"
+      "tag": "forge:circuits/basic"
     },
     "1": {
       "count": 1,
-      "tag": "minecraft:root"
+      "tag": "forge:ingots/gold"
     },
     "count": 2
   },

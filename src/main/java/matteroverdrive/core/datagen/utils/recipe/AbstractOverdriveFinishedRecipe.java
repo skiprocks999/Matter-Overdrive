@@ -101,7 +101,7 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 			}
 			for(Pair<TagKey<Item>, Integer> itemTags: tagItemIngredients) {
 				itemJson = new JsonObject();
-				itemJson.addProperty("tag", itemTags.getFirst().registry().registry().toString());
+				itemJson.addProperty("tag", itemTags.getFirst().location().toString());
 				itemJson.addProperty(AbstractOverdriveRecipeSerializer.COUNT, itemTags.getSecond());
 				itemInputs.add(index + "", itemJson);
 				index++;
@@ -125,7 +125,7 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 			}
 			for(Pair<TagKey<Fluid>, Integer> itemTags: tagFluidIngredients) {
 				fluidJson = new JsonObject();
-				fluidJson.addProperty("tag", itemTags.getFirst().registry().registry().toString());
+				fluidJson.addProperty("tag", itemTags.getFirst().location().toString());
 				fluidJson.addProperty("amount", itemTags.getSecond());
 				fluidInputs.add(index + "", fluidJson);
 				index++;
