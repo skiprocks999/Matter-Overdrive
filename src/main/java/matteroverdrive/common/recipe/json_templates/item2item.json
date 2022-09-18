@@ -1,5 +1,9 @@
 {
 	"type" : "recipecatgoeshere",
+	//how much energy per tick a machine will use
+	"usage" : 1.0,
+	//how many ticks a recipe will take
+	"time" : 50.0,
 	//this field is manditory!
 	"iteminputs" : {
 		"count" : 2, //can be any number in theory; must have this field

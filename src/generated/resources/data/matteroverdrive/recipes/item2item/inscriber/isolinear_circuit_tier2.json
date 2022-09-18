@@ -15,5 +15,7 @@
   "output": {
     "count": 1,
     "item": "matteroverdrive:isolinear_circuit_tier2"
-  }
+  },
+  "time": 250.0,
+  "usage": 250.0
 }

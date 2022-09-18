@@ -385,11 +385,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		return isPowered();
 	}
 
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
 	public CompoundTag getNetworkData() {
 		CompoundTag data = new CompoundTag();
 

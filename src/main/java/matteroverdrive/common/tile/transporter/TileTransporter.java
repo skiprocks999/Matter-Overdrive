@@ -80,6 +80,7 @@ public class TileTransporter extends GenericMachineTile {
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
 		setRange(DEFAULT_RADIUS);
+		setProcessingTime(BUILD_UP_TIME);
 
 		defaultSpeed = DEFAULT_SPEED;
 		defaultMatterUsage = MATTER_USAGE;
@@ -87,7 +88,6 @@ public class TileTransporter extends GenericMachineTile {
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
 		defaultRange = DEFAULT_RADIUS;
-		defaultProcessingTime = BUILD_UP_TIME;
 
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
@@ -262,11 +262,6 @@ public class TileTransporter extends GenericMachineTile {
 		cooldownProp.set(additional.getInt("cooldown"));
 		destinationProp.set(additional.getInt("dest"));
 		locationManagerProp.set(additional.getCompound("locations"));
-	}
-
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
 	}
 
 	public Pair<Boolean, Integer> validDestination(TransporterLocationWrapper loc) {

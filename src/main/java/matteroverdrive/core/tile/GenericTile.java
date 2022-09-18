@@ -140,7 +140,8 @@ public abstract class GenericTile extends BlockEntity
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
 		CompoundTag tag = super.getUpdateTag();
-		getFirstContactData(tag);
+		//getFirstContactData(tag);
+		saveAdditional(tag);
 		return tag;
 	}
 
@@ -197,11 +198,6 @@ public abstract class GenericTile extends BlockEntity
 	@Override
 	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
-	}
-
-	// Override this if your class overrides saveAdditional()
-	public void getFirstContactData(CompoundTag tag) {
-
 	}
 
 }

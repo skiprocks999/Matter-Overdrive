@@ -36,9 +36,14 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 	private List<Pair<TagKey<Fluid>, Integer>> tagFluidIngredients = new ArrayList<>();
 	
 	private double experience = 0.0;
+	private double processTime = 0.0;
+	private double usagePerTick = 0.0;
 	
-	protected AbstractOverdriveFinishedRecipe(RecipeSerializer<?> serializer) {
+	protected AbstractOverdriveFinishedRecipe(RecipeSerializer<?> serializer, double experience, double processTime, double usagePerTick) {
 		this.serializer = serializer;
+		this.experience = experience;
+		this.processTime = processTime;
+		this.usagePerTick = usagePerTick;
 	}
 	
 	public AbstractOverdriveFinishedRecipe name(RecipeCategory category, String parent, String name) {
@@ -84,6 +89,9 @@ public abstract class AbstractOverdriveFinishedRecipe implements FinishedRecipe 
 	@Override
 	public void serializeRecipeData(JsonObject recipeJson) {
 		boolean inputsFlag = false;
+		
+		recipeJson.addProperty(AbstractOverdriveRecipeSerializer.TIME, processTime);
+		recipeJson.addProperty(AbstractOverdriveRecipeSerializer.USAGE, usagePerTick);
 		
 		int itemInputsCount = itemIngredients.size() + tagItemIngredients.size();
 		if(itemInputsCount > 0) {

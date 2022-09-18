@@ -43,11 +43,6 @@ public abstract class GenericRedstoneTile extends GenericTile implements IRedsto
 	}
 
 	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
-	@Override
 	public void setMode(int mode) {
 		currRedstoneModeProp.set(mode);
 	}

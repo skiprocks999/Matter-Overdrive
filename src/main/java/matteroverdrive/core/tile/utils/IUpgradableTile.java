@@ -71,34 +71,49 @@ public interface IUpgradableTile {
 	}
 
 	// MUTATOR METHODS
+	
+	//boolean indicates change
 
-	default void setSpeed(double speed) {
+	default boolean setSpeed(double speed) {
+		return false;
 	}
 
-	default void setMatterUsage(double matter) {
+	default boolean setMatterUsage(double matter) {
+		return false;
 	}
 
-	default void setFailure(float failure) {
+	default boolean setFailure(float failure) {
+		return false;
 	}
 
-	default void setMatterStorage(double storage) {
+	default boolean setMatterStorage(double storage) {
+		return false;
 	}
 
-	default void setPowerStorage(double storage) {
+	default boolean setPowerStorage(double storage) {
+		return false;
 	}
 
-	default void setPowerUsage(double usage) {
+	default boolean setPowerUsage(double usage) {
+		return false;
 	}
 
-	default void setRange(double range) {
+	default boolean setRange(double range) {
+		return false;
 	}
 
-	default void setMuffled(boolean muffled) {
+	default boolean setMuffled(boolean muffled) {
+		return false;
+	}
+	
+	default boolean setProcessingTime(double time) {
+		return false;
 	}
 
 	// MISC
 
-	default void setAcceleratorMultiplier(double multiplier) {
+	default boolean setAcceleratorMultiplier(double multiplier) {
+		return false;
 	}
 
 	default double getProcessingTime() {

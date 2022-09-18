@@ -13,21 +13,23 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public abstract class AbstractFluidRecipe extends AbstractOverdriveRecipe {
 
-	protected AbstractFluidRecipe(ResourceLocation recipeID, double experience) {
-		super(recipeID, experience);
+	protected AbstractFluidRecipe(ResourceLocation recipeID, double experience, double processTime, double usage) {
+		super(recipeID, experience, processTime, usage);
 	}
 
-	protected AbstractFluidRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, double experience) {
-		super(recipeID, itemBiproducts, experience);
+	protected AbstractFluidRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, double experience,
+			double processTime, double usage) {
+		super(recipeID, itemBiproducts, experience, processTime, usage);
 	}
 
-	protected AbstractFluidRecipe(ProbableFluid[] fluidBiproducts, ResourceLocation recipeID, double experience) {
-		super(fluidBiproducts, recipeID, experience);
+	protected AbstractFluidRecipe(ProbableFluid[] fluidBiproducts, ResourceLocation recipeID, double experience,
+			double processTime, double usage) {
+		super(fluidBiproducts, recipeID, experience, processTime, usage);
 	}
 
 	protected AbstractFluidRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts,
-			ProbableFluid[] fluidBiproducts, double experience) {
-		super(recipeID, itemBiproducts, fluidBiproducts, experience);
+			ProbableFluid[] fluidBiproducts, double experience, double processTime, double usage) {
+		super(recipeID, itemBiproducts, fluidBiproducts, experience, processTime, usage);
 	}
 
 	@Override

@@ -16,8 +16,8 @@ public class InscriberRecipe extends Item2ItemRecipe {
 	public static final ResourceLocation RECIPE_ID = new ResourceLocation(MOD_ID, RECIPE_GROUP);
 
 	public InscriberRecipe(ResourceLocation recipeID, CountableIngredient[] inputs, ItemStack output,
-			double experience) {
-		super(recipeID, inputs, output, experience);
+			double experience, double processTime, double usage) {
+		super(recipeID, inputs, output, experience, processTime, usage);
 
 	}
 

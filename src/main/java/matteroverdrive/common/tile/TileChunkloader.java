@@ -49,9 +49,4 @@ public class TileChunkloader extends GenericMachineTile {
 		// TODO implement
 	}
 
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
-	}
-
 }

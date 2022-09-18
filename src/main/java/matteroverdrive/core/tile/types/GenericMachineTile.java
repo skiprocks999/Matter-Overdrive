@@ -21,8 +21,8 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 
 	private boolean running = false;
 	private boolean powered = false;
-	private double progress = 0.0;
-	private double recipeValue = 0.0;
+	private double progress = 0.0D;
+	private double recipeValue = 0.0D;
 
 	private final Property<Boolean> runningProp;
 	private final Property<Boolean> poweredProp;
@@ -94,17 +94,26 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	}
 
 	@Override
-	public void setMatterStorage(double storage) {
+	public boolean setMatterStorage(double storage) {
+		double prevStor = 0.0;
 		if (hasMatterStorageCap()) {
-			getMatterStorageCap().updateMaxMatterStorage(storage);
+			CapabilityMatterStorage stor = getMatterStorageCap();
+			prevStor = stor.getMaxMatterStored();
+			stor.updateMaxMatterStorage(storage);
 		}
+		return prevStor != storage;
 	}
 
 	@Override
-	public void setPowerStorage(double storage) {
+	public boolean setPowerStorage(double storage) {
+		int newStor = (int) storage;
+		int prevStor = 0;
 		if (hasEnergyStorageCap()) {
-			getEnergyStorageCap().updateMaxEnergyStorage((int) storage);
+			CapabilityEnergyStorage stor = getEnergyStorageCap();
+			prevStor = stor.getMaxEnergyStored();
+			getEnergyStorageCap().updateMaxEnergyStorage(newStor);
 		}
+		return newStor != prevStor;
 	}
 
 	public void addEnergyStorageCap(CapabilityEnergyStorage cap) {
@@ -177,11 +186,6 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 		setPowered(additional.getBoolean("isPowered"));
 		setProgress(additional.getDouble("currProgress"));
 		setRecipeValue(additional.getDouble("currRecipeValue"));
-	}
-	
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
 	}
 
 }

@@ -27,6 +27,8 @@ public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdr
 	public static final String FLUID_BIPRODUCTS = "fluidbi";
 	public static final String OUTPUT = "output";
 	public static final String EXPERIENCE = "experience";
+	public static final String TIME = "time";
+	public static final String USAGE = "usage";
 
 	private Class<T> RECIPE_CLASS;
 
@@ -156,6 +158,20 @@ public abstract class AbstractOverdriveRecipeSerializer<T extends AbstractOverdr
 
 	public static double getExperience(JsonObject json) {
 		return json.has(EXPERIENCE) ? json.get(EXPERIENCE).getAsDouble() : 0;
+	}
+	
+	public static double getProcessTime(JsonObject json) {
+		if(!json.has(TIME)) {
+			throw new UnsupportedOperationException("You must include a Processing Time!");
+		}
+		return json.get(TIME).getAsDouble();
+	}
+	
+	public static double getUsagePerTick(JsonObject json) {
+		if(!json.has(USAGE)) {
+			throw new UnsupportedOperationException("You must include a Usage per Tick!");
+		}
+		return json.get(USAGE).getAsDouble();
 	}
 
 }

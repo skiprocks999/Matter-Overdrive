@@ -18,7 +18,6 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	public double defaultPowerUsage = 0;
 	public double defaultRange = 0;
 	public float defaultFailureChance = 0;
-	public double defaultProcessingTime = 0;
 
 	// Currents
 	private double currentSpeed = 0;
@@ -26,6 +25,8 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	private double currentPowerUsage = 0;
 	private double currentRange = 0;
 	private float currentFailureChance = 0;
+	
+	private double currentProcessingTime = 0;
 
 	private double saMultiplier = 1; // we don't save this to NBT to make out lives easier
 
@@ -33,30 +34,33 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	private boolean isMuffled = false;
 
 	// Properties
-	public final Property<Double> currSpeedProp;
-	public final Property<Double> currMatterUsage;
-	public final Property<Double> currPowerUsage;
-	public final Property<Double> currRangeProp;
-	public final Property<Boolean> currIsMuffled;
-	public final Property<Double> currSAMultiplier;
-	public final Property<Float> currFailureChance;
+	private final Property<Double> currSpeedProp;
+	private final Property<Double> currMatterUsageProp;
+	private final Property<Double> currPowerUsageProp;
+	private final Property<Double> currRangeProp;
+	private final Property<Boolean> currIsMuffledProp;
+	private final Property<Double> currSAMultiplierProp;
+	private final Property<Float> currFailureChanceProp;
+	private final Property<Double> currProcessingTimeProp;
 
 	public GenericUpgradableTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.currSpeedProp = this.getPropertyManager()
 				.addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentSpeed, speed -> currentSpeed = speed));
-		this.currMatterUsage = this.getPropertyManager().addTrackedProperty(
+		this.currMatterUsageProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.DOUBLE.create(() -> currentMatterUsage, usage -> currentMatterUsage = usage));
-		this.currPowerUsage = this.getPropertyManager().addTrackedProperty(
+		this.currPowerUsageProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.DOUBLE.create(() -> currentPowerUsage, usage -> currentPowerUsage = usage));
 		this.currRangeProp = this.getPropertyManager()
 				.addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentRange, range -> currentRange = range));
-		this.currIsMuffled = this.getPropertyManager()
+		this.currIsMuffledProp = this.getPropertyManager()
 				.addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> isMuffled, muff -> isMuffled = muff));
-		this.currSAMultiplier = this.getPropertyManager()
+		this.currSAMultiplierProp = this.getPropertyManager()
 				.addTrackedProperty(PropertyTypes.DOUBLE.create(() -> saMultiplier, mult -> saMultiplier = mult));
-		this.currFailureChance = this.getPropertyManager().addTrackedProperty(
+		this.currFailureChanceProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.FLOAT.create(() -> currentFailureChance, fail -> currentFailureChance = fail));
+		this.currProcessingTimeProp = this.getPropertyManager()
+				.addTrackedProperty(PropertyTypes.DOUBLE.create(() -> currentProcessingTime, time -> currentProcessingTime = time));
 	}
 
 	// INTERFACE HANDLING
@@ -100,7 +104,7 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 
 	@Override
 	public boolean isMuffled() {
-		return this.currIsMuffled.get();
+		return this.currIsMuffledProp.get();
 	}
 
 	@Override
@@ -110,17 +114,17 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 
 	@Override
 	public double getCurrentMatterUsage() {
-		return this.currMatterUsage.get();
+		return this.currMatterUsageProp.get();
 	}
 
 	@Override
 	public float getCurrentFailure() {
-		return this.currFailureChance.get();
+		return this.currFailureChanceProp.get();
 	}
 
 	@Override
 	public double getCurrentPowerUsage() {
-		return this.currPowerUsage.get();
+		return this.currPowerUsageProp.get();
 	}
 
 	@Override
@@ -130,49 +134,62 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 
 	@Override
 	public double getAcceleratorMultiplier() {
-		return this.currSAMultiplier.get();
+		return this.currSAMultiplierProp.get();
 	}
 
 	// setters
 
 	@Override
-	public void setAcceleratorMultiplier(double multiplier) {
-		this.currSAMultiplier.set(multiplier);
+	public boolean setAcceleratorMultiplier(double multiplier) {
+		this.currSAMultiplierProp.set(multiplier);
+		return currSAMultiplierProp.isDirtyNoUpdate();
 	}
 
 	@Override
-	public void setSpeed(double speed) {
+	public boolean setSpeed(double speed) {
 		this.currSpeedProp.set(speed);
+		return currSpeedProp.isDirty();
 	}
 
 	@Override
-	public void setMatterUsage(double matter) {
-		this.currMatterUsage.set(matter);
+	public boolean setMatterUsage(double matter) {
+		this.currMatterUsageProp.set(matter);
+		return currMatterUsageProp.isDirtyNoUpdate();
 	}
 
 	@Override
-	public void setFailure(float failure) {
-		this.currFailureChance.set(failure);
+	public boolean setFailure(float failure) {
+		this.currFailureChanceProp.set(failure);
+		return currFailureChanceProp.isDirtyNoUpdate();
 	}
 
 	@Override
-	public void setPowerUsage(double usage) {
-		this.currPowerUsage.set(usage);
+	public boolean setPowerUsage(double usage) {
+		this.currPowerUsageProp.set(usage);
+		return currPowerUsageProp.isDirtyNoUpdate();
 	}
 
 	@Override
-	public void setRange(double range) {
+	public boolean setRange(double range) {
 		this.currRangeProp.set(range);
+		return currRangeProp.isDirtyNoUpdate();
 	}
 
 	@Override
-	public void setMuffled(boolean muffled) {
-		this.currIsMuffled.set(muffled);
+	public boolean setMuffled(boolean muffled) {
+		this.currIsMuffledProp.set(muffled);
+		return currIsMuffledProp.isDirtyNoUpdate();
+	}
+	
+	@Override
+	public boolean setProcessingTime(double time) {
+		this.currProcessingTimeProp.set(time);
+		return currProcessingTimeProp.isDirtyNoUpdate();
 	}
 
 	@Override
 	public double getProcessingTime() {
-		return defaultProcessingTime;
+		return currentProcessingTime;
 	}
 	
 	@Override
@@ -181,11 +198,12 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 		
 		CompoundTag additional = new CompoundTag();
 		additional.putDouble("currSpeed", currSpeedProp.get());
-		additional.putDouble("currMatterUsage", currMatterUsage.get());
-		additional.putDouble("currPowerUsage", currPowerUsage.get());
+		additional.putDouble("currMatterUsage", currMatterUsageProp.get());
+		additional.putDouble("currPowerUsage", currPowerUsageProp.get());
 		additional.putDouble("currRange", currRangeProp.get());
-		additional.putBoolean("currIsMuffled", currIsMuffled.get());
-		additional.putFloat("currFailure", currFailureChance.get());
+		additional.putBoolean("currIsMuffled", currIsMuffledProp.get());
+		additional.putFloat("currFailure", currFailureChanceProp.get());
+		additional.putDouble("procTime", currentProcessingTime);
 		
 		tag.put("upgradeinfo", additional);
 	}
@@ -202,11 +220,7 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 		setRange(additional.getDouble("currRange"));
 		setFailure(additional.getFloat("currFailure"));
 		setMuffled(additional.getBoolean("currIsMuffled"));
-	}
-	
-	@Override
-	public void getFirstContactData(CompoundTag tag) {
-		saveAdditional(tag);
+		setProcessingTime(additional.getDouble("procTime"));
 	}
 
 }

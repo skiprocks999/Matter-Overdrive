@@ -48,13 +48,13 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		setSpeed(DEFAULT_SPEED);
 		setFailure(FAILURE_CHANCE);
 		setPowerUsage(USAGE_PER_TICK);
+		setProcessingTime(OPERATING_TIME);
 
 		defaultSpeed = DEFAULT_SPEED;
 		defaultFailureChance = FAILURE_CHANCE;
 		defaultMatterStorage = MATTER_STORAGE;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
-		defaultProcessingTime = OPERATING_TIME;
 
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));

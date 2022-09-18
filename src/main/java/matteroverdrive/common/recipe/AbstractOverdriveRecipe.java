@@ -47,36 +47,47 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 	private ProbableItem[] itemBiProducts;
 	private ProbableFluid[] fluidBiProducts;
 
+	private double processTime;
+	private double usagePerTick;
+
 	private HashMap<Integer, List<Integer>> itemArrangements = new HashMap<>();
 	private List<Integer> fluidArrangement;
 
-	protected AbstractOverdriveRecipe(ResourceLocation recipeID, double experience) {
+	protected AbstractOverdriveRecipe(ResourceLocation recipeID, double experience, double processTime, double usage) {
 		id = recipeID;
 		hasItemBi = false;
 		hasFluidBi = false;
 		xp = experience;
+		this.processTime = processTime;
+		usagePerTick = usage;
 	}
 
-	protected AbstractOverdriveRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, double experience) {
+	protected AbstractOverdriveRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts, double experience,
+			double processTime, double usage) {
 		id = recipeID;
 		hasItemBi = true;
 		itemBiProducts = itemBiproducts;
 		itemBiCount = itemBiproducts.length;
 		hasFluidBi = false;
 		xp = experience;
+		this.processTime = processTime;
+		usagePerTick = usage;
 	}
 
-	protected AbstractOverdriveRecipe(ProbableFluid[] fluidBiproducts, ResourceLocation recipeID, double experience) {
+	protected AbstractOverdriveRecipe(ProbableFluid[] fluidBiproducts, ResourceLocation recipeID, double experience,
+			double processTime, double usage) {
 		id = recipeID;
 		hasItemBi = false;
 		hasFluidBi = true;
 		fluidBiProducts = fluidBiproducts;
 		fluidBiCount = fluidBiproducts.length;
 		xp = experience;
+		this.processTime = processTime;
+		usagePerTick = usage;
 	}
 
 	protected AbstractOverdriveRecipe(ResourceLocation recipeID, ProbableItem[] itemBiproducts,
-			ProbableFluid[] fluidBiproducts, double experience) {
+			ProbableFluid[] fluidBiproducts, double experience, double processTime, double usage) {
 		id = recipeID;
 		hasItemBi = true;
 		itemBiProducts = itemBiproducts;
@@ -85,6 +96,8 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 		fluidBiProducts = fluidBiproducts;
 		fluidBiCount = fluidBiproducts.length;
 		xp = experience;
+		this.processTime = processTime;
+		usagePerTick = usage;
 	}
 
 	/**
@@ -181,6 +194,14 @@ public abstract class AbstractOverdriveRecipe implements Recipe<RecipeWrapper> {
 
 	public double getXp() {
 		return xp;
+	}
+
+	public double getProcessTime() {
+		return processTime;
+	}
+
+	public double getUsagePerTick() {
+		return usagePerTick;
 	}
 
 	public static List<AbstractOverdriveRecipe> findRecipesbyType(RecipeType<? extends AbstractOverdriveRecipe> typeIn,

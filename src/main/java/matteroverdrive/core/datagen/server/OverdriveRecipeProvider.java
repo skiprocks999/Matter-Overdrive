@@ -40,17 +40,17 @@ public class OverdriveRecipeProvider extends RecipeProvider {
 
 	private void addInscriberRecipes(Consumer<FinishedRecipe> consumer) {
 		
-		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2).get()), "isolinear_circuit_tier2")
+		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2).get()), "isolinear_circuit_tier2", 250, 250)
 			.addItemTagInput(OverdriveTags.Items.CIRCUITS_BASIC, 1).addItemTagInput(OverdriveTags.Items.GOLD_INGOT, 1).complete(consumer);
-		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3).get()), "isolinear_circuit_tier3")
+		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3).get()), "isolinear_circuit_tier3", 300, 300)
 			.addItemTagInput(OverdriveTags.Items.CIRCUITS_ADVANCED, 1).addItemTagInput(OverdriveTags.Items.DIAMOND_GEM, 1).complete(consumer);
-		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4).get()), "isolinear_circuit_tier4")
+		inscriberRecipe(new ItemStack(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4).get()), "isolinear_circuit_tier4", 350, 350)
 			.addItemTagInput(OverdriveTags.Items.CIRCUITS_ELITE, 1).addItemTagInput(OverdriveTags.Items.EMERALD_GEM, 1).complete(consumer);
 	
 	}
 	
-	private FinishedRecipeItemOutput inscriberRecipe(ItemStack output, String name) {
-		return FinishedRecipeItemOutput.of(RecipeInit.INSCRIBER_SERIALIZER.get(), output)
+	private FinishedRecipeItemOutput inscriberRecipe(ItemStack output, String name, double processTime, double usage) {
+		return FinishedRecipeItemOutput.of(RecipeInit.INSCRIBER_SERIALIZER.get(), output, 0.0, processTime, usage)
 				.name(RecipeCategory.ITEM_2_ITEM, References.ID, INSCRIBER_LOC + "/" + name);
 	}
 

@@ -11,8 +11,8 @@ public class FinishedRecipeFluidOutput extends AbstractOverdriveFinishedRecipe {
 
 	private FluidStack output;
 	
-	private FinishedRecipeFluidOutput(RecipeSerializer<?> serializer, FluidStack stack) {
-		super(serializer);
+	private FinishedRecipeFluidOutput(RecipeSerializer<?> serializer, FluidStack stack, double experience, double processTime, double usage) {
+		super(serializer, experience, processTime, usage);
 		this.output = stack;
 	}
 
@@ -29,8 +29,8 @@ public class FinishedRecipeFluidOutput extends AbstractOverdriveFinishedRecipe {
 		return (FinishedRecipeFluidOutput) super.name(category, parent, name);
 	}
 	
-	public static FinishedRecipeFluidOutput of(RecipeSerializer<?> serializer, FluidStack output) {
-		return new FinishedRecipeFluidOutput(serializer, output);
+	public static FinishedRecipeFluidOutput of(RecipeSerializer<?> serializer, FluidStack output, double experience, double processTime, double usage) {
+		return new FinishedRecipeFluidOutput(serializer, output, experience, processTime, usage);
 	}
 
 }

@@ -89,8 +89,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		boolean flag = false;
 		if (!canRun()) {
 			flag = setPowered(false);
-			setPowerUsage(0);
-			flag |= currPowerUsage.isDirtyNoUpdate();
+			flag |= setPowerUsage(0);
 			if (flag) {
 				setChanged();
 			}
@@ -114,8 +113,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		}
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			flag = setPowered(false);
-			setPowerUsage(0);
-			flag |= currPowerUsage.isDirtyNoUpdate();
+			flag |= setPowerUsage(0);
 			if (flag) {
 				setChanged();
 			}

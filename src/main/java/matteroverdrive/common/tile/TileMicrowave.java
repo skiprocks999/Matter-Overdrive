@@ -42,11 +42,11 @@ public class TileMicrowave extends GenericMachineTile {
 
 		setSpeed(DEFAULT_SPEED);
 		setPowerUsage(USAGE_PER_TICK);
+		setProcessingTime(OPERATING_TIME);
 
 		defaultSpeed = DEFAULT_SPEED;
 		defaultPowerStorage = ENERGY_STORAGE;
 		defaultPowerUsage = USAGE_PER_TICK;
-		defaultProcessingTime = OPERATING_TIME;
 
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
