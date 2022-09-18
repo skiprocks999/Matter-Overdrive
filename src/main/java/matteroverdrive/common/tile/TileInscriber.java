@@ -75,6 +75,8 @@ public class TileInscriber extends GenericMachineTile {
 		if (!canRun()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
+			flag |= setProcessingTime(0);
+			flag |= setPowerUsage(0);
 			if (flag) {
 				setChanged();
 			}
@@ -88,6 +90,8 @@ public class TileInscriber extends GenericMachineTile {
 		if (input1.isEmpty() || input2.isEmpty()) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
+			flag |= setProcessingTime(0);
+			flag |= setPowerUsage(0);
 			if (flag) {
 				setChanged();
 			}
@@ -107,10 +111,18 @@ public class TileInscriber extends GenericMachineTile {
 		if (!matched) {
 			flag = setRunning(false);
 			flag |= setProgress(0);
+			flag |= setProcessingTime(0);
+			flag |= setPowerUsage(0);
 			if (flag) {
 				setChanged();
 			}
 			return;
+		}
+		
+		flag = setProcessingTime(cachedRecipe.getProcessTime());
+		flag |= updatePowerUsageFromRecipe(cachedRecipe.getUsagePerTick());
+		if(flag) {
+			setChanged();
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
@@ -126,7 +138,7 @@ public class TileInscriber extends GenericMachineTile {
 			setRunning(true);
 			incrementProgress(getCurrentSpeed());
 			energy.removeEnergy((int) getCurrentPowerUsage());
-			if (getProgress() >= OPERATING_TIME) {
+			if (getProgress() >= getProcessingTime()) {
 				setProgress(0);
 				if (output.isEmpty()) {
 					inv.setStackInSlot(2, result.copy());
@@ -138,7 +150,6 @@ public class TileInscriber extends GenericMachineTile {
 				for (int i = 0; i < inputs.size(); i++) {
 					inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
 				}
-
 			}
 			setChanged();
 		} else {

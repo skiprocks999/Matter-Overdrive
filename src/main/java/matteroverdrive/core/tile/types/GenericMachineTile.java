@@ -1,6 +1,7 @@
 package matteroverdrive.core.tile.types;
 
 import matteroverdrive.common.item.ItemUpgrade;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -159,6 +160,21 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
+	}
+	
+	public boolean updatePowerUsageFromRecipe(double usage) {
+		defaultPowerUsage = usage;
+		if(!setPowerUsage(usage)) {
+			return false;
+		}
+		double powerUsage = getDefaultPowerUsage();
+		for (ItemStack stack : getInventoryCap().getUpgrades()) {
+			if (!stack.isEmpty()) {
+				UpgradeType upgrade = ((ItemUpgrade) stack.getItem()).type;
+				powerUsage *= upgrade.powerUsageBonus;
+			}
+		}
+		return setPowerUsage((int) powerUsage);
 	}
 	
 	@Override
