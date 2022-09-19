@@ -1,43 +1,37 @@
 package matteroverdrive.compatibility.jei.utils.label;
 
-import matteroverdrive.common.recipe.AbstractOverdriveRecipe;
-import matteroverdrive.compatibility.jei.categories.OverdriveRecipeCategory;
-import net.minecraft.network.chat.Component;
+import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipeCategory;
+import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.MutableComponent;
 
 public class GenericLabelWrapper {
 
-	protected static final String POWER = "power";
+	protected final int color;
+	protected final int yPos;
+	protected final int xPos;
+	protected final String name;
 
-	private int COLOR;
-	private int Y_POS;
-	private int X_POS;
-	private String NAME;
-
-	public GenericLabelWrapper(int color, int yPos, int endXPos, String name) {
-		COLOR = color;
-		Y_POS = yPos;
-		X_POS = endXPos;
-		NAME = name;
+	public GenericLabelWrapper(int color, int xPos, int yPos, String name) {
+		this.color = color;
+		this.yPos = yPos;
+		this.xPos = xPos;
+		this.name = name;
 	}
 
 	public int getColor() {
-		return COLOR;
+		return color;
 	}
 
 	public int getYPos() {
-		return Y_POS;
+		return yPos;
 	}
 
 	public int getXPos() {
-		return X_POS;
+		return xPos;
 	}
 
-	public String getLocation() {
-		return "jei.guilabel." + NAME;
+	public MutableComponent getComponent(AbstractOverdriveRecipeCategory<?> category, Object recipe) {
+		return UtilsText.jeiTranslated(name);
 	}
-
-	public MutableComponent getComponent(OverdriveRecipeCategory<?> category, AbstractOverdriveRecipe recipe) {
-		return Component.translatable(getLocation());
-	}
+	
 }

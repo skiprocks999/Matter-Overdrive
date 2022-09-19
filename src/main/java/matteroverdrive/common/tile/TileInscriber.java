@@ -140,15 +140,15 @@ public class TileInscriber extends GenericMachineTile {
 			energy.removeEnergy((int) getCurrentPowerUsage());
 			if (getProgress() >= getProcessingTime()) {
 				setProgress(0);
-				if (output.isEmpty()) {
-					inv.setStackInSlot(2, result.copy());
-				} else {
-					output.grow(result.getCount());
-				}
 				List<CountableIngredient> ings = cachedRecipe.getCountedIngredients();
 				List<Integer> slotOrientation = cachedRecipe.getItemArrangment(0);
 				for (int i = 0; i < inputs.size(); i++) {
 					inputs.get(slotOrientation.get(i)).shrink(ings.get(i).getStackSize());
+				}
+				if (output.isEmpty()) {
+					inv.setStackInSlot(2, result.copy());
+				} else {
+					output.grow(result.getCount());
 				}
 			}
 			setChanged();

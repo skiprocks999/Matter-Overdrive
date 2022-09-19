@@ -1,4 +1,4 @@
-package matteroverdrive.compatibility.jei.categories;
+package matteroverdrive.compatibility.jei.categories.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,13 +11,12 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.common.recipe.AbstractOverdriveRecipe;
 import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.arrows.animated.ArrowAnimatedWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.fluid.GenericFluidGaugeWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.item.GenericItemSlotWrapper;
-import matteroverdrive.compatibility.jei.utils.label.BiproductPercentWrapper;
 import matteroverdrive.compatibility.jei.utils.label.GenericLabelWrapper;
+import matteroverdrive.compatibility.jei.utils.label.types.BiproductPercentWrapper;
 import matteroverdrive.core.utils.UtilsText;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
@@ -33,11 +32,10 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class OverdriveRecipeCategory<T extends AbstractOverdriveRecipe> implements IRecipeCategory<T> {
+public abstract class AbstractOverdriveRecipeCategory<T> implements IRecipeCategory<T> {
 
 	private int ANIMATION_LENGTH;
 
@@ -67,8 +65,8 @@ public abstract class OverdriveRecipeCategory<T extends AbstractOverdriveRecipe>
 	private ScreenObjectWrapper[] staticArrows = new ScreenObjectWrapper[0];
 	private ScreenObjectWrapper[] backgroundExtra = new ScreenObjectWrapper[0];
 
-	public OverdriveRecipeCategory(IGuiHelper guiHelper, ResourceLocation loc, ItemStack inputMachine,
-			ScreenObjectWrapper wrapper, int animationTime) {
+	public AbstractOverdriveRecipeCategory(IGuiHelper guiHelper, ItemStack inputMachine, ScreenObjectWrapper wrapper, 
+			int animationTime) {
 
 		ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, inputMachine);
 		BACKGROUND = guiHelper.createDrawable(wrapper.getTexture(), wrapper.getTextX(), wrapper.getTextY(),
@@ -439,6 +437,6 @@ public abstract class OverdriveRecipeCategory<T extends AbstractOverdriveRecipe>
 
 	public List<FluidStack> getFluidOutputs(T recipe) {
 		return Collections.emptyList();
-	}
+	}  
 
 }

@@ -5,12 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.common.recipe.item2item.Item2ItemRecipe;
-import matteroverdrive.compatibility.jei.categories.OverdriveRecipeCategory;
+import matteroverdrive.compatibility.jei.categories.base.OverdriveRecipeCategory;
 import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
 import matteroverdrive.core.recipe.ProbableFluid;
 import matteroverdrive.core.utils.UtilsCapability;
 import mezz.jei.api.helpers.IGuiHelper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class Item2ItemRecipeCategory<T extends Item2ItemRecipe> extends OverdriveRecipeCategory<T> {
@@ -23,8 +22,8 @@ public abstract class Item2ItemRecipeCategory<T extends Item2ItemRecipe> extends
 	 * > All fluid bucket output slots will be incled with the outputSlots field
 	 */
 
-	protected Item2ItemRecipeCategory(IGuiHelper guiHelper, ResourceLocation loc, ItemStack inputMachine, ScreenObjectWrapper bWrap, int animTime) {
-		super(guiHelper, loc, inputMachine, bWrap, animTime);
+	protected Item2ItemRecipeCategory(IGuiHelper guiHelper, ItemStack inputMachine, ScreenObjectWrapper bWrap, int animTime) {
+		super(guiHelper, inputMachine, bWrap, animTime);
 	}
 
 	@Override

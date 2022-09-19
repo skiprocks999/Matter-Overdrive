@@ -70,7 +70,7 @@ public class MatterRegister extends SimplePreparableReloadListener<Map<ResourceL
 	private final String folderName;
 	private final Logger logger;
 
-	private HashMap<Item, Double> CLIENT_VALUES = new HashMap<>();
+	public HashMap<Item, Double> CLIENT_VALUES = new HashMap<>();
 
 	public MatterRegister() {
 		folderName = "matter";

@@ -270,6 +270,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addKeyLabel("togglematterscanner", "Toggle Matter Scanner");
 			
 			addJei(InscriberRecipe.RECIPE_GROUP, "Inscriber");
+			addJei("microwave", "Microwave");
+			addJei("matter_recycler", "Matter Recycler");
+			addJei("powerconsumed", "Total: %s");
+			addJei("usagepertick", "%s/t");
+			addJei("processtime", "Time: ");
 		}
 	}
 

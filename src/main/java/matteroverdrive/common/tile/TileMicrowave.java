@@ -28,9 +28,9 @@ public class TileMicrowave extends GenericMachineTile {
 	public static final int SLOT_COUNT = 7;
 
 	public static final int OPERATING_TIME = 50;
-	private static final int USAGE_PER_TICK = 30;
-	private static final int ENERGY_STORAGE = 512000;
-	private static final int DEFAULT_SPEED = 1;
+	public static final int USAGE_PER_TICK = 30;
+	public static final int ENERGY_STORAGE = 512000;
+	public static final int DEFAULT_SPEED = 1;
 
 	private SmokingRecipe cachedRecipe;
 

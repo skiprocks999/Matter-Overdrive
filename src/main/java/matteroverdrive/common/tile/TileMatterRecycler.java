@@ -27,9 +27,9 @@ public class TileMatterRecycler extends GenericMachineTile {
 	public static final int SLOT_COUNT = 7;
 
 	public static final int OPERATING_TIME = 50;
-	private static final int USAGE_PER_TICK = 30;
-	private static final int ENERGY_STORAGE = 512000;
-	private static final int DEFAULT_SPEED = 1;
+	public static final int USAGE_PER_TICK = 30;
+	public static final int ENERGY_STORAGE = 512000;
+	public static final int DEFAULT_SPEED = 1;
 
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -128,6 +128,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (getProgress() >= OPERATING_TIME) {
 			setProgress(0);
+			input.shrink(1);
 			if (output.isEmpty()) {
 				ItemStack refinedDust = new ItemStack(ItemRegistry.ITEM_MATTER_DUST.get(), 1);
 				UtilsNbt.writeMatterVal(refinedDust, value);
@@ -135,7 +136,6 @@ public class TileMatterRecycler extends GenericMachineTile {
 			} else {
 				output.grow(1);
 			}
-			input.shrink(1);
 		}
 		setChanged();
 

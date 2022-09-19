@@ -32,11 +32,11 @@ public class TileMatterDecomposer extends GenericMachineTile {
 	public static final int SLOT_COUNT = 8;
 
 	public static final int OPERATING_TIME = 500;
-	private static final int USAGE_PER_TICK = 80;
-	private static final float FAILURE_CHANCE = 0.005F;
-	private static final int MATTER_STORAGE = 1024;
-	private static final int ENERGY_STORAGE = 512000;
-	private static final int DEFAULT_SPEED = 1;
+	public static final int USAGE_PER_TICK = 80;
+	public static final float FAILURE_CHANCE = 0.005F;
+	public static final int MATTER_STORAGE = 1024;
+	public static final int ENERGY_STORAGE = 512000;
+	public static final int DEFAULT_SPEED = 1;
 
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -162,6 +162,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (getProgress() >= OPERATING_TIME) {
 			if (roll() < getCurrentFailure()) {
+				input.shrink(1);
 				if (output.isEmpty()) {
 					ItemStack dust = new ItemStack(ItemRegistry.ITEM_RAW_MATTER_DUST.get());
 					UtilsNbt.writeMatterVal(dust, getRecipeValue());
@@ -169,7 +170,6 @@ public class TileMatterDecomposer extends GenericMachineTile {
 				} else {
 					output.grow(1);
 				}
-				input.shrink(1);
 			} else {
 				storage.giveMatter(getRecipeValue());
 				input.shrink(1);

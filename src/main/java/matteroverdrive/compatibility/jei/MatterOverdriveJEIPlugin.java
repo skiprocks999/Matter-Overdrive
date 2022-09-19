@@ -17,6 +17,8 @@ import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.compatibility.jei.categories.item2item.specificmachines.RecipeCategoryInscriber;
+import matteroverdrive.compatibility.jei.categories.pseudo.RecipeCategoryMatterRecycler;
+import matteroverdrive.compatibility.jei.categories.vanillacooking.specificmachines.RecipeCategoryMicrowave;
 import matteroverdrive.compatibility.jei.screenhandlers.types.ScreenHandlerCharger;
 import matteroverdrive.compatibility.jei.screenhandlers.types.ScreenHandlerInscriber;
 import matteroverdrive.compatibility.jei.screenhandlers.types.ScreenHandlerMatterAnalyzer;
@@ -40,6 +42,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 
 @JeiPlugin
 public class MatterOverdriveJEIPlugin implements IModPlugin {
@@ -55,23 +58,20 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 
 		registration.addRecipeCatalyst(RecipeCategoryInscriber.INPUT_MACHINE, RecipeCategoryInscriber.RECIPE_TYPE);
+		registration.addRecipeCatalyst(RecipeCategoryMicrowave.INPUT_MACHINE, RecipeCategoryMicrowave.RECIPE_TYPE);
+		registration.addRecipeCatalyst(RecipeCategoryMatterRecycler.INPUT_MACHINE, RecipeCategoryMatterRecycler.RECIPE_TYPE);
 		
 	}
 
 	@Override
-	//if you can think of a way to automate this go for it
 	public void registerRecipes(IRecipeRegistration registration) {
 		Minecraft mc = Minecraft.getInstance();
 		ClientLevel world = Objects.requireNonNull(mc.level);
 		RecipeManager recipeManager = world.getRecipeManager();
 
-		
-		// Electric Furnace
-		//List<SmeltingRecipe> electricFurnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
-		//registration.addRecipes(ElectricFurnaceRecipeCategory.RECIPE_TYPE, electricFurnaceRecipes);
-
 		registration.addRecipes(RecipeCategoryInscriber.RECIPE_TYPE, recipeManager.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get()));
-
+		registration.addRecipes(RecipeCategoryMicrowave.RECIPE_TYPE, recipeManager.getAllRecipesFor(RecipeType.SMOKING));
+		registration.addRecipes(RecipeCategoryMatterRecycler.RECIPE_TYPE, RecipeCategoryMatterRecycler.getPseudoReipes());
 		
 	}
 
@@ -81,6 +81,9 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 
 		registration.addRecipeCategories(new RecipeCategoryInscriber(guiHelper));
+		registration.addRecipeCategories(new RecipeCategoryMicrowave(guiHelper));
+		registration.addRecipeCategories(new RecipeCategoryMatterRecycler(guiHelper));
+		
 	}
 
 	@Override
@@ -100,6 +103,8 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registry.addGuiContainerHandler(ScreenMatterAnalyzer.class, new ScreenHandlerMatterAnalyzer());
 		
 		registry.addRecipeClickArea(ScreenInscriber.class, 33, 48, 22, 15, RecipeCategoryInscriber.RECIPE_TYPE);
+		registry.addRecipeClickArea(ScreenMicrowave.class, 33, 48, 22, 15, RecipeCategoryMicrowave.RECIPE_TYPE);
+		registry.addRecipeClickArea(ScreenMatterRecycler.class, 33, 48, 22, 15, RecipeCategoryMatterRecycler.RECIPE_TYPE);
 	
 	}
 
