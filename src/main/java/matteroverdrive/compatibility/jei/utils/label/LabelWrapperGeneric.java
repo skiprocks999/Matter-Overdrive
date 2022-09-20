@@ -4,14 +4,14 @@ import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipe
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.MutableComponent;
 
-public class GenericLabelWrapper {
+public class LabelWrapperGeneric {
 
 	protected final int color;
 	protected final int yPos;
 	protected final int xPos;
 	protected final String name;
 
-	public GenericLabelWrapper(int color, int xPos, int yPos, String name) {
+	public LabelWrapperGeneric(int color, int xPos, int yPos, String name) {
 		this.color = color;
 		this.yPos = yPos;
 		this.xPos = xPos;

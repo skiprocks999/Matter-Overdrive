@@ -272,6 +272,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addJei(InscriberRecipe.RECIPE_GROUP, "Inscriber");
 			addJei("microwave", "Microwave");
 			addJei("matter_recycler", "Matter Recycler");
+			addJei("matter_decomposer", "Matter Decomposer");
 			addJei("powerconsumed", "Total: %s");
 			addJei("usagepertick", "%s/t");
 			addJei("processtime", "Time: ");

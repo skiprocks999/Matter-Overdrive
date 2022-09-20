@@ -13,9 +13,9 @@ import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper.JeiTextur
 import matteroverdrive.compatibility.jei.utils.gui.arrows.animated.ArrowRightAnimatedWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.backgroud.OverdriveBackgroundManager;
 import matteroverdrive.compatibility.jei.utils.gui.item.DefaultItemSlotWrapper;
-import matteroverdrive.compatibility.jei.utils.label.types.PowerConsumedLabelWrapper;
-import matteroverdrive.compatibility.jei.utils.label.types.PowerUsageLabelWrapper;
-import matteroverdrive.compatibility.jei.utils.label.types.ProcessTimeLabelWrapper;
+import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperPowerConsumed;
+import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperPowerUsage;
+import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperProcessTime;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.BlockRegistry;
@@ -37,9 +37,9 @@ public class RecipeCategoryMatterRecycler extends AbstractOverdriveRecipeCategor
 
 	private static final ArrowRightAnimatedWrapper ANIM_ARROW = new ArrowRightAnimatedWrapper(35, 15);
 	
-	private static final PowerUsageLabelWrapper POWER_USE = new PowerUsageLabelWrapper(UtilsRendering.HOLO_RED, 50, 40);
-	private static final PowerConsumedLabelWrapper POWER_CONSUMED = new PowerConsumedLabelWrapper(UtilsRendering.HOLO_RED, 50, 52);
-	private static final ProcessTimeLabelWrapper PROCESS_TIME = new ProcessTimeLabelWrapper(UtilsRendering.TEXT_BLUE, 89, 19);
+	private static final LabelWrapperPowerUsage POWER_USE = new LabelWrapperPowerUsage(UtilsRendering.HOLO_RED, 50, 40);
+	private static final LabelWrapperPowerConsumed POWER_CONSUMED = new LabelWrapperPowerConsumed(UtilsRendering.HOLO_RED, 50, 52);
+	private static final LabelWrapperProcessTime PROCESS_TIME = new LabelWrapperProcessTime(UtilsRendering.TEXT_BLUE, 89, 19);
 
 	private static final int ANIM_TIME = 50;
 

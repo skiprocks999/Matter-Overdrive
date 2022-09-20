@@ -3,22 +3,22 @@ package matteroverdrive.compatibility.jei.utils.label.types;
 import matteroverdrive.common.recipe.AbstractOverdriveRecipe;
 import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipeCategory;
 import matteroverdrive.compatibility.jei.utils.IPseudoRecipe;
-import matteroverdrive.compatibility.jei.utils.label.GenericLabelWrapper;
+import matteroverdrive.compatibility.jei.utils.label.LabelWrapperGeneric;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
-public class ProcessTimeLabelWrapper extends GenericLabelWrapper {
+public class LabelWrapperProcessTime extends LabelWrapperGeneric {
 
 	private boolean constantTime = false;
 	private double time = 0.0;
 	
-	public ProcessTimeLabelWrapper(int color, int xPos, int yPos) {
+	public LabelWrapperProcessTime(int color, int xPos, int yPos) {
 		super(color, xPos, yPos, "processtime");
 	}
 	
-	public ProcessTimeLabelWrapper setConstTime(double time) {
+	public LabelWrapperProcessTime setConstTime(double time) {
 		constantTime = true;
 		this.time = time;
 		return this;

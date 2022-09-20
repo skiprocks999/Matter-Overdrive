@@ -17,6 +17,7 @@ import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.compatibility.jei.categories.item2item.specificmachines.RecipeCategoryInscriber;
+import matteroverdrive.compatibility.jei.categories.pseudo.RecipeCategoryMatterDecomposer;
 import matteroverdrive.compatibility.jei.categories.pseudo.RecipeCategoryMatterRecycler;
 import matteroverdrive.compatibility.jei.categories.vanillacooking.specificmachines.RecipeCategoryMicrowave;
 import matteroverdrive.compatibility.jei.screenhandlers.types.ScreenHandlerCharger;
@@ -60,6 +61,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registration.addRecipeCatalyst(RecipeCategoryInscriber.INPUT_MACHINE, RecipeCategoryInscriber.RECIPE_TYPE);
 		registration.addRecipeCatalyst(RecipeCategoryMicrowave.INPUT_MACHINE, RecipeCategoryMicrowave.RECIPE_TYPE);
 		registration.addRecipeCatalyst(RecipeCategoryMatterRecycler.INPUT_MACHINE, RecipeCategoryMatterRecycler.RECIPE_TYPE);
+		registration.addRecipeCatalyst(RecipeCategoryMatterDecomposer.INPUT_MACHINE, RecipeCategoryMatterDecomposer.RECIPE_TYPE);
 		
 	}
 
@@ -72,6 +74,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registration.addRecipes(RecipeCategoryInscriber.RECIPE_TYPE, recipeManager.getAllRecipesFor(RecipeInit.INSCRIBER_TYPE.get()));
 		registration.addRecipes(RecipeCategoryMicrowave.RECIPE_TYPE, recipeManager.getAllRecipesFor(RecipeType.SMOKING));
 		registration.addRecipes(RecipeCategoryMatterRecycler.RECIPE_TYPE, RecipeCategoryMatterRecycler.getPseudoReipes());
+		registration.addRecipes(RecipeCategoryMatterDecomposer.RECIPE_TYPE, RecipeCategoryMatterDecomposer.getPseudoReipes());
 		
 	}
 
@@ -83,6 +86,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registration.addRecipeCategories(new RecipeCategoryInscriber(guiHelper));
 		registration.addRecipeCategories(new RecipeCategoryMicrowave(guiHelper));
 		registration.addRecipeCategories(new RecipeCategoryMatterRecycler(guiHelper));
+		registration.addRecipeCategories(new RecipeCategoryMatterDecomposer(guiHelper));
 		
 	}
 
@@ -105,6 +109,7 @@ public class MatterOverdriveJEIPlugin implements IModPlugin {
 		registry.addRecipeClickArea(ScreenInscriber.class, 33, 48, 22, 15, RecipeCategoryInscriber.RECIPE_TYPE);
 		registry.addRecipeClickArea(ScreenMicrowave.class, 33, 48, 22, 15, RecipeCategoryMicrowave.RECIPE_TYPE);
 		registry.addRecipeClickArea(ScreenMatterRecycler.class, 33, 48, 22, 15, RecipeCategoryMatterRecycler.RECIPE_TYPE);
+		registry.addRecipeClickArea(ScreenMatterDecomposer.class, 33, 48, 22, 15, RecipeCategoryMatterDecomposer.RECIPE_TYPE);
 	
 	}
 

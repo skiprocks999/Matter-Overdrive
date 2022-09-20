@@ -5,12 +5,12 @@ import java.util.List;
 
 import matteroverdrive.common.recipe.AbstractOverdriveRecipe;
 import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipeCategory;
-import matteroverdrive.compatibility.jei.utils.label.GenericLabelWrapper;
+import matteroverdrive.compatibility.jei.utils.label.LabelWrapperGeneric;
 import matteroverdrive.core.recipe.ProbableItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class BiproductPercentWrapper extends GenericLabelWrapper {
+public class BiproductPercentWrapper extends LabelWrapperGeneric {
 
 	private boolean isFluid;
 
@@ -25,7 +25,7 @@ public class BiproductPercentWrapper extends GenericLabelWrapper {
 			if (isFluid) {
 				// for future use
 			} else if (overdrive.hasItemBiproducts()) {
-				List<GenericLabelWrapper> labels = Arrays.asList(category.LABELS);
+				List<LabelWrapperGeneric> labels = Arrays.asList(category.LABELS);
 				int biPos = labels.indexOf(this) - category.itemBiLabelFirstIndex;
 				ProbableItem item = overdrive.getItemBiproducts()[biPos];
 				return Component.literal(item.getChance() * 100 + "%");

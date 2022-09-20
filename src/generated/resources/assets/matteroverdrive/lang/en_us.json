@@ -167,6 +167,7 @@
   "item.matteroverdrive.upgrade_speed": "Speed Upgrade",
   "itemGroup.itemgroupmatteroverdrivemain": "Matter Overdrive",
   "jei.matteroverdrive.inscriber_recipe": "Inscriber",
+  "jei.matteroverdrive.matter_decomposer": "Matter Decomposer",
   "jei.matteroverdrive.matter_recycler": "Matter Recycler",
   "jei.matteroverdrive.microwave": "Microwave",
   "jei.matteroverdrive.powerconsumed": "Total: %s",

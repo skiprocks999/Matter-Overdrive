@@ -15,7 +15,7 @@ import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.arrows.animated.ArrowAnimatedWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.fluid.GenericFluidGaugeWrapper;
 import matteroverdrive.compatibility.jei.utils.gui.item.GenericItemSlotWrapper;
-import matteroverdrive.compatibility.jei.utils.label.GenericLabelWrapper;
+import matteroverdrive.compatibility.jei.utils.label.LabelWrapperGeneric;
 import matteroverdrive.compatibility.jei.utils.label.types.BiproductPercentWrapper;
 import matteroverdrive.core.utils.UtilsText;
 import mezz.jei.api.constants.VanillaTypes;
@@ -44,7 +44,7 @@ public abstract class AbstractOverdriveRecipeCategory<T> implements IRecipeCateg
 
 	private ItemStack ICON_STACK;
 
-	public GenericLabelWrapper[] LABELS;
+	public LabelWrapperGeneric[] LABELS;
 
 	public int itemBiLabelFirstIndex;
 	public int fluidBiLabelFirstIndex;
@@ -122,16 +122,16 @@ public abstract class AbstractOverdriveRecipeCategory<T> implements IRecipeCateg
 	public void addDescriptions(PoseStack stack, T recipe) {
 		if (LABELS != null) {
 			Font fontRenderer = Minecraft.getInstance().font;
-			for (GenericLabelWrapper wrap : LABELS) {
+			for (LabelWrapperGeneric wrap : LABELS) {
 				fontRenderer.draw(stack, wrap.getComponent(this, recipe), wrap.getXPos(), wrap.getYPos(),
 						wrap.getColor());
 			}
 		}
 	}
 
-	public void setLabels(GenericLabelWrapper... labels) {
+	public void setLabels(LabelWrapperGeneric... labels) {
 		LABELS = labels;
-		GenericLabelWrapper wrap;
+		LabelWrapperGeneric wrap;
 		boolean firstItemBi = false;
 		for (int i = 0; i < labels.length; i++) {
 			wrap = labels[i];
