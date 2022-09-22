@@ -29,6 +29,7 @@ import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileSolarPanel;
+import matteroverdrive.common.tile.station.TileAndroidStation;
 import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.registers.BulkRegister;
 import matteroverdrive.core.registers.IBulkRegistryObject;
@@ -166,6 +167,15 @@ public class BlockRegistry {
 	public static final RegistryObject<Block> BLOCK_MATTER_REPLICATOR = registerBlock(
 			TypeMachine.MATTER_REPLICATOR.id(), () -> new BlockMachine<TileMatterReplicator>(TileMatterReplicator::new,
 					TypeMachine.MATTER_REPLICATOR, TileRegistry.TILE_MATTER_REPLICATOR), true);
+
+	public static final RegistryObject<Block> BLOCK_ANDROID_STATION = registerBlock(
+					"android_station",
+					() -> new BlockMachine<TileAndroidStation>(
+									TileAndroidStation::new,
+									TypeMachine.ANDROID_STATION,
+									TileRegistry.TILE_ANDROID_STATION
+					)
+	);
 
 	// Functional Methods
 

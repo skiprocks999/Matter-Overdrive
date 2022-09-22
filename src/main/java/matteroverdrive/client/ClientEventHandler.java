@@ -8,12 +8,15 @@ import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.keys.handlers.KeyHandlerMatterScanner;
 import matteroverdrive.client.render.rllhandler.RLLHandlerMatterScanner;
+import matteroverdrive.client.render.tile.RendererStationAndroid;
 import matteroverdrive.client.render.tooltip.MatterValueTooltipHandler;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.event.handler.client.AbstractKeyPressHandler;
-import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
-import matteroverdrive.core.event.handler.client.AbstractTooltipHandler;
+import matteroverdrive.core.eventhandler.client.AbstractKeyPressHandler;
+import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.eventhandler.client.AbstractTooltipHandler;
+import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -22,6 +25,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent.Key;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
@@ -40,9 +44,7 @@ public class ClientEventHandler {
 
 	protected static void init() {
 		RLL_HANDLERS.add(new RLLHandlerMatterScanner());
-
 		KEY_PRESS_HANDLERS.add(new KeyHandlerMatterScanner());
-
 		TOOLTIP_HANDLERS.add(new MatterValueTooltipHandler());
 	}
 
@@ -106,6 +108,11 @@ public class ClientEventHandler {
 				}
 			});
 		}
+	}
+
+	@SubscribeEvent
+	public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerBlockEntityRenderer(TileRegistry.TILE_ANDROID_STATION.get(), RendererStationAndroid::new);
 	}
 
 }
