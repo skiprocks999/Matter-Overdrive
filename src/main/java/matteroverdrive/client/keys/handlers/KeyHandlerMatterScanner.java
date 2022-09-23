@@ -7,7 +7,7 @@ import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.event.handler.client.AbstractKeyPressHandler;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketToggleMatterScanner;
+import matteroverdrive.core.packet.type.serverbound.misc.PacketToggleMatterScanner;
 import matteroverdrive.core.utils.UtilsItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;

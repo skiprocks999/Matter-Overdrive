@@ -5,7 +5,7 @@ import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.clientbound.PacketClientMNData;
+import matteroverdrive.core.packet.type.clientbound.misc.PacketClientMNData;
 import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;

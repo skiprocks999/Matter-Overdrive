@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketCancelReplication;
+import matteroverdrive.core.packet.type.serverbound.misc.PacketCancelReplication;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
 import matteroverdrive.core.screen.component.ScreenComponentQueuedOrder;

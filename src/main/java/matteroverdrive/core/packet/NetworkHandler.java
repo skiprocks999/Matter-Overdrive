@@ -1,20 +1,28 @@
 package matteroverdrive.core.packet;
 
-import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import matteroverdrive.References;
-import matteroverdrive.core.packet.type.serverbound.*;
-import matteroverdrive.core.property.packet.serverbound.*;
-import matteroverdrive.core.packet.type.clientbound.*;
-import matteroverdrive.core.property.packet.clientbound.*;
+import matteroverdrive.core.packet.type.serverbound.android.*;
+import matteroverdrive.core.packet.type.serverbound.misc.*;
+import matteroverdrive.core.packet.type.serverbound.property.*;
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
+import matteroverdrive.core.packet.type.clientbound.android.*;
+import matteroverdrive.core.packet.type.clientbound.misc.*;
+import matteroverdrive.core.packet.type.clientbound.property.*;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.simple.SimpleChannel.MessageBuilder;
 
 public class NetworkHandler {
 
@@ -28,60 +36,71 @@ public class NetworkHandler {
 
 		/* SERVER-BOUND */
 
-		CHANNEL.registerMessage(disc++, PacketUpdateCapabilitySides.class, PacketUpdateCapabilitySides::encode,
-				PacketUpdateCapabilitySides::decode, PacketUpdateCapabilitySides::handle,
-				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, PacketToggleMatterScanner.class, PacketToggleMatterScanner::encode,
-				PacketToggleMatterScanner::decode, PacketToggleMatterScanner::handle,
-				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, PacketQueueReplication.class, PacketQueueReplication::encode,
-				PacketQueueReplication::decode, PacketQueueReplication::handle,
-				Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		CHANNEL.registerMessage(disc++, PacketCancelReplication.class, PacketCancelReplication::encode,
-				PacketCancelReplication::decode, PacketCancelReplication::handle,
-				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		serverMessage(PacketUpdateCapabilitySides.class, PacketUpdateCapabilitySides::encode,
+				PacketUpdateCapabilitySides::decode, PacketUpdateCapabilitySides::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateServerContainerProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketUpdateServerContainerProperty::encode)
-				.decoder(PacketUpdateServerContainerProperty::decode)
-				.consumerNetworkThread(PacketUpdateServerContainerProperty::consume).add();
+		serverMessage(PacketToggleMatterScanner.class, PacketToggleMatterScanner::encode,
+				PacketToggleMatterScanner::decode, PacketToggleMatterScanner::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateServerEntityProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketUpdateServerEntityProperty::encode).decoder(PacketUpdateServerEntityProperty::decode)
-				.consumerNetworkThread(PacketUpdateServerEntityProperty::consume).add();
+		serverMessage(PacketQueueReplication.class, PacketQueueReplication::encode, PacketQueueReplication::decode,
+				PacketQueueReplication::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateServerTileProperty.class, disc++, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PacketUpdateServerTileProperty::encode)
-				.decoder(PacketUpdateServerTileProperty::decode)
-				.consumerNetworkThread(PacketUpdateServerTileProperty::consume).add();
+		serverMessage(PacketCancelReplication.class, PacketCancelReplication::encode, PacketCancelReplication::decode,
+				PacketCancelReplication::handle);
+
+		serverMessage(PacketUpdateServerContainerProperty.class, PacketUpdateServerContainerProperty::encode,
+				PacketUpdateServerContainerProperty::decode, PacketUpdateServerContainerProperty::handle);
+
+		serverMessage(PacketUpdateServerEntityProperty.class, PacketUpdateServerEntityProperty::encode,
+				PacketUpdateServerEntityProperty::decode, PacketUpdateServerEntityProperty::handle);
+
+		serverMessage(PacketUpdateServerTileProperty.class, PacketUpdateServerTileProperty::encode,
+				PacketUpdateServerTileProperty::decode, PacketUpdateServerTileProperty::handle);
+
+		serverMessage(PacketUpdateServerTileProperty.class, PacketUpdateServerTileProperty::encode,
+				PacketUpdateServerTileProperty::decode, PacketUpdateServerTileProperty::handle);
+
+		serverMessage(PacketUpdateServerTileProperty.class, PacketUpdateServerTileProperty::encode,
+				PacketUpdateServerTileProperty::decode, PacketUpdateServerTileProperty::handle);
+		
+		serverMessage(PacketAndroidPerkAttemptBuy.class, PacketAndroidPerkAttemptBuy::encode,
+				PacketAndroidPerkAttemptBuy::decode, PacketAndroidPerkAttemptBuy::handle);
+		
+		serverMessage(PacketAndroidPerkToggle.class, PacketAndroidPerkToggle::encode,
+				PacketAndroidPerkToggle::decode, PacketAndroidPerkToggle::handle);
 
 		/* CLIENT-BOUND */
 
-		CHANNEL.registerMessage(disc++, PacketClientMatterValues.class, PacketClientMatterValues::encode,
-				PacketClientMatterValues::decode, PacketClientMatterValues::handle,
-				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketSyncClientEntityCapability.class,
-				PacketSyncClientEntityCapability::encode, PacketSyncClientEntityCapability::decode,
-				PacketSyncClientEntityCapability::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketClientMNData.class, PacketClientMNData::encode,
-				PacketClientMNData::decode, PacketClientMNData::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(disc++, PacketPlayMatterScannerSound.class, PacketPlayMatterScannerSound::encode,
-				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle,
-				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		clientMessage(PacketClientMatterValues.class, PacketClientMatterValues::encode,
+				PacketClientMatterValues::decode, PacketClientMatterValues::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateClientContainerProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(PacketUpdateClientContainerProperty::encode)
-				.decoder(PacketUpdateClientContainerProperty::decode)
-				.consumerNetworkThread(PacketUpdateClientContainerProperty::consume).add();
+		clientMessage(PacketSyncClientEntityCapability.class, PacketSyncClientEntityCapability::encode,
+				PacketSyncClientEntityCapability::decode, PacketSyncClientEntityCapability::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateClientEntityProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(PacketUpdateClientEntityProperty::encode).decoder(PacketUpdateClientEntityProperty::decode)
-				.consumerNetworkThread(PacketUpdateClientEntityProperty::consume).add();
+		clientMessage(PacketClientMNData.class, PacketClientMNData::encode, PacketClientMNData::decode,
+				PacketClientMNData::handle);
 
-		CHANNEL.messageBuilder(PacketUpdateClientTileProperty.class, disc++, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(PacketUpdateClientTileProperty::encode)
-				.decoder(PacketUpdateClientTileProperty::decode)
-				.consumerNetworkThread(PacketUpdateClientTileProperty::consume).add();
+		clientMessage(PacketPlayMatterScannerSound.class, PacketPlayMatterScannerSound::encode,
+				PacketPlayMatterScannerSound::decode, PacketPlayMatterScannerSound::handle);
+
+		clientMessage(PacketUpdateClientContainerProperty.class, PacketUpdateClientContainerProperty::encode,
+				PacketUpdateClientContainerProperty::decode, PacketUpdateClientContainerProperty::handle);
+
+		clientMessage(PacketUpdateClientEntityProperty.class, PacketUpdateClientEntityProperty::encode,
+				PacketUpdateClientEntityProperty::decode, PacketUpdateClientEntityProperty::handle);
+
+		clientMessage(PacketUpdateClientTileProperty.class, PacketUpdateClientTileProperty::encode,
+				PacketUpdateClientTileProperty::decode, PacketUpdateClientTileProperty::handle);
+		
+		clientMessage(PacketAndroidEnergySync.class, PacketAndroidEnergySync::encode, PacketAndroidEnergySync::decode,
+				PacketAndroidEnergySync::handle);
+		
+		clientMessage(PacketAndroidSyncAll.class, PacketAndroidSyncAll::encode, PacketAndroidSyncAll::decode,
+				PacketAndroidSyncAll::handle);
+		
+		clientMessage(PacketAndroidTurningTimeSync.class, PacketAndroidTurningTimeSync::encode, PacketAndroidTurningTimeSync::decode,
+				PacketAndroidTurningTimeSync::handle);
+		
 	}
 
 	public static void sendUpdateClientContainerProperties(ServerPlayer player,
@@ -101,13 +120,11 @@ public class NetworkHandler {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
-	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk,
-			PacketUpdateClientTileProperty message) {
+	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk, PacketUpdateClientTileProperty message) {
 		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
 	}
 
-	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk,
-			PacketUpdateServerTileProperty message) {
+	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk, PacketUpdateServerTileProperty message) {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
 
@@ -117,6 +134,22 @@ public class NetworkHandler {
 
 	public static void sendToServer(Object obj) {
 		CHANNEL.sendToServer(obj);
+	}
+
+	private static <T extends AbstractOverdrivePacket<T>> void clientMessage(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder,
+			Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
+		message(clazz, NetworkDirection.PLAY_TO_CLIENT).encoder(encoder).decoder(decoder)
+				.consumerNetworkThread(consumer).add();
+	}
+
+	private static <T extends AbstractOverdrivePacket<T>> void serverMessage(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder,
+			Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
+		message(clazz, NetworkDirection.PLAY_TO_SERVER).encoder(encoder).decoder(decoder)
+				.consumerNetworkThread(consumer).add();
+	}
+
+	private static <T extends AbstractOverdrivePacket<T>> MessageBuilder<T> message(Class<T> clazz, NetworkDirection dir) {
+		return CHANNEL.messageBuilder(clazz, disc++, dir);
 	}
 
 }

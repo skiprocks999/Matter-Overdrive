@@ -1,4 +1,4 @@
-package matteroverdrive.core.packet.type.serverbound;
+package matteroverdrive.core.packet.type.serverbound.misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
 import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.utils.UtilsMatter;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkEvent.Context;
 
-public class PacketUpdateCapabilitySides {
+public class PacketUpdateCapabilitySides extends AbstractOverdrivePacket<PacketUpdateCapabilitySides> {
 
 	private final BlockPos pos;
 	private final CapabilityType type;
@@ -41,44 +42,45 @@ public class PacketUpdateCapabilitySides {
 		this.output = output;
 	}
 
-	public static void handle(PacketUpdateCapabilitySides message, Supplier<Context> context) {
+	@Override
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = ctx.getSender().getLevel();
 			if (world != null) {
-				BlockEntity tile = world.getBlockEntity(message.pos);
+				BlockEntity tile = world.getBlockEntity(pos);
 				if (tile instanceof GenericTile generic) {
-					if (generic.hasCapability(message.type.capability)) {
-						switch (message.type) {
+					if (generic.hasCapability(type.capability)) {
+						switch (type) {
 						case ITEM:
-							CapabilityInventory inv = generic.exposeCapability(message.type.capability);
-							if (message.input) {
-								inv.setInputDirs(message.inDirs);
+							CapabilityInventory inv = generic.exposeCapability(type.capability);
+							if (input) {
+								inv.setInputDirs(inDirs);
 							}
-							if (message.output) {
-								inv.setOutputDirs(message.outDirs);
+							if (output) {
+								inv.setOutputDirs(outDirs);
 							}
 							inv.refreshCapability();
 							generic.setChanged();
 							break;
 						case ENERGY:
-							CapabilityEnergyStorage energy = generic.exposeCapability(message.type.capability);
-							if (message.input) {
-								energy.setInputDirs(message.inDirs);
+							CapabilityEnergyStorage energy = generic.exposeCapability(type.capability);
+							if (input) {
+								energy.setInputDirs(inDirs);
 							}
-							if (message.output) {
-								energy.setOutputDirs(message.outDirs);
+							if (output) {
+								energy.setOutputDirs(outDirs);
 							}
 							energy.refreshCapability();
 							generic.setChanged();
 							break;
 						case MATTER:
-							CapabilityMatterStorage matter = generic.exposeCapability(message.type.capability);
-							if (message.input) {
-								matter.setInputDirs(message.inDirs);
+							CapabilityMatterStorage matter = generic.exposeCapability(type.capability);
+							if (input) {
+								matter.setInputDirs(inDirs);
 							}
-							if (message.output) {
-								matter.setOutputDirs(message.outDirs);
+							if (output) {
+								matter.setOutputDirs(outDirs);
 							}
 							matter.refreshCapability();
 							generic.setChanged();
@@ -91,23 +93,24 @@ public class PacketUpdateCapabilitySides {
 				}
 			}
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
-	public static void encode(PacketUpdateCapabilitySides pkt, FriendlyByteBuf buf) {
-		buf.writeBlockPos(pkt.pos);
-		buf.writeEnum(pkt.type);
-		buf.writeBoolean(pkt.input);
-		if (pkt.input) {
-			buf.writeInt(pkt.inDirs.size());
-			for (Direction dir : pkt.inDirs) {
+	@Override
+	public void encode(FriendlyByteBuf buf) {
+		buf.writeBlockPos(pos);
+		buf.writeEnum(type);
+		buf.writeBoolean(input);
+		if (input) {
+			buf.writeInt(inDirs.size());
+			for (Direction dir : inDirs) {
 				buf.writeEnum(dir);
 			}
 		}
-		buf.writeBoolean(pkt.output);
-		if (pkt.output) {
-			buf.writeInt(pkt.outDirs.size());
-			for (Direction dir : pkt.outDirs) {
+		buf.writeBoolean(output);
+		if (output) {
+			buf.writeInt(outDirs.size());
+			for (Direction dir : outDirs) {
 				buf.writeEnum(dir);
 			}
 		}

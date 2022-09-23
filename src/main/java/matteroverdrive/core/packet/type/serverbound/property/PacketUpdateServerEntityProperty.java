@@ -1,53 +1,53 @@
-package matteroverdrive.core.property.packet.serverbound;
+package matteroverdrive.core.packet.type.serverbound.property;
 
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.PropertyTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketUpdateServerContainerProperty {
-	private final short windowId;
+public class PacketUpdateServerEntityProperty extends AbstractOverdrivePacket<PacketUpdateServerEntityProperty> {
+	private final int entityId;
 	private final PropertyType<?> propertyType;
 	private final short property;
 	private final Object value;
 
-	public PacketUpdateServerContainerProperty(short windowId, PropertyType<?> propertyType, short property,
-			Object value) {
-		this.windowId = windowId;
+	public PacketUpdateServerEntityProperty(int entityId, PropertyType<?> propertyType, short property, Object value) {
+		this.entityId = entityId;
 		this.propertyType = propertyType;
 		this.property = property;
 		this.value = value;
 	}
 
-	public static PacketUpdateServerContainerProperty decode(FriendlyByteBuf packetBuffer) {
-		short windowId = packetBuffer.readShort();
+	public static PacketUpdateServerEntityProperty decode(FriendlyByteBuf packetBuffer) {
+		int entityId = packetBuffer.readInt();
 		PropertyType<?> propertyType = PropertyTypes.getByIndex(packetBuffer.readShort());
 		short property = packetBuffer.readShort();
 		Object value = propertyType.getReader().apply(packetBuffer);
-		return new PacketUpdateServerContainerProperty(windowId, propertyType, property, value);
+		return new PacketUpdateServerEntityProperty(entityId, propertyType, property, value);
 	}
 
+	@Override
 	public void encode(FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeShort(windowId);
+		packetBuffer.writeInt(entityId);
 		packetBuffer.writeShort(PropertyTypes.getIndex(propertyType));
 		packetBuffer.writeShort(property);
 		propertyType.attemptWrite(packetBuffer, value);
 	}
 
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+	@Override
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
 			Player playerEntity = contextSupplier.get().getSender();
 			if (playerEntity != null) {
-				AbstractContainerMenu container = playerEntity.containerMenu;
-				if (container.containerId == windowId) {
-					if (container instanceof IPropertyManaged) {
-						((IPropertyManaged) container).getPropertyManager().update(propertyType, property, value);
-					}
+				Entity entity = playerEntity.level.getEntity(entityId);
+				if (entity instanceof IPropertyManaged managed) {
+					managed.getPropertyManager().update(propertyType, property, value);
 				}
 			}
 		});

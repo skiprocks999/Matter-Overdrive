@@ -34,7 +34,7 @@ import com.mojang.datafixers.util.Pair;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.core.matter.generator.AbstractMatterValueGenerator;
-import matteroverdrive.core.packet.type.clientbound.PacketClientMatterValues;
+import matteroverdrive.core.packet.type.clientbound.misc.PacketClientMatterValues;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

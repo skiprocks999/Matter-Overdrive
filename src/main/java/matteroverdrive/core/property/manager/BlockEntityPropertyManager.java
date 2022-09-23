@@ -2,11 +2,11 @@ package matteroverdrive.core.property.manager;
 
 import com.google.common.collect.Lists;
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.core.packet.type.clientbound.property.PacketUpdateClientTileProperty;
+import matteroverdrive.core.packet.type.serverbound.property.PacketUpdateServerTileProperty;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.PropertyType;
-import matteroverdrive.core.property.packet.clientbound.PacketUpdateClientTileProperty;
-import matteroverdrive.core.property.packet.serverbound.PacketUpdateServerTileProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;

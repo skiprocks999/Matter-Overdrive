@@ -16,7 +16,7 @@ import matteroverdrive.core.capability.types.entity_data.ICapabilityEntityData;
 import matteroverdrive.core.capability.types.overworld_data.ICapabilityOverworldData;
 import matteroverdrive.core.event.handler.server.AbstractServerTickHandler;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.clientbound.PacketSyncClientEntityCapability;
+import matteroverdrive.core.packet.type.clientbound.misc.PacketSyncClientEntityCapability;
 import matteroverdrive.core.utils.UtilsMath;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;

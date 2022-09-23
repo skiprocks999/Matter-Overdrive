@@ -1,5 +1,6 @@
-package matteroverdrive.core.property.packet.serverbound;
+package matteroverdrive.core.packet.type.serverbound.property;
 
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.PropertyTypes;
@@ -11,7 +12,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketUpdateServerTileProperty {
+public class PacketUpdateServerTileProperty extends AbstractOverdrivePacket<PacketUpdateServerTileProperty> {
 
 	private final BlockPos blockPos;
 	private final PropertyType<?> propertyType;
@@ -34,6 +35,7 @@ public class PacketUpdateServerTileProperty {
 		return new PacketUpdateServerTileProperty(pos, propertyType, property, value);
 	}
 
+	@Override
 	public void encode(FriendlyByteBuf packetBuffer) {
 		packetBuffer.writeBlockPos(blockPos);
 		packetBuffer.writeShort(PropertyTypes.getIndex(propertyType));
@@ -41,7 +43,8 @@ public class PacketUpdateServerTileProperty {
 		propertyType.attemptWrite(packetBuffer, value);
 	}
 
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+	@Override
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
 			Player playerEntity = contextSupplier.get().getSender();
 			if (playerEntity != null) {

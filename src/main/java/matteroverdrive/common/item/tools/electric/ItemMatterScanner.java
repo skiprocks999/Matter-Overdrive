@@ -9,7 +9,7 @@ import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.clientbound.PacketPlayMatterScannerSound;
+import matteroverdrive.core.packet.type.clientbound.misc.PacketPlayMatterScannerSound;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;

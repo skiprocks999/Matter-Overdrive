@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
+import matteroverdrive.core.packet.type.serverbound.misc.PacketUpdateCapabilitySides;
+import matteroverdrive.core.packet.type.serverbound.misc.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIO.BlockSide;

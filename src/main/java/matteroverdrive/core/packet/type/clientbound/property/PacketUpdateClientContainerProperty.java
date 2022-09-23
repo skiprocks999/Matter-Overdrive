@@ -1,35 +1,29 @@
-package matteroverdrive.core.property.packet.clientbound;
+package matteroverdrive.core.packet.type.clientbound.property;
 
 import com.google.common.collect.Lists;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.core.property.IPropertyManaged;
-import matteroverdrive.core.property.PropertyManager;
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
+import matteroverdrive.core.packet.type.clientbound.PacketBarrierMethods;
 import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.PropertyTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class PacketUpdateClientTileProperty {
-
-	private final BlockPos blockPos;
+public class PacketUpdateClientContainerProperty extends AbstractOverdrivePacket<PacketUpdateClientContainerProperty> {
+	private final short windowId;
 	private final List<Triple<PropertyType<?>, Short, Object>> updates;
 
-	public PacketUpdateClientTileProperty(BlockPos blockPos,
-			List<Triple<PropertyType<?>, Short, Object>> updates) {
-		this.blockPos = blockPos;
+	public PacketUpdateClientContainerProperty(short windowId, List<Triple<PropertyType<?>, Short, Object>> updates) {
+		this.windowId = windowId;
 		this.updates = updates;
 	}
 
+	@Override
 	public void encode(FriendlyByteBuf packetBuffer) {
-		packetBuffer.writeBlockPos(blockPos);
+		packetBuffer.writeShort(windowId);
 		List<Triple<PropertyType<?>, Short, Object>> validUpdates = Lists.newArrayList();
 		for (Triple<PropertyType<?>, Short, Object> update : updates) {
 			if (update.getLeft().isValid(update.getRight())) {
@@ -45,26 +39,16 @@ public class PacketUpdateClientTileProperty {
 		}
 	}
 
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+	@Override
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
-			LocalPlayer playerEntity = Minecraft.getInstance().player;
-			if (playerEntity != null) {
-				BlockEntity entity = playerEntity.level.getBlockEntity(blockPos);
-				if (entity instanceof IPropertyManaged managed) {
-					PropertyManager propertyManager = managed.getPropertyManager();
-					for (Triple<PropertyType<?>, Short, Object> update : updates) {
-						propertyManager.update(update.getLeft(), update.getMiddle(), update.getRight());
-					}
-				} else {
-					MatterOverdrive.LOGGER.info("BlockEntity is not instance of IPropertyManaged");
-				}
-			}
+			PacketBarrierMethods.handlePacketUpdateClientContainerProperties(null, windowId);
 		});
 		return true;
 	}
 
-	public static PacketUpdateClientTileProperty decode(FriendlyByteBuf packetBuffer) {
-		BlockPos pos = packetBuffer.readBlockPos();
+	public static PacketUpdateClientContainerProperty decode(FriendlyByteBuf packetBuffer) {
+		short windowId = packetBuffer.readShort();
 		short updateAmount = packetBuffer.readShort();
 		List<Triple<PropertyType<?>, Short, Object>> updates = Lists.newArrayList();
 		for (short i = 0; i < updateAmount; i++) {
@@ -73,7 +57,6 @@ public class PacketUpdateClientTileProperty {
 			Object object = propertyType.getReader().apply(packetBuffer);
 			updates.add(Triple.of(propertyType, propertyLocation, object));
 		}
-		return new PacketUpdateClientTileProperty(pos, updates);
+		return new PacketUpdateClientContainerProperty(windowId, updates);
 	}
-
 }

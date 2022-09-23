@@ -1,7 +1,7 @@
 package matteroverdrive.core.capability.types.android;
 
-import matteroverdrive.core.android.packet.s2c.PacketAndroidEnergySync;
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.core.packet.type.clientbound.android.PacketAndroidEnergySync;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.function.DoubleSupplier;
 
 import matteroverdrive.core.inventory.GenericInventoryTile;
-import matteroverdrive.core.packet.type.serverbound.PacketUpdateCapabilitySides.CapabilityType;
+import matteroverdrive.core.packet.type.serverbound.misc.PacketUpdateCapabilitySides.CapabilityType;
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;

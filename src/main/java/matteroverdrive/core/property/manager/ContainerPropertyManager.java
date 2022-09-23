@@ -1,11 +1,11 @@
 package matteroverdrive.core.property.manager;
 
 import matteroverdrive.core.packet.NetworkHandler;
+import matteroverdrive.core.packet.type.clientbound.property.PacketUpdateClientContainerProperty;
+import matteroverdrive.core.packet.type.serverbound.property.PacketUpdateServerContainerProperty;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyManager;
 import matteroverdrive.core.property.PropertyType;
-import matteroverdrive.core.property.packet.clientbound.PacketUpdateClientContainerProperty;
-import matteroverdrive.core.property.packet.serverbound.PacketUpdateServerContainerProperty;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerListener;
 import org.apache.commons.compress.utils.Lists;

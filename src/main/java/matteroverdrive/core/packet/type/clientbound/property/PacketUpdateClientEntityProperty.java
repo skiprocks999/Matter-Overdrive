@@ -1,22 +1,18 @@
-package matteroverdrive.core.property.packet.clientbound;
+package matteroverdrive.core.packet.type.clientbound.property;
 
 import com.google.common.collect.Lists;
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.core.property.IPropertyManaged;
-import matteroverdrive.core.property.PropertyManager;
+import matteroverdrive.core.packet.type.AbstractOverdrivePacket;
+import matteroverdrive.core.packet.type.clientbound.PacketBarrierMethods;
 import matteroverdrive.core.property.PropertyType;
 import matteroverdrive.core.property.PropertyTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class PacketUpdateClientEntityProperty {
+public class PacketUpdateClientEntityProperty extends AbstractOverdrivePacket<PacketUpdateClientEntityProperty> {
 
 	private final int entityId;
 	private final List<Triple<PropertyType<?>, Short, Object>> updates;
@@ -26,6 +22,7 @@ public class PacketUpdateClientEntityProperty {
 		this.updates = updates;
 	}
 
+	@Override
 	public void encode(FriendlyByteBuf packetBuffer) {
 		packetBuffer.writeInt(entityId);
 		List<Triple<PropertyType<?>, Short, Object>> validUpdates = Lists.newArrayList();
@@ -43,20 +40,10 @@ public class PacketUpdateClientEntityProperty {
 		}
 	}
 
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+	@Override
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
-			LocalPlayer playerEntity = Minecraft.getInstance().player;
-			if (playerEntity != null) {
-				Entity entity = playerEntity.level.getEntity(entityId);
-				if (entity instanceof IPropertyManaged managed) {
-					PropertyManager propertyManager = managed.getPropertyManager();
-					for (Triple<PropertyType<?>, Short, Object> update : updates) {
-						propertyManager.update(update.getLeft(), update.getMiddle(), update.getRight());
-					}
-				} else {
-					MatterOverdrive.LOGGER.info("Entity is not instance of IPropertyManaged");
-				}
-			}
+			PacketBarrierMethods.handlePacketUpdateClientEntityProperties(null, entityId);
 		});
 		return true;
 	}
