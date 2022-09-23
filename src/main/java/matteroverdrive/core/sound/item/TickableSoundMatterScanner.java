@@ -2,9 +2,9 @@ package matteroverdrive.core.sound.item;
 
 import java.util.UUID;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.core.utils.UtilsWorld;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -23,7 +23,7 @@ public class TickableSoundMatterScanner extends AbstractTickableSoundInstance {
 	private static final float MAX_DISTANCE = 10.0F;
 
 	public TickableSoundMatterScanner(InteractionHand hand, UUID id) {
-		super(SoundRegister.SOUND_MATTER_SCANNER_RUNNING.get(), SoundSource.PLAYERS,
+		super(SoundRegistry.SOUND_MATTER_SCANNER_RUNNING.get(), SoundSource.PLAYERS,
 				SoundInstance.createUnseededRandom());
 		this.hand = hand;
 		this.id = id;

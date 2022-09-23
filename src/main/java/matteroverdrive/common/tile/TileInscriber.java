@@ -2,7 +2,6 @@ package matteroverdrive.common.tile;
 
 import java.util.List;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryInscriber;
 import matteroverdrive.common.recipe.RecipeInit;
@@ -16,6 +15,7 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -163,7 +163,7 @@ public class TileInscriber extends GenericMachineTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
 		}
 	}
 

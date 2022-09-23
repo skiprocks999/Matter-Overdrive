@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.SoundRegister;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.screen.ScreenPatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
@@ -20,8 +20,8 @@ import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSearchbar;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -68,12 +68,12 @@ public class WrapperPatternMonitorScreen {
 
 		searchbar = new EditBoxSearchbar(screen, guiWidth + x, guiHeight + y, 134, 14, 167);
 		searchbar.setResponder(this::handleSearchBar);
-		searchbar.setTextColor(UtilsRendering.WHITE);
-		searchbar.setTextColorUneditable(UtilsRendering.WHITE);
+		searchbar.setTextColor(Colors.WHITE.getColor());
+		searchbar.setTextColorUneditable(Colors.WHITE.getColor());
 
 		orderQuantityBox = new EditBoxOverdrive(EditBoxTextures.OVERDRIVE_EDIT_BOX, screen, guiWidth + x + 44, guiHeight + y + 123, 54, 15);
-		orderQuantityBox.setTextColor(UtilsRendering.WHITE);
-		orderQuantityBox.setTextColorUneditable(UtilsRendering.WHITE);
+		orderQuantityBox.setTextColor(Colors.WHITE.getColor());
+		orderQuantityBox.setTextColorUneditable(Colors.WHITE.getColor());
 		orderQuantityBox.setMaxLength(4);
 		orderQuantityBox.setResponder(this::handleQuantityBar);
 		orderQuantityBox.setFilter(EditBoxOverdrive.POSITIVE_INTEGER_BOX);
@@ -110,7 +110,7 @@ public class WrapperPatternMonitorScreen {
 			int inc = Screen.hasShiftDown() ? 16 : 1;
 			orderVal = Mth.clamp(orderVal += inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
-		}).setRight().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
+		}).setRight().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		decVal = new ButtonOverdrive(screen, x + 29, y + 123, 15, 15, MINUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
@@ -120,26 +120,26 @@ public class WrapperPatternMonitorScreen {
 			int inc = Screen.hasShiftDown() ? 16 : 1;
 			orderVal = Mth.clamp(orderVal -= inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
-		}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
+		}).setLeft().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, Component.empty(), (button) -> {
 			Minecraft minecraft = Minecraft.getInstance();
 			ItemPatternWrapper wrapper = selectedItem.getPattern();
 			if (wrapper == null || wrapper.isAir()) {
 				minecraft.getSoundManager()
-						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
 			// safety check for data pack fuckery
 			if (value <= 0.0) {
 				minecraft.getSoundManager()
-						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			TilePatternMonitor monitor = screen.getMenu().getTile();
 			if (monitor == null) {
 				minecraft.getSoundManager()
-						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F));
 				return;
 			}
 			String order = orderQuantityBox.getValue();
@@ -149,10 +149,10 @@ public class WrapperPatternMonitorScreen {
 			}
 			if (monitor.postOrderToNetwork(wrapper, orderVal, true, true)) {
 				minecraft.getSoundManager()
-						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
+						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT1.get(), 1.0F));
 			} else {
 				minecraft.getSoundManager()
-						.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F));
+						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F));
 			}
 
 		}, (button, stack, x, y) -> {
@@ -329,7 +329,7 @@ public class WrapperPatternMonitorScreen {
 
 	private Consumer<SoundManager> getIncDecSound() {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
-		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F, pitch));
+		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT0.get(), 1.0F, pitch));
 	}
 
 }

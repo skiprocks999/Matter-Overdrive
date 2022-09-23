@@ -1,10 +1,8 @@
 package matteroverdrive.registry;
 
 import java.awt.*;
-import java.sql.Ref;
 import java.util.function.Function;
 
-import matteroverdrive.MatterOverdrive;
 import matteroverdrive.References;
 import matteroverdrive.common.item.ItemPatternDrive;
 import matteroverdrive.common.item.ItemUpgrade;

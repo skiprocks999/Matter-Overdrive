@@ -174,7 +174,7 @@ public class BlockRegistry {
 									TileAndroidStation::new,
 									TypeMachine.ANDROID_STATION,
 									TileRegistry.TILE_ANDROID_STATION
-					)
+					), false
 	);
 
 	// Functional Methods

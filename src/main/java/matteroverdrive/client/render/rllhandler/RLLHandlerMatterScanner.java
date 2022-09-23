@@ -7,6 +7,8 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
+import matteroverdrive.client.ClientReferences.AtlasTextures;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
@@ -82,7 +84,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			int[] shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 1.5D, 15.0D,
 					0.5);
 
-			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer,
+			font.drawInBatch(text, shift[0], shift[1], Colors.HOLO.getColor(), false, matrix.last().pose(), buffer,
 					true, 0, 255);
 
 			matrix.popPose();
@@ -99,7 +101,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 3.5D, 13.0D, 0.75);
 
-			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer,
+			font.drawInBatch(text, shift[0], shift[1], Colors.HOLO.getColor(), false, matrix.last().pose(), buffer,
 					true, 0, 255);
 
 			matrix.popPose();
@@ -114,7 +116,7 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
 
-			font.drawInBatch(text, shift[0], shift[1], UtilsRendering.TEXT_BLUE, false, matrix.last().pose(), buffer,
+			font.drawInBatch(text, shift[0], shift[1], Colors.HOLO.getColor(), false, matrix.last().pose(), buffer,
 					true, 0, 255);
 
 			matrix.popPose();
@@ -127,13 +129,11 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 			rotateMatrixForScanner(matrix, player.getDirection(), traceDir);
 
-			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES
-					.get(ClientRegister.TEXTURE_HOLO_GRID);
+			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_GRID);
 			float[] holo_uv = { holoGrid.getU0(), holoGrid.getU1(), holoGrid.getV0(), holoGrid.getV1() };
-			float[] holo_color = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
-			holo_color[3] = 0.2F;
+			float[] holo_color = Colors.HOLO.getFloatArrModAlpha(0.2F);
 
-			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(ClientRegister.TEXTURE_SPINNER);
+			TextureAtlasSprite spinner = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.SPINNER);
 			float[] spinner_uv = { spinner.getU0(), spinner.getU1(), spinner.getV0(), spinner.getV1() };
 			float cutoff = getCuttoffFloat(player, scannerStatus.held, scannerStatus.stack);
 			float[] spinner_color = getSpinnerColor(scannerStatus.held, cutoff);
@@ -364,13 +364,13 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 
 			float iRatio = 1.0F - ratio;
 
-			return new float[] { UtilsRendering.FLOAT_HOLO_RED[0] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[0] * iRatio,
-					UtilsRendering.FLOAT_HOLO_RED[1] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[1] * iRatio,
-					UtilsRendering.FLOAT_HOLO_RED[2] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[2] * iRatio,
-					UtilsRendering.FLOAT_HOLO_RED[3] * ratio + UtilsRendering.FLOAT_HOLO_GREEN[3] * iRatio };
+			return new float[] { Colors.HOLO_RED.getRFloat() * ratio + Colors.HOLO_GREEN.getRFloat() * iRatio,
+					Colors.HOLO_RED.getGFloat() * ratio + Colors.HOLO_GREEN.getGFloat() * iRatio,
+					Colors.HOLO_RED.getBFloat() * ratio + Colors.HOLO_GREEN.getBFloat() * iRatio,
+					Colors.HOLO_RED.getAFloat() * ratio + Colors.HOLO_GREEN.getAFloat() * iRatio };
 
 		} else {
-			return UtilsRendering.FLOAT_TEXT_BLUE;
+			return Colors.HOLO.getFloatArr();
 		}
 	}
 

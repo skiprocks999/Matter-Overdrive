@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -143,7 +143,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 
 	@Override
 	public void playDownSound(SoundManager handler) {
-		handler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F));
+		handler.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT1.get(), 1.0F));
 
 	}
 

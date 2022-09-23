@@ -2,6 +2,7 @@ package matteroverdrive.core.screen.component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
@@ -40,7 +41,7 @@ public class ScreenComponentQueuedOrder extends OverdriveScreenComponent {
 			itemRenderer.renderGuiItem(new ItemStack(order.getItem()), x + 2, y + 2);
 			MutableComponent order = UtilsText.gui("orderratio", this.order.getRemaining(),
 					this.order.getOrderedCount());
-			gui.getFontRenderer().draw(stack, order, x + 22, y + 6.5F, UtilsRendering.WHITE);
+			gui.getFontRenderer().draw(stack, order, x + 22, y + 6.5F, Colors.WHITE.getColor());
 		}
 	}
 

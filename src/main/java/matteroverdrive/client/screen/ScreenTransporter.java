@@ -2,6 +2,7 @@ package matteroverdrive.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.inventory.InventoryTransporter;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
@@ -21,7 +22,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonT
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.component.wrappers.WrapperTransporterLocationEditer;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -292,20 +292,20 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(
-				new ScreenComponentLabel(this, 70, 54, new int[] { 4 }, UtilsText.gui("xlabel"), UtilsRendering.WHITE));
+				new ScreenComponentLabel(this, 70, 54, new int[] { 4 }, UtilsText.gui("xlabel"), Colors.WHITE.getColor()));
 		addScreenComponent(
-				new ScreenComponentLabel(this, 70, 74, new int[] { 4 }, UtilsText.gui("ylabel"), UtilsRendering.WHITE));
+				new ScreenComponentLabel(this, 70, 74, new int[] { 4 }, UtilsText.gui("ylabel"), Colors.WHITE.getColor()));
 		addScreenComponent(
-				new ScreenComponentLabel(this, 70, 94, new int[] { 4 }, UtilsText.gui("zlabel"), UtilsRendering.WHITE));
+				new ScreenComponentLabel(this, 70, 94, new int[] { 4 }, UtilsText.gui("zlabel"), Colors.WHITE.getColor()));
 		addScreenComponent(new ScreenComponentLabel(this, 70, 111, new int[] { 4 }, () -> {
 			TileTransporter transporter = getMenu().getTile();
 			Component extraComponent = Component.empty();
@@ -325,7 +325,7 @@ public class ScreenTransporter extends GenericMachineScreen<InventoryTransporter
 
 			}
 			return UtilsText.gui("dimensionname", extraComponent);
-		}, UtilsRendering.WHITE));
+		}, Colors.WHITE.getColor()));
 
 	}
 

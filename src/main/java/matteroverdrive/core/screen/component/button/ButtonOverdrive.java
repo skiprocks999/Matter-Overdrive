@@ -2,8 +2,9 @@ package matteroverdrive.core.screen.component.button;
 
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -21,7 +22,7 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	protected ButtonTextures hoveredText;
 	protected ButtonTextures pressedText;
 
-	protected int textColor = UtilsRendering.TEXT_BLUE;
+	protected int textColor = Colors.HOLO.getColor();
 	protected Consumer<SoundManager> downSound = null;
 
 	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
@@ -67,8 +68,8 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		UtilsRendering.setShader(GameRenderer::getPositionTexShader);
+		UtilsRendering.resetShaderColor();
 
 		if (isPressed) {
 			UtilsRendering.bindTexture(pressedText.getTexture());

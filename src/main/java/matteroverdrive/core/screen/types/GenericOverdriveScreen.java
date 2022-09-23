@@ -3,8 +3,8 @@ package matteroverdrive.core.screen.types;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.inventory.GenericInventory;
-import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,7 +40,7 @@ public abstract class GenericOverdriveScreen<T extends GenericInventory> extends
 		float length = font.width(this.title);
 		float offset = (144.0F - length) / 2.0F;
 		this.font.draw(stack, this.title, (float) this.titleLabelX + 3 + offset, (float) this.titleLabelY + 1,
-				UtilsRendering.TITLE_BLUE);
+				Colors.MATTER.getColor());
 	}
 
 }

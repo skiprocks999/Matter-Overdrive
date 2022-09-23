@@ -1,9 +1,9 @@
 package matteroverdrive.common.tile.matter_network.matter_replicator.utils;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.sound.tile.TickableSoundTile;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 
 public class SoundHandlerReplicator {
@@ -35,7 +35,7 @@ public class SoundHandlerReplicator {
 		}
 
 		if (continuous && !previousContinuous && playing) {
-			continuousReplication = new TickableSoundTile(SoundRegister.SOUND_MATTER_REPLICATOR.get(), replicator,
+			continuousReplication = new TickableSoundTile(SoundRegistry.SOUND_MATTER_REPLICATOR.get(), replicator,
 					true);
 			Minecraft.getInstance().getSoundManager().play(continuousReplication);
 			if (singleReplication != null) {
@@ -46,12 +46,12 @@ public class SoundHandlerReplicator {
 		previousContinuous = continuous;
 
 		if (replicator.shouldPlaySound() && !playing) {
-			continuousReplication = new TickableSoundTile(SoundRegister.SOUND_MATTER_REPLICATOR.get(), replicator,
+			continuousReplication = new TickableSoundTile(SoundRegistry.SOUND_MATTER_REPLICATOR.get(), replicator,
 					true);
 			if (continuous) {
 				Minecraft.getInstance().getSoundManager().play(continuousReplication);
 			}
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), replicator, true);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_MACHINE.get(), replicator, true);
 			replicator.setSoundPlaying();
 		}
 
@@ -60,7 +60,7 @@ public class SoundHandlerReplicator {
 		}
 
 		if (playing && playReplicateSound && !continuous && !playingReplicationSound) {
-			singleReplication = new TickableSoundTile(SoundRegister.SOUND_MATTER_REPLICATOR.get(), replicator, false);
+			singleReplication = new TickableSoundTile(SoundRegistry.SOUND_MATTER_REPLICATOR.get(), replicator, false);
 			Minecraft.getInstance().getSoundManager().play(singleReplication);
 			playingReplicationSound = true;
 		}

@@ -1,6 +1,5 @@
 package matteroverdrive.common.tile;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMicrowave;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -11,6 +10,7 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -157,7 +157,7 @@ public class TileMicrowave extends GenericMachineTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_MACHINE.get(), this, 1.0F, 1.0F, true);
 		}
 	}
 

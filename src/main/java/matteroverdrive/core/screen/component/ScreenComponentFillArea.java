@@ -22,9 +22,9 @@ public class ScreenComponentFillArea extends OverdriveScreenComponent {
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		UtilsRendering.bindTexture(resource.getTexture());
-		UtilsRendering.color(color);
+		UtilsRendering.setShaderColor(color);
 		blit(stack, this.x, this.y, 0, 0, this.width, this.height);
-		UtilsRendering.color(UtilsRendering.WHITE);
+		UtilsRendering.resetShaderColor();
 	}
 
 }

@@ -4,12 +4,12 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.SoundRegister;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.screen.GenericScreen;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -56,14 +56,14 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileTransporter transport = transporter.get();
 		TransporterLocationWrapper wrapper = transport.locationManager.getLocation(index);
-		int color = transport.validDestination(wrapper).getFirst() ? UtilsRendering.TEXT_BLUE : UtilsRendering.RED;
+		int color = transport.validDestination(wrapper).getFirst() ? Colors.HOLO.getColor() : Colors.RED.getColor();
 		drawCenteredString(stack, gui.getFontRenderer(), wrapper.getName(), this.x + this.width / 2,
 				this.y + (this.height - 8) / 2, color);
 	}
 
 	@Override
 	public void playDownSound(SoundManager manager) {
-		manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT1.get(), 1.0F, 1.0F));
+		manager.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT1.get(), 1.0F, 1.0F));
 	}
 
 }

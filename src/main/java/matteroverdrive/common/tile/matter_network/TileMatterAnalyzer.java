@@ -2,7 +2,6 @@ package matteroverdrive.common.tile.matter_network;
 
 import javax.annotation.Nullable;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.item.ItemUpgrade;
@@ -19,6 +18,7 @@ import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -220,7 +220,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_MATTER_ANALYZER.get(), this, true);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_MATTER_ANALYZER.get(), this, true);
 		}
 	}
 
@@ -258,12 +258,12 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	}
 
 	private void playFailureSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS,
+		getLevel().playSound(null, getBlockPos(), SoundRegistry.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.BLOCKS,
 				0.5F, 1.0F);
 	}
 
 	private void playSuccessSound() {
-		getLevel().playSound(null, getBlockPos(), SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS,
+		getLevel().playSound(null, getBlockPos(), SoundRegistry.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.BLOCKS,
 				0.5F, 1.0F);
 	}
 

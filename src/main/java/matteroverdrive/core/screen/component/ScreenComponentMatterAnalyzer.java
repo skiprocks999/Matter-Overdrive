@@ -2,9 +2,9 @@ package matteroverdrive.core.screen.component;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
@@ -37,11 +37,11 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 	public void renderForeground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		TileMatterAnalyzer analyzer = (TileMatterAnalyzer) ((GenericInventoryTile<?>)gui.getMenu()).getTile();
 		if (analyzer != null && analyzer.isRunning()) {
-			int color = UtilsRendering.TITLE_BLUE;
-
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			int color = Colors.HOLO.getColor();
+			
+			UtilsRendering.setShader(GameRenderer::getPositionTexShader);
 			UtilsRendering.bindTexture(OverdriveTextures.WHITE.getTexture());
-			UtilsRendering.color(color);
+			UtilsRendering.setShaderColor(color);
 
 			int seed = Item.getId(analyzer.scannedItemProp.get().getItem());
 			random.setSeed((long) seed);
@@ -74,7 +74,7 @@ public class ScreenComponentMatterAnalyzer extends OverdriveScreenComponent {
 				values[i] = UtilsMath.lerpF(values[i], newValue, 0.05f);
 			}
 
-			UtilsRendering.color(UtilsRendering.WHITE);
+			UtilsRendering.resetShaderColor();
 
 		}
 	}

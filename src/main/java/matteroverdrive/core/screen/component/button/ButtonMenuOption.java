@@ -3,13 +3,13 @@ package matteroverdrive.core.screen.component.button;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -81,7 +81,7 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 
 	@Override
 	public void playDownSound(SoundManager pHandler) {
-		pHandler.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F));
+		pHandler.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT0.get(), 1.0F));
 	}
 
 	public enum MenuButtonType {

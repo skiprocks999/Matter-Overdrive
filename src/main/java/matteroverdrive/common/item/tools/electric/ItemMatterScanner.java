@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.References;
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
@@ -16,6 +15,7 @@ import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.core.utils.UtilsWorld;
 import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -318,12 +318,12 @@ public class ItemMatterScanner extends ItemElectric {
 
 	private void playFailureSound(Player player) {
 		player.level.playSound(null, player.getX(), player.getY(), player.getZ(),
-				SoundRegister.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
+				SoundRegistry.SOUND_MATTER_SCANNER_FAIL.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
 	}
 
 	private void playSuccessSound(Player player) {
 		player.level.playSound(null, player.getX(), player.getY(), player.getZ(),
-				SoundRegister.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
+				SoundRegistry.SOUND_MATTER_SCANNER_SUCCESS.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
 	}
 
 	private boolean doesStoredMatch(BlockState state, ItemStack stack) {

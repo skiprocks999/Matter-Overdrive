@@ -1,5 +1,6 @@
 package matteroverdrive.client.screen;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.inventory.InventorySpacetimeAccelerator;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
@@ -10,7 +11,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuOption;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -80,7 +80,7 @@ public class ScreenSpacetimeAccelerator extends GenericMachineScreen<InventorySp
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }).setCustomTimeKey("multiplier")
 				.setMatterPerTick());
 

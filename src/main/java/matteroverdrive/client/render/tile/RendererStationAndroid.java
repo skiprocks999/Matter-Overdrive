@@ -4,9 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import matteroverdrive.ReferencesClient;
+
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.tile.station.TileAndroidStation;
+import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -34,8 +36,10 @@ public class RendererStationAndroid extends RendererStationBase<TileAndroidStati
       stack.pushPose();
       stack.translate(0.5,  2,  0.5);
       stack.mulPose(Vector3f.XP.rotationDegrees(180));
-
-      RenderSystem.setShaderColor(ReferencesClient.Colors.HOLO.getRed(), ReferencesClient.Colors.HOLO.getGreen(), ReferencesClient.Colors.HOLO.getBlue(), 0.625f);
+      
+      float[] holoArr = UtilsRendering.getColorArray(Colors.HOLO.getColor());
+      
+      UtilsRendering.setShaderColor(Colors.HOLO.getFloatArrModAlpha(0.625f));
       float playerPosX = Mth.clampedLerp((float) player.xo, (float) player.position().x, partialTicks);
       float playerPosZ = Mth.clampedLerp((float) player.zo, (float) player.position().z, partialTicks);
       float angle = (float) Math.toDegrees(Math.atan2(playerPosX - (tile.getBlockPos().getX() + 0.5), playerPosZ - (tile.getBlockPos().getZ() + 0.5)) + Math.PI);
@@ -52,7 +56,7 @@ public class RendererStationAndroid extends RendererStationBase<TileAndroidStati
 
       RenderSystem.applyModelViewMatrix();
 
-      playerModel.renderToBuffer(new PoseStack(), consumer, 0, OverlayTexture.NO_OVERLAY, ReferencesClient.Colors.HOLO.getRed() / 255f, ReferencesClient.Colors.HOLO.getBlue() / 255f, ReferencesClient.Colors.HOLO.getGreen() / 255f, 0.625F);
+      playerModel.renderToBuffer(new PoseStack(), consumer, 0, OverlayTexture.NO_OVERLAY, Colors.HOLO.getRFloat(), Colors.HOLO.getGFloat(), Colors.HOLO.getBFloat(), 0.625F);
 
       // This fixes mojank ;) we don't actually use it. This forces a upload to buffer so the values are not lost.
       bufferIn.getBuffer(RenderType.translucentMovingBlock());

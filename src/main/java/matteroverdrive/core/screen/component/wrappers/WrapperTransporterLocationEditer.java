@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.SoundRegister;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.common.tile.transporter.utils.TransporterLocationWrapper;
 import matteroverdrive.core.screen.GenericScreen;
@@ -13,8 +13,8 @@ import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSuppliableName;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
 import matteroverdrive.core.utils.UtilsNbt;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
@@ -67,8 +67,8 @@ public class WrapperTransporterLocationEditer {
 		nameBox = new EditBoxSuppliableName(EditBoxTextures.OVERDRIVE_EDIT_BOX, gui, guiWidth + 65 + xOffset, guiHeight + 30 + yOffset, 120, 15, () -> {
 			return transporterSupplier.get().locationManager.getLocation(currIndex).getName().getString();
 		});
-		nameBox.setTextColor(UtilsRendering.WHITE);
-		nameBox.setTextColorUneditable(UtilsRendering.WHITE);
+		nameBox.setTextColor(Colors.WHITE.getColor());
+		nameBox.setTextColorUneditable(Colors.WHITE.getColor());
 		nameBox.setMaxLength(15);
 		nameBox.setResponder(string -> {
 			nameBox.setFocus(true);
@@ -83,8 +83,8 @@ public class WrapperTransporterLocationEditer {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getX()
 							+ "";
 				});
-		xCoordinateBox.setTextColor(UtilsRendering.WHITE);
-		xCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
+		xCoordinateBox.setTextColor(Colors.WHITE.getColor());
+		xCoordinateBox.setTextColorUneditable(Colors.WHITE.getColor());
 		// the world border is 30M....
 		xCoordinateBox.setMaxLength(9);
 		xCoordinateBox.setFilter(EditBoxOverdrive.INTEGER_BOX);
@@ -101,8 +101,8 @@ public class WrapperTransporterLocationEditer {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getY()
 							+ "";
 				});
-		yCoordinateBox.setTextColor(UtilsRendering.WHITE);
-		yCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
+		yCoordinateBox.setTextColor(Colors.WHITE.getColor());
+		yCoordinateBox.setTextColorUneditable(Colors.WHITE.getColor());
 		yCoordinateBox.setMaxLength(9);
 		yCoordinateBox.setFilter(EditBoxOverdrive.INTEGER_BOX);
 		yCoordinateBox.setResponder(string -> {
@@ -118,8 +118,8 @@ public class WrapperTransporterLocationEditer {
 					return transporterSupplier.get().locationManager.getLocation(currIndex).getDestination().getZ()
 							+ "";
 				});
-		zCoordinateBox.setTextColor(UtilsRendering.WHITE);
-		zCoordinateBox.setTextColorUneditable(UtilsRendering.WHITE);
+		zCoordinateBox.setTextColor(Colors.WHITE.getColor());
+		zCoordinateBox.setTextColorUneditable(Colors.WHITE.getColor());
 		zCoordinateBox.setMaxLength(9);
 		zCoordinateBox.setFilter(EditBoxOverdrive.INTEGER_BOX);
 		zCoordinateBox.setResponder(string -> {
@@ -134,13 +134,13 @@ public class WrapperTransporterLocationEditer {
 			final int ref = i;
 			incButtons[i] = new ButtonOverdrive(gui, 79 + xOffset, 50 + 20 * i + yOffset, 15, 15, PLUS, button -> {
 				handleIncDec(ref, 1);
-			}).setLeft().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
+			}).setLeft().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		}
 		for (int i = 0; i < decButtons.length; i++) {
 			final int ref = i;
 			decButtons[i] = new ButtonOverdrive(gui, 164 + xOffset, 50 + 20 * i + yOffset, 15, 15, MINUS, button -> {
 				handleIncDec(ref, -1);
-			}).setRight().setColor(UtilsRendering.WHITE).setSound(getIncDecSound());
+			}).setRight().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		}
 		resetLocation = new ButtonOverdrive(gui, 133 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("resetpos"),
 				button -> {
@@ -270,12 +270,12 @@ public class WrapperTransporterLocationEditer {
 	}
 
 	private Consumer<SoundManager> getDefaultSound() {
-		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F, 1.0F));
+		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F, 1.0F));
 	}
 
 	private Consumer<SoundManager> getIncDecSound() {
 		float pitch = MatterOverdrive.RANDOM.nextFloat(0.9F, 1.1F);
-		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_SOFT0.get(), 1.0F, pitch));
+		return manager -> manager.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_SOFT0.get(), 1.0F, pitch));
 	}
 
 	public boolean areEditBoxesActive() {

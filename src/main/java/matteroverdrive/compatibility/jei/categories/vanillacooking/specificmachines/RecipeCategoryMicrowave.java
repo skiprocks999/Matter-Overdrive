@@ -1,6 +1,7 @@
 package matteroverdrive.compatibility.jei.categories.vanillacooking.specificmachines;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.compatibility.jei.categories.vanillacooking.CookingRecipeCategory;
 import matteroverdrive.compatibility.jei.utils.gui.ScreenObjectWrapper;
@@ -12,7 +13,6 @@ import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperPowerCons
 import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperPowerUsage;
 import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperProcessTime;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.BlockRegistry;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
@@ -31,9 +31,9 @@ public class RecipeCategoryMicrowave extends CookingRecipeCategory<SmokingRecipe
 
 	private static final ArrowRightAnimatedWrapper ANIM_ARROW = new ArrowRightAnimatedWrapper(35, 15);
 	
-	private static final LabelWrapperPowerUsage POWER_USE = new LabelWrapperPowerUsage(UtilsRendering.HOLO_RED, 50, 40).setConstUsage(TileMicrowave.USAGE_PER_TICK);
-	private static final LabelWrapperPowerConsumed POWER_CONSUMED = new LabelWrapperPowerConsumed(UtilsRendering.HOLO_RED, 50, 52).setConstUsage(TileMicrowave.USAGE_PER_TICK);
-	private static final LabelWrapperProcessTime PROCESS_TIME = new LabelWrapperProcessTime(UtilsRendering.TEXT_BLUE, 89, 19);
+	private static final LabelWrapperPowerUsage POWER_USE = new LabelWrapperPowerUsage(Colors.HOLO_RED.getColor(), 50, 40).setConstUsage(TileMicrowave.USAGE_PER_TICK);
+	private static final LabelWrapperPowerConsumed POWER_CONSUMED = new LabelWrapperPowerConsumed(Colors.HOLO_RED.getColor(), 50, 52).setConstUsage(TileMicrowave.USAGE_PER_TICK);
+	private static final LabelWrapperProcessTime PROCESS_TIME = new LabelWrapperProcessTime(Colors.HOLO.getColor(), 89, 19);
 
 	private static final int ANIM_TIME = 50;
 

@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 public class ScreenComponentIcon extends OverdriveScreenComponent {
 
 	private IconType type;
-	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = "textures/gui/icon/";
 
 	public ScreenComponentIcon(@Nonnull IconType type, final GenericScreen<?> gui, final int x, final int y,
@@ -27,10 +26,9 @@ public class ScreenComponentIcon extends OverdriveScreenComponent {
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (type != IconType.NONE) {
 			UtilsRendering.bindTexture(resource.getTexture());
-			UtilsRendering.color(color);
+			UtilsRendering.resetShaderColor();
 			blit(stack, this.x, this.y, type.getTextureU(), type.getTextureV(), type.getUWidth(),
 					type.getVHeight(), type.getTextureWidth(), type.getTextureHeight());
-			UtilsRendering.color(color);
 		}
 	}
 

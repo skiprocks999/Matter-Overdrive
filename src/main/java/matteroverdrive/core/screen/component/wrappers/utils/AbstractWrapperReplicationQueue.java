@@ -3,6 +3,7 @@ package matteroverdrive.core.screen.component.wrappers.utils;
 import java.util.List;
 import java.util.function.Consumer;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.PacketCancelReplication;
@@ -12,7 +13,6 @@ import matteroverdrive.core.screen.component.ScreenComponentQueuedOrder;
 import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
-import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,7 +39,7 @@ public abstract class AbstractWrapperReplicationQueue {
 
 	public void initButtons(ItemRenderer renderer) {
 
-		label = new ScreenComponentLabel(screen, x, y, screenNumbers, getCatagoryName(), UtilsRendering.TEXT_BLUE);
+		label = new ScreenComponentLabel(screen, x, y, screenNumbers, getCatagoryName(), Colors.HOLO.getColor());
 
 		int xOff = -2;
 		int yOff = 10;

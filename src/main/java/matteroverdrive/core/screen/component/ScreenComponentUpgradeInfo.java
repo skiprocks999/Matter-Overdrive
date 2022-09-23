@@ -2,12 +2,12 @@ package matteroverdrive.core.screen.component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsText;
-import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -55,7 +55,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 				} else {
 					component = UtilsText.gui("time", UtilsText.formatTimeValue(operatingTime / currSpeed / 20.0));
 				}
-				color = currSpeed >= owner.getDefaultSpeed() ? UtilsRendering.GREEN : UtilsRendering.RED;
+				color = currSpeed >= owner.getDefaultSpeed() ? Colors.GREEN.getColor() : Colors.RED.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -64,7 +64,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			if (currPowerUsage > 0 && owner.getDefaultPowerUsage() > 0) {
 				String formatted = UtilsText.formatPowerValue(currPowerUsage);
 				component = powerNonTick ? UtilsText.gui("usage", formatted) : UtilsText.gui("usagetick", formatted);
-				color = currPowerUsage > owner.getDefaultPowerUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
+				color = currPowerUsage > owner.getDefaultPowerUsage() ? Colors.RED.getColor() : Colors.GREEN.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -73,7 +73,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			if (currMatterUsage > 0 && owner.getDefaultMatterUsage() > 0) {
 				String formatted = UtilsText.formatMatterValue(currMatterUsage);
 				component = matterPerTick ? UtilsText.gui("usagetick", formatted) : UtilsText.gui("usage", formatted);
-				color = currMatterUsage > owner.getDefaultMatterUsage() ? UtilsRendering.RED : UtilsRendering.GREEN;
+				color = currMatterUsage > owner.getDefaultMatterUsage() ? Colors.RED.getColor() : Colors.GREEN.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -81,7 +81,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			float failureChance = owner.getCurrentFailure();
 			if (owner.getDefaultFailure() > 0) {
 				component = UtilsText.gui("failure", UtilsText.formatPercentage(failureChance * 100));
-				color = failureChance > owner.getDefaultFailure() ? UtilsRendering.RED : UtilsRendering.GREEN;
+				color = failureChance > owner.getDefaultFailure() ? Colors.RED.getColor() : Colors.GREEN.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -89,7 +89,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			int range = (int) owner.getCurrentRange();
 			if (owner.getDefaultRange() > 0) {
 				component = UtilsText.gui("range", range);
-				color = range >= owner.getDefaultRange() ? UtilsRendering.GREEN : UtilsRendering.RED;
+				color = range >= owner.getDefaultRange() ? Colors.GREEN.getColor() : Colors.RED.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -97,7 +97,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			double currPowerStorage = owner.getCurrentPowerStorage();
 			if (currPowerStorage > 0 && owner.getDefaultPowerStorage() > 0) {
 				component = UtilsText.gui("storage", UtilsText.formatPowerValue(currPowerStorage));
-				color = currPowerStorage >= owner.getDefaultPowerStorage() ? UtilsRendering.GREEN : UtilsRendering.RED;
+				color = currPowerStorage >= owner.getDefaultPowerStorage() ? Colors.GREEN.getColor() : Colors.RED.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
@@ -105,13 +105,12 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 			double currMatterStorage = owner.getCurrentMatterStorage();
 			if (currMatterStorage > 0 && owner.getDefaultMatterStorage() > 0) {
 				component = UtilsText.gui("storage", UtilsText.formatMatterValue(currMatterStorage));
-				color = currMatterStorage >= owner.getDefaultMatterStorage() ? UtilsRendering.GREEN
-						: UtilsRendering.RED;
+				color = currMatterStorage >= owner.getDefaultMatterStorage() ? Colors.GREEN.getColor() : Colors.RED.getColor();
 				font.draw(stack, component, this.x, this.y + offset, color);
 				offset += 10;
 			}
 			if (owner.isMuffled()) {
-				font.draw(stack, UtilsText.gui("soundmuted"), this.x, this.y + offset, UtilsRendering.GREEN);
+				font.draw(stack, UtilsText.gui("soundmuted"), this.x, this.y + offset, Colors.GREEN.getColor());
 			}
 
 		}

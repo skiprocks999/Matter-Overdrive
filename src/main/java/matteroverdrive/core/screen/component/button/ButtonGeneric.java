@@ -3,10 +3,10 @@ package matteroverdrive.core.screen.component.button;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -53,8 +53,8 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 
 	public static enum ButtonType {
 
-		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),
-		CLOSE_RED(0, 0, 18, 0, 9, 9, true, SoundRegister.SOUND_BUTTON_SOFT1.get()),
+		CLOSE_SCREEN(0, 0, 9, 0, 9, 9, true, SoundRegistry.SOUND_BUTTON_SOFT1.get()),
+		CLOSE_RED(0, 0, 18, 0, 9, 9, true, SoundRegistry.SOUND_BUTTON_SOFT1.get()),
 		ORDER_ITEMS(0, 57, 20, 57, 20, 10, false, null);
 
 		public final int xOffset;

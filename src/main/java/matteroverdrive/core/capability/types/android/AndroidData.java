@@ -7,7 +7,7 @@ import matteroverdrive.core.android.packet.s2c.PacketAndroidSyncAll;
 import matteroverdrive.core.android.packet.s2c.PacketAndroidTurningTimeSync;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.packet.NetworkHandler;
-import matteroverdrive.core.sound.MatterOverdriveSounds;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -94,7 +94,7 @@ public class AndroidData implements ICapabilityAndroid, ICapabilityProvider {
 
   private void playGlitchSound(Entity entity, RandomSource random, float amount) {
     if(entity instanceof Player player) {
-      player.level.playSound(player, player.blockPosition(), MatterOverdriveSounds.GLITCH.get(), SoundSource.PLAYERS, amount, 0.9f + random.nextFloat() * 0.2f);
+      player.level.playSound(player, player.blockPosition(), SoundRegistry.GLITCH.get(), SoundSource.PLAYERS, amount, 0.9f + random.nextFloat() * 0.2f);
     }
   }
 

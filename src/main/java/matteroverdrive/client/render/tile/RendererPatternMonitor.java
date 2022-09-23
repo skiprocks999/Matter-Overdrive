@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
+import matteroverdrive.client.ClientReferences.AtlasTextures;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
@@ -59,24 +61,21 @@ public class RendererPatternMonitor extends AbstractTileRenderer<TilePatternMoni
 		if (state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) {
 			matrix.pushPose();
 
-			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES
-					.get(ClientRegister.TEXTURE_HOLO_GRID);
+			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_GRID);
 			float[] holo_uv = { holoGrid.getU0(), holoGrid.getU1(), holoGrid.getV0(), holoGrid.getV1() };
-			float[] holoColor = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
+			float[] holoColor = Colors.HOLO.getFloatArr();
 			holoColor[3] = 0.2F;
 
-			TextureAtlasSprite holoGlow = ClientRegister.CACHED_TEXTUREATLASSPRITES
-					.get(ClientRegister.TEXTURE_HOLO_GLOW);
+			TextureAtlasSprite holoGlow = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_GLOW);
 			float[] glow_uv = { holoGlow.getU0(), holoGlow.getU1(), holoGlow.getV0(), holoGlow.getV1() };
-			float[] glowColor = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
+			
 			float propAlpha = (float) Math.abs(Math.cos((double) (getGameTime() % 80) / 80.0D * Math.PI));
 			if (propAlpha < 0.1F)
 				propAlpha = 0.1F;
-			glowColor[3] = propAlpha;
+			float[] glowColor = Colors.HOLO.getFloatArrModAlpha(propAlpha);
 
-			TextureAtlasSprite holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-					.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
-			float[] barsColor = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
+			TextureAtlasSprite holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR);
+			float[] barsColor = Colors.HOLO.getFloatArr();
 
 			Matrix4f matrix4f = matrix.last().pose();
 			Matrix3f matrix3f = matrix.last().normal();
@@ -94,25 +93,19 @@ public class RendererPatternMonitor extends AbstractTileRenderer<TilePatternMoni
 				float rot = horizontalFacing.toYRot();
 				if (facing == Direction.UP) {
 					if (rot == 90.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_90);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_90);
 					} else if (rot == 180.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_180);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_180);
 					} else if (rot == 270.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_270);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_270);
 					}
 				} else {
 					if (rot == 90.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_90);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_90);
 					} else if (rot == 0.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_180);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_180);
 					} else if (rot == 270.0F) {
-						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES
-								.get(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_270);
+						holoBars = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_PATTERN_MONITOR_270);
 					}
 				}
 

@@ -1,10 +1,9 @@
 package matteroverdrive.client;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.AtlasTextures;
 import matteroverdrive.client.particle.replicator.ParticleReplicator;
 import matteroverdrive.client.particle.shockwave.ParticleShockwave;
 import matteroverdrive.client.particle.vent.ParticleVent;
@@ -61,24 +60,7 @@ public class ClientRegister {
 
 	/* TEXTURES */
 
-	public static final HashMap<ResourceLocation, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
-	private static final List<ResourceLocation> CUSTOM_BLOCK_TEXTURES = new ArrayList<>();
-
-	private static final String CUSTOM_LOC = References.ID + ":atlas/";
-
-	public static final ResourceLocation TEXTURE_HOLO_GRID = new ResourceLocation(CUSTOM_LOC + "holo_grid");
-	// rotating matricies is a pain in the ass fight me
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR = new ResourceLocation(
-			CUSTOM_LOC + "pattern_monitor_holo");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_90 = new ResourceLocation(
-			CUSTOM_LOC + "pattern_monitor_holo_90");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_180 = new ResourceLocation(
-			CUSTOM_LOC + "pattern_monitor_holo_180");
-	public static final ResourceLocation TEXTURE_HOLO_PATTERN_MONITOR_270 = new ResourceLocation(
-			CUSTOM_LOC + "pattern_monitor_holo_270");
-	public static final ResourceLocation TEXTURE_SPINNER = new ResourceLocation(CUSTOM_LOC + "spinner");
-	public static final ResourceLocation TEXTURE_HOLO_GLOW = new ResourceLocation(CUSTOM_LOC + "holo_monitor_glow");
-	public static final ResourceLocation TEXTURE_CONNECTION_ICON = new ResourceLocation(CUSTOM_LOC + "connection_icon");
+	public static final HashMap<AtlasTextures, TextureAtlasSprite> CACHED_TEXTUREATLASSPRITES = new HashMap<>();
 
 	public static void init() {
 
@@ -207,29 +189,20 @@ public class ClientRegister {
 		return new ResourceLocation(References.ID + ":block/" + path);
 	}
 
-	static {
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GRID);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_90);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_180);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_PATTERN_MONITOR_270);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_SPINNER);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_HOLO_GLOW);
-		CUSTOM_BLOCK_TEXTURES.add(ClientRegister.TEXTURE_CONNECTION_ICON);
-	}
-
 	@SubscribeEvent
 	public static void addCustomTextureAtlases(TextureStitchEvent.Pre event) {
 		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-			CUSTOM_BLOCK_TEXTURES.forEach(h -> event.addSprite(h));
+			for(AtlasTextures atlas : AtlasTextures.values()) {
+				event.addSprite(atlas.getTexture());
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public static void cacheCustomTextureAtlases(TextureStitchEvent.Post event) {
 		if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-			for (ResourceLocation loc : CUSTOM_BLOCK_TEXTURES) {
-				ClientRegister.CACHED_TEXTUREATLASSPRITES.put(loc, event.getAtlas().getSprite(loc));
+			for(AtlasTextures atlas : AtlasTextures.values()) {
+				ClientRegister.CACHED_TEXTUREATLASSPRITES.put(atlas, event.getAtlas().getSprite(atlas.getTexture()));
 			}
 		}
 	}

@@ -21,7 +21,6 @@ import net.minecraft.util.FormattedCharSequence;
 public class ScreenComponentSlot extends OverdriveScreenComponent {
 
 	private final SlotType type;
-	private int color = UtilsRendering.getRGBA(255, 255, 255, 255);
 	private static final String BASE_TEXTURE_LOC = "textures/gui/slot/";
 	private IconType icon = null;
 	private ScreenComponentIcon iconComp = null;
@@ -66,11 +65,10 @@ public class ScreenComponentSlot extends OverdriveScreenComponent {
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		if (type != SlotType.NONE) {
 			UtilsRendering.bindTexture(resource.getTexture());
-			UtilsRendering.color(color);
+			UtilsRendering.resetShaderColor();
 			blit(stack, this.x + type.getXOffset(), this.y + type.getYOffset(), type.getTextureU(), type.getTextureV(),
 					type.getUWidth(), type.getVHeight(), type.getTextureWidth(), type.getTextureHeight());
 
-			UtilsRendering.color(UtilsRendering.getRGBA(255, 255, 255, 255));
 			if (iconComp != null) {
 				iconComp.renderBackground(stack, mouseX, mouseY, partialTicks);
 			}

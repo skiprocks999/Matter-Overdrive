@@ -1,7 +1,6 @@
 package matteroverdrive.common.tile;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterDecomposer;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
@@ -18,6 +17,7 @@ import matteroverdrive.core.utils.UtilsMatter;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.ItemRegistry;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -184,7 +184,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_DECOMPOSER.get(), this, true);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_DECOMPOSER.get(), this, true);
 		}
 	}
 

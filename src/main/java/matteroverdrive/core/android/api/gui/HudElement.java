@@ -1,11 +1,11 @@
 package matteroverdrive.core.android.api.gui;
 
 import com.mojang.blaze3d.platform.Window;
-import matteroverdrive.ReferencesClient;
+
+import matteroverdrive.client.ClientReferences;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.android.api.ICapabilityAndroid;
 import net.minecraft.client.Minecraft;
-
-import java.awt.*;
 
 public abstract class HudElement implements IHudElement{
 
@@ -15,7 +15,7 @@ public abstract class HudElement implements IHudElement{
   protected int posY;
   protected int width;
   protected int height;
-  protected Color baseColor;
+  protected Colors baseColor;
   protected float backgroundAlpha;
 
   public HudElement(String name, int width, int height) {
@@ -23,7 +23,7 @@ public abstract class HudElement implements IHudElement{
     this.width = width;
     this.height = height;
     mc = Minecraft.getInstance();
-    baseColor = ReferencesClient.Colors.HOLO;
+    baseColor = ClientReferences.Colors.HOLO;
   }
 
   @Override
@@ -52,7 +52,7 @@ public abstract class HudElement implements IHudElement{
   }
 
   @Override
-  public void setBaseColor(Color color) {
+  public void setBaseColor(Colors color) {
     this.baseColor = color;
   }
 

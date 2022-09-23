@@ -22,6 +22,7 @@ import matteroverdrive.registry.FluidRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import matteroverdrive.registry.MenuRegistry;
 import matteroverdrive.registry.ParticleRegistry;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -48,7 +49,7 @@ public class MatterOverdrive {
 	public MatterOverdrive() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		OverdriveBlockProperties.Defaults.init();
-		SoundRegister.SOUNDS.register(bus);
+		SoundRegistry.SOUNDS.register(bus);
 		OverdriveBlockStates.init();
 		BlockRegistry.BLOCKS.register(bus);
 		ItemRegistry.ITEMS.register(bus);

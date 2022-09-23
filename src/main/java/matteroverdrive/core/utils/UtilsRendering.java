@@ -1,5 +1,7 @@
 package matteroverdrive.core.utils;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -7,9 +9,11 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
@@ -21,20 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 
 public class UtilsRendering {
-
-	public static final int TEXT_BLUE = getRGBA(255, 169, 226, 251);
-	public static final int TITLE_BLUE = getRGBA(255, 191, 228, 230);
-	public static final int GUI_STANDARD = getRGBA(255, 62, 81, 84);
-	public static final int GUI_DARK = getRGBA(255, 44, 54, 52);
-	public static final int RED = getRGBA(255, 255, 0, 0);
-	public static final int GREEN = getRGBA(255, 0, 255, 0);
-	public static final int WHITE = getRGBA(255, 255, 255, 255);
-	public static final int HOLO_RED = getRGBA(255, 230, 80, 20);
-	public static final int HOLO_GREEN = getRGBA(255, 24, 207, 0);
-
-	public static final float[] FLOAT_TEXT_BLUE = UtilsRendering.getColorArray(UtilsRendering.TEXT_BLUE);
-	public static final float[] FLOAT_HOLO_RED = UtilsRendering.getColorArray(UtilsRendering.HOLO_RED);
-	public static final float[] FLOAT_HOLO_GREEN = UtilsRendering.getColorArray(UtilsRendering.HOLO_GREEN);
 
 	public static final AABB AABB_BLOCK = new AABB(0, 0, 0, 1, 1, 1);
 
@@ -66,12 +56,20 @@ public class UtilsRendering {
 		return new float[] { getRed(color), getGreen(color), getBlue(color), getAlpha(color) };
 	}
 
-	public static void color(int color) {
-		RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
+	public static void setShaderColor(int color) {
+		setShaderColor(getColorArray(color));
+	}
+	
+	public static void setShaderColor(float[] color) {
+		RenderSystem.setShaderColor(color[0], color[1], color[2], color[3]);
 	}
 
-	public static void resetColor() {
-		color(WHITE);
+	public static void resetShaderColor() {
+		setShaderColor(Colors.WHITE.getFloatArr());
+	}
+	
+	public static void setShader(Supplier<ShaderInstance> shader) {
+		RenderSystem.setShader(shader);
 	}
 
 	public static BakedModel getBakedModel(ResourceLocation model) {

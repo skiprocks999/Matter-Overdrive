@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.tile.TileMatterDecomposer;
 import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipeCategory;
 import matteroverdrive.compatibility.jei.utils.IPseudoRecipe;
@@ -21,7 +22,6 @@ import matteroverdrive.compatibility.jei.utils.label.types.LabelWrapperProcessTi
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.utils.UtilsNbt;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -40,11 +40,11 @@ public class RecipeCategoryMatterDecomposer extends AbstractOverdriveRecipeCateg
 
 	private static final ArrowRightAnimatedWrapper ANIM_ARROW = new ArrowRightAnimatedWrapper(35, 15);
 	
-	private static final LabelWrapperPowerUsage POWER_USE = new LabelWrapperPowerUsage(UtilsRendering.HOLO_RED, 50, 45);
-	private static final LabelWrapperPowerConsumed POWER_CONSUMED = new LabelWrapperPowerConsumed(UtilsRendering.HOLO_RED, 50, 56);
+	private static final LabelWrapperPowerUsage POWER_USE = new LabelWrapperPowerUsage(Colors.HOLO_RED.getColor(), 50, 45);
+	private static final LabelWrapperPowerConsumed POWER_CONSUMED = new LabelWrapperPowerConsumed(Colors.HOLO_RED.getColor(), 50, 56);
 	private static final LabelWrapperMatterDecomposer COMPOSER = new LabelWrapperMatterDecomposer(50, 34);
-	private static final LabelWrapperProcessTime PROCESS_TIME = new LabelWrapperProcessTime(UtilsRendering.TEXT_BLUE, 89, 24);
-	private static final LabelWrapperFailureChance FAILURE = new LabelWrapperFailureChance(UtilsRendering.TITLE_BLUE, 89, 12, TileMatterDecomposer.FAILURE_CHANCE);
+	private static final LabelWrapperProcessTime PROCESS_TIME = new LabelWrapperProcessTime(Colors.HOLO.getColor(), 89, 24);
+	private static final LabelWrapperFailureChance FAILURE = new LabelWrapperFailureChance(Colors.MATTER.getColor(), 89, 12, TileMatterDecomposer.FAILURE_CHANCE);
 	
 	private static final int ANIM_TIME = 50;
 

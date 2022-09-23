@@ -2,10 +2,10 @@ package matteroverdrive.core.screen.component.button;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.utils.UtilsRendering;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ public class ButtonEditTransporterLocation extends ButtonOverdrive {
 
 	@Override
 	public void playDownSound(SoundManager manager) {
-		manager.play(SimpleSoundInstance.forUI(SoundRegister.SOUND_BUTTON_LOUD3.get(), 1.0F, 1.0F));
+		manager.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F, 1.0F));
 	}
 
 }

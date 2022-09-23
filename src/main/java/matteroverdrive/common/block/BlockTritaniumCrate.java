@@ -3,13 +3,13 @@ package matteroverdrive.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import matteroverdrive.SoundRegister;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
@@ -67,7 +67,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 		if (tile instanceof GenericTile generic && generic != null) {
 			if (generic.hasMenu) {
 				player.openMenu(generic.getMenuProvider());
-				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegister.SOUND_CRATE_OPEN.get(),
+				generic.getLevel().playSound(null, tile.getBlockPos(), SoundRegistry.SOUND_CRATE_OPEN.get(),
 						SoundSource.BLOCKS, 0.5F, 1.0F);
 			}
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);

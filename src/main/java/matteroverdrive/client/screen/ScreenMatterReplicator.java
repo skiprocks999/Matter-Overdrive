@@ -1,5 +1,6 @@
 package matteroverdrive.client.screen;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.inventory.InventoryMatterReplicator;
 import matteroverdrive.core.screen.component.ScreenComponentHotbarBar;
 import matteroverdrive.core.screen.component.ScreenComponentLabel;
@@ -17,7 +18,6 @@ import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonT
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.component.wrappers.WrapperMatterReplicatorOrders;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -252,14 +252,14 @@ public class ScreenMatterReplicator extends GenericMachineScreen<InventoryMatter
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3, 4 }));
 		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 42, new int[] { 3 }, UtilsText.gui("ioitems"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 80, new int[] { 3 }, UtilsText.gui("ioenergy"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentLabel(this, 80, 122, new int[] { 3 }, UtilsText.gui("iomatter"),
-				UtilsRendering.TEXT_BLUE));
+				Colors.HOLO.getColor()));
 		slider = new ScreenComponentVerticalSlider(this, 9, 39, 102, new int[] { 4 });
 		slider.setClickConsumer(queued.getSliderClickedConsumer());
 		slider.setDragConsumer(queued.getSliderDraggedConsumer());

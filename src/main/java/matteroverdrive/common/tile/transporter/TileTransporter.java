@@ -8,7 +8,6 @@ import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 
 import matteroverdrive.MatterOverdrive;
-import matteroverdrive.SoundRegister;
 import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.event.ServerEventHandler;
@@ -29,6 +28,7 @@ import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
+import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -216,7 +216,7 @@ public class TileTransporter extends GenericMachineTile {
 					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
 				});
 				ServerEventHandler.TASK_HANDLER.queueTask(() -> {
-					dim.playSound(null, curLoc.getDestination(), SoundRegister.SOUND_TRANSPORTER_ARRIVE.get(),
+					dim.playSound(null, curLoc.getDestination(), SoundRegistry.SOUND_TRANSPORTER_ARRIVE.get(),
 							SoundSource.BLOCKS, 1.0F, 1.0F);
 				});
 			}
@@ -228,7 +228,7 @@ public class TileTransporter extends GenericMachineTile {
 	public void tickClient() {
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
-			SoundBarrierMethods.playTileSound(SoundRegister.SOUND_TRANSPORTER.get(), this, false);
+			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_TRANSPORTER.get(), this, false);
 		}
 
 		if (getProgress() > 0 && isRunning()) {

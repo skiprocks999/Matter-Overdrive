@@ -4,7 +4,7 @@ import matteroverdrive.core.android.api.perk.AndroidPerkManager;
 import matteroverdrive.core.android.api.perk.IAndroidPerk;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.network.INetworkPacketHandler;
-import matteroverdrive.core.sound.MatterOverdriveSounds;
+import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +46,7 @@ public class PacketAndroidPerkAttemptBuy {
             if (entity.experienceLevel >= requiredXP){
               entity.giveExperienceLevels(-requiredXP);
               perkManager.buyPerk(androidPerk);
-              entity.level.playSound(entity, entity.blockPosition(), MatterOverdriveSounds.PERK_UNLOCK.get(), SoundSource.PLAYERS, 0.5f, 1f);
+              entity.level.playSound(entity, entity.blockPosition(), SoundRegistry.PERK_UNLOCK.get(), SoundSource.PLAYERS, 0.5f, 1f);
               iAndroid.requestUpdate();
             }
           }

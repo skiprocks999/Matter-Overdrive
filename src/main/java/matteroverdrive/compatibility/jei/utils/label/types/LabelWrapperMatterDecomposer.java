@@ -1,9 +1,9 @@
 package matteroverdrive.compatibility.jei.utils.label.types;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.compatibility.jei.categories.base.AbstractOverdriveRecipeCategory;
 import matteroverdrive.compatibility.jei.categories.pseudo.RecipeCategoryMatterDecomposer.PseudoRecipeMatterDecomposer;
 import matteroverdrive.compatibility.jei.utils.label.LabelWrapperGeneric;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class LabelWrapperMatterDecomposer extends LabelWrapperGeneric {
 
 	public LabelWrapperMatterDecomposer(int xPos, int yPos) {
-		super(UtilsRendering.HOLO_GREEN, xPos, yPos, "");
+		super(Colors.HOLO_GREEN.getColor(), xPos, yPos, "");
 	}
 	
 	@Override

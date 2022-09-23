@@ -5,7 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import matteroverdrive.ReferencesClient;
+
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.tile.station.BaseStationTile;
 import net.minecraft.client.Minecraft;
@@ -14,8 +15,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
-
-import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.GL_ONE;
 
@@ -41,16 +40,19 @@ public class RendererStationBase<T extends BaseStationTile> implements BlockEnti
 
     VertexConsumer consumer = bufferIn.getBuffer(MORenderTypes.BASE_STATION);
 
-    Color color;
+    float red;
+    float green;
+    float blue;
+    
     if (tile.isUsableByPlayer(Minecraft.getInstance().player)) {
-      color = ReferencesClient.Colors.HOLO;
+      red = Colors.HOLO.getRFloat();
+      green = Colors.HOLO.getGFloat();
+      blue = Colors.HOLO.getBFloat();
     } else {
-      color = ReferencesClient.Colors.HOLO_RED;
+    	red = Colors.HOLO_RED.getRFloat();
+        green = Colors.HOLO_RED.getGFloat();
+        blue = Colors.HOLO_RED.getBFloat();
     }
-
-    var red = color.getRed() / 255f;
-    var green = color.getGreen() / 255f;
-    var blue = color.getBlue() / 255f;
 
     var hologramTop = height + hologramHeight;
 
@@ -104,7 +106,8 @@ public class RendererStationBase<T extends BaseStationTile> implements BlockEnti
 
 
   public void drawHoloText(PoseStack stack, T tile, double x, double y, double z, float partialTicks) {
-    LocalPlayer player = Minecraft.getInstance().player;
+    Minecraft minecraft = Minecraft.getInstance();
+	LocalPlayer player = minecraft.player;
     if (!tile.isUsableByPlayer(player)) {
       stack.pushPose();
       RenderSystem.enableBlend();
@@ -123,10 +126,10 @@ public class RendererStationBase<T extends BaseStationTile> implements BlockEnti
       stack.scale(0.02f, 0.02f, 0.02f);
       String[] info = "Access Denied".split(" ");
       for (int i = 0; i < info.length; i++) {
-        int width = Minecraft.getInstance().font.width(info[i]);
+        int width = minecraft.font.width(info[i]);
         stack.pushPose();
         stack.translate(-width / 2, -32, 0);
-        Minecraft.getInstance().font.draw(stack, info[i], 0, i * 10, ReferencesClient.Colors.HOLO_RED.getRGB());
+        minecraft.font.draw(stack, info[i], 0, i * 10, Colors.HOLO_RED.getColor());
         stack.popPose();
       }
 

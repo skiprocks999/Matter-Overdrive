@@ -1,12 +1,13 @@
-package matteroverdrive;
+package matteroverdrive.registry;
 
+import matteroverdrive.References;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class SoundRegister {
+public class SoundRegistry {
 
 	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,
 			References.ID);
@@ -30,6 +31,12 @@ public class SoundRegister {
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_BEEP = sound("matter_scanner_beep");
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_FAIL = sound("matter_scanner_fail");
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_SUCCESS = sound("matter_scanner_success");
+
+	public static final RegistryObject<SoundEvent> KUNAI_THUD = sound("kunai_thud");
+	public static final RegistryObject<SoundEvent> ANDROID_TELEPORT = sound("android_teleport");
+	public static final RegistryObject<SoundEvent> GLITCH = sound("gui.glitch");
+	public static final RegistryObject<SoundEvent> PERK_UNLOCK = sound("perk_unlock");
+	public static final RegistryObject<SoundEvent> NIGHT_VISION = sound("night_vision");
 
 	private static RegistryObject<SoundEvent> sound(String name) {
 		return SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(References.ID + ":" + name)));

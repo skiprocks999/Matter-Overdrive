@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -26,7 +27,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 
 	private boolean vertical = false;
 
-	private int color = UtilsRendering.WHITE;
+	private int color = Colors.WHITE.getColor();
 
 	public ScreenComponentProgress(final DoubleSupplier progress, final GenericScreen<?> gui, final int x, final int y,
 			final int[] screenNumbers) {
@@ -49,7 +50,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		UtilsRendering.bindTexture(resource.getTexture());
-		UtilsRendering.color(color);
+		UtilsRendering.setShaderColor(color);
 		double progress = Math.min(1.0, this.progress.getAsDouble());
 		if (vertical) {
 			int height = (int) (progress * this.height);
@@ -60,7 +61,7 @@ public class ScreenComponentProgress extends OverdriveScreenComponent {
 			blit(stack, this.x, this.y, HOR_BASE_X, HOR_BASE_Y, this.width, this.height);
 			blit(stack, this.x, this.y, HOR_BASE_X + this.width, HOR_BASE_Y, width, this.height);
 		}
-		UtilsRendering.resetColor();
+		UtilsRendering.resetShaderColor();
 	}
 
 }

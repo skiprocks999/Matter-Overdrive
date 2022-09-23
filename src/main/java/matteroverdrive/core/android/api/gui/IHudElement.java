@@ -2,9 +2,9 @@ package matteroverdrive.core.android.api.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import matteroverdrive.core.android.api.ICapabilityAndroid;
 
-import java.awt.*;
+import matteroverdrive.client.ClientReferences.Colors;
+import matteroverdrive.core.android.api.ICapabilityAndroid;
 
 public interface IHudElement {
 
@@ -20,7 +20,7 @@ public interface IHudElement {
 
   void setY(int y);
 
-  void setBaseColor(Color color);
+  void setBaseColor(Colors color);
 
   void setBackgroundAlpha(float alpha);
 

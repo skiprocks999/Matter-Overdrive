@@ -12,10 +12,9 @@ import matteroverdrive.client.render.tile.RendererStationAndroid;
 import matteroverdrive.client.render.tooltip.MatterValueTooltipHandler;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
-import matteroverdrive.core.eventhandler.client.AbstractKeyPressHandler;
-import matteroverdrive.core.eventhandler.client.AbstractRenderLevelLastHandler;
-import matteroverdrive.core.eventhandler.client.AbstractTooltipHandler;
-import matteroverdrive.registry.BlockRegistry;
+import matteroverdrive.core.event.handler.client.AbstractKeyPressHandler;
+import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.event.handler.client.AbstractTooltipHandler;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
@@ -28,7 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent.Key;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -75,14 +74,14 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void handleRenderLevelLastEvents(RenderLevelLastEvent event) {
+	public static void handleRenderLevelLastEvents(RenderLevelStageEvent event) {
 
 		Minecraft minecraft = Minecraft.getInstance();
 		PoseStack matrix = event.getPoseStack();
 		LevelRenderer renderer = event.getLevelRenderer();
 		Matrix4f projMatrix = event.getProjectionMatrix();
 		float partialTicks = event.getPartialTick();
-		long stateNS = event.getStartNanos();
+		long stateNS = event.getRenderTick();
 
 		for (AbstractRenderLevelLastHandler handler : RLL_HANDLERS) {
 			handler.handleRendering(minecraft, renderer, matrix, projMatrix, partialTicks, stateNS);
