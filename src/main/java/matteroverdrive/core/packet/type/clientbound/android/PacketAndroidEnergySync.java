@@ -24,9 +24,9 @@ public class PacketAndroidEnergySync extends AbstractOverdrivePacket<PacketAndro
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
+	public boolean handle(PacketAndroidEnergySync pkt, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketAndroidEnergySync(energy, maxEnergy);
+			PacketBarrierMethods.handlePacketAndroidEnergySync(pkt.energy, pkt.maxEnergy);
 		});
 		return true;
 	}

@@ -21,9 +21,9 @@ public class PacketAndroidTurningTimeSync extends AbstractOverdrivePacket<Packet
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
+	public boolean handle(PacketAndroidTurningTimeSync pkt, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketAndroidTurningTimeSync(time);
+			PacketBarrierMethods.handlePacketAndroidTurningTimeSync(pkt.time);
 		});
 		return true;
 	}

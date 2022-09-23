@@ -44,13 +44,13 @@ public class PacketUpdateServerTileProperty extends AbstractOverdrivePacket<Pack
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(PacketUpdateServerTileProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
 			Player playerEntity = contextSupplier.get().getSender();
 			if (playerEntity != null) {
-				BlockEntity entity = playerEntity.level.getBlockEntity(blockPos);
+				BlockEntity entity = playerEntity.level.getBlockEntity(pkt.blockPos);
 				if (entity instanceof IPropertyManaged managed) {
-					managed.getPropertyManager().update(propertyType, property, value);
+					managed.getPropertyManager().update(pkt.propertyType, pkt.property, pkt.value);
 				}
 			}
 		});

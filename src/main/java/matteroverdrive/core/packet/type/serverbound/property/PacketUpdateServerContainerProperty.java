@@ -42,14 +42,14 @@ public class PacketUpdateServerContainerProperty extends AbstractOverdrivePacket
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(PacketUpdateServerContainerProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
 			Player playerEntity = contextSupplier.get().getSender();
 			if (playerEntity != null) {
 				AbstractContainerMenu container = playerEntity.containerMenu;
-				if (container.containerId == windowId) {
+				if (container.containerId == pkt.windowId) {
 					if (container instanceof IPropertyManaged) {
-						((IPropertyManaged) container).getPropertyManager().update(propertyType, property, value);
+						((IPropertyManaged) container).getPropertyManager().update(pkt.propertyType, pkt.property, pkt.value);
 					}
 				}
 			}

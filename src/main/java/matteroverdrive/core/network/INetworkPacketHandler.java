@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public interface INetworkPacketHandler<T> {
 
-  void encode(FriendlyByteBuf outBuffer);
+	void encode(FriendlyByteBuf outBuffer);
 
-  boolean handle(Supplier<NetworkEvent.Context> ctx);
+	boolean handle(T pkt, Supplier<NetworkEvent.Context> ctx);
 }

@@ -20,10 +20,10 @@ public class PacketSyncClientEntityCapability extends AbstractOverdrivePacket<Pa
 	}
 
 	@Override
-	public boolean handle(Supplier<Context> context) {
+	public boolean handle(PacketSyncClientEntityCapability pkt, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketSyncClientEntityCapability(id, clientCapability);
+			PacketBarrierMethods.handlePacketSyncClientEntityCapability(pkt.id, pkt.clientCapability);
 		});
 		return true;
 	}

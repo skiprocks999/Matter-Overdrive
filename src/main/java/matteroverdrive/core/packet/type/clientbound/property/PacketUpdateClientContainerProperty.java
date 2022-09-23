@@ -40,9 +40,9 @@ public class PacketUpdateClientContainerProperty extends AbstractOverdrivePacket
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(PacketUpdateClientContainerProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketUpdateClientContainerProperties(null, windowId);
+			PacketBarrierMethods.handlePacketUpdateClientContainerProperties(pkt.updates, pkt.windowId);
 		});
 		return true;
 	}

@@ -23,6 +23,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.network.simple.SimpleChannel.MessageBuilder;
+import net.minecraftforge.network.simple.SimpleChannel.MessageBuilder.ToBooleanBiFunction;
 
 public class NetworkHandler {
 
@@ -124,15 +125,15 @@ public class NetworkHandler {
 	}
 	
 	private static <T extends AbstractOverdrivePacket<T>> void clientMessage(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder,
-			Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
+			Function<FriendlyByteBuf, T> decoder, ToBooleanBiFunction<T, Supplier<NetworkEvent.Context>> handler) {
 		message(clazz, NetworkDirection.PLAY_TO_CLIENT).encoder(encoder).decoder(decoder)
-				.consumerNetworkThread(consumer).add();
+				.consumerNetworkThread(handler).add();
 	}
 
 	private static <T extends AbstractOverdrivePacket<T>> void serverMessage(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder,
-			Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
+			Function<FriendlyByteBuf, T> decoder, ToBooleanBiFunction<T, Supplier<NetworkEvent.Context>> handler) {
 		message(clazz, NetworkDirection.PLAY_TO_SERVER).encoder(encoder).decoder(decoder)
-				.consumerNetworkThread(consumer).add();
+				.consumerNetworkThread(handler).add();
 	}
 
 	private static <T extends AbstractOverdrivePacket<T>> MessageBuilder<T> message(Class<T> clazz, NetworkDirection dir) {

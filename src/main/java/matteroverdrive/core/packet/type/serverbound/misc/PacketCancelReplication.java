@@ -22,19 +22,19 @@ public class PacketCancelReplication extends AbstractOverdrivePacket<PacketCance
 	}
 
 	@Override
-	public boolean handle(Supplier<Context> context) {
+	public boolean handle(PacketCancelReplication pkt, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = context.get().getSender().getLevel();
 			if (world != null) {
-				BlockEntity entity = world.getBlockEntity(replicatorPos);
+				BlockEntity entity = world.getBlockEntity(pkt.replicatorPos);
 				if (entity != null && entity instanceof TileMatterReplicator replicator) {
 					try {
-						replicator.orderManager.cancelOrder(index);
+						replicator.orderManager.cancelOrder(pkt.index);
 					} catch (Exception e) {
 						MatterOverdrive.LOGGER
-								.warn("Attempted to remove order from " + replicatorPos.toShortString()
-										+ " at index " + index + " and failed!");
+								.warn("Attempted to remove order from " + pkt.replicatorPos.toShortString()
+										+ " at index " + pkt.index + " and failed!");
 					}
 				}
 			}

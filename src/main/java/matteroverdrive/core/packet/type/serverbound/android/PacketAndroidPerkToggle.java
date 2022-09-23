@@ -21,10 +21,10 @@ public class PacketAndroidPerkToggle extends AbstractOverdrivePacket<PacketAndro
 	}
 
 	@Override
-	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
+	public boolean handle(PacketAndroidPerkToggle pkt, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ctx.get().getSender().getCapability(MatterOverdriveCapabilities.ANDROID_DATA).ifPresent(iAndroid -> {
-				iAndroid.getPerkManager().togglePerk(perk);
+				iAndroid.getPerkManager().togglePerk(pkt.perk);
 				iAndroid.requestUpdate();
 			});
 		});
