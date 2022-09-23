@@ -87,14 +87,9 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		} else if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
-		boolean flag = false;
+		
 		if (!canRun()) {
-			flag = setRecipeValue(0);
-			flag |= setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRecipeValue(0) || setRunning(false) || setProgress(0));
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
@@ -103,12 +98,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			flag = setRunning(false);
-			flag |= setRecipeValue(0);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setRecipeValue(0) || setProgress(0));
 			return;
 		}
 
@@ -119,20 +109,13 @@ public class TileMatterDecomposer extends GenericMachineTile {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
 			if (matterVal <= 0.0) {
-				flag = setRunning(false);
-				flag |= setRecipeValue(0);
-				flag |= setProgress(0);
-				if (flag) {
-					setChanged();
-				}
+				setShouldSaveData(setRunning(false) || setRecipeValue(0) || setProgress(0));
 				return;
 			}
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
@@ -142,9 +125,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		CapabilityMatterStorage storage = getMatterStorageCap();
 
 		if ((storage.getMaxMatterStored() - storage.getMatterStored()) < getRecipeValue()) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
@@ -152,9 +133,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 
 		if (!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == getRecipeValue()
 				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 		setRunning(true);
@@ -176,7 +155,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 			}
 			setProgress(0);
 		}
-		setChanged();
+		setShouldSaveData(true);
 
 	}
 

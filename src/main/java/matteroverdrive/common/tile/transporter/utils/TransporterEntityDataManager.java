@@ -43,7 +43,7 @@ public class TransporterEntityDataManager {
 
 	private void setChanged() {
 		dataProp.set(serializeNbt());
-		owner.setChanged();
+		owner.setShouldSaveData(true);
 	}
 
 	public List<EntityDataWrapper> getEntityData() {

@@ -76,24 +76,16 @@ public class TileMicrowave extends GenericMachineTile {
 		} else if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
-		boolean flag = false;
+
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
@@ -110,19 +102,13 @@ public class TileMicrowave extends GenericMachineTile {
 			matched = cachedRecipe.getIngredients().get(0).test(input);
 		}
 		if (!matched) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
@@ -131,9 +117,7 @@ public class TileMicrowave extends GenericMachineTile {
 
 		if (!(output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
 				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
@@ -149,7 +133,7 @@ public class TileMicrowave extends GenericMachineTile {
 				output.grow(result.getCount());
 			}
 		}
-		setChanged();
+		setShouldSaveData(true);
 
 	}
 

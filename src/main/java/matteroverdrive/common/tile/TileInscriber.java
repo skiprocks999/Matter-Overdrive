@@ -71,15 +71,8 @@ public class TileInscriber extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		boolean flag = false;
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setProcessingTime(0);
-			flag |= setPowerUsage(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || setProcessingTime(0) || setPowerUsage(0));
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
@@ -88,13 +81,7 @@ public class TileInscriber extends GenericMachineTile {
 		ItemStack input1 = inputs.get(0);
 		ItemStack input2 = inputs.get(1);
 		if (input1.isEmpty() || input2.isEmpty()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setProcessingTime(0);
-			flag |= setPowerUsage(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || setProcessingTime(0) || setPowerUsage(0));
 			return;
 		}
 		boolean matched = false;
@@ -109,26 +96,14 @@ public class TileInscriber extends GenericMachineTile {
 			matched = cachedRecipe.matchesRecipe(inv, 0);
 		}
 		if (!matched) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setProcessingTime(0);
-			flag |= setPowerUsage(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || setProcessingTime(0) || setPowerUsage(0));
 			return;
 		}
 		
-		flag = setProcessingTime(cachedRecipe.getProcessTime());
-		flag |= updatePowerUsageFromRecipe(cachedRecipe.getUsagePerTick());
-		if(flag) {
-			setChanged();
-		}
+		setShouldSaveData(setProcessingTime(cachedRecipe.getProcessTime()) || updatePowerUsageFromRecipe(cachedRecipe.getUsagePerTick()));
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 		ItemStack output = inv.getOutputs().get(0);
@@ -151,11 +126,9 @@ public class TileInscriber extends GenericMachineTile {
 					output.grow(result.getCount());
 				}
 			}
-			setChanged();
+			setShouldSaveData(true);
 		} else {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 		}
 	}
 

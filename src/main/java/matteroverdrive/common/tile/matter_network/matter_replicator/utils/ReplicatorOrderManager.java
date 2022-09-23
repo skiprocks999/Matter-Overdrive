@@ -69,7 +69,7 @@ public class ReplicatorOrderManager {
 
 	private void setChanged() {
 		orderProp.set(serializeNbt());
-		owner.setChanged();
+		owner.setShouldSaveData(true);
 	}
 
 	public int size() {

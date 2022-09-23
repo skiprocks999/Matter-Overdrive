@@ -76,9 +76,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
 			addItem(ItemRegistry.ITEM_LEAD_PLATE, "Lead Plating");
 			
-			addItem(ItemRegistry.ANDROID_PILL_BLUE, "Blue Pill");
-			addItem(ItemRegistry.ANDROID_PILL_RED, "Red Pill");
-			addItem(ItemRegistry.ANDROID_PILL_YELLOW, "Yellow Pill");
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Blue Pill");
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_RED, "Red Pill");
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Yellow Pill");
 			
 
 			for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
@@ -181,6 +181,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItemDescTooltip(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Right-click to store a location");
 			addItemDescTooltip(ItemRegistry.ITEM_PATTERN_DRIVE, "Stores up to 3 unique patterns");
 			addItemDescTooltip(ItemRegistry.ITEM_MATTER_SCANNER, "A portable Matter Analyzer with perks");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_RED, "Makes you an android");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Makes you an human for a price");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Resets all android abilities");
 			
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				addBlockItemDescTooltip(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), "Retains items when broken");
@@ -283,6 +286,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addJei("powerconsumed", "Total: %s");
 			addJei("usagepertick", "%s/t");
 			addJei("processtime", "Time: ");
+			
+			addDamageSource("android_transformation", "%s became human again");
 		}
 	}
 
@@ -336,6 +341,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	
 	private void addJei(String key, String translation) {
 		add("jei." + References.ID + "." + key, translation);
+	}
+	
+	private void addDamageSource(String key, String translation) {
+		add("death.attack." + key, translation);
 	}
 	
 	private String name(Item item) {

@@ -74,13 +74,9 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		boolean flag = false;
 		if (!canRun()) {
 			resetRadiusMultipliers();
-			flag = setRunning(false);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 		UtilsTile.drainElectricSlot(this);
@@ -89,20 +85,14 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			resetRadiusMultipliers();
-			flag = setRunning(false);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			resetRadiusMultipliers();
-			flag = setRunning(false);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 

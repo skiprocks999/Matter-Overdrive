@@ -72,13 +72,9 @@ public class TileMatterRecycler extends GenericMachineTile {
 		} else if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
-		boolean flag = false;
+
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
@@ -87,39 +83,27 @@ public class TileMatterRecycler extends GenericMachineTile {
 		ItemStack input = inv.getInputs().get(0);
 
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
 		double value = UtilsNbt.readMatterVal(input);
 		if (value <= 0) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
 		ItemStack output = inv.getOutputs().get(0);
 		if (!(output.isEmpty()
 				|| (output.getCount() < output.getMaxStackSize() && UtilsNbt.readMatterVal(output) == value))) {
-			if (setRunning(false)) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
@@ -137,7 +121,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 				output.grow(1);
 			}
 		}
-		setChanged();
+		setShouldSaveData(true);
 
 	}
 

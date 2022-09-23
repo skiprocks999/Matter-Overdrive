@@ -57,9 +57,9 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		}, new ResourceLocation[] {
 				itemLoc("flashdrive/flashdrive_transporter_stored")
 				});
-		layeredItem(ItemRegistry.ANDROID_PILL_BLUE, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
-		layeredItem(ItemRegistry.ANDROID_PILL_RED, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
-		layeredItem(ItemRegistry.ANDROID_PILL_YELLOW, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
+		layeredItem(ItemRegistry.ITEM_ANDROID_PILL_BLUE, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
+		layeredItem(ItemRegistry.ITEM_ANDROID_PILL_RED, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
+		layeredItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
 		
 		generateBatteries();
 		generateMatterContainers();

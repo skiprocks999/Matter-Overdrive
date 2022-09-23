@@ -126,14 +126,8 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		boolean flag = false;
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= entityDataManager.wipe();
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
 			return;
 		}
 
@@ -151,12 +145,7 @@ public class TileTransporter extends GenericMachineTile {
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= entityDataManager.wipe();
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
 			return;
 		}
 
@@ -164,31 +153,19 @@ public class TileTransporter extends GenericMachineTile {
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 
 		if (!validData.getFirst()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= entityDataManager.wipe();
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			flag = setRunning(false);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false));
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
-			flag = setRunning(false);
-			flag |= entityDataManager.wipe();
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setRunning(false) || entityDataManager.wipe());
 			return;
 		}
 
@@ -221,7 +198,7 @@ public class TileTransporter extends GenericMachineTile {
 				});
 			}
 		}
-		setChanged();
+		setShouldSaveData(true);
 	}
 
 	@Override

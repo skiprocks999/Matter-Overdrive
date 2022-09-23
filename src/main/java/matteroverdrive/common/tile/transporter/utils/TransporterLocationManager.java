@@ -37,7 +37,7 @@ public class TransporterLocationManager {
 
 	private void onChange() {
 		locationProp.set(serializeNbt());
-		owner.setChanged();
+		owner.setShouldSaveData(true);
 	}
 
 	public CompoundTag serializeNbt() {

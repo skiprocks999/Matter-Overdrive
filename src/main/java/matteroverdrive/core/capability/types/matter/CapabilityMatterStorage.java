@@ -318,7 +318,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 			propertyHandler.set(serializeNBT());
 		}
 		if (hasOwner) {
-			owner.setChanged();
+			owner.setShouldSaveData(true);
 		}
 	}
 

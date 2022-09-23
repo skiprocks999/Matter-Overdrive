@@ -125,34 +125,22 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		UtilsTile.drainMatterSlot(this);
 
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		boolean flag = false;
 
 		orderManager.removeCompletedOrders();
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setPowered(false);
-			flag |= setProgress(0);
-			flag |= setCurrentOrder(QueuedReplication.EMPTY);
+			setShouldSaveData(setRunning(false) || setPowered(false) || setProgress(0)
+					|| setCurrentOrder(QueuedReplication.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			flag = setRunning(false);
-			flag |= setPowered(false);
-			flag |= setProgress(0);
-			flag |= setCurrentOrder(QueuedReplication.EMPTY);
+			setShouldSaveData(setRunning(false) || setPowered(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -178,14 +166,9 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 
 		if (orderManager.isEmpty()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setCurrentOrder(QueuedReplication.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -194,14 +177,9 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 		if (value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
 			orderManager.cancelOrder(0);
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setCurrentOrder(QueuedReplication.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -212,12 +190,9 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		ItemStack dust = outputs.get(1);
 		boolean dustEmpty = dust.isEmpty();
 		if (!dustEmpty && !(UtilsNbt.readMatterVal(dust) == value && dust.getCount() < dust.getMaxStackSize())) {
-			flag = setRunning(false);
+			setShouldSaveData(setRunning(false));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -225,24 +200,18 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		ItemStack output = outputs.get(0);
 		boolean outputEmpty = output.isEmpty();
 		if (!outputEmpty && !(ItemStack.isSame(stack, output) && output.getCount() < output.getMaxStackSize())) {
-			flag = setRunning(false);
+			setShouldSaveData(setRunning(false));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getRecipeValue()) {
-			flag = setRunning(false);
+			setShouldSaveData(setRunning(false));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -267,7 +236,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 
-		setChanged();
+		setShouldSaveData(true);
 
 		if (getProgress() < getRecipeValue() * MATTER_MULTIPLIER) {
 			return;
@@ -297,7 +266,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		matter.removeMatter(getRecipeValue());
 		setCurrentOrder(QueuedReplication.EMPTY);
 		setRecipeValue(0);
-		setChanged();
+		setShouldSaveData(true);
 
 	}
 

@@ -36,6 +36,8 @@ public abstract class GenericTile extends BlockEntity
 	private boolean isTickable = false;
 
 	protected long ticks = 0;
+	
+	private boolean shouldSaveData = false;
 
 	/**
 	 * Property Manager for the BlockEntity. See: <a href=
@@ -65,6 +67,14 @@ public abstract class GenericTile extends BlockEntity
 	@Override
 	public boolean canTick() {
 		return isTickable;
+	}
+	
+	public boolean shouldSaveData() {
+		return shouldSaveData;
+	}
+	
+	public void setShouldSaveData(boolean should) {
+		shouldSaveData = should;
 	}
 
 	@Override
@@ -191,6 +201,7 @@ public abstract class GenericTile extends BlockEntity
 		return ticks;
 	}
 
+	@Override
 	public void incrementTicks() {
 		ticks++;
 	};
@@ -198,6 +209,21 @@ public abstract class GenericTile extends BlockEntity
 	@Override
 	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
+	}
+	
+	@Override
+	public void tick(Level world) {
+		tickCommon();
+		incrementTicks();
+		if (world.isClientSide) {
+			tickClient();
+		} else {
+			tickServer();
+			if(shouldSaveData()) {
+				setChanged();
+				setShouldSaveData(false);
+			}
+		}
 	}
 
 }

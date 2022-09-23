@@ -50,22 +50,21 @@ public class TileSolarPanel extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		if (canRun()) {
-			if (ticks % 5 == 0) {
-				Level world = getLevel();
-				setRunning(world.isDay() && world.canSeeSky(getBlockPos()));
-			}
-			if (isRunning()) {
-				CapabilityEnergyStorage energy = getEnergyStorageCap();
-				energy.giveEnergy((int) (GENERATION * getAcceleratorMultiplier()));
-			}
-			UtilsTile.outputEnergy(this);
-			setChanged();
-		} else {
-			if (setRunning(false)) {
-				setChanged();
-			}
+		if (!canRun()) {
+			setShouldSaveData(setRunning(false));
+			return;
+		} 
+		UtilsTile.outputEnergy(this);
+		
+		if (ticks % 5 == 0) {
+			Level world = getLevel();
+			setRunning(world.isDay() && world.canSeeSky(getBlockPos()));
 		}
+		if (isRunning()) {
+			CapabilityEnergyStorage energy = getEnergyStorageCap();
+			energy.giveEnergy((int) (GENERATION * getAcceleratorMultiplier()));
+		}
+		
 	}
 
 }

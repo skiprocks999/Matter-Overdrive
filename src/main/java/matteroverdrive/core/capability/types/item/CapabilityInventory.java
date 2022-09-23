@@ -514,7 +514,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}
-			owner.setChanged();
+			owner.setShouldSaveData(true);
 		}
 	}
 

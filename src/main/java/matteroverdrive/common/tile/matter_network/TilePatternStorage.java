@@ -86,13 +86,8 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 
 	@Override
 	public void tickServer() {
-		boolean flag = false;
 		if (!canRun()) {
-			flag = setPowered(false);
-			flag |= setPowerUsage(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setPowered(false) || setPowerUsage(0));
 			return;
 		}
 
@@ -105,24 +100,15 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 				drives++;
 			}
 		}
-		int usage = BASE_USAGE + drives * USAGE_PER_DRIVE;
-		boolean activeFlag = getCurrentPowerUsage() != usage;
-		setPowerUsage(usage);
-		if(activeFlag) {
-			setChanged();
-		}
+		setPowerUsage(BASE_USAGE + drives * USAGE_PER_DRIVE);
+		setShouldSaveData(true);
+		
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			flag = setPowered(false);
-			flag |= setPowerUsage(0);
-			if (flag) {
-				setChanged();
-			}
+			setShouldSaveData(setPowered(false) || setPowerUsage(0));
 			return;
 		}
-		if(setPowered(true)) {
-			setChanged();
-		}
 		energy.removeEnergy((int) getCurrentPowerUsage());
+		setShouldSaveData(setPowered(true));
 
 		ItemStack scanner = inv.getStackInSlot(6);
 		if (!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {

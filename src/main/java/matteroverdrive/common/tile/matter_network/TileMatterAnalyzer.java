@@ -80,56 +80,35 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		boolean flag = false;
 		if (!canRun()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(ItemStack.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(ItemStack.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack scanned = inv.getStackInSlot(0);
 		if (scanned.isEmpty()) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(ItemStack.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
 		if (network == null || !hasAttachedDrives(network)) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(ItemStack.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
@@ -146,21 +125,14 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 
 		}
 		if (!shouldAnalyze) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(ItemStack.EMPTY);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
-			if (flag) {
-				setChanged();
 			}
 			return;
 		}
 		if (!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
-			flag = setRunning(false);
-			flag |= setProgress(0);
-			flag |= setScannedItem(scanned);
+			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(scanned));
 			int[] stored = network.getHighestStorageLocationForItem(scannedItemProp.get().getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
 			if (val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {
@@ -171,9 +143,6 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			if (currState && !isRunning()) {
 				UtilsTile.updateLit(this, Boolean.FALSE);
 			}
-			if (flag) {
-				setChanged();
-			}
 			return;
 		}
 		setRunning(true);
@@ -182,7 +151,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		if (!currState && isRunning()) {
 			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
-		setChanged();
+		setShouldSaveData(true);
 		if (getProgress() < PROCESSING_TIME) {
 			return;
 		}
@@ -213,7 +182,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		shouldAnalyze = false;
 		setScannedItem(ItemStack.EMPTY);
 		setRunning(false);
-		setChanged();
+		setShouldSaveData(true);
 	}
 
 	@Override

@@ -81,17 +81,17 @@ public class ItemRegistry {
 	public static final RegistryObject<Item> ITEM_LEAD_PLATE = ITEMS.register("lead_plate",
 			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(TileMatterReplicator.NEEDED_PLATES)));
 
-	public static final RegistryObject<Item> ANDROID_PILL_RED = ITEMS.register("android_pill_red",
+	public static final RegistryObject<Item> ITEM_ANDROID_PILL_RED = ITEMS.register("android_pill_red",
 			() -> new ItemAndroidRedPill(new Item.Properties().food(ItemAndroidPill.PILLS).tab(References.MAIN),
-					Colors.PILL_RED, false));
+					Colors.PILL_RED, true));
 
-	public static final RegistryObject<Item> ANDROID_PILL_BLUE = ITEMS.register("android_pill_blue",
+	public static final RegistryObject<Item> ITEM_ANDROID_PILL_BLUE = ITEMS.register("android_pill_blue",
 			() -> new ItemAndroidBluePill(new Item.Properties().food(ItemAndroidPill.PILLS).tab(References.MAIN),
-					Colors.PILL_BLUE, false));
+					Colors.PILL_BLUE, true));
 
-	public static final RegistryObject<Item> ANDROID_PILL_YELLOW = ITEMS.register("android_pill_yellow",
+	public static final RegistryObject<Item> ITEM_ANDROID_PILL_YELLOW = ITEMS.register("android_pill_yellow",
 			() -> new ItemAndroidYellowPill(new Item.Properties().food(ItemAndroidPill.PILLS).tab(References.MAIN),
-					Colors.PILL_YELLOW, false));
+					Colors.PILL_YELLOW, true));
 
 	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {
