@@ -102,40 +102,27 @@ public class NetworkHandler {
 				PacketAndroidTurningTimeSync::handle);
 		
 	}
-
-	public static void sendUpdateClientContainerProperties(ServerPlayer player,
-			PacketUpdateClientContainerProperty message) {
-		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+	
+	public static void sendToClientPlayer(ServerPlayer player, AbstractOverdrivePacket<?> packet) {
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
-	public static void sendUpdateServerContainerProperties(PacketUpdateServerContainerProperty message) {
+	public static void sendToClientEntity(Entity entity, AbstractOverdrivePacket<?> packet) {
+		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), packet);
+	}
+	
+	public static void sendToClientEntityAndSelf(Entity entity, AbstractOverdrivePacket<?> packet) {
+		CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), packet);
+	}
+	
+	public static void sendToClientChunk(LevelChunk chunk, AbstractOverdrivePacket<?> packet) {
+		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
+	}
+	
+	public static void sendToServer(AbstractOverdrivePacket<?> message) {
 		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
 	}
-
-	public static void sendUpdateClientEntityProperties(Entity entity, PacketUpdateClientEntityProperty message) {
-		CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
-	}
-
-	public static void sendUpdateServerEntityProperties(PacketUpdateServerEntityProperty message) {
-		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
-	}
-
-	public static void sendUpdateClientBlockEntityProperties(LevelChunk chunk, PacketUpdateClientTileProperty message) {
-		CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), message);
-	}
-
-	public static void sendUpdateServerBlockEntityProperties(LevelChunk chunk, PacketUpdateServerTileProperty message) {
-		CHANNEL.send(PacketDistributor.SERVER.noArg(), message);
-	}
-
-	public static void sendToPlayer(Object obj, ServerPlayer player) {
-		CHANNEL.sendTo(obj, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-	}
-
-	public static void sendToServer(Object obj) {
-		CHANNEL.sendToServer(obj);
-	}
-
+	
 	private static <T extends AbstractOverdrivePacket<T>> void clientMessage(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder,
 			Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
 		message(clazz, NetworkDirection.PLAY_TO_CLIENT).encoder(encoder).decoder(decoder)

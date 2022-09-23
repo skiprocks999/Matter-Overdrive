@@ -1,7 +1,8 @@
 package matteroverdrive.core.android;
 
 import com.google.common.collect.ImmutableMultimap;
-import matteroverdrive.core.android.item.ItemAndroidPill;
+
+import matteroverdrive.common.item.pill.ItemAndroidPill;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.android.AndroidEnergy;
 import matteroverdrive.core.eventhandler.manager.EventManager;

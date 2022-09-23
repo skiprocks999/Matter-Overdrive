@@ -1,9 +1,9 @@
 package matteroverdrive.common.item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
@@ -11,7 +11,6 @@ import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPattern
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsNbt;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,16 +21,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
 public class ItemPatternDrive extends OverdriveItem {
 
-	private static final List<ItemPatternDrive> CONTAINERS = new ArrayList<>();
 	// any item past 64 km will only get 1 scan
 	// idea is high utility for low value items and poor utility for high-value
 	// diamonds to dirt but not the other way around in other words
@@ -41,7 +34,6 @@ public class ItemPatternDrive extends OverdriveItem {
 
 	public ItemPatternDrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN), true);
-		CONTAINERS.add(this);
 	}
 
 	@Override
@@ -192,50 +184,39 @@ public class ItemPatternDrive extends OverdriveItem {
 			return 1000000.0D;
 		}
 	}
-
-	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-	private static class ColorHandler {
-
-		private static final int RED = UtilsRendering.getRGBA(1, 255, 0, 0);
-		private static final int YELLOW = UtilsRendering.getRGBA(1, 255, 255, 0);
-		private static final int GREEN = UtilsRendering.getRGBA(0, 0, 255, 0);
-		private static final int NONE = UtilsRendering.getRGBA(1, 35, 45, 48);
-
-		@SubscribeEvent
-		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
-			CONTAINERS.forEach(item -> event.register((stack, index) -> {
-				switch (index) {
-				case 1:
-					return handleColor(0, stack);
-				case 2:
-					return handleColor(1, stack);
-				case 3:
-					return handleColor(2, stack);
-				default:
-					return 0xFFFFFF;
-				}
-			}, item));
-		}
-
-		private static int handleColor(int index, ItemStack stack) {
-			LazyOptional<ICapabilityItemPatternStorage> lazyOp = stack
+	
+	@Override
+	public boolean isColored() {
+		return true;
+	}
+	
+	@Override
+	public int getColor(ItemStack item, int layer) {
+		if(layer > 0) {
+			LazyOptional<ICapabilityItemPatternStorage> lazyOp = item
 					.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
 			if (lazyOp.isPresent()) {
 				ICapabilityItemPatternStorage storage = lazyOp.resolve().get();
-				ItemPatternWrapper pattern = storage.getStoredPatterns()[index];
+				ItemPatternWrapper pattern = storage.getStoredPatterns()[layer - 1];
 				if (pattern.isNotAir()) {
 					int percentage = pattern.getPercentage();
 					if (percentage >= 100) {
-						return GREEN;
+						return Colors.GREEN.getColor();
 					} else if (percentage < 100 && percentage > 50) {
-						return YELLOW;
+						return Colors.YELLOW.getColor();
 					} else {
-						return RED;
+						return Colors.RED.getColor();
 					}
 				}
 			}
-			return NONE;
+			return Colors.PATTERN_DRIVE_NONE.getColor();
 		}
+		return Colors.WHITE.getColor();
+	}
+	
+	@Override
+	public int getNumOfLayers() {
+		return 4;
 	}
 
 }

@@ -102,7 +102,7 @@ public class WrapperIOConfig {
 				}
 			}
 		}
-		NetworkHandler.CHANNEL.sendToServer(
+		NetworkHandler.sendToServer(
 				new PacketUpdateCapabilitySides(position.get(), type, hasInput, hasOutput, inputs, outputs));
 	}
 

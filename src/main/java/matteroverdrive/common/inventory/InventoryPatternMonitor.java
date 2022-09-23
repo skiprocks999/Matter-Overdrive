@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraftforge.network.NetworkDirection;
 
 public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMonitor> {
 
@@ -45,8 +44,7 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 		if (player instanceof ServerPlayer server && tile != null) {
 			NetworkMatter network = tile.getConnectedNetwork();
 			if (network != null && tile.getTicks() % 2 == 0) {
-				NetworkHandler.CHANNEL.sendTo(new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()),
-						server.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+				NetworkHandler.sendToClientPlayer(server, new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()));
 			}
 		}
 	}

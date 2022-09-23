@@ -1,4 +1,5 @@
 {
+  "block.matteroverdrive.android_station": "Android Station",
   "block.matteroverdrive.charger": "Android Charger",
   "block.matteroverdrive.charger_child": "Charger Child",
   "block.matteroverdrive.chunkloader": "Chunkloader",
@@ -135,6 +136,9 @@
   "gui.matteroverdrive.xlabel": "X",
   "gui.matteroverdrive.ylabel": "Y",
   "gui.matteroverdrive.zlabel": "Z",
+  "item.matteroverdrive.android_pill_blue": "Blue Pill",
+  "item.matteroverdrive.android_pill_red": "Red Pill",
+  "item.matteroverdrive.android_pill_yellow": "Yellow Pill",
   "item.matteroverdrive.battery_creative": "Creative Battery",
   "item.matteroverdrive.battery_highcapacity": "High-Capacity Battery",
   "item.matteroverdrive.battery_regular": "Battery",

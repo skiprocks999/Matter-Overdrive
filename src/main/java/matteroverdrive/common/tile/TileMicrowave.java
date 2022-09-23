@@ -142,12 +142,12 @@ public class TileMicrowave extends GenericMachineTile {
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		if (getProgress() >= OPERATING_TIME) {
 			setProgress(0);
+			input.shrink(1);
 			if (output.isEmpty()) {
 				inv.setStackInSlot(1, result.copy());
 			} else {
 				output.grow(result.getCount());
 			}
-			input.shrink(1);
 		}
 		setChanged();
 

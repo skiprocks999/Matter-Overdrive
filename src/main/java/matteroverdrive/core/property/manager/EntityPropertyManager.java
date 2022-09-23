@@ -44,7 +44,7 @@ public class EntityPropertyManager extends PropertyManager {
 			}
 		}
 		property.set(value);
-		NetworkHandler.sendUpdateServerEntityProperties(
+		NetworkHandler.sendToServer(
 				new PacketUpdateServerEntityProperty(entityId, property.getPropertyType(), propertyId, value));
 	}
 
@@ -63,7 +63,7 @@ public class EntityPropertyManager extends PropertyManager {
 		}
 
 		if (!dirtyProperties.isEmpty()) {
-			NetworkHandler.sendUpdateClientEntityProperties(entity,
+			NetworkHandler.sendToClientEntity(entity,
 					new PacketUpdateClientEntityProperty(entityId, dirtyProperties));
 		}
 	}

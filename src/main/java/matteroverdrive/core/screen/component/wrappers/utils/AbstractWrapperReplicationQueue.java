@@ -179,7 +179,7 @@ public abstract class AbstractWrapperReplicationQueue {
 
 	public void handleOrderCancel(int buttonIndex, QueuedReplication order) {
 		if (order != null) {
-			NetworkHandler.CHANNEL.sendToServer(new PacketCancelReplication(order.getOwnerPos(), order.getQueuePos()));
+			NetworkHandler.sendToServer(new PacketCancelReplication(order.getOwnerPos(), order.getQueuePos()));
 		}
 	}
 

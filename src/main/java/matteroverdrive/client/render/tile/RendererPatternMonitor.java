@@ -7,11 +7,11 @@ import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.ClientReferences.AtlasTextures;
 import matteroverdrive.client.ClientReferences.Colors;
+import matteroverdrive.client.render.tile.utils.AbstractTileRenderer;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.common.block.OverdriveBlockStates;
 import matteroverdrive.common.block.OverdriveBlockStates.VerticalFacing;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
-import matteroverdrive.core.render.AbstractTileRenderer;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;

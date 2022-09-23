@@ -7,6 +7,7 @@ import com.mojang.math.Vector3f;
 
 import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.render.shaders.MORenderTypes;
+import matteroverdrive.client.render.tile.utils.RendererStationBase;
 import matteroverdrive.common.tile.station.TileAndroidStation;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 
@@ -23,8 +24,8 @@ public class RendererStationAndroid extends RendererStationBase<TileAndroidStati
 
   private final PlayerModel<?> playerModel;
 
-  public RendererStationAndroid(BlockEntityRendererProvider.Context rendererContext) {
-    super(rendererContext.getBlockEntityRenderDispatcher());
+  public RendererStationAndroid(Context rendererContext) {
+    super(rendererContext);
     this.playerModel = new PlayerModel<>(rendererContext.bakeLayer(ModelLayers.PLAYER), false);
     this.playerModel.young = false;
   }

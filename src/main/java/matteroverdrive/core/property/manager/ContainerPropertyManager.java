@@ -46,7 +46,7 @@ public class ContainerPropertyManager extends PropertyManager {
 			}
 		}
 		property.set(value);
-		NetworkHandler.sendUpdateServerContainerProperties(
+		NetworkHandler.sendToServer(
 				new PacketUpdateServerContainerProperty(menuId, property.getPropertyType(), propertyId, value));
 	}
 
@@ -77,7 +77,7 @@ public class ContainerPropertyManager extends PropertyManager {
 
 			if (!dirtyProperties.isEmpty()) {
 				for (ServerPlayer playerEntity : playerListeners) {
-					NetworkHandler.sendUpdateClientContainerProperties(playerEntity,
+					NetworkHandler.sendToClientEntity(playerEntity,
 							new PacketUpdateClientContainerProperty(menuId, dirtyProperties));
 				}
 			}

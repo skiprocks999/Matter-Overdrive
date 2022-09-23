@@ -1,8 +1,8 @@
-package matteroverdrive.common.item.pill;
+package matteroverdrive.common.item.pill.types;
 
-import matteroverdrive.core.android.item.ItemAndroidPill;
+import matteroverdrive.client.ClientReferences.Colors;
+import matteroverdrive.common.item.pill.ItemAndroidPill;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ItemAndroidBluePill extends ItemAndroidPill {
-  public ItemAndroidBluePill(Properties properties, TextColor pillColor) {
-    super(properties, pillColor);
+  public ItemAndroidBluePill(Properties properties, Colors pillColor, boolean hasShiftTip) {
+    super(properties, pillColor, hasShiftTip);
   }
 
   @Override

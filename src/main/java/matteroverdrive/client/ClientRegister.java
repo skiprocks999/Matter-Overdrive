@@ -11,6 +11,8 @@ import matteroverdrive.client.render.tile.RendererCharger;
 import matteroverdrive.client.render.tile.RendererInscriber;
 import matteroverdrive.client.render.tile.RendererMatterReplicator;
 import matteroverdrive.client.render.tile.RendererPatternMonitor;
+import matteroverdrive.client.render.tile.RendererStationAndroid;
+import matteroverdrive.client.screen.ScreenAndroidStation;
 import matteroverdrive.client.screen.ScreenCharger;
 import matteroverdrive.client.screen.ScreenInscriber;
 import matteroverdrive.client.screen.ScreenMatterAnalyzer;
@@ -78,6 +80,7 @@ public class ClientRegister {
 		MenuScreens.register(MenuRegistry.MENU_MATTER_REPLICATOR.get(), ScreenMatterReplicator::new);
 		MenuScreens.register(MenuRegistry.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
 		MenuScreens.register(MenuRegistry.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
+		MenuScreens.register(MenuRegistry.MENU_ANDROID_STATION.get(), ScreenAndroidStation::new);
 
 		ItemProperties.register(ItemRegistry.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {
@@ -170,6 +173,7 @@ public class ClientRegister {
 		event.registerBlockEntityRenderer(TileRegistry.TILE_INSCRIBER.get(), RendererInscriber::new);
 		event.registerBlockEntityRenderer(TileRegistry.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
 		event.registerBlockEntityRenderer(TileRegistry.TILE_MATTER_REPLICATOR.get(), RendererMatterReplicator::new);
+		event.registerBlockEntityRenderer(TileRegistry.TILE_ANDROID_STATION.get(), RendererStationAndroid::new);
 
 	}
 

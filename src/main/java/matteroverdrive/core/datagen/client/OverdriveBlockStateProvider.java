@@ -86,6 +86,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, existingBlock(BlockRegistry.BLOCK_PATTERN_MONITOR), true);
 		//charger TileRenderer JSON
 		getObjModel("charger_renderer", "block/charger", "block/charger");
+		horrRotatedBlock(BlockRegistry.BLOCK_ANDROID_STATION, existingBlock(BlockRegistry.BLOCK_ANDROID_STATION), true);
 		
 		genMatterConduits();
 		genNetworkCables();

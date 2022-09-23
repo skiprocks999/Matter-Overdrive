@@ -35,7 +35,6 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemMatterScanner extends ItemElectric {
@@ -84,7 +83,7 @@ public class ItemMatterScanner extends ItemElectric {
 				if (!isHeld(stack)) {
 					setHolding(stack);
 					if (!world.isClientSide)
-						NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+						NetworkHandler.sendToClientEntityAndSelf(player,
 								new PacketPlayMatterScannerSound(player.getUUID(), hand));
 				}
 				player.startUsingItem(hand);

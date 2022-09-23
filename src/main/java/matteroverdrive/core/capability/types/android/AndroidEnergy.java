@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.network.NetworkDirection;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -45,7 +44,7 @@ public class AndroidEnergy implements IEnergyStorage, ICapabilityProvider {
 
   public static void syncEnergy(ServerPlayer entity) {
     entity.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyStorage -> {
-      NetworkHandler.CHANNEL.sendTo(new PacketAndroidEnergySync(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored()), entity.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+      NetworkHandler.sendToClientPlayer(entity, new PacketAndroidEnergySync(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored()));
     });
   }
 

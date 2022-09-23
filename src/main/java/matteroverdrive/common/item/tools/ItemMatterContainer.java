@@ -1,16 +1,15 @@
 package matteroverdrive.common.item.tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.matter.CapabilityCreativeMatterStorage;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.registers.IBulkRegistryObject;
-import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -21,22 +20,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 public class ItemMatterContainer extends OverdriveItem {
 
-	private static final List<ItemMatterContainer> CONTAINERS = new ArrayList<>();
 	public final ContainerType container;
 
 	public ItemMatterContainer(ContainerType type) {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN), false);
 		container = type;
-		CONTAINERS.add(this);
 	}
 
 	@Override
@@ -131,14 +124,35 @@ public class ItemMatterContainer extends OverdriveItem {
 			});
 		}
 	}
+	
+	@Override
+	public boolean isColored() {
+		return true;
+	}
+	
+	@Override
+	public int getNumOfLayers() {
+		return 3;
+	}
+	
+	@Override
+	public int getColor(ItemStack item, int layer) {
+		if (layer == 2) {
+			return Colors.MATTER.getColor();
+		} else if (layer == 1) {
+			return ((ItemMatterContainer)item.getItem()).container.bandColor.getColor();
+		} else {
+			return Colors.WHITE.getColor();
+		}
+	}
 
 	public enum ContainerType implements IBulkRegistryObject {
-		REGULAR(1000, UtilsRendering.getRGBA(1, 254, 203, 4)), CREATIVE(0, UtilsRendering.getRGBA(1, 255, 132, 0));
+		REGULAR(1000, Colors.YELLOW_STRIPES), CREATIVE(0, Colors.ORANGE_STRIPES);
 
-		public final int bandColor;
+		public final Colors bandColor;
 		public final double capacity;
 
-		private ContainerType(double capacity, int bandColor) {
+		private ContainerType(double capacity, Colors bandColor) {
 			this.capacity = capacity;
 			this.bandColor = bandColor;
 		}
@@ -148,25 +162,6 @@ public class ItemMatterContainer extends OverdriveItem {
 			return "matter_container_" + this.toString().toLowerCase();
 		}
 
-	}
-
-	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-	private static class ColorHandler {
-
-		private static final int BAR_COLOR = UtilsRendering.getRGBA(1, 191, 228, 230);
-
-		@SubscribeEvent
-		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
-			CONTAINERS.forEach(item -> event.register((stack, index) -> {
-				if (index == 2) {
-					return BAR_COLOR;
-				} else if (index == 1) {
-					return item.container.bandColor;
-				} else {
-					return 0xFFFFFF;
-				}
-			}, item));
-		}
 	}
 
 }

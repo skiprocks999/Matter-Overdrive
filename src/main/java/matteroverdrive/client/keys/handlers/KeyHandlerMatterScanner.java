@@ -37,7 +37,7 @@ public class KeyHandlerMatterScanner extends AbstractKeyPressHandler {
 	private void handleScannerToggle(ItemStack stack, InteractionHand hand, UUID uuid) {
 		CapabilityEnergyStorage storage = UtilsItem.getEnergyStorageCap(stack);
 		if (storage != null && storage.getEnergyStored() > 0) {
-			NetworkHandler.CHANNEL.sendToServer(new PacketToggleMatterScanner(uuid, hand));
+			NetworkHandler.sendToServer(new PacketToggleMatterScanner(uuid, hand));
 		}
 	}
 

@@ -127,7 +127,7 @@ public class AndroidData implements ICapabilityAndroid, ICapabilityProvider {
 
   public void sync(Entity entity){
     if (entity instanceof ServerPlayer serverEntity){
-      NetworkHandler.sendToPlayer(new PacketAndroidSyncAll(serializeNBT()), serverEntity);
+      NetworkHandler.sendToClientPlayer(serverEntity, new PacketAndroidSyncAll(serializeNBT()));
       this.needsUpdate = false;
     }
   }
@@ -164,7 +164,7 @@ public class AndroidData implements ICapabilityAndroid, ICapabilityProvider {
     fake.bypassArmor();
     --transformationTime;
     if (entity instanceof ServerPlayer serverPlayer){
-      NetworkHandler.sendToPlayer(new PacketAndroidTurningTimeSync(transformationTime), serverPlayer);
+      NetworkHandler.sendToClientPlayer(serverPlayer, new PacketAndroidTurningTimeSync(transformationTime));
     }
     if (entity instanceof LivingEntity){
       if (transformationTime > 0) {

@@ -1,7 +1,11 @@
 package matteroverdrive.common.item.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import matteroverdrive.References;
+import matteroverdrive.client.ClientReferences.Colors;
+import matteroverdrive.core.item.IItemColored;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,14 +14,24 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-public class OverdriveItem extends Item {
+public class OverdriveItem extends Item implements IItemColored {
 
+	private static final List<OverdriveItem> COLORED_ITEMS = new ArrayList<>();
+	
 	private final boolean hasShiftTip;
 	
 	public OverdriveItem(Properties pProperties, boolean hasShiftTip) {
 		super(pProperties);
 		this.hasShiftTip = hasShiftTip;
+		//it will only get added to the list if it's colored; makes the event handling simpler
+		if(isColored()) {
+			COLORED_ITEMS.add(this);
+		}
 	}
 	
 	@Override
@@ -40,6 +54,21 @@ public class OverdriveItem extends Item {
 	}
 	
 	protected void appendPostSuperTooltip(ItemStack stack, Level world, List<Component> tooltips, TooltipFlag flag) {
+		
+	}
+	
+	@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = References.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+	private static class ColorHandler {
+		
+		@SubscribeEvent
+		public static void registerColoredBlocks(RegisterColorHandlersEvent.Item event) {
+			COLORED_ITEMS.forEach(item -> event.register((stack, index) -> {
+				if(index < item.getNumOfLayers()) {
+					return item.getColor(stack, index);
+				}
+				return Colors.WHITE.getColor();
+			}, item));
+		}
 		
 	}
 

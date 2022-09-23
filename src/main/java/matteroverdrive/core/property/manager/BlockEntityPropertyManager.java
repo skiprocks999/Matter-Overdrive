@@ -45,10 +45,8 @@ public class BlockEntityPropertyManager extends PropertyManager {
 			}
 		}
 		property.set(value);
-		NetworkHandler.sendUpdateServerBlockEntityProperties(
-				blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()),
-				new PacketUpdateServerTileProperty(blockEntity.getBlockPos(), property.getPropertyType(),
-						propertyId, value));
+		NetworkHandler.sendToServer(new PacketUpdateServerTileProperty(blockEntity.getBlockPos(),
+				property.getPropertyType(), propertyId, value));
 	}
 
 	/**
@@ -66,7 +64,7 @@ public class BlockEntityPropertyManager extends PropertyManager {
 		}
 
 		if (!dirtyProperties.isEmpty() && blockEntity.getLevel() != null) {
-			NetworkHandler.sendUpdateClientBlockEntityProperties(
+			NetworkHandler.sendToClientChunk(
 					blockEntity.getLevel().getChunkAt(blockEntity.getBlockPos()),
 					new PacketUpdateClientTileProperty(blockPos, dirtyProperties));
 		}

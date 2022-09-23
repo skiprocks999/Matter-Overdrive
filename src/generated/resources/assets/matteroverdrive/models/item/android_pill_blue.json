@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "matteroverdrive:item/pill/pill_bottom",
+    "layer1": "matteroverdrive:item/pill/pill_top"
+  }
+}

@@ -10,26 +10,25 @@ import net.minecraft.world.inventory.SimpleContainerData;
 
 public class InventoryAndroidStation extends GenericInventoryTile<TileAndroidStation> {
 
-  public InventoryAndroidStation(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
-    super(MenuRegistry.MENU_ANDROID_STATION.get(), id, playerinv, invcap, tilecoords);
-  }
+	public InventoryAndroidStation(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData tilecoords) {
+		super(MenuRegistry.MENU_ANDROID_STATION.get(), id, playerinv, invcap, tilecoords);
+	}
 
-  public InventoryAndroidStation(int id, Inventory playerinv) {
-    this(id, playerinv, new CapabilityInventory(0, false, false),
-            new SimpleContainerData(0));
-  }
+	public InventoryAndroidStation(int id, Inventory playerinv) {
+		this(id, playerinv, CapabilityInventory.EMPTY, new SimpleContainerData(3));
+	}
 
+	@Override
+	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
+	}
 
-  @Override
-  public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {}
+	@Override
+	public int[] getHotbarNumbers() {
+		return new int[] { 0, 1, 2 };
+	}
 
-  @Override
-  public int[] getHotbarNumbers() {
-    return new int[] { 0, 1, 2 };
-  }
-
-  @Override
-  public int[] getPlayerInvNumbers() {
-    return new int[]{ 0 };
-  }
+	@Override
+	public int[] getPlayerInvNumbers() {
+		return new int[] { 0 };
+	}
 }

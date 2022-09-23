@@ -75,6 +75,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			addItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "Tritanium Plate");
 			addItem(ItemRegistry.ITEM_LEAD_PLATE, "Lead Plating");
+			
+			addItem(ItemRegistry.ANDROID_PILL_BLUE, "Blue Pill");
+			addItem(ItemRegistry.ANDROID_PILL_RED, "Red Pill");
+			addItem(ItemRegistry.ANDROID_PILL_YELLOW, "Yellow Pill");
+			
 
 			for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
 				String name = getNameFromEnum(color.toString());
@@ -113,6 +118,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.REGULAR), "Matter Conduit");
 			addBlock(BlockRegistry.BLOCK_MATTER_CONDUITS.get(TypeMatterConduit.HEAVY), "Heavy Matter Conduit");
 			addBlock(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
+			
+			addBlock(BlockRegistry.BLOCK_ANDROID_STATION, "Android Station");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");

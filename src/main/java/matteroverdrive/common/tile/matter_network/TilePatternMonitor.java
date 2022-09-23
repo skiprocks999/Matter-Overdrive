@@ -150,8 +150,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 						smallestQueue = queueSize;
 						val = entry;
 						if (queueSize == 0) {
-							NetworkHandler.CHANNEL
-									.sendToServer(new PacketQueueReplication(entry.getKey(), pattern, count));
+							NetworkHandler.sendToServer(new PacketQueueReplication(entry.getKey(), pattern, count));
 							return true;
 						}
 					}
@@ -159,7 +158,7 @@ public class TilePatternMonitor extends GenericTile implements IMatterNetworkMem
 			}
 		}
 		if (val != null) {
-			NetworkHandler.CHANNEL.sendToServer(new PacketQueueReplication(val.getKey(), pattern, count));
+			NetworkHandler.sendToServer(new PacketQueueReplication(val.getKey(), pattern, count));
 			return true;
 		}
 		return false;

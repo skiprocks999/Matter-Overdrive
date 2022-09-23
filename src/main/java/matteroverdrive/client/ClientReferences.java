@@ -28,8 +28,14 @@ public class ClientReferences {
 		GUI_ENERGY(224, 0, 0, 255),
 		RED(255, 0, 0, 255),
 		GREEN(0, 255, 0, 255), 
+		YELLOW(255, 255, 0, 255),
 		WHITE(255, 255, 255, 255),
-		YELLOW_STRIPES(254, 203, 4, 255);
+		YELLOW_STRIPES(254, 203, 4, 255),
+		ORANGE_STRIPES(255, 132, 0, 255),
+		PATTERN_DRIVE_NONE(35, 45, 48, 255),
+		PILL_RED(208, 0, 0, 255),
+		PILL_YELLOW(255, 228, 0, 255),
+		PILL_BLUE(1, 159, 234, 255);
 
 		private final int rInt;
 		private final int gInt;

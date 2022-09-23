@@ -24,7 +24,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.network.NetworkDirection;
 
 public class TeleporterArrivalHandler extends AbstractServerTickHandler {
 
@@ -57,9 +56,8 @@ public class TeleporterArrivalHandler extends AbstractServerTickHandler {
 								if (capData.getTransporterTimer() > 0) {
 									capData.setTransporterTimer(capData.getTransporterTimer() - 1);
 									if (entity instanceof ServerPlayer player) {
-										NetworkHandler.CHANNEL.sendTo(
-												new PacketSyncClientEntityCapability(capData, entity.getUUID()),
-												player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+										NetworkHandler.sendToClientPlayer(player,
+												new PacketSyncClientEntityCapability(capData, entity.getUUID()));
 									}
 								}
 							}

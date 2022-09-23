@@ -1,4 +1,4 @@
-package matteroverdrive.core.render;
+package matteroverdrive.client.render.tile.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
