@@ -41,13 +41,13 @@ public class PacketUpdateServerEntityProperty extends AbstractOverdrivePacket<Pa
 	}
 
 	@Override
-	public boolean handle(PacketUpdateServerEntityProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
 			Player playerEntity = contextSupplier.get().getSender();
 			if (playerEntity != null) {
-				Entity entity = playerEntity.level.getEntity(pkt.entityId);
+				Entity entity = playerEntity.level.getEntity(entityId);
 				if (entity instanceof IPropertyManaged managed) {
-					managed.getPropertyManager().update(pkt.propertyType, pkt.property, pkt.value);
+					managed.getPropertyManager().update(propertyType, property, value);
 				}
 			}
 		});

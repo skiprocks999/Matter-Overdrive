@@ -41,9 +41,9 @@ public class PacketUpdateClientEntityProperty extends AbstractOverdrivePacket<Pa
 	}
 
 	@Override
-	public boolean handle(PacketUpdateClientEntityProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketUpdateClientEntityProperties(pkt.updates, pkt.entityId);
+			PacketBarrierMethods.handlePacketUpdateClientEntityProperties(updates, entityId);
 		});
 		return true;
 	}

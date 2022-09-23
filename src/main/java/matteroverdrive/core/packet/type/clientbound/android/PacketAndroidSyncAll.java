@@ -22,9 +22,9 @@ public class PacketAndroidSyncAll extends AbstractOverdrivePacket<PacketAndroidS
 	}
 
 	@Override
-	public boolean handle(PacketAndroidSyncAll pkt, Supplier<NetworkEvent.Context> ctx) {
+	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketAndroidSyncAll(pkt.compoundTag);
+			PacketBarrierMethods.handlePacketAndroidSyncAll(compoundTag);
 		});
 		return true;
 	}

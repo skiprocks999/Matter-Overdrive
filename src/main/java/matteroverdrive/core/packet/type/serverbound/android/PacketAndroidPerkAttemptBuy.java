@@ -30,10 +30,10 @@ public class PacketAndroidPerkAttemptBuy extends AbstractOverdrivePacket<PacketA
 	}
 	
 	@Override
-	public boolean handle(PacketAndroidPerkAttemptBuy pkt, Supplier<NetworkEvent.Context> ctx) {
+	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer entity = ctx.get().getSender();
-			IAndroidPerk androidPerk = IAndroidPerk.PERKS.get(pkt.perk);
+			IAndroidPerk androidPerk = IAndroidPerk.PERKS.get(perk);
 			entity.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).ifPresent(iAndroid -> {
 				AndroidPerkManager perkManager = iAndroid.getPerkManager();
 				if (!perkManager.hasPerk(androidPerk)

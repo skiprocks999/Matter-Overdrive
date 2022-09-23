@@ -20,10 +20,10 @@ public class PacketClientMNData extends AbstractOverdrivePacket<PacketClientMNDa
 	}
 
 	@Override
-	public boolean handle(PacketClientMNData pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketClientMNData(pkt.data, pkt.monitorPos);
+			PacketBarrierMethods.handlePacketClientMNData(data, monitorPos);
 		});
 		return true;
 	}

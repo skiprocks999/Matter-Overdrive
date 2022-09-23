@@ -24,14 +24,14 @@ public class PacketToggleMatterScanner extends AbstractOverdrivePacket<PacketTog
 	}
 
 	@Override
-	public boolean handle(PacketToggleMatterScanner pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = context.get().getSender().getLevel();
 			if (world != null) {
-				Player player = world.getPlayerByUUID(pkt.id);
+				Player player = world.getPlayerByUUID(id);
 				if (player != null) {
-					ItemStack stack = player.getItemInHand(pkt.hand);
+					ItemStack stack = player.getItemInHand(hand);
 					if (!stack.isEmpty() && stack.getItem() instanceof ItemMatterScanner scanner) {
 						boolean newMode = !stack.getOrCreateTag().getBoolean(UtilsNbt.ON);
 						stack.getOrCreateTag().putBoolean(UtilsNbt.ON, newMode);

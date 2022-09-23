@@ -20,10 +20,10 @@ public class PacketPlayMatterScannerSound extends AbstractOverdrivePacket<Packet
 	}
 
 	@Override
-	public boolean handle(PacketPlayMatterScannerSound pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketPlayMatterScannerSound(pkt.id, pkt.hand);
+			PacketBarrierMethods.handlePacketPlayMatterScannerSound(id, hand);
 		});
 		return true;
 	}

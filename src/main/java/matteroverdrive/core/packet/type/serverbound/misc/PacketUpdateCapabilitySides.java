@@ -43,44 +43,44 @@ public class PacketUpdateCapabilitySides extends AbstractOverdrivePacket<PacketU
 	}
 
 	@Override
-	public boolean handle(PacketUpdateCapabilitySides pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = ctx.getSender().getLevel();
 			if (world != null) {
-				BlockEntity tile = world.getBlockEntity(pkt.pos);
+				BlockEntity tile = world.getBlockEntity(pos);
 				if (tile instanceof GenericTile generic) {
-					if (generic.hasCapability(pkt.type.capability)) {
-						switch (pkt.type) {
+					if (generic.hasCapability(type.capability)) {
+						switch (type) {
 						case ITEM:
-							CapabilityInventory inv = generic.exposeCapability(pkt.type.capability);
-							if (pkt.input) {
-								inv.setInputDirs(pkt.inDirs);
+							CapabilityInventory inv = generic.exposeCapability(type.capability);
+							if (input) {
+								inv.setInputDirs(inDirs);
 							}
 							if (output) {
-								inv.setOutputDirs(pkt.outDirs);
+								inv.setOutputDirs(outDirs);
 							}
 							inv.refreshCapability();
 							generic.setChanged();
 							break;
 						case ENERGY:
-							CapabilityEnergyStorage energy = generic.exposeCapability(pkt.type.capability);
-							if (pkt.input) {
-								energy.setInputDirs(pkt.inDirs);
+							CapabilityEnergyStorage energy = generic.exposeCapability(type.capability);
+							if (input) {
+								energy.setInputDirs(inDirs);
 							}
-							if (pkt.output) {
-								energy.setOutputDirs(pkt.outDirs);
+							if (output) {
+								energy.setOutputDirs(outDirs);
 							}
 							energy.refreshCapability();
 							generic.setChanged();
 							break;
 						case MATTER:
-							CapabilityMatterStorage matter = generic.exposeCapability(pkt.type.capability);
-							if (pkt.input) {
-								matter.setInputDirs(pkt.inDirs);
+							CapabilityMatterStorage matter = generic.exposeCapability(type.capability);
+							if (input) {
+								matter.setInputDirs(inDirs);
 							}
-							if (pkt.output) {
-								matter.setOutputDirs(pkt.outDirs);
+							if (output) {
+								matter.setOutputDirs(outDirs);
 							}
 							matter.refreshCapability();
 							generic.setChanged();

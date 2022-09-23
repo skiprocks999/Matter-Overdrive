@@ -19,10 +19,10 @@ public class PacketClientMatterValues extends AbstractOverdrivePacket<PacketClie
 	}
 
 	@Override
-	public boolean handle(PacketClientMatterValues pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketClientMatterValues(pkt.values);
+			PacketBarrierMethods.handlePacketClientMatterValues(values);
 		});
 		return true;
 	}

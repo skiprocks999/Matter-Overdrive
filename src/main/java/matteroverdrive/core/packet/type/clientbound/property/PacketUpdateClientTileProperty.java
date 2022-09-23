@@ -43,9 +43,9 @@ public class PacketUpdateClientTileProperty extends AbstractOverdrivePacket<Pack
 	}
 
 	@Override
-	public boolean handle(PacketUpdateClientTileProperty pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+	public boolean handle(Supplier<NetworkEvent.Context> contextSupplier) {
 		contextSupplier.get().enqueueWork(() -> {
-			PacketBarrierMethods.handlePacketUpdateClientTileProperties(pkt.updates, pkt.blockPos);
+			PacketBarrierMethods.handlePacketUpdateClientTileProperties(updates, blockPos);
 		});
 		return true;
 	}

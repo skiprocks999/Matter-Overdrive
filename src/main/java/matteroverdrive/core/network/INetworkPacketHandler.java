@@ -9,5 +9,5 @@ public interface INetworkPacketHandler<T> {
 
 	void encode(FriendlyByteBuf outBuffer);
 
-	boolean handle(T pkt, Supplier<NetworkEvent.Context> ctx);
+	boolean handle(Supplier<NetworkEvent.Context> ctx);
 }

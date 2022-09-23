@@ -25,14 +25,14 @@ public class PacketQueueReplication extends AbstractOverdrivePacket<PacketQueueR
 	}
 
 	@Override
-	public boolean handle(PacketQueueReplication pkt, Supplier<Context> context) {
+	public boolean handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = context.get().getSender().getLevel();
 			if (world != null) {
-				BlockEntity entity = world.getBlockEntity(pkt.replicatorPos);
+				BlockEntity entity = world.getBlockEntity(replicatorPos);
 				if (entity != null && entity instanceof TileMatterReplicator replicator) {
-					replicator.orderManager.addOrder(new QueuedReplication(pkt.wrapper, pkt.amt));
+					replicator.orderManager.addOrder(new QueuedReplication(wrapper, amt));
 
 				}
 			}
