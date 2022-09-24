@@ -75,7 +75,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(7).setOutputs(1).setEnergyInputSlots(1)
 				.setOwner(this).setValidator(getValidator()).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setPropertyManager(capEnergyStorageProp));
@@ -86,12 +86,13 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 
 	@Override
 	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
+		
 		if (!canRun()) {
 			setShouldSaveData(setPowered(false) || setPowerUsage(0));
 			return;
 		}
 
-		UtilsTile.drainElectricSlot(this);
 		CapabilityInventory inv = getInventoryCap();
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		int drives = 0;

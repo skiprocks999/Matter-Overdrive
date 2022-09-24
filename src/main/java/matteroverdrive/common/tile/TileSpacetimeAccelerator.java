@@ -57,7 +57,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergySlots(1).setMatterSlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setEnergyInputSlots(1).setMatterInputSlots(1)
 				.setUpgrades(4).setOwner(this).setValidator(machineValidator())
 				.setValidUpgrades(InventorySpacetimeAccelerator.UPGRADES).setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_CAPACITY, true, false).setOwner(this)
@@ -74,13 +74,13 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
 		if (!canRun()) {
 			resetRadiusMultipliers();
 			setShouldSaveData(setRunning(false));
 			return;
 		}
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.drainMatterSlot(this);
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {

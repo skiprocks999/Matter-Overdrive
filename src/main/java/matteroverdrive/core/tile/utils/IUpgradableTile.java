@@ -119,5 +119,9 @@ public interface IUpgradableTile {
 	default double getProcessingTime() {
 		return 0;
 	}
+	
+	default void onUpgradesChange(double[] prevValues, double[] newValues) {
+		
+	}
 
 }

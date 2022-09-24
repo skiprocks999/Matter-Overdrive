@@ -104,7 +104,7 @@ public class TileTransporter extends GenericMachineTile {
 		entityDataProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.NBT.create(entityDataManager::serializeNbt, entityDataManager::deserializeNbt));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setMatterSlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergyInputSlots(1).setMatterInputSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
 				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES)
@@ -126,13 +126,14 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
+		
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
 			return;
 		}
 
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.drainMatterSlot(this);
 		if (cooldownProp.get() < COOLDOWN) {
 			cooldownProp.set(cooldownProp.get() + 1);
 			setRunning(false);

@@ -12,6 +12,7 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> CRATE_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
+	public static final ForgeConfigSpec.ConfigValue<Integer> CHUNKLOADER_RANGE;
 	//matter generator options
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATORS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_SMELTING_GENERATOR;
@@ -57,6 +58,15 @@ public final class MatterOverdriveConfig {
 				" ",
 				"default value = false"
 				).define("accurate_transporter", false);
+		CHUNKLOADER_RANGE = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Controls the maximum radius of the chunkloader. A radius of zero means it will only load a single",
+				"chunk. A radius of 1 means is will load a 3x3 area of chunks. A radius of 2 means it will load a",
+				"5x5 area of chunks and so on.",
+				" ",
+				"default value = false"
+				).defineInRange("chunkloader_range", 5, 0, 16);
 		USE_DEFAULT_GENERATORS = COMMON_BUILDER.comment(
 				" ",
 				" ",

@@ -9,11 +9,13 @@ import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.utils.UtilsCapability;
+import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.TriPredicate;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -156,8 +158,10 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 
 	protected static TriPredicate<Integer, ItemStack, CapabilityInventory> machineValidator() {
 		return (x, y, i) -> x < i.outputIndex()
-				|| x >= i.energySlotsIndex() && x < i.matterSlotsIndex() && UtilsCapability.hasEnergyCap(y)
-				|| x >= i.matterSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
+				|| x >= i.energyInputSlotsIndex() && x < i.matterInputSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+				|| x >= i.matterInputSlotsIndex() && x < i.energyOutputSlotsIndex() && UtilsCapability.hasMatterCap(y)
+				|| x >= i.energyOutputSlotsIndex() && x < i.matterOutputSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+				|| x >= i.matterOutputSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
 	}
@@ -175,6 +179,19 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 			}
 		}
 		return setPowerUsage((int) powerUsage);
+	}
+	
+	public int getNumOfIterations() {
+		int currProgressInt = (int) getProgress();
+		setProgress(getProgress() - currProgressInt);
+		return currProgressInt;
+	}
+	
+	public void handleOnState() {
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+		if(currState ^ isRunning()) {
+			UtilsTile.updateLit(this, isRunning());
+		}
 	}
 	
 	@Override

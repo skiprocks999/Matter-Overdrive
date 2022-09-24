@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TileMatterRecycler extends GenericMachineTile {
 
@@ -50,7 +49,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setOutputs(1).setEnergyInputSlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
@@ -66,19 +65,16 @@ public class TileMatterRecycler extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		if (currState && !isRunning()) {
-			UtilsTile.updateLit(this, Boolean.FALSE);
-		} else if (!currState && isRunning()) {
-			UtilsTile.updateLit(this, Boolean.TRUE);
-		}
+		UtilsTile.drainElectricSlot(this);
+		
+		handleOnState();
 
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false) || setProgress(0));
 			return;
 		}
 
-		UtilsTile.drainElectricSlot(this);
+		
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 

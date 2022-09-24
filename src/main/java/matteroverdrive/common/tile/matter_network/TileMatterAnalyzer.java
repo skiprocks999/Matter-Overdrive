@@ -28,7 +28,6 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.TriPredicate;
 
 public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNetworkMember {
@@ -66,7 +65,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		scannedItemProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.ITEM_STACK.create(() -> scannedItem, item -> scannedItem = item.copy()));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergySlots(1).setUpgrades(4)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergyInputSlots(1).setUpgrades(4)
 				.setOwner(this).setValidUpgrades(InventoryMatterAnalyzer.UPGRADES).setValidator(getValidator())
 				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
@@ -79,37 +78,27 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+
+		handleOnState();
+		
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack scanned = inv.getStackInSlot(0);
 		if (scanned.isEmpty()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
 		if (network == null || !hasAttachedDrives(network)) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
@@ -126,9 +115,6 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		}
 		if (!shouldAnalyze) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setScannedItem(ItemStack.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		if (!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
@@ -140,17 +126,11 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			} else {
 				shouldAnalyze = true;
 			}
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		setRunning(true);
 		incrementProgress(getCurrentSpeed());
 		energy.removeEnergy((int) getCurrentPowerUsage());
-		if (!currState && isRunning()) {
-			UtilsTile.updateLit(this, Boolean.TRUE);
-		}
 		setShouldSaveData(true);
 		if (getProgress() < PROCESSING_TIME) {
 			return;

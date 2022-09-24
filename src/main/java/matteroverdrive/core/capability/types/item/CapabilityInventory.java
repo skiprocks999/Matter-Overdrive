@@ -47,8 +47,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	private int inputs = 0;
 	private int outputs = 0;
 	private int byproducts = 0;
-	private int energySlot = 0;
-	private int matterSlot = 0;
+	private int energyInputSlot = 0;
+	private int matterInputSlot = 0;
+	private int energyOutputSlot = 0;
+	private int matterOutputSlot = 0;
 	// not included in child cap
 	private int upgrades = 0;
 
@@ -124,13 +126,23 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return this;
 	}
 
-	public CapabilityInventory setEnergySlots(int count) {
-		energySlot = count;
+	public CapabilityInventory setEnergyInputSlots(int count) {
+		energyInputSlot = count;
 		return this;
 	}
 
-	public CapabilityInventory setMatterSlots(int count) {
-		matterSlot = count;
+	public CapabilityInventory setMatterInputSlots(int count) {
+		matterInputSlot = count;
+		return this;
+	}
+	
+	public CapabilityInventory setEnergyOutputSlots(int count) {
+		energyOutputSlot = count;
+		return this;
+	}
+
+	public CapabilityInventory setMatterOutputSlots(int count) {
+		matterOutputSlot = count;
 		return this;
 	}
 
@@ -166,12 +178,20 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return byproducts;
 	}
 
-	public int energySlots() {
-		return energySlot;
+	public int energyInputSlots() {
+		return energyInputSlot;
 	}
 
-	public int matterSlots() {
-		return matterSlot;
+	public int matterInputSlots() {
+		return matterInputSlot;
+	}
+	
+	public int energyOutputSlots() {
+		return energyOutputSlot;
+	}
+
+	public int matterOutputSlots() {
+		return matterOutputSlot;
 	}
 
 	public int upgrades() {
@@ -179,7 +199,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	}
 
 	public int externalCount() {
-		return inputs() + outputs() + byproducts() + energySlots() + matterSlots();
+		return inputs() + outputs() + byproducts() + energyInputSlots() + matterInputSlots() + energyOutputSlots() + matterOutputSlots();
 	}
 
 	public int inputIndex() {
@@ -194,16 +214,24 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return outputIndex() + outputs;
 	}
 
-	public int energySlotsIndex() {
+	public int energyInputSlotsIndex() {
 		return byproductIndex() + byproducts;
 	}
 
-	public int matterSlotsIndex() {
-		return energySlotsIndex() + energySlot;
+	public int matterInputSlotsIndex() {
+		return energyInputSlotsIndex() + energyInputSlot;
+	}
+	
+	public int energyOutputSlotsIndex() {
+		return byproductIndex() + matterInputSlot;
+	}
+
+	public int matterOutputSlotsIndex() {
+		return energyOutputSlotsIndex() + energyOutputSlot;
 	}
 
 	public int upgradeIndex() {
-		return matterSlotsIndex() + matterSlot;
+		return matterOutputSlotsIndex() + matterOutputSlot;
 	}
 
 	@Override
@@ -269,7 +297,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
 
-		int[] vals = new int[] { inputs, outputs, byproducts, energySlot, matterSlot, upgrades };
+		int[] vals = new int[] { inputs, outputs, byproducts, energyInputSlot, matterInputSlot, energyOutputSlot, matterOutputSlot, upgrades };
 
 		tag.putIntArray("sizes", vals);
 
@@ -301,9 +329,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		inputs = vals[0];
 		outputs = vals[1];
 		byproducts = vals[2];
-		energySlot = vals[3];
-		matterSlot = vals[4];
-		upgrades = vals[5];
+		energyInputSlot = vals[3];
+		matterInputSlot = vals[4];
+		energyOutputSlot = vals[5];
+		matterOutputSlot = vals[6];
+		upgrades = vals[7];
 	}
 
 	@Override
@@ -346,18 +376,18 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	private void setInputCaps() {
 		childInput = LazyOptional.of(() -> {
-			int[] slots = new int[inputs() + energySlots() + matterSlots()];
+			int[] slots = new int[inputs() + energyInputSlots() + matterInputSlots()];
 			int index = 0;
 			for (int i = 0; i < inputs(); i++) {
 				slots[index] = inputIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < energySlots(); i++) {
-				slots[index] = energySlotsIndex() + i;
+			for (int i = 0; i < energyInputSlots(); i++) {
+				slots[index] = energyInputSlotsIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < matterSlots(); i++) {
-				slots[index] = matterSlotsIndex() + i;
+			for (int i = 0; i < matterInputSlots(); i++) {
+				slots[index] = matterInputSlotsIndex() + i;
 				index++;
 			}
 			return new ChildInventoryHandler(this, slots);
@@ -375,7 +405,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	private void setOutputCaps() {
 		childOutput = LazyOptional.of(() -> {
-			int[] slots = new int[outputs() + byproducts() + energySlots() + matterSlots()];
+			int[] slots = new int[outputs() + byproducts() + energyOutputSlots() + matterOutputSlots()];
 			int index = 0;
 			for (int i = 0; i < outputs(); i++) {
 				slots[index] = outputIndex() + i;
@@ -385,12 +415,12 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				slots[index] = byproductIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < energySlots(); i++) {
-				slots[index] = energySlotsIndex() + i;
+			for (int i = 0; i < energyOutputSlots(); i++) {
+				slots[index] = energyOutputSlotsIndex() + i;
 				index++;
 			}
-			for (int i = 0; i < matterSlots(); i++) {
-				slots[index] = matterSlotsIndex() + i;
+			for (int i = 0; i < matterOutputSlots(); i++) {
+				slots[index] = matterOutputSlotsIndex() + i;
 				index++;
 			}
 			return new ChildInventoryHandler(this, slots);
@@ -430,18 +460,34 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		return byprouducts;
 	}
 
-	public List<ItemStack> getEnergyItems() {
+	public List<ItemStack> getEnergyInputItems() {
 		List<ItemStack> energy = new ArrayList<>();
-		for (int i = 0; i < energySlots(); i++) {
-			energy.add(getStackInSlot(energySlotsIndex() + i));
+		for (int i = 0; i < energyInputSlots(); i++) {
+			energy.add(getStackInSlot(energyInputSlotsIndex() + i));
 		}
 		return energy;
 	}
 
-	public List<ItemStack> getMatterItems() {
+	public List<ItemStack> getMatterInputItems() {
 		List<ItemStack> matter = new ArrayList<>();
-		for (int i = 0; i < matterSlots(); i++) {
-			matter.add(getStackInSlot(matterSlotsIndex() + i));
+		for (int i = 0; i < matterInputSlots(); i++) {
+			matter.add(getStackInSlot(matterInputSlotsIndex() + i));
+		}
+		return matter;
+	}
+	
+	public List<ItemStack> getEnergyOutputItems() {
+		List<ItemStack> energy = new ArrayList<>();
+		for (int i = 0; i < energyOutputSlots(); i++) {
+			energy.add(getStackInSlot(energyOutputSlotsIndex() + i));
+		}
+		return energy;
+	}
+
+	public List<ItemStack> getMatterOutputItems() {
+		List<ItemStack> matter = new ArrayList<>();
+		for (int i = 0; i < matterOutputSlots(); i++) {
+			matter.add(getStackInSlot(matterOutputSlotsIndex() + i));
 		}
 		return matter;
 	}
@@ -487,7 +533,10 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				double powerStorage = upgradable.getDefaultPowerStorage();
 				double powerUsage = upgradable.getDefaultPowerUsage();
 				double range = upgradable.getDefaultRange();
-				boolean isMuffled = false;
+				boolean isMuffled = upgradable.isMuffled();
+				
+				double[] prevValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
+				
 				for (ItemStack stack : getUpgrades()) {
 					if (!stack.isEmpty()) {
 						UpgradeType upgrade = ((ItemUpgrade) stack.getItem()).type;
@@ -510,6 +559,11 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 				upgradable.setPowerUsage((int) powerUsage);
 				upgradable.setRange((int) range);
 				upgradable.setMuffled(isMuffled);
+				
+				double[] newValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
+				
+				upgradable.onUpgradesChange(prevValues, newValues);
+				
 			}
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());

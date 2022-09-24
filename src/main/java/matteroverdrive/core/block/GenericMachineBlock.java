@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class GenericMachineBlock extends GenericEntityBlock {
+public abstract class GenericMachineBlock extends GenericEntityBlock {
 
 	public static final Properties DEFAULT_MACHINE_PROPERTIES = Properties.of(Material.METAL).strength(3.5F)
 			.sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops();

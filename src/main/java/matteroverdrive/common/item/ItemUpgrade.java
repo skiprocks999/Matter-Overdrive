@@ -96,5 +96,9 @@ public class ItemUpgrade extends OverdriveItem {
 		}
 
 	}
+	
+	public static enum UpgradeEffect {
+		SPEED, MATTER_STORAGE, MATTER_USAGE, FAILURE, POWER_USAGE, POWER_STORAGE, RANGE, MUFFLED;
+	}
 
 }

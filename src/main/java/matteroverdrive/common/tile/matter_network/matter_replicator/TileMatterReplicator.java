@@ -49,7 +49,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.TriPredicate;
@@ -104,9 +103,10 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		ordersProp = this.getPropertyManager()
 				.addTrackedProperty(PropertyTypes.NBT.create(orderManager::serializeNbt, orderManager::deserializeNbt));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2).setEnergySlots(1)
-				.setMatterSlots(1).setUpgrades(4).setOwner(this).setValidUpgrades(InventoryMatterReplicator.UPGRADES)
-				.setValidator(getValidator()).setPropertyManager(capInventoryProp));
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(2)
+				.setEnergyInputSlots(1).setMatterInputSlots(1).setUpgrades(4).setOwner(this)
+				.setValidUpgrades(InventoryMatterReplicator.UPGRADES).setValidator(getValidator())
+				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setPropertyManager(capEnergyStorageProp));
 		addMatterStorageCap(new CapabilityMatterStorage(MATTER_STORAGE, true, false).setOwner(this)
@@ -124,24 +124,19 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
 
-		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+		handleOnState();
 
 		orderManager.removeCompletedOrders();
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false) || setPowered(false) || setProgress(0)
 					|| setCurrentOrder(QueuedReplication.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false) || setPowered(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
+			setShouldSaveData(setRunning(false) || setPowered(false) || setProgress(0)
+					|| setCurrentOrder(QueuedReplication.EMPTY));
 			return;
 		}
 		setPowered(true);
@@ -167,9 +162,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 		if (orderManager.isEmpty()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
@@ -178,9 +170,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		if (value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
 			orderManager.cancelOrder(0);
 			setShouldSaveData(setRunning(false) || setProgress(0) || setCurrentOrder(QueuedReplication.EMPTY));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 		setRecipeValue(value);
@@ -191,9 +180,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		boolean dustEmpty = dust.isEmpty();
 		if (!dustEmpty && !(UtilsNbt.readMatterVal(dust) == value && dust.getCount() < dust.getMaxStackSize())) {
 			setShouldSaveData(setRunning(false));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
@@ -201,18 +187,12 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		boolean outputEmpty = output.isEmpty();
 		if (!outputEmpty && !(ItemStack.isSame(stack, output) && output.getCount() < output.getMaxStackSize())) {
 			setShouldSaveData(setRunning(false));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getRecipeValue()) {
 			setShouldSaveData(setRunning(false));
-			if (currState && !isRunning()) {
-				UtilsTile.updateLit(this, Boolean.FALSE);
-			}
 			return;
 		}
 
@@ -230,10 +210,6 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 					entity.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 1, false, true, false));
 				}
 			}
-		}
-
-		if (!currState && isRunning()) {
-			UtilsTile.updateLit(this, Boolean.TRUE);
 		}
 
 		setShouldSaveData(true);

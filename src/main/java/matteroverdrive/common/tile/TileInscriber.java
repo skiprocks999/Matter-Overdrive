@@ -54,7 +54,7 @@ public class TileInscriber extends GenericMachineTile {
 		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergySlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergyInputSlots(1)
 				.setUpgrades(4).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.UP, Direction.NORTH },
 						new Direction[] { Direction.DOWN })
@@ -71,11 +71,12 @@ public class TileInscriber extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
+		UtilsTile.drainElectricSlot(this);
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false) || setProgress(0) || setProcessingTime(0) || setPowerUsage(0));
 			return;
 		}
-		UtilsTile.drainElectricSlot(this);
+		
 		CapabilityInventory inv = getInventoryCap();
 		List<ItemStack> inputs = inv.getInputs();
 		ItemStack input1 = inputs.get(0);
