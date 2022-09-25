@@ -36,7 +36,7 @@ public enum TypeMachine {
 	SPACETIME_ACCELERATOR(Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D),
 			OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 					.setHasFacing(false).setCanBeWaterlogged()),
-	CHUNKLOADER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()),
+	CHUNKLOADER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity().setCanBeLit(false)),
 	MATTER_ANALYZER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 			.setCanBeLit(false).setCanBeWaterlogged().setHasFacing(false)),
 	PATTERN_STORAGE(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()

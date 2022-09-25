@@ -80,21 +80,20 @@ public class TileMatterDecomposer extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.fillMatterSlot(this);
+		setShouldSaveData(UtilsTile.drainElectricSlot(this) | UtilsTile.fillMatterSlot(this));
 		
 		handleOnState();
 		
 		if (!canRun()) {
-			setShouldSaveData(setRecipeValue(0) || setRunning(false) || setProgress(0));
+			setShouldSaveData(setRecipeValue(0) | setRunning(false) | setProgress(0));
 			return;
 		}
 		
-		UtilsTile.outputMatter(this);
+		setShouldSaveData(UtilsTile.outputMatter(this));
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			setShouldSaveData(setRunning(false) || setRecipeValue(0) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setRecipeValue(0) | setProgress(0));
 			return;
 		}
 
@@ -105,7 +104,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
 			if (matterVal <= 0.0) {
-				setShouldSaveData(setRunning(false) || setRecipeValue(0) || setProgress(0));
+				setShouldSaveData(setRunning(false) | setRecipeValue(0) | setProgress(0));
 				return;
 			}
 		}

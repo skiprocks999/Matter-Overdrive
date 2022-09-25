@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import matteroverdrive.References;
-import matteroverdrive.common.block.BlockChunkloader;
 import matteroverdrive.common.block.BlockColored;
 import matteroverdrive.common.block.BlockCustomGlass;
 import matteroverdrive.common.block.BlockMachine;
@@ -163,7 +162,7 @@ public class BlockRegistry {
 			TypeMatterNetworkCable.values());
 
 	public static final RegistryObject<Block> BLOCK_CHUNKLOADER = registerBlock(TypeMachine.CHUNKLOADER.id(),
-			() -> new BlockChunkloader<TileChunkloader>(TileChunkloader::new, TypeMachine.CHUNKLOADER,
+			() -> new BlockMachine<TileChunkloader>(TileChunkloader::new, TypeMachine.CHUNKLOADER,
 					TileRegistry.TILE_CHUNKLOADER),
 			true);
 

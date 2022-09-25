@@ -69,19 +69,19 @@ public class TileMicrowave extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
+		setShouldSaveData(UtilsTile.drainElectricSlot(this));
 		
 		handleOnState();
 
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 		
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 
@@ -98,7 +98,7 @@ public class TileMicrowave extends GenericMachineTile {
 			matched = cachedRecipe.getIngredients().get(0).test(input);
 		}
 		if (!matched) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 

@@ -223,7 +223,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	}
 	
 	public int energyOutputSlotsIndex() {
-		return byproductIndex() + matterInputSlot;
+		return matterInputSlotsIndex() + matterInputSlot;
 	}
 
 	public int matterOutputSlotsIndex() {
@@ -524,7 +524,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	@Override
 	protected void onContentsChanged(int slot) {
-		if (hasOwner) {
+		if (hasOwner && !owner.getLevel().isClientSide()) {
 			if (slot >= upgradeIndex() && upgrades() > 0 && owner instanceof IUpgradableTile upgradable) {
 				double speed = upgradable.getDefaultSpeed();
 				double matterUsage = upgradable.getDefaultMatterUsage();

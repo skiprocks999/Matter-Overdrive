@@ -5,10 +5,6 @@
 		128,
 		128
 	],
-	"textures": {
-		"0": "matteroverdrive:block/chunkloader",
-		"particle": "matteroverdrive:block/base_stripes"
-	},
 	"elements": [
 		{
 			"from": [

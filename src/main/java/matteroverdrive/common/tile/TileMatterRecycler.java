@@ -65,12 +65,12 @@ public class TileMatterRecycler extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
+		setShouldSaveData(UtilsTile.drainElectricSlot(this));
 		
 		handleOnState();
 
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 
@@ -79,13 +79,13 @@ public class TileMatterRecycler extends GenericMachineTile {
 		ItemStack input = inv.getInputs().get(0);
 
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 
 		double value = UtilsNbt.readMatterVal(input);
 		if (value <= 0) {
-			setShouldSaveData(setRunning(false) || setProgress(0));
+			setShouldSaveData(setRunning(false) | setProgress(0));
 			return;
 		}
 

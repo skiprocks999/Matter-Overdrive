@@ -74,7 +74,7 @@ public abstract class GenericTile extends BlockEntity
 	}
 	
 	public void setShouldSaveData(boolean should) {
-		shouldSaveData = should;
+		shouldSaveData |= should;
 	}
 
 	@Override
@@ -224,6 +224,10 @@ public abstract class GenericTile extends BlockEntity
 				setShouldSaveData(false);
 			}
 		}
+	}
+	
+	public void onBlockBroken(Level world, BlockPos pos) {
+		
 	}
 
 }

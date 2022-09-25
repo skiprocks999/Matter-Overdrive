@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "matteroverdrive:block/chunkloader"
+    "lit=false": {
+      "model": "matteroverdrive:block/chunkloader_off"
+    },
+    "lit=true": {
+      "model": "matteroverdrive:block/chunkloader_on"
     }
   }
 }

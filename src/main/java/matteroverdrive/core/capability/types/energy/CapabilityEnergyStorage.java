@@ -316,10 +316,10 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 	}
 
 	private void onChange() {
-		if (propertyHandler != null) {
-			propertyHandler.set(serializeNBT());
-		}
-		if (hasOwner) {
+		if(hasOwner && !owner.getLevel().isClientSide()) {
+			if (propertyHandler != null) {
+				propertyHandler.set(serializeNBT());
+			}
 			owner.setShouldSaveData(true);
 		}
 	}

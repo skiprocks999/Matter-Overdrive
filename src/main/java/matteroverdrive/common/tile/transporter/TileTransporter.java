@@ -126,11 +126,10 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.drainMatterSlot(this);
+		setShouldSaveData(UtilsTile.drainElectricSlot(this) | UtilsTile.drainMatterSlot(this));
 		
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
+			setShouldSaveData(setRunning(false) || setProgress(0) | entityDataManager.wipe());
 			return;
 		}
 
@@ -139,14 +138,14 @@ public class TileTransporter extends GenericMachineTile {
 			setRunning(false);
 			setProgress(0);
 			entityDataManager.wipe();
-			setChanged();
+			setShouldSaveData(true);
 			return;
 		}
 
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
-			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
+			setShouldSaveData(setRunning(false) | setProgress(0) | entityDataManager.wipe());
 			return;
 		}
 
@@ -154,7 +153,7 @@ public class TileTransporter extends GenericMachineTile {
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 
 		if (!validData.getFirst()) {
-			setShouldSaveData(setRunning(false) || setProgress(0) || entityDataManager.wipe());
+			setShouldSaveData(setRunning(false) | setProgress(0) | entityDataManager.wipe());
 			return;
 		}
 
@@ -166,7 +165,7 @@ public class TileTransporter extends GenericMachineTile {
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
-			setShouldSaveData(setRunning(false) || entityDataManager.wipe());
+			setShouldSaveData(setRunning(false) | entityDataManager.wipe());
 			return;
 		}
 

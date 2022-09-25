@@ -66,7 +66,7 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		
 		
 		
-		simpleBlock(BlockRegistry.BLOCK_CHUNKLOADER, existingBlock(BlockRegistry.BLOCK_CHUNKLOADER), true);
+		redstoneToggleBlock(BlockRegistry.BLOCK_CHUNKLOADER, getChunkloaderBase("off"), getChunkloaderBase("on"), true);
 		simpleBlock(BlockRegistry.BLOCK_CHARGER_CHILD, true);
 		simpleBlock(BlockRegistry.BLOCK_TRANSPORTER, blockTopBottom(BlockRegistry.BLOCK_TRANSPORTER, "block/transporter/transporter_top",
 				"block/transporter/transporter_bottom", "block/transporter/transporter_side"), true);
@@ -320,6 +320,11 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		return models().withExistingParent("block/microwave" + name, modLoc("block/parent/microwave_base"))
 				.texture("0", modLoc("block/microwave/microwave")).texture("1", modLoc("block/microwave/microwave_front" + frontText))
 				.texture("2", modLoc("block/microwave/microwave_back")).texture("particle", "#0");
+	}
+	
+	private BlockModelBuilder getChunkloaderBase(String name) {
+		return models().withExistingParent("block/chunkloader_" + name, modLoc("block/parent/chunkloader_base"))
+				.texture("0", modLoc("block/chunkloader/chunkloader_" + name)).texture("particle", modLoc("block/base_stripes"));
 	}
 
 	private ResourceLocation key(Block block) {

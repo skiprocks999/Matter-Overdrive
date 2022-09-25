@@ -21,7 +21,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class UtilsTile {
 
-	public static void outputEnergy(GenericTile tile) {
+	public static boolean outputEnergy(GenericTile tile) {
+		boolean drained = false;
 		if (tile.hasCapability(CapabilityEnergy.ENERGY)) {
 			CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
 			Level world = tile.getLevel();
@@ -44,6 +45,7 @@ public class UtilsTile {
 										if (accepted > 0) {
 											storage.receiveEnergy(accepted, false);
 											energy.extractEnergy(accepted, false);
+											drained = true;
 										}
 									}
 								}
@@ -63,6 +65,7 @@ public class UtilsTile {
 									if (accepted > 0) {
 										storage.receiveEnergy(accepted, false);
 										energy.extractEnergy(accepted, false);
+										drained = true;
 									}
 								}
 							}
@@ -71,11 +74,13 @@ public class UtilsTile {
 				}
 			}
 		}
+		return drained;
 	}
 
-	public static void drainElectricSlot(GenericTile tile) {
+	public static boolean drainElectricSlot(GenericTile tile) {
 		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
+		boolean drained = false;
 		for (ItemStack stack : inv.getEnergyInputItems()) {
 			if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
 				IEnergyStorage storage = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve()
@@ -84,12 +89,15 @@ public class UtilsTile {
 					int accepted = energy.receiveEnergy(storage.getEnergyStored(), true);
 					energy.receiveEnergy(accepted, false);
 					storage.extractEnergy(accepted, false);
+					drained = true;
 				}
 			}
 		}
+		return drained;
 	}
 
-	public static void outputMatter(GenericTile tile) {
+	public static boolean outputMatter(GenericTile tile) {
+		boolean drained = false;
 		if (tile.hasCapability(MatterOverdriveCapabilities.MATTER_STORAGE)) {
 			CapabilityMatterStorage matter = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 			Level world = tile.getLevel();
@@ -110,6 +118,7 @@ public class UtilsTile {
 									if (storage.canReceive()) {
 										matter.extractMatter(storage.receiveMatter(matter.getMatterStored(), false),
 												false);
+										drained = true;
 									}
 								}
 							}
@@ -125,6 +134,7 @@ public class UtilsTile {
 								ICapabilityMatterStorage storage = lazy.resolve().get();
 								if (storage.canReceive()) {
 									matter.extractMatter(storage.receiveMatter(matter.getMatterStored(), false), false);
+									drained = true;
 								}
 							}
 						}
@@ -132,9 +142,11 @@ public class UtilsTile {
 				}
 			}
 		}
+		return drained;
 	}
 
-	public static void drainMatterSlot(GenericTile tile) {
+	public static boolean drainMatterSlot(GenericTile tile) {
+		boolean drained = false;
 		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		CapabilityMatterStorage energy = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 		for (ItemStack stack : inv.getMatterInputItems()) {
@@ -145,14 +157,17 @@ public class UtilsTile {
 					double accepted = energy.receiveMatter(storage.getMatterStored(), true);
 					energy.receiveMatter(accepted, false);
 					storage.extractMatter(accepted, false);
+					drained = true;
 				}
 			}
 		}
+		return drained;
 	}
 
-	public static void fillMatterSlot(GenericTile tile) {
+	public static boolean fillMatterSlot(GenericTile tile) {
 		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		CapabilityMatterStorage matter = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
+		boolean drained = false;
 		for (ItemStack stack : inv.getMatterOutputItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
 				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
@@ -161,9 +176,11 @@ public class UtilsTile {
 					double accepted = storage.receiveMatter(matter.getMatterStored(), true);
 					storage.receiveMatter(accepted, false);
 					matter.extractMatter(accepted, false);
+					drained = true;
 				}
 			}
 		}
+		return drained;
 	}
 
 	public static boolean isFEReciever(BlockEntity acceptor, Direction dir) {

@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.world.ForgeChunkManager;
 
@@ -70,14 +71,13 @@ public class TileChunkloader extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.drainMatterSlot(this);
+		setShouldSaveData((UtilsTile.drainElectricSlot(this)) | (UtilsTile.drainMatterSlot(this)));
 		
 		handleOnState();
 		
 		if (!canRun()) {
 			if(isRunning()) {
-				updateChunks(false);
+				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
 			setShouldSaveData(setRunning(false));
@@ -86,7 +86,7 @@ public class TileChunkloader extends GenericMachineTile {
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			if(isRunning()) {
-				updateChunks(false);
+				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
 			setShouldSaveData(setRunning(false));
@@ -95,7 +95,7 @@ public class TileChunkloader extends GenericMachineTile {
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			if(isRunning()) {
-				updateChunks(false);
+				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
 			setShouldSaveData(setRunning(false));
@@ -105,7 +105,7 @@ public class TileChunkloader extends GenericMachineTile {
 		energy.removeEnergy((int) getCurrentPowerUsage());
 		setRunning(true);
 		if (didRangeChange) {
-			updateChunks(true);
+			updateChunks(true, getLevel(), getBlockPos());
 			didRangeChange = false;
 		}
 		setShouldSaveData(true);
@@ -139,11 +139,16 @@ public class TileChunkloader extends GenericMachineTile {
 		super.load(tag);
 		didRangeChange = tag.getBoolean("didrangechange");
 	}
+	
+	@Override
+	public void onBlockBroken(Level world, BlockPos pos) {
+		updateChunks(false, world, pos);
+	}
 
-	public void updateChunks(boolean load) {
+	private void updateChunks(boolean load, Level world, BlockPos pos) {
 
 		int offset = (int) (getCurrentRange() - 1);
-		ChunkPos currChunkPos = getLevel().getChunk(worldPosition).getPos();
+		ChunkPos currChunkPos = world.getChunk(pos).getPos();
 		int lowerXOffset = currChunkPos.x - offset;
 		int lowerZOffset = currChunkPos.z - offset;
 
@@ -151,7 +156,7 @@ public class TileChunkloader extends GenericMachineTile {
 
 		BlockPos[][] ownerPos = new BlockPos[delta + 1][delta + 1];
 
-		BlockPos bottomLeft = getBlockPos().offset(-16 * offset, 0, -16 * offset);
+		BlockPos bottomLeft = pos.offset(-16 * offset, 0, -16 * offset);
 
 		for (int i = 0; i <= delta; i++) {
 			for (int j = 0; j <= delta; j++) {
@@ -161,7 +166,7 @@ public class TileChunkloader extends GenericMachineTile {
 
 		for (int i = 0; i <= delta; i++) {
 			for (int j = 0; j <= delta; j++) {
-				ForgeChunkManager.forceChunk((ServerLevel) getLevel(), References.ID, ownerPos[i][j], lowerXOffset + i,
+				ForgeChunkManager.forceChunk((ServerLevel) world, References.ID, ownerPos[i][j], lowerXOffset + i,
 						lowerZOffset + j, load, true);
 				String action = load ? "loading" : "unloading";
 				MatterOverdrive.LOGGER.info(action + " chunk at " + lowerXOffset + i + "," + lowerZOffset + j);

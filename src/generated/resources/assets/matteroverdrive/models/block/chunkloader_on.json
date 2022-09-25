@@ -1,0 +1,7 @@
+{
+  "parent": "matteroverdrive:block/parent/chunkloader_base",
+  "textures": {
+    "0": "matteroverdrive:block/chunkloader/chunkloader_on",
+    "particle": "matteroverdrive:block/base_stripes"
+  }
+}

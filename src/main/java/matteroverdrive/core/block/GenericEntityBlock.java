@@ -143,14 +143,19 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 
 	@Override
 	public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean moving) {
-		super.onRemove(oldState, level, pos, newState, moving);
-		if (!level.isClientSide && newState.hasProperty(FACING)
-				&& oldState.getValue(FACING) != newState.getValue(FACING)) {
+		if (!level.isClientSide()) {
 			BlockEntity entity = level.getBlockEntity(pos);
 			if (entity != null && entity instanceof GenericTile tile) {
-				tile.refreshCapabilities();
+				if (newState.hasProperty(FACING) && oldState.getValue(FACING) != newState.getValue(FACING)) {
+					tile.refreshCapabilities();
+				}
+				if(newState.isAir()) {
+					tile.onBlockBroken(level, pos);
+				}
 			}
+			
 		}
+		super.onRemove(oldState, level, pos, newState, moving);
 	}
 
 	@Override

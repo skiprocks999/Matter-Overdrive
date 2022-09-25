@@ -74,8 +74,7 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		UtilsTile.drainElectricSlot(this);
-		UtilsTile.drainMatterSlot(this);
+		setShouldSaveData(UtilsTile.drainElectricSlot(this) | UtilsTile.drainMatterSlot(this));
 		if (!canRun()) {
 			resetRadiusMultipliers();
 			setShouldSaveData(setRunning(false));
