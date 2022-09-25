@@ -54,7 +54,7 @@ public class TileSolarPanel extends GenericMachineTile {
 			setShouldSaveData(setRunning(false));
 			return;
 		} 
-		setShouldSaveData(UtilsTile.outputEnergy(this));
+		UtilsTile.outputEnergy(this);
 		
 		if (ticks % 5 == 0) {
 			Level world = getLevel();

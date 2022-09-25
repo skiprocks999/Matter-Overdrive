@@ -73,8 +73,26 @@ public abstract class GenericTile extends BlockEntity
 		return shouldSaveData;
 	}
 	
-	public void setShouldSaveData(boolean should) {
-		shouldSaveData |= should;
+	/**
+	 * This is a less efficient solution than just using the bitwise boolean operator |
+	 * 
+	 * However, being forced to use a specific boolean operator will ultimately lead to
+	 * someone forgetting and causing a bug that takes forever to track down.
+	 * 
+	 * Maybe we can revisit the concept when we are looking at making performance improvements
+	 * @param bool
+	 */
+	public void setShouldSaveData(boolean...changes) {
+		for(boolean bool : changes) {
+			if(bool) {
+				shouldSaveData = true;
+				break;
+			}
+		}
+	}
+	
+	protected void resetShouldSaveData() {
+		shouldSaveData = false;
 	}
 
 	@Override
@@ -221,7 +239,7 @@ public abstract class GenericTile extends BlockEntity
 			tickServer();
 			if(shouldSaveData()) {
 				setChanged();
-				setShouldSaveData(false);
+				resetShouldSaveData();
 			}
 		}
 	}

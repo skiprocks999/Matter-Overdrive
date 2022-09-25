@@ -71,7 +71,8 @@ public class TileChunkloader extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		setShouldSaveData((UtilsTile.drainElectricSlot(this)) | (UtilsTile.drainMatterSlot(this)));
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
 		
 		handleOnState();
 		

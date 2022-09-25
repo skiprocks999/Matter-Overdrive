@@ -86,10 +86,10 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 
 	@Override
 	public void tickServer() {
-		setShouldSaveData(UtilsTile.drainElectricSlot(this));
+		UtilsTile.drainElectricSlot(this);
 		
 		if (!canRun()) {
-			setShouldSaveData(setPowered(false) | setPowerUsage(0));
+			setShouldSaveData(setPowered(false), setPowerUsage(0));
 			return;
 		}
 
@@ -105,7 +105,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		setShouldSaveData(true);
 		
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setPowered(false) | setPowerUsage(0));
+			setShouldSaveData(setPowered(false), setPowerUsage(0));
 			return;
 		}
 		energy.removeEnergy((int) getCurrentPowerUsage());

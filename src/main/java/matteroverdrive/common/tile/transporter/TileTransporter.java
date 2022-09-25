@@ -126,26 +126,24 @@ public class TileTransporter extends GenericMachineTile {
 
 	@Override
 	public void tickServer() {
-		setShouldSaveData(UtilsTile.drainElectricSlot(this) | UtilsTile.drainMatterSlot(this));
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
 		
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false) || setProgress(0) | entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
 		if (cooldownProp.get() < COOLDOWN) {
 			cooldownProp.set(cooldownProp.get() + 1);
-			setRunning(false);
-			setProgress(0);
-			entityDataManager.wipe();
-			setShouldSaveData(true);
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
-			setShouldSaveData(setRunning(false) | setProgress(0) | entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
@@ -153,19 +151,19 @@ public class TileTransporter extends GenericMachineTile {
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 
 		if (!validData.getFirst()) {
-			setShouldSaveData(setRunning(false) | setProgress(0) | entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), entityDataManager.wipe());
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
-			setShouldSaveData(setRunning(false) | entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), entityDataManager.wipe());
 			return;
 		}
 

@@ -121,21 +121,20 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 	@Override
 	public void tickServer() {
-		setShouldSaveData((UtilsTile.drainElectricSlot(this)) | (UtilsTile.drainMatterSlot(this)));
+		UtilsTile.drainElectricSlot(this);
+		UtilsTile.drainMatterSlot(this);
 
 		handleOnState();
 
 		orderManager.removeCompletedOrders();
 		if (!canRun()) {
-			setShouldSaveData(
-					setRunning(false) | setPowered(false) | setProgress(0) | setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(
-					setRunning(false) | setPowered(false) | setProgress(0) | setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
 			return;
 		}
 		setPowered(true);
@@ -160,7 +159,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 
 		if (orderManager.isEmpty()) {
-			setShouldSaveData(setRunning(false) | setProgress(0) | setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
 			return;
 		}
 
@@ -168,7 +167,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 		if (value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
 			orderManager.cancelOrder(0);
-			setShouldSaveData(setRunning(false) | setProgress(0) | setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
 			return;
 		}
 		setRecipeValue(value);
