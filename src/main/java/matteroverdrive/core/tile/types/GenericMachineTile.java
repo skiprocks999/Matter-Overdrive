@@ -6,16 +6,22 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.capability.types.matter.ICapabilityMatterStorage;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.utils.UtilsCapability;
+import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.TriPredicate;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -165,10 +171,10 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 				|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
 						&& i.isUpgradeValid(upgrade.type);
 	}
-	
+
 	public boolean updatePowerUsageFromRecipe(double usage) {
 		defaultPowerUsage = usage;
-		if(!setPowerUsage(usage)) {
+		if (!setPowerUsage(usage)) {
 			return false;
 		}
 		double powerUsage = getDefaultPowerUsage();
@@ -180,45 +186,75 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 		}
 		return setPowerUsage((int) powerUsage);
 	}
-	
+
 	public int getNumOfIterations() {
 		int currProgressInt = (int) getProgress();
 		setProgress(getProgress() - currProgressInt);
 		return currProgressInt;
 	}
-	
+
 	public void handleOnState() {
 		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
-		if(currState ^ isRunning()) {
+		if (currState ^ isRunning()) {
 			UtilsTile.updateLit(this, isRunning());
 		}
 	}
-	
+
+	public boolean doesOutputFit(ItemStack output, ItemStack result) {
+		return UtilsItem.compareItems(output.getItem(), result.getItem())
+				&& (output.getCount() + result.getCount() <= result.getMaxStackSize());
+	}
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
-		
+
 		CompoundTag additional = new CompoundTag();
-		
+
 		additional.putBoolean("isRunning", runningProp.get());
 		additional.putBoolean("isPowered", poweredProp.get());
 		additional.putDouble("currProgress", progressProp.get());
 		additional.putDouble("currRecipeValue", recipeValueProp.get());
-		
+
 		tag.put("genericmachineinfo", additional);
-		
+
 	}
-	
+
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		
+
 		CompoundTag additional = tag.getCompound("genericmachineinfo");
-		
+
 		setRunning(additional.getBoolean("isRunning"));
 		setPowered(additional.getBoolean("isPowered"));
 		setProgress(additional.getDouble("currProgress"));
 		setRecipeValue(additional.getDouble("currRecipeValue"));
+	}
+	
+	@Override
+	public InteractionResult useServer(Player player, InteractionHand hand, BlockHitResult hit) {
+		if(hasMatterStorageCap()) {
+			ItemStack stack = player.getItemInHand(hand);
+			if (UtilsCapability.hasMatterCap(stack)) {
+				CapabilityMatterStorage matter = getMatterStorageCap();
+				ICapabilityMatterStorage storage = (ICapabilityMatterStorage) stack
+						.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).cast().resolve().get();
+				if (storage.canReceive() && matter.canExtract()) {
+					double accepted = storage.receiveMatter(matter.getMatterStored(), true);
+					storage.receiveMatter(accepted, false);
+					matter.extractMatter(accepted, false);
+					return InteractionResult.CONSUME;
+				}
+				if (storage.canExtract() && matter.canReceive()) {
+					double accepted = matter.receiveMatter(storage.getMatterStored(), true);
+					matter.receiveMatter(accepted, false);
+					storage.extractMatter(accepted, false);
+					return InteractionResult.CONSUME;
+				}
+			}
+		}
+		return super.useServer(player, hand, hit);
 	}
 
 }

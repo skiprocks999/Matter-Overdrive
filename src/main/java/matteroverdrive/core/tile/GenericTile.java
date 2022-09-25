@@ -11,13 +11,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -246,6 +251,20 @@ public abstract class GenericTile extends BlockEntity
 	
 	public void onBlockBroken(Level world, BlockPos pos) {
 		
+	}
+	
+	//returns 
+	public InteractionResult useClient(Player player, InteractionHand hand, BlockHitResult hit) {
+		return hasMenu ? InteractionResult.SUCCESS : InteractionResult.PASS;
+	}
+	
+	public InteractionResult useServer(Player player, InteractionHand hand, BlockHitResult hit) {
+		if(hasMenu) {
+			player.awardStat(Stats.INTERACT_WITH_FURNACE);
+			player.openMenu(getMenuProvider());
+			return InteractionResult.CONSUME;
+		}
+		return InteractionResult.PASS;
 	}
 
 }

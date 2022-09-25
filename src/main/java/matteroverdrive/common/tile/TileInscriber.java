@@ -13,7 +13,6 @@ import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.recipe.CountableIngredient;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericMachineTile;
-import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
@@ -109,8 +108,7 @@ public class TileInscriber extends GenericMachineTile {
 		}
 		ItemStack output = inv.getOutputs().get(0);
 		ItemStack result = cachedRecipe.getResultItem();
-		if ((output.isEmpty() || (UtilsItem.compareItems(output.getItem(), result.getItem())
-				&& (output.getCount() + result.getCount() <= result.getMaxStackSize())))) {
+		if (output.isEmpty() || doesOutputFit(output, result)) {
 			setRunning(true);
 			incrementProgress(getCurrentSpeed());
 			energy.removeEnergy((int) getCurrentPowerUsage());
