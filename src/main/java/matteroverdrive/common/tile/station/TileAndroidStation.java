@@ -8,9 +8,13 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileAndroidStation extends BaseStationTile {
@@ -28,6 +32,24 @@ public class TileAndroidStation extends BaseStationTile {
 	public boolean isUsableByPlayer(LocalPlayer player) {
 		return player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).map(ICapabilityAndroid::isAndroid)
 				.orElse(false);
+	}
+	
+	@Override
+	public InteractionResult useClient(Player player, InteractionHand hand, BlockHitResult hit) {
+		if(player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).map(ICapabilityAndroid::isAndroid)
+				.orElse(false)) {
+			return super.useClient(player, hand, hit);
+		}
+		return InteractionResult.PASS;
+	}
+	
+	@Override
+	public InteractionResult useServer(Player player, InteractionHand hand, BlockHitResult hit) {
+		if(player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).map(ICapabilityAndroid::isAndroid)
+				.orElse(false)) {
+			return super.useClient(player, hand, hit);
+		}
+		return InteractionResult.PASS;
 	}
 
 	@Override

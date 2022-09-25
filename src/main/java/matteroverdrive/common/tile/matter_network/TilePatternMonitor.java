@@ -21,7 +21,7 @@ import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.packet.NetworkHandler;
 import matteroverdrive.core.packet.type.serverbound.misc.PacketQueueReplication;
-import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.GenericTickingTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.TileRegistry;
@@ -34,7 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TilePatternMonitor extends GenericTile implements IMatterNetworkMember {
+public class TilePatternMonitor extends GenericTickingTile implements IMatterNetworkMember {
 
 	private HashMap<BlockPos, PatternStorageDataWrapper> clientPatternStorageData = new HashMap<>();
 	private HashMap<BlockPos, MatterReplicatorDataWrapper> clientMatterReplicatorData = new HashMap<>();

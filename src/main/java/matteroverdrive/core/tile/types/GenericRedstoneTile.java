@@ -2,7 +2,6 @@ package matteroverdrive.core.tile.types;
 
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
-import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.IRedstoneModeTile;
 import matteroverdrive.core.utils.UtilsTile;
 import net.minecraft.core.BlockPos;
@@ -10,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class GenericRedstoneTile extends GenericTile implements IRedstoneModeTile {
+public abstract class GenericRedstoneTile extends GenericTickingTile implements IRedstoneModeTile {
 
 	private int currRedstoneMode = 0;
 

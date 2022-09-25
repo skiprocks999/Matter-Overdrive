@@ -5,7 +5,6 @@ import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
-import matteroverdrive.core.tile.utils.ITickableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,17 +29,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-public abstract class GenericTile extends BlockEntity
-		implements Nameable, ITickableTile, IPropertyManaged {
+public abstract class GenericTile extends BlockEntity implements Nameable, IPropertyManaged {
 
 	private HashMap<Capability<?>, IOverdriveCapability> capabilities = new HashMap<>();
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
-
-	private boolean isTickable = false;
-
-	protected long ticks = 0;
 	
 	private boolean shouldSaveData = false;
 
@@ -63,15 +57,6 @@ public abstract class GenericTile extends BlockEntity
 
 	public MenuProvider getMenuProvider() {
 		return menu;
-	}
-
-	public void setTickable() {
-		isTickable = true;
-	}
-	
-	@Override
-	public boolean canTick() {
-		return isTickable;
 	}
 	
 	public boolean shouldSaveData() {
@@ -220,40 +205,14 @@ public abstract class GenericTile extends BlockEntity
 	}
 
 	@Override
-	public long getTicks() {
-		return ticks;
-	}
-
-	@Override
-	public void incrementTicks() {
-		ticks++;
-	};
-
-	@Override
 	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
-	}
-	
-	@Override
-	public void tick(Level world) {
-		tickCommon();
-		incrementTicks();
-		if (world.isClientSide) {
-			tickClient();
-		} else {
-			tickServer();
-			if(shouldSaveData()) {
-				setChanged();
-				resetShouldSaveData();
-			}
-		}
 	}
 	
 	public void onBlockBroken(Level world, BlockPos pos) {
 		
 	}
 	
-	//returns 
 	public InteractionResult useClient(Player player, InteractionHand hand, BlockHitResult hit) {
 		return hasMenu ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
