@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.utils;
+package matteroverdrive.datagen.utils;
 
 import java.io.IOException;
 import java.nio.file.Path;

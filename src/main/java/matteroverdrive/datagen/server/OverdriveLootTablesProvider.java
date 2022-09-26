@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.server;
+package matteroverdrive.datagen.server;
 
 import matteroverdrive.common.block.OverdriveBlockColors;
 import matteroverdrive.common.block.type.TypeMatterConduit;
@@ -16,8 +16,8 @@ import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.transporter.TileTransporter;
-import matteroverdrive.core.datagen.utils.AbstractLootTableProvider;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.datagen.utils.AbstractLootTableProvider;
 import matteroverdrive.registry.BlockRegistry;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.data.DataGenerator;

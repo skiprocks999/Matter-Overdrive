@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.utils.recipe;
+package matteroverdrive.datagen.utils.recipe;
 
 import java.util.ArrayList;
 import java.util.List;

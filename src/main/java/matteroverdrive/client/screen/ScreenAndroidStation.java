@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class ScreenAndroidStation extends GenericMachineScreen<InventoryAndroidStation> {
 
 	public ScreenAndroidStation(InventoryAndroidStation menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 		// TODO Auto-generated constructor stub
 	}
 

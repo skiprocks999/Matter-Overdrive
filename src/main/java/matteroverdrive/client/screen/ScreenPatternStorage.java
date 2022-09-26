@@ -33,7 +33,7 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 	private static final int FIRST_HEIGHT = 40;
 
 	public ScreenPatternStorage(InventoryPatternStorage menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 				new ScreenComponentFillArea(this, 15, 59, 2, 26, new int[] { 0 }, Colors.GUI_STANDARD.getColor()));
 		addScreenComponent(new ScreenComponentProgress(() -> 0, this, 8, 61, new int[] { 0 }).vertical());
 		addScreenComponent(defaultEnergyBar(167, 35, new int[] { 0 }));
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, 169, new int[] { 0, 1 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				Colors.HOLO.getColor()));
 		addScreenComponent(getPoweredIndicator(6, 159, new int[] { 0, 1 }));

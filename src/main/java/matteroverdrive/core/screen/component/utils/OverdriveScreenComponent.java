@@ -144,7 +144,7 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 		NONE(new ResourceLocation(""), 0, 0),
 		PROGRESS_BARS(new ResourceLocation(References.ID, "textures/gui/progress/progress.png"), 256, 256),
 		WHITE(new ResourceLocation("forge", "textures/white.png"), 256, 256),
-		HOTBAR_BAR(new ResourceLocation(References.ID, "textures/gui/base/hotbar_bar.png"), 5, 169),
+		HOTBAR_BAR(new ResourceLocation(References.ID, "textures/gui/base/hotbar_bar.png"), 5, 16),
 		RUNNING_INDICATOR(new ResourceLocation(References.ID, "textures/gui/base/indicator.png"), 256, 256),
 		TABLET_SCREEN(new ResourceLocation(References.ID, "textures/gui/misc/screen.png"), 118, 48),
 		ORDER_SEARCH_BAR(new ResourceLocation(References.ID, "textures/gui/misc/order_bar.png"), 158, 20),

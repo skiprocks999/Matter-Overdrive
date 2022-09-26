@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.server;
+package matteroverdrive.datagen.server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

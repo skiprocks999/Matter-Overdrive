@@ -44,7 +44,7 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 	private static final int FIRST_HEIGHT = 40;
 
 	public ScreenMatterRecycler(InventoryMatterRecycler menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class ScreenMatterRecycler extends GenericMachineScreen<InventoryMatterRe
 		addScreenComponent(getProgressArrow(33, 48, new int[] { 0 }));
 		addScreenComponent(defaultEnergyBar(118, 35, new int[] { 0 }));
 		addScreenComponent(getRunningIndicator(6, 158, new int[] { 0, 1, 2, 3 }));
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, 169, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));

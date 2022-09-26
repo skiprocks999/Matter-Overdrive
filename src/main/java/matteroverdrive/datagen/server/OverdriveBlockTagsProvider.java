@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.server;
+package matteroverdrive.datagen.server;
 
 import matteroverdrive.References;
 import matteroverdrive.registry.BlockRegistry;

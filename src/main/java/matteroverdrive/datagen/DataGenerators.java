@@ -1,15 +1,15 @@
-package matteroverdrive.core.datagen;
+package matteroverdrive.datagen;
 
 import matteroverdrive.References;
-import matteroverdrive.core.datagen.client.OverdriveBlockModelsProvider;
-import matteroverdrive.core.datagen.client.OverdriveBlockStateProvider;
-import matteroverdrive.core.datagen.client.OverdriveLangKeyProvider;
-import matteroverdrive.core.datagen.client.OverdriveItemModelsProvider;
-import matteroverdrive.core.datagen.server.OverdriveLootTablesProvider;
-import matteroverdrive.core.datagen.server.OverdriveMatterValueGenerator;
-import matteroverdrive.core.datagen.server.OverdriveBlockTagsProvider;
-import matteroverdrive.core.datagen.server.OverdriveItemTagsProvider;
-import matteroverdrive.core.datagen.server.OverdriveRecipeProvider;
+import matteroverdrive.datagen.client.OverdriveBlockModelsProvider;
+import matteroverdrive.datagen.client.OverdriveBlockStateProvider;
+import matteroverdrive.datagen.client.OverdriveItemModelsProvider;
+import matteroverdrive.datagen.client.OverdriveLangKeyProvider;
+import matteroverdrive.datagen.server.OverdriveBlockTagsProvider;
+import matteroverdrive.datagen.server.OverdriveItemTagsProvider;
+import matteroverdrive.datagen.server.OverdriveLootTablesProvider;
+import matteroverdrive.datagen.server.OverdriveMatterValueGenerator;
+import matteroverdrive.datagen.server.OverdriveRecipeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

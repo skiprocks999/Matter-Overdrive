@@ -21,8 +21,8 @@ import net.minecraft.world.entity.player.Inventory;
 public abstract class GenericMachineScreen<T extends GenericInventoryTile<? extends GenericMachineTile>>
 		extends GenericOverdriveScreen<T> {
 
-	public GenericMachineScreen(T menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+	public GenericMachineScreen(T menu, Inventory playerinventory, Component title, int guiWidth, int guiHeight) {
+		super(menu, playerinventory, title, guiWidth, guiHeight);
 	}
 
 	public ButtonGeneric getCloseButton(int x, int y) {

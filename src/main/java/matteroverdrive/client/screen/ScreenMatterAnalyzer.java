@@ -34,7 +34,7 @@ public class ScreenMatterAnalyzer extends GenericMachineScreen<InventoryMatterAn
 	private static final int FIRST_HEIGHT = 40;
 
 	public ScreenMatterAnalyzer(InventoryMatterAnalyzer menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ScreenMatterAnalyzer extends GenericMachineScreen<InventoryMatterAn
 		addScreenComponent(new ScreenComponentMatterAnalyzer(this, 52, 33, new int[] { 0 }));
 		addScreenComponent(defaultEnergyBar(180, 35, new int[] { 0 }));
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2, 3 }));
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2, 3 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, 169, new int[] { 0, 1, 2, 3 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));

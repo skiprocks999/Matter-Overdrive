@@ -31,7 +31,7 @@ public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> 
 	private static final int FIRST_HEIGHT = 40;
 
 	public ScreenSolarPanel(InventorySolarPanel menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class ScreenSolarPanel extends GenericMachineScreen<InventorySolarPanel> 
 			return 0;
 		}).setGenerator());
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2 }));
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, 169, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));

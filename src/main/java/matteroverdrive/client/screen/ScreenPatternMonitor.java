@@ -39,7 +39,7 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 	public ScreenComponentVerticalSlider ordersSlider;
 
 	public ScreenPatternMonitor(InventoryPatternMonitor menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 			ordersWrapper.updateButtons(true);
 		}, MenuButtonType.TASKS, menu, false);
 
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, new int[] { 0 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 139, 169, new int[] { 0 }));
 
 		wrapper = new WrapperPatternMonitorScreen(this, 53, 26);
 		ordersWrapper = new WrapperPatternMonitorOrders(this, 48, 32, new int[] { 1 });

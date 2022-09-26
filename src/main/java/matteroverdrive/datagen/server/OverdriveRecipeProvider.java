@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.server;
+package matteroverdrive.datagen.server;
 
 import java.util.function.Consumer;
 
@@ -6,9 +6,9 @@ import matteroverdrive.References;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.recipe.RecipeInit;
 import matteroverdrive.common.tags.OverdriveTags;
-import matteroverdrive.core.datagen.utils.recipe.AbstractOverdriveFinishedRecipe.RecipeCategory;
-import matteroverdrive.core.datagen.utils.recipe.FinishedRecipeItemOutput;
-import matteroverdrive.core.datagen.utils.recipe.OverdriveShapedCraftingRecipe;
+import matteroverdrive.datagen.utils.recipe.FinishedRecipeItemOutput;
+import matteroverdrive.datagen.utils.recipe.OverdriveShapedCraftingRecipe;
+import matteroverdrive.datagen.utils.recipe.AbstractOverdriveFinishedRecipe.RecipeCategory;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;

@@ -8,9 +8,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class ScreenTritaniumCrate extends GenericVanillaScreen<InventoryTritaniumCrate> {
 
 	public ScreenTritaniumCrate(InventoryTritaniumCrate pMenu, Inventory pPlayerInventory, Component pTitle) {
-		super(pMenu, pPlayerInventory, pTitle);
-		imageHeight += InventoryTritaniumCrate.OFFSET;
-		inventoryLabelY += InventoryTritaniumCrate.OFFSET;
+		super(pMenu, pPlayerInventory, pTitle, 176 + InventoryTritaniumCrate.OFFSET, 166 + InventoryTritaniumCrate.OFFSET);
 	}
 
+	
 }

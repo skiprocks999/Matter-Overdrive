@@ -30,7 +30,7 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 	private static final int FIRST_HEIGHT = 40;
 
 	public ScreenChunkloader(InventoryChunkloader menu, Inventory playerinventory, Component title) {
-		super(menu, playerinventory, title);
+		super(menu, playerinventory, title, 224, 176);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ScreenChunkloader extends GenericMachineScreen<InventoryChunkloader
 		addScreenComponent(defaultEnergyBar(141, 35, new int[] { 0 }));
 		addScreenComponent(defaultUsageMatterBar(95, 35, new int[] { 0 }));
 		addScreenComponent(getRunningIndicator(6, 159, new int[] { 0, 1, 2 }));
-		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, new int[] { 0, 1, 2 }));
+		addScreenComponent(new ScreenComponentHotbarBar(this, 40, 143, 169, new int[] { 0, 1, 2 }));
 		addScreenComponent(new ScreenComponentLabel(this, 110, 37, new int[] { 1 }, UtilsText.gui("redstone"),
 				Colors.HOLO.getColor()));
 		addScreenComponent(new ScreenComponentUpgradeInfo(this, 79, 76, new int[] { 2 }));

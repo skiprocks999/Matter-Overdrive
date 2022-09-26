@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.utils.recipe;
+package matteroverdrive.datagen.utils.recipe;
 
 import com.google.gson.JsonObject;
 

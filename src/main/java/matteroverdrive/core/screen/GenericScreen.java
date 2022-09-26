@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import matteroverdrive.References;
 import matteroverdrive.core.inventory.GenericInventory;
 import matteroverdrive.core.inventory.slot.IToggleableSlot;
 import matteroverdrive.core.inventory.slot.SlotUpgrade;
@@ -12,6 +13,7 @@ import matteroverdrive.core.screen.component.ScreenComponentSlot;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
+import matteroverdrive.core.screen.component.utils.ITexture;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.client.gui.Font;
@@ -24,12 +26,13 @@ import net.minecraft.world.inventory.Slot;
 public abstract class GenericScreen<T extends GenericInventory> extends AbstractContainerScreen<T> {
 
 	private List<OverdriveScreenComponent> components = new ArrayList<>();
-	protected int playerInvOffset = 0;
-	protected final ResourceLocation background;
+	protected final GuiTextures background;
 
-	public GenericScreen(T menu, Inventory playerinventory, Component title, ResourceLocation background) {
+	public GenericScreen(T menu, Inventory playerinventory, Component title, GuiTextures background, int guiWidth, int guiHeight) {
 		super(menu, playerinventory, title);
 		this.background = background;
+		imageWidth = guiWidth;
+		imageHeight = guiHeight;
 		setScreenParams();
 	}
 
@@ -63,7 +66,7 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTick, int x, int y) {
-		UtilsRendering.bindTexture(background);
+		UtilsRendering.bindTexture(background.getTexture());
 		blit(stack, getXPos(), getYPos(), 0, 0, imageWidth, imageHeight);
 	}
 
@@ -122,5 +125,36 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	public abstract int getScreenNumber();
 
 	public abstract void setScreenParams();
+	
+	public static enum GuiTextures implements ITexture {
+		OVERDRIVE_BAR(new ResourceLocation(References.ID, "textures/gui/base/overdrive_base_tab.png"), 120, 76),
+		VANILLA(new ResourceLocation(References.ID, "textures/gui/base/base_vanilla.png"), 256, 256);
+
+		private final ResourceLocation texture;
+		private final int imageWidth;
+		private final int imageHeight;
+		
+		private GuiTextures(ResourceLocation texture, int imageWidth, int imageHeight) {
+			this.texture = texture;
+			this.imageWidth = imageWidth;
+			this.imageHeight = imageHeight;
+		}
+		
+		@Override
+		public ResourceLocation getTexture() {
+			return texture;
+		}
+
+		@Override
+		public int getTextureWidth() {
+			return imageWidth;
+		}
+
+		@Override
+		public int getTextureHeight() {
+			return imageHeight;
+		}
+		
+	}
 
 }

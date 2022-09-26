@@ -1,4 +1,4 @@
-package matteroverdrive.core.datagen.client;
+package matteroverdrive.datagen.client;
 
 import matteroverdrive.References;
 import matteroverdrive.common.block.OverdriveBlockColors;
