@@ -18,10 +18,15 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 
 	public static final int EXTEND_DISTANCE = 32;
 
+	private static final int IMAGE_WIDTH = 87;
+	private static final int IMAGE_HEIGHT = 43;
+	
 	public boolean isExtended;
 	private boolean isPressed;
+	
+	private final int height;
 
-	public ButtonMenuBar(GenericScreen<?> gui, int x, int y, boolean inidialCondition, OnPress press) {
+	public ButtonMenuBar(GenericScreen<?> gui, int x, int y, int height, boolean inidialCondition, OnPress press) {
 		super(gui, x, y, 16, 143, Component.empty(), press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuBar bar = (ButtonMenuBar) button;
 			if (bar.isExtended) {
@@ -34,6 +39,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 		if (isExtended) {
 			this.x += EXTEND_DISTANCE;
 		}
+		this.height = height; 
 	}
 
 	@Override
@@ -41,15 +47,82 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		UtilsRendering.bindTexture(ButtonTextures.MENU_BAR.getTexture());
-
-		if (isPressed) {
-			this.blit(stack, this.x, this.y, 16, 0, 16, 143);
-		} else {
-			this.blit(stack, this.x, this.y, 0, 0, 16, 143);
-		}
+		
+		renderButton(stack);
+		
 		if (isExtended) {
-			this.blit(stack, this.x - EXTEND_DISTANCE, this.y, 32, 0, 32, 143);
+			renderBar(stack);
 		}
+	}
+	
+	private void renderButton(PoseStack stack) {
+		
+		int tcWidth = 16;
+		int tcHeight = 5;
+		
+		int midWidth = 16;
+		int midHeight = 32;
+		
+		int lcWidth = 16;
+		int lcHeight = 6;
+		
+		int pressed = isPressed ? 16 : 0;
+		
+		int addHeight = height - tcHeight - lcHeight;
+		
+		//top corner
+		blit(stack, this.x, this.y, pressed, 0, tcWidth, tcHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		//middle
+		int wholeHeight = addHeight / midHeight;
+		int remainHeight = addHeight % midHeight;
+		
+		for(int i = 0; i < wholeHeight; i++) {
+			blit(stack, this.x, this.y + tcHeight + midHeight * i, pressed, tcHeight, midWidth, midHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		}
+		blit(stack, this.x, this.y + tcHeight + midHeight * wholeHeight, pressed, tcHeight, midWidth, remainHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		//bottom corner
+		blit(stack, this.x, this.y + tcHeight + addHeight, pressed, tcHeight + midHeight, lcWidth, lcHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+	
+		//arrow
+		
+		int arrowWidth = 15;
+		int arrowHeight = 28;
+		
+		int arrowOffset = (addHeight - arrowHeight) / 2;
+		
+		blit(stack, this.x, this.y + tcHeight + arrowOffset, 68, 0, arrowWidth, arrowHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+	
+	}
+	
+	private void renderBar(PoseStack stack) {
+		
+		int tcWidth = 36;
+		int tcHeight = 7;
+		
+		int midWidth = 32;
+		int midHeight = 28;
+		
+		int lcWidth = 32;
+		int lcHeight = 8;
+		
+		int addHeight = height - tcHeight - lcHeight;
+		
+		//top corner
+		blit(stack, this.x - EXTEND_DISTANCE, this.y, 32, 0, tcWidth, tcHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		//middle
+		int wholeHeight = addHeight / midHeight;
+		int remainHeight = addHeight % midHeight;
+		
+		for(int i = 0; i < wholeHeight; i++) {
+			blit(stack, this.x - EXTEND_DISTANCE, this.y + tcHeight + midHeight * i, 32, tcHeight, midWidth, midHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		}
+		blit(stack, this.x - EXTEND_DISTANCE, this.y + tcHeight + midHeight * wholeHeight, 32, tcHeight, midWidth, remainHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		//bottom corner
+		blit(stack, this.x - EXTEND_DISTANCE, this.y + tcHeight + addHeight, 32, tcHeight + midHeight, lcWidth, lcHeight, IMAGE_WIDTH, IMAGE_HEIGHT);
 	}
 
 	@Override

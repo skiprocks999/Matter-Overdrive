@@ -57,7 +57,7 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 		super.init();
 
 		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
-		menu = new ButtonMenuBar(this, 212, 33, EXTENDED, button -> {
+		menu = new ButtonMenuBar(this, 212, 33, 143, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;
 			tasks.visible = !tasks.visible;

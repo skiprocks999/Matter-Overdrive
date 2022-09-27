@@ -86,7 +86,7 @@ public abstract class AbstractOverdriveButton extends OverdriveScreenComponent {
 	public static enum ButtonTextures implements ITexture {
 		
 		GENERIC_BUTTONS(new ResourceLocation(References.ID, "textures/gui/button/buttons.png"), 256, 256),
-		MENU_BAR(new ResourceLocation(References.ID, "textures/gui/button/menu_bar.png"), 64, 43),
+		MENU_BAR(new ResourceLocation(References.ID, "textures/gui/button/menu_bar.png"), 87, 43),
 		
 		OVERDRIVE_NONE_REG(new ResourceLocation(References.ID, "textures/gui/button/button_normal.png"), 18, 18),
 		OVERDRIVE_NONE_LEFT(new ResourceLocation(References.ID, "textures/gui/button/button_normal_left.png"), 18, 18),
