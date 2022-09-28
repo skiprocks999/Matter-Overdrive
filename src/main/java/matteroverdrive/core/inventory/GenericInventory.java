@@ -17,23 +17,41 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected Player player;
 	protected Level world;
 	protected final int slotCount;
-	protected int playerInvOffset = 0;
 	private int nextIndex = 0;
 	protected boolean hasInventorySlots = true;
 	protected boolean hasHotbarSlots = true;
 
-	public int nextIndex() {
-		return nextIndex++;
-	}
+	private final int hotbarX;
+	private final int hotbarY;
+	private final int playerInvX;
+	private final int playerInvY;
+	private final SlotType hotbarSlotType;
+	private final SlotType playerInvSlotType;
 
-	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap) {
+	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap,
+			int playerInvX, int playerInvY, int hotbarX, int hotbarY, SlotType hotbarSlotType,
+			SlotType playerInvSlotType) {
 		super(menu, id);
 		world = playerinv.player.level;
 		slotCount = slots.size();
 		this.invcap = invcap;
-		addInvSlots(invcap, playerinv);
-		addPlayerInventory(playerinv, SlotType.SMALL, SlotType.SMALL);
+
+		this.hotbarX = hotbarX;
+		this.hotbarY = hotbarY;
+		this.playerInvX = playerInvX;
+		this.playerInvY = playerInvY;
+		this.hotbarSlotType = hotbarSlotType;
+		this.playerInvSlotType = playerInvSlotType;
+
 		player = playerinv.player;
+
+		addInvSlots(invcap, playerinv);
+		addPlayerInventory(playerinv);
+
+	}
+
+	public int nextIndex() {
+		return nextIndex++;
 	}
 
 	public <T extends GenericInventory> T setNoInventory() {
@@ -46,19 +64,18 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return (T) this;
 	}
 
-	protected void addPlayerInventory(Inventory playerinv, SlotType playerInv, SlotType hotbar) {
+	protected void addPlayerInventory(Inventory playerinv) {
 		if (hasInventorySlots) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 9; ++j) {
-					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, 45 + j * 18, 81 + i * 18 + playerInvOffset + 8,
-							getPlayerInvNumbers(), playerInv));
+					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, playerInvX + j * 18, 89 + i * 18,
+							getPlayerInvNumbers(player), playerInvSlotType));
 				}
 			}
 		}
 		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				addSlot(new SlotContainer(playerinv, k, 45 + k * 18, 142 + playerInvOffset + 8, getHotbarNumbers(),
-						hotbar));
+				addSlot(new SlotContainer(playerinv, k, 45 + k * 18, 150, getHotbarNumbers(player), hotbarSlotType));
 			}
 		}
 	}
@@ -79,8 +96,8 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return UtilsInventory.handleShiftClick(slots, player, index);
 	}
 
-	public abstract int[] getHotbarNumbers();
+	public abstract int[] getHotbarNumbers(Player player);
 
-	public abstract int[] getPlayerInvNumbers();
+	public abstract int[] getPlayerInvNumbers(Player player);
 
 }

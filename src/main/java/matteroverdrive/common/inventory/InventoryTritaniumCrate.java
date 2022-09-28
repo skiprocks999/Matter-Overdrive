@@ -2,7 +2,7 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.inventory.GenericVanillaInventoryTile;
+import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;;
 
-public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTritaniumCrate> {
+public class InventoryTritaniumCrate extends GenericInventoryTile<TileTritaniumCrate> {
 
 	public static final int OFFSET = 56;
 
@@ -24,12 +24,12 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	}
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {
-		super(MenuRegistry.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
+		super(MenuRegistry.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords, 8, 142 + OFFSET, 8, 84 + OFFSET,
+				SlotType.VANILLA, SlotType.VANILLA);
 	}
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
-		playerInvOffset = OFFSET;
 		for (int j = 0; j < 6; ++j) {
 			for (int k = 0; k < 9; ++k) {
 				this.addSlot(new SlotGeneric(invcap, nextIndex(), 8 + k * 18, 18 + j * 18, new int[] { 0, 1, 2 },
@@ -49,12 +49,12 @@ public class InventoryTritaniumCrate extends GenericVanillaInventoryTile<TileTri
 	}
 
 	@Override
-	public int[] getHotbarNumbers() {
+	public int[] getHotbarNumbers(Player player) {
 		return new int[] { 0, 1, 2 };
 	}
 
 	@Override
-	public int[] getPlayerInvNumbers() {
+	public int[] getPlayerInvNumbers(Player player) {
 		return new int[] { 0, 1, 2 };
 	}
 
