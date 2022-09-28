@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.screen.GenericScreen;
 import matteroverdrive.core.screen.component.utils.AbstractOverdriveButton;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -45,7 +46,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		UtilsRendering.setShaderColor(Colors.WHITE.getColor());
 		UtilsRendering.bindTexture(ButtonTextures.MENU_BAR.getTexture());
 		
 		renderButton(stack);

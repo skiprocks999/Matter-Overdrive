@@ -127,7 +127,8 @@ public abstract class GenericScreen<T extends GenericInventory> extends Abstract
 	public abstract void setScreenParams();
 	
 	public static enum GuiTextures implements ITexture {
-		OVERDRIVE_BAR(new ResourceLocation(References.ID, "textures/gui/base/overdrive_base_tab.png"), 120, 76),
+		OVERDRIVE_MENU(new ResourceLocation(References.ID, "textures/gui/base/base_overdrive_with_menu.png"), 120, 76),
+		OVERDRIVE_NO_MENU(new ResourceLocation(References.ID, "textures/gui/base/base_overdrive_wo_menu.png"), 120, 76),
 		VANILLA(new ResourceLocation(References.ID, "textures/gui/base/base_vanilla.png"), 256, 256);
 
 		private final ResourceLocation texture;

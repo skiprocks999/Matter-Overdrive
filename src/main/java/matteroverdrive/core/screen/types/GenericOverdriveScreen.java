@@ -20,14 +20,18 @@ public abstract class GenericOverdriveScreen<T extends GenericInventory> extends
 	
 	private static final float TITLE_OFFSET_RATIO = 144.0F / 224.0F;
 
-	public GenericOverdriveScreen(T menu, Inventory playerinventory, Component title, int guiWidth, int guiHeight) {
-		super(menu, playerinventory, title, GuiTextures.OVERDRIVE_BAR, guiWidth, guiHeight);
+	public GenericOverdriveScreen(T menu, Inventory playerinventory, Component title, GuiTextures texture, int guiWidth, int guiHeight) {
+		super(menu, playerinventory, title, GuiTextures.OVERDRIVE_MENU, guiWidth, guiHeight);
 		if(guiWidth < MIN_WIDTH) {
 			throw new UnsupportedOperationException("Gui width must be a minumum of " + MIN_WIDTH);
 		}
 		if(guiHeight < MIN_HEIGHT) {
 			throw new UnsupportedOperationException("Gui height must be a minumum of " + MIN_HEIGHT);
 		}
+	}
+	
+	public GenericOverdriveScreen(T menu, Inventory playerinventory, Component title, int guiWidth, int guiHeight) {
+		this(menu, playerinventory, title, GuiTextures.OVERDRIVE_MENU, guiWidth, guiHeight);
 	}
 
 	@Override
