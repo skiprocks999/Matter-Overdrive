@@ -1,6 +1,9 @@
 package matteroverdrive.core.inventory;
 
+import javax.annotation.Nullable;
+
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.item.PlayerSlotDataWrapper;
 import matteroverdrive.core.inventory.slot.SlotContainer;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.utils.UtilsInventory;
@@ -21,61 +24,45 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 	protected boolean hasInventorySlots = true;
 	protected boolean hasHotbarSlots = true;
 
-	private final int hotbarX;
-	private final int hotbarY;
-	private final int playerInvX;
-	private final int playerInvY;
-	private final SlotType hotbarSlotType;
-	private final SlotType playerInvSlotType;
+	@Nullable
+	private final PlayerSlotDataWrapper wrapper;
 
-	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap,
-			int playerInvX, int playerInvY, int hotbarX, int hotbarY, SlotType hotbarSlotType,
-			SlotType playerInvSlotType) {
+	protected GenericInventory(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap) {
 		super(menu, id);
 		world = playerinv.player.level;
 		slotCount = slots.size();
 		this.invcap = invcap;
-
-		this.hotbarX = hotbarX;
-		this.hotbarY = hotbarY;
-		this.playerInvX = playerInvX;
-		this.playerInvY = playerInvY;
-		this.hotbarSlotType = hotbarSlotType;
-		this.playerInvSlotType = playerInvSlotType;
-
 		player = playerinv.player;
-
-		addInvSlots(invcap, playerinv);
-		addPlayerInventory(playerinv);
-
+		
+		wrapper = getDataWrapper(player);
+		
+		init();
+		
+	}
+	
+	public void init() {
+		addInvSlots(invcap, player.getInventory());
+		addPlayerInventory(player.getInventory());
 	}
 
 	public int nextIndex() {
 		return nextIndex++;
 	}
 
-	public <T extends GenericInventory> T setNoInventory() {
-		hasInventorySlots = false;
-		return (T) this;
-	}
-
-	public <T extends GenericInventory> T setNoHotbar() {
-		hasHotbarSlots = false;
-		return (T) this;
-	}
-
 	protected void addPlayerInventory(Inventory playerinv) {
 		if (hasInventorySlots) {
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 9; ++j) {
-					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, playerInvX + j * 18, 89 + i * 18,
-							getPlayerInvNumbers(player), playerInvSlotType));
+					addSlot(new SlotContainer(playerinv, j + i * 9 + 9, wrapper.pInvStartX() + j * wrapper.pInvSlotW(),
+							wrapper.pInvStartY() + i * wrapper.pInvSlotH(), wrapper.pInvNumbers(),
+							wrapper.pInvSlotType()));
 				}
 			}
 		}
 		if (hasHotbarSlots) {
 			for (int k = 0; k < 9; ++k) {
-				addSlot(new SlotContainer(playerinv, k, 45 + k * 18, 150, getHotbarNumbers(player), hotbarSlotType));
+				addSlot(new SlotContainer(playerinv, k, wrapper.hotbarStartX() + k * wrapper.hotbarSlotW(),
+						wrapper.hotbarStartY(), wrapper.hotbarNumbers(), wrapper.hotbarSlotType()));
 			}
 		}
 	}
@@ -96,8 +83,15 @@ public abstract class GenericInventory extends AbstractContainerMenu {
 		return UtilsInventory.handleShiftClick(slots, player, index);
 	}
 
-	public abstract int[] getHotbarNumbers(Player player);
-
-	public abstract int[] getPlayerInvNumbers(Player player);
+	public abstract PlayerSlotDataWrapper getDataWrapper(Player player);
+	
+	public static PlayerSlotDataWrapper defaultOverdriveScreen(int[] hotbarNumbers, int[] inventoryNumbers) {
+		return new PlayerSlotDataWrapper(45, 89, 18, 18, 45, 150, 18, 18, SlotType.SMALL, SlotType.SMALL, hotbarNumbers, inventoryNumbers);
+	}
+	
+	public static PlayerSlotDataWrapper defaultVanillaScreen(int[] hotbarNumbers, int[] inventoryNumbers) {
+		return new PlayerSlotDataWrapper(8, 84, 18, 18, 8, 142, 18, 18, SlotType.VANILLA,
+				SlotType.VANILLA, hotbarNumbers, inventoryNumbers);
+	}
 
 }

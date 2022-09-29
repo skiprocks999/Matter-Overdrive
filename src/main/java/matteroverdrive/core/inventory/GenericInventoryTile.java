@@ -3,7 +3,6 @@ package matteroverdrive.core.inventory;
 import javax.annotation.Nullable;
 
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
-import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.core.tile.GenericTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,9 +15,8 @@ public abstract class GenericInventoryTile<T extends GenericTile> extends Generi
 	protected final ContainerData tilecoords;
 
 	protected GenericInventoryTile(MenuType<?> menu, int id, Inventory playerinv, CapabilityInventory invcap,
-			ContainerData tilecoords, int hotbarX, int hotbarY, int playerInvX, int playerInvY, SlotType hotbarSlotType,
-			SlotType playerInvSlotType) {
-		super(menu, id, playerinv, invcap, hotbarX, hotbarY, playerInvX, playerInvY, hotbarSlotType, playerInvSlotType);
+			ContainerData tilecoords) {
+		super(menu, id, playerinv, invcap);
 		this.tilecoords = tilecoords;
 		addDataSlots(tilecoords);
 	}

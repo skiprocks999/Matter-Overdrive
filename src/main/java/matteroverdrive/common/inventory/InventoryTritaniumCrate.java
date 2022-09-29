@@ -2,6 +2,7 @@ package matteroverdrive.common.inventory;
 
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.item.PlayerSlotDataWrapper;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotGeneric;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
@@ -24,8 +25,7 @@ public class InventoryTritaniumCrate extends GenericInventoryTile<TileTritaniumC
 	}
 
 	public InventoryTritaniumCrate(int id, Inventory playerinv, CapabilityInventory invcap, ContainerData coords) {
-		super(MenuRegistry.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords, 8, 142 + OFFSET, 8, 84 + OFFSET,
-				SlotType.VANILLA, SlotType.VANILLA);
+		super(MenuRegistry.MENU_TRITANIUM_CRATE.get(), id, playerinv, invcap, coords);
 	}
 
 	@Override
@@ -49,13 +49,9 @@ public class InventoryTritaniumCrate extends GenericInventoryTile<TileTritaniumC
 	}
 
 	@Override
-	public int[] getHotbarNumbers(Player player) {
-		return new int[] { 0, 1, 2 };
-	}
-
-	@Override
-	public int[] getPlayerInvNumbers(Player player) {
-		return new int[] { 0, 1, 2 };
+	public PlayerSlotDataWrapper getDataWrapper(Player player) {
+		return new PlayerSlotDataWrapper(8, 84 + OFFSET, 18, 18, 8, 142 + OFFSET, 18, 18, SlotType.VANILLA,
+				SlotType.VANILLA, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 });
 	}
 
 }

@@ -3,6 +3,7 @@ package matteroverdrive.common.inventory;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.tile.transporter.TileTransporter;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.item.PlayerSlotDataWrapper;
 import matteroverdrive.core.inventory.GenericInventoryTile;
 import matteroverdrive.core.inventory.slot.SlotEnergyCharging;
 import matteroverdrive.core.inventory.slot.SlotMatterCharging;
@@ -13,6 +14,7 @@ import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import matteroverdrive.registry.ItemRegistry;
 import matteroverdrive.registry.MenuRegistry;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
@@ -43,15 +45,10 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 142, 55, new int[] { 2 }, UPGRADES));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 166, 55, new int[] { 2 }, UPGRADES));
 	}
-
+	
 	@Override
-	public int[] getHotbarNumbers() {
-		return new int[] { 0, 1, 2, 3, 4 };
-	}
-
-	@Override
-	public int[] getPlayerInvNumbers() {
-		return new int[] {};
+	public PlayerSlotDataWrapper getDataWrapper(Player player) {
+		return defaultOverdriveScreen(new int[] { 0, 1, 2, 3, 4 }, new int[] {});
 	}
 
 }
