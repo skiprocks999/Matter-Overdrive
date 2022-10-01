@@ -20,7 +20,6 @@ import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
-import matteroverdrive.MatterOverdrive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 
@@ -38,6 +37,8 @@ public class UtilsMath {
 			210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157,
 			184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243,
 			141, 128, 195, 78, 66, 215, 61, 156, 180 };
+	
+	public static final double TWO_PI = Math.PI * 2;
 
 	public static boolean between(double var, double lower, double upper) {
 		return var >= lower && var < upper;
@@ -50,7 +51,7 @@ public class UtilsMath {
 	public static Vector3f randomSpherePoint(double x0, double y0, double z0, Vector3d radius, Random rand) {
 		double u = rand.nextDouble();
 		double v = rand.nextDouble();
-		double theta = 2 * Math.PI * u;
+		double theta = TWO_PI * u;
 		double phi = Math.acos(2 * v - 1);
 		double x = x0 + (radius.x * Math.sin(phi) * Math.cos(theta));
 		double y = y0 + (radius.y * Math.sin(phi) * Math.sin(theta));
@@ -62,11 +63,23 @@ public class UtilsMath {
 		return toValue * (time /= maxTime) * time * time * time + fromValue;
 	}
 
-	public static Vector3f randomCirclePoint(float radius) {
-		double u = MatterOverdrive.RANDOM.nextDouble();
-		double theta = 2 * Math.PI * u;
+	public static Vector3f randomSpherePoint(float radius, Random rand) {
+		double u = rand.nextDouble();
+		double v = rand.nextDouble();
+		double theta = TWO_PI * u;
+		double phi = Math.acos(2 * v - 1);
+		double x = radius * Math.sin(phi) * Math.cos(theta);
+		double y = radius * Math.sin(phi) * Math.sin(theta);
+		double z = radius * Math.cos(phi);
+		return new Vector3f((float) x, (float) y, (float) z);
+	}
+	
+	public static Vector3f randomCirclePoint(float radius, Random rand) {
+		double u = rand.nextDouble();
+		double theta = TWO_PI * u;
 		double x = (radius * Math.sin(theta));
 		double z = (radius * Math.cos(theta));
+		
 		return new Vector3f((float) x, 0, (float) z);
 	}
 

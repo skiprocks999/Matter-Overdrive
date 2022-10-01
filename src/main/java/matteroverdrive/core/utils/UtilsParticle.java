@@ -17,7 +17,7 @@ public class UtilsParticle {
 
 			Vec3i dirVec = side.getNormal();
 
-			Vector3f circle = UtilsMath.randomCirclePoint(MatterOverdrive.RANDOM.nextFloat());
+			Vector3f circle = UtilsMath.randomSpherePoint(MatterOverdrive.RANDOM.nextFloat(), MatterOverdrive.RANDOM);
 			circle.mul(0.4f);
 			float rot = side.toYRot();
 

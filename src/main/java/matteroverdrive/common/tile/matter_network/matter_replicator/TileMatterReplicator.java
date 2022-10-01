@@ -270,7 +270,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 				float height = vec.y() + random.nextFloat() * entity.getBbHeight();
 
 				Vector3f origin = new Vector3f(vec.x(), height, vec.z());
-				Vector3f offset = UtilsMath.randomCirclePoint((float) entityRadius / 1.5F);
+				Vector3f offset = UtilsMath.randomCirclePoint((float) entityRadius / 1.5F, MatterOverdrive.RANDOM);
 				Vector3f pos = new Vector3f(origin.x() + offset.x(), origin.y(), origin.z() + offset.z());
 
 				world.addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.01F).setAge(2), pos.x(),
