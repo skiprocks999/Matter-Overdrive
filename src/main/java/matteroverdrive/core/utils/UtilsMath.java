@@ -37,7 +37,7 @@ public class UtilsMath {
 			210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157,
 			184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243,
 			141, 128, 195, 78, 66, 215, 61, 156, 180 };
-	
+
 	public static final double TWO_PI = Math.PI * 2;
 
 	public static boolean between(double var, double lower, double upper) {
@@ -53,10 +53,8 @@ public class UtilsMath {
 		double v = rand.nextDouble();
 		double theta = TWO_PI * u;
 		double phi = Math.acos(2 * v - 1);
-		double x = x0 + (radius.x * Math.sin(phi) * Math.cos(theta));
-		double y = y0 + (radius.y * Math.sin(phi) * Math.sin(theta));
-		double z = z0 + (radius.z * Math.cos(phi));
-		return new Vector3f((float) x, (float) y, (float) z);
+		return new Vector3f((float) (x0 + (radius.x * Math.sin(phi) * Math.cos(theta))),
+				(float) (y0 + (radius.y * Math.sin(phi) * Math.sin(theta))), (float) (z0 + (radius.z * Math.cos(phi))));
 	}
 
 	public static double easeIn(double time, double fromValue, double toValue, double maxTime) {
@@ -68,19 +66,15 @@ public class UtilsMath {
 		double v = rand.nextDouble();
 		double theta = TWO_PI * u;
 		double phi = Math.acos(2 * v - 1);
-		double x = radius * Math.sin(phi) * Math.cos(theta);
-		double y = radius * Math.sin(phi) * Math.sin(theta);
-		double z = radius * Math.cos(phi);
-		return new Vector3f((float) x, (float) y, (float) z);
+		return new Vector3f((float) (radius * Math.sin(phi) * Math.cos(theta)),
+				(float) (radius * Math.sin(phi) * Math.sin(theta)), (float) (radius * Math.cos(phi)));
 	}
-	
+
 	public static Vector3f randomCirclePoint(float radius, Random rand) {
 		double u = rand.nextDouble();
 		double theta = TWO_PI * u;
-		double x = (radius * Math.sin(theta));
-		double z = (radius * Math.cos(theta));
-		
-		return new Vector3f((float) x, 0, (float) z);
+
+		return new Vector3f((float) ((radius * Math.sin(theta))), 0, (float) ((radius * Math.cos(theta))));
 	}
 
 	public static Quaternion vec4FToQuaternion(Vector4f vector) {

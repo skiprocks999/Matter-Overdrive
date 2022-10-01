@@ -40,7 +40,7 @@ public enum TypeMachine {
 	MATTER_ANALYZER(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
 			.setCanBeLit(false).setCanBeWaterlogged().setHasFacing(false)),
 	PATTERN_STORAGE(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).redstoneConnectivity()
-			.setCanBeWaterlogged().setHasFacing(false)),
+			.setCanBeWaterlogged().setHasFacing(false).setCanBeLit(false)),
 	PATTERN_MONITOR(new VoxelShape[] { Shapes.box(0.0D, 0.6875D, 0.0D, 1.0D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D), Shapes.box(0.0D, 0.0D, 0.6875D, 1.0D, 1.0D, 1.0D),
 			Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.3125D), Shapes.box(0.6875D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),

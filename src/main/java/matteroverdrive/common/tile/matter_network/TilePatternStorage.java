@@ -87,9 +87,10 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
+		handleOnState();
 		
 		if (!canRun()) {
-			setShouldSaveData(setPowered(false), setPowerUsage(0));
+			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false));
 			return;
 		}
 
@@ -105,11 +106,11 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		setShouldSaveData(true);
 		
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setPowered(false), setPowerUsage(0));
+			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false));
 			return;
 		}
 		energy.removeEnergy((int) getCurrentPowerUsage());
-		setShouldSaveData(setPowered(true));
+		setShouldSaveData(setPowered(true), setRunning(true));
 
 		ItemStack scanner = inv.getStackInSlot(6);
 		if (!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
