@@ -2,12 +2,16 @@ package matteroverdrive.common.tile.matter_network;
 
 import javax.annotation.Nullable;
 
+import com.mojang.math.Vector3f;
+
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.inventory.InventoryMatterAnalyzer;
 import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.network.NetworkMatter;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
@@ -17,6 +21,8 @@ import matteroverdrive.core.tile.types.GenericMachineTile;
 import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
+import matteroverdrive.core.utils.UtilsMath;
+import matteroverdrive.core.utils.UtilsParticle;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.SoundRegistry;
 import matteroverdrive.registry.TileRegistry;
@@ -170,6 +176,20 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		if (shouldPlaySound() && !clientSoundPlaying) {
 			clientSoundPlaying = true;
 			SoundBarrierMethods.playTileSound(SoundRegistry.SOUND_MATTER_ANALYZER.get(), this, true);
+		}
+		if(isRunning() && MatterOverdriveConfig.MATTER_ANALYZER_VENT_PARTICLES.get()) {
+			//left of block
+			if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+				Vector3f pos = UtilsMath.blockPosToVector(worldPosition);
+				pos.add(0.5F, 0.5F, 0.5F);
+				UtilsParticle.spawnVentParticlesSphere(pos, 0.03F, getFacing().getClockWise(), 1);
+			}
+			//right of block
+			if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+				Vector3f pos = UtilsMath.blockPosToVector(worldPosition);
+				pos.add(0.5F, 0.5F, 0.5F);
+				UtilsParticle.spawnVentParticlesSphere(pos, 0.03F, getFacing().getCounterClockWise(), 1);
+			}
 		}
 	}
 

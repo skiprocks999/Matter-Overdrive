@@ -31,6 +31,10 @@ public final class MatterOverdriveConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> TIME_DECIMALS;
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWER_DECIMALS;
 	public static final ForgeConfigSpec.ConfigValue<Integer> PERCENT_DECIMALS;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> PATTERN_STORAGE_VENT_PARTICLES;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> MATTER_REPLICATOR_VENT_PARTICLES;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> MATTER_REPLICATOR_ITEM_PARTICLES;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> MATTER_ANALYZER_VENT_PARTICLES;
 
 	static {
 		
@@ -209,6 +213,38 @@ public final class MatterOverdriveConfig {
 				" ",
 				"default value = 2"
 				).defineInRange("percent_decimals", 2, UtilsText.MIN_DECIMAL_PLACES, UtilsText.MAX_DECIMAL_PLACES);
+		PATTERN_STORAGE_VENT_PARTICLES = CLIENT_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the Pattern Storage block will spawn particles from its vent while running. The",
+				"particles are client-side only. Recommended to turn off for users with less powerful computers.",
+				" ",
+				"default value = true"
+				).define("spawn_pattern_storage_vent_particles", true);
+		MATTER_REPLICATOR_VENT_PARTICLES = CLIENT_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the Matter Replicator block will spawn particles from its vent while running. The",
+				"particles are client-side only. Recommended to turn off for users with less powerful computers.",
+				" ",
+				"default value = true"
+				).define("spawn_matter_replicator_vent_particles", true);
+		MATTER_REPLICATOR_ITEM_PARTICLES = CLIENT_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the Pattern Storage block will spawn particles around the item while running. The",
+				"particles are client-side only. Recommended to turn off for users with less powerful computers.",
+				" ",
+				"default value = true"
+				).define("spawn_matter_replicator_item_particles", true);
+		MATTER_ANALYZER_VENT_PARTICLES = CLIENT_BUILDER.comment(
+				" ",
+				" ",
+				"Controls whether or not the Matter Analyzer block will spawn particles from its vent while running. The",
+				"particles are client-side only. Recommended to turn off for users with less powerful computers.",
+				" ",
+				"default value = true"
+				).define("spawn_pattern_storage_vent_particles", true);
 		
 		CLIENT_CONFIG = CLIENT_BUILDER.build();
 		

@@ -117,6 +117,8 @@ public class RLSHandlerMatterScanner extends AbstractRenderLevelStageHandler {
 
 			shift = moveMatrixForText(matrix, traceDir, player.getDirection(), font.width(text), 11.5D, 5.0D, 0.75);
 
+			
+			
 			font.drawInBatch(text, shift[0], shift[1], Colors.HOLO.getColor(), false, matrix.last().pose(), buffer,
 					true, 0, 255);
 

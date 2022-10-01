@@ -24,6 +24,7 @@ import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
@@ -34,6 +35,7 @@ import matteroverdrive.core.utils.UtilsDirection;
 import matteroverdrive.core.utils.UtilsItem;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsNbt;
+import matteroverdrive.core.utils.UtilsParticle;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.ItemRegistry;
 import matteroverdrive.registry.TileRegistry;
@@ -252,29 +254,43 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		soundHandler.tick(getAdjustedTicks(), clientSoundPlaying);
 		QueuedReplication currentOrder = getCurrentOrder();
 		if (isRunning() && !currentOrder.isEmpty()) {
-			Level world = getLevel();
-			BlockPos blockPos = getBlockPos();
-			ItemEntity entity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.25,
-					blockPos.getZ() + 0.5D, new ItemStack(currentOrder.getItem()));
-			float progress = (float) getProgress() / (float) (getProcessingTime() == 0 ? 1 : getProcessingTime());
-			Vector3f vec = new Vector3f((float) entity.getX(), (float) entity.getY(), (float) entity.getZ());
-			double entityRadius = entity.getBbWidth();
-			Random random = MatterOverdrive.RANDOM;
-			double time = Math.min(progress, 1);
-			float gravity = 0.1f;
-			int count = 100;
-			time = 1 - time;
+			if(MatterOverdriveConfig.MATTER_REPLICATOR_ITEM_PARTICLES.get()) {
+				Level world = getLevel();
+				BlockPos blockPos = getBlockPos();
+				ItemEntity entity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.25,
+						blockPos.getZ() + 0.5D, new ItemStack(currentOrder.getItem()));
+				float progress = (float) getProgress() / (float) (getProcessingTime() == 0 ? 1 : getProcessingTime());
+				Vector3f vec = new Vector3f((float) entity.getX(), (float) entity.getY(), (float) entity.getZ());
+				double entityRadius = entity.getBbWidth();
+				Random random = MatterOverdrive.RANDOM;
+				double time = Math.min(progress, 1);
+				float gravity = 0.1f;
+				int count = (int) (progress * 100.0F);
+				time = 1 - time;
 
-			for (int i = 0; i < count; i++) {
-				float speed = 0.05F;
-				float height = vec.y() + random.nextFloat() * entity.getBbHeight();
+				for (int i = 0; i < count; i++) {
+					float speed = 0.05F;
+					float height = vec.y() + random.nextFloat() * entity.getBbHeight();
 
-				Vector3f origin = new Vector3f(vec.x(), height, vec.z());
-				Vector3f offset = UtilsMath.randomCirclePoint((float) entityRadius / 1.5F, MatterOverdrive.RANDOM);
-				Vector3f pos = new Vector3f(origin.x() + offset.x(), origin.y(), origin.z() + offset.z());
+					Vector3f origin = new Vector3f(vec.x(), height, vec.z());
+					Vector3f offset = UtilsMath.randomCirclePoint((float) entityRadius / 1.5F, MatterOverdrive.RANDOM);
+					Vector3f pos = new Vector3f(origin.x() + offset.x(), origin.y(), origin.z() + offset.z());
 
-				world.addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.01F).setAge(2), pos.x(),
-						pos.y(), pos.z(), 0, speed, 0);
+					world.addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.01F).setAge(2), pos.x(),
+							pos.y(), pos.z(), 0, speed, 0);
+				}
+			}
+			if(MatterOverdriveConfig.MATTER_REPLICATOR_VENT_PARTICLES.get()) {
+				//left of block
+				if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+					Vector3f pos = UtilsMath.moveToEdgeOfFaceAndCenter(getFacing().getClockWise(), getBlockPos());
+					UtilsParticle.spawnVentParticlesAtFace(pos, 0.03F, getFacing().getClockWise(), 1);
+				}
+				//right of block
+				if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+					Vector3f pos = UtilsMath.moveToEdgeOfFaceAndCenter(getFacing().getCounterClockWise(), getBlockPos());
+					UtilsParticle.spawnVentParticlesAtFace(pos, 0.03F, getFacing().getCounterClockWise(), 1);
+				}
 			}
 		}
 	}
@@ -286,6 +302,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 		data.put("orders", ordersProp.get());
 		data.putBoolean("fused", usingFused);
+		data.put("currorder", currentOrder.writeToNbt());
 
 		tag.put("data", data);
 	}
@@ -297,6 +314,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 		ordersProp.set(data.getCompound("orders"));
 		usingFused = data.getBoolean("fused");
+		currentOrderProp.set(data.getCompound("currorder"));
 	}
 
 	@Override

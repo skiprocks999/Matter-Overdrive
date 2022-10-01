@@ -18,6 +18,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
@@ -122,10 +123,10 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 
 	@Override
 	public void tickClient() {
-		if (isPowered() && MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
+		if (isPowered() && MatterOverdrive.RANDOM.nextFloat() < 0.2F && MatterOverdriveConfig.PATTERN_STORAGE_VENT_PARTICLES.get()) {
 			Vector3f pos = UtilsMath.blockPosToVector(worldPosition);
 			pos.add(0.5F, 0.5F, 0.5F);
-			UtilsParticle.spawnVentParticles(pos, 0.03F, getFacing(), 1);
+			UtilsParticle.spawnVentParticlesSphere(pos, 0.03F, getFacing(), 1);
 		}
 	}
 

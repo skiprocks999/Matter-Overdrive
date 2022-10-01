@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "matteroverdrive:block/matter_replicator",
+    "facing=east,lit=false": {
+      "model": "matteroverdrive:block/matter_replicator_off",
       "y": 90
     },
-    "facing=north": {
-      "model": "matteroverdrive:block/matter_replicator"
+    "facing=east,lit=true": {
+      "model": "matteroverdrive:block/matter_replicator_on",
+      "y": 90
     },
-    "facing=south": {
-      "model": "matteroverdrive:block/matter_replicator",
+    "facing=north,lit=false": {
+      "model": "matteroverdrive:block/matter_replicator_off"
+    },
+    "facing=north,lit=true": {
+      "model": "matteroverdrive:block/matter_replicator_on"
+    },
+    "facing=south,lit=false": {
+      "model": "matteroverdrive:block/matter_replicator_off",
       "y": 180
     },
-    "facing=west": {
-      "model": "matteroverdrive:block/matter_replicator",
+    "facing=south,lit=true": {
+      "model": "matteroverdrive:block/matter_replicator_on",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "matteroverdrive:block/matter_replicator_off",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "matteroverdrive:block/matter_replicator_on",
       "y": 270
     }
   }

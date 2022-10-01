@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import matteroverdrive.client.render.item.VariableAlphaItemRenderer;
 import matteroverdrive.client.render.tile.utils.AbstractTileRenderer;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
@@ -12,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,8 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 
 			matrix.translate(0.5, 0.3, 0.5);
 
-			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+			VariableAlphaItemRenderer renderer = new VariableAlphaItemRenderer(
+					Minecraft.getInstance().getItemRenderer());
 
 			random.setSeed((long) (Item.getId(stack.getItem()) + stack.getDamageValue()));
 
@@ -62,13 +63,14 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 
 			if (shouldSpin) {
 				matrix.mulPose(Vector3f.YP.rotation(spin));
+				float processingTime = (float) (replicator.getProcessingTime() == 0 ? 1.0F : replicator.getProcessingTime());
+				renderer.setAlpha((float) replicator.getProgress() / processingTime);
+			} else {
+				renderer.setAlpha(1.0F);
 			}
 
 			if (!isGui3D) {
-				float f7 = -0.0F;
-				float f8 = -0.0F;
-				float f9 = -0.0F;
-				matrix.translate((double) f7, (double) f8, (double) f9);
+				matrix.translate(-0.0D, -0.0D, -0.0D);
 			}
 
 			renderer.render(stack, ItemTransforms.TransformType.GROUND, false, matrix, buffer, light,

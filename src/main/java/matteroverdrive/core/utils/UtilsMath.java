@@ -21,6 +21,7 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 public class UtilsMath {
@@ -153,6 +154,33 @@ public class UtilsMath {
 
 	public static Vector3f blockPosToVector(BlockPos pos) {
 		return new Vector3f(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public static Vector3f moveToEdgeOfFaceAndCenter(Direction dir, BlockPos blockPos) {
+
+		Vector3f pos = UtilsMath.blockPosToVector(blockPos);
+		switch (dir) {
+		case UP:
+			pos.add(0.5F, 1.0F, 0.5F);
+			return pos;
+		case DOWN:
+			pos.add(0.5F, 0.0F, 0.5F);
+			return pos;
+		case NORTH:
+			pos.add(0.5F, 0.5F, 0.0F);
+			return pos;
+		case SOUTH:
+			pos.add(0.5F, 0.5F, 1.0F);
+			return pos;
+		case EAST:
+			pos.add(1.0F, 0.5F, 0.5F);
+			return pos;
+		case WEST:
+			pos.add(0.0F, 0.5F, 0.5F);
+			return pos;
+		}
+
+		return pos;
 	}
 
 	// JAVA REFERENCE IMPLEMENTATION OF IMPROVED NOISE - COPYRIGHT 2002 KEN PERLIN.

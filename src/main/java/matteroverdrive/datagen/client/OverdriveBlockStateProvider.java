@@ -77,25 +77,17 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 				true);
 		bottomSlabBlock(BlockRegistry.BLOCK_SOLAR_PANEL, blockLoc("base"), blockLoc("base"), blockLoc("solar_panel"),
 				true);
-		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_ANALYZER, getMatAnaBase("", ""), getMatAnaBase("_on", "_on"),
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_ANALYZER, getMatAnaBase("", "", "closed"), getMatAnaBase("_on", "_on", "open"),
 				true);
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_DECOMPOSER, getMatDecomBase("", "empty"),
 				getMatDecomBase("_on", "full"), true);
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_RECYCLER, getMatRecBase("", ""), getMatRecBase("_on", "_anim"),
 				true);
-		horrRotatedBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR,
-				getObjModel("matter_replicator", "block/matter_replicator").texture("bottom", blockLoc("base"))
-						.texture("back", blockLoc("network_port")).texture("sides", blockLoc("vent_open"))
-						.texture("front", blockLoc("matter_replicator")).texture("particle", "#bottom")
-						.renderType("cutout"),
-				true);
+		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR, getMatterRepBase("off", "closed"),
+				getMatterRepBase("on", "open"), true);
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE, getMicroBase("", ""), getMicroBase("_on", "_on"), true);
-		horrRotatedLitBlock(BlockRegistry.BLOCK_PATTERN_STORAGE,
-				getObjModel("pattern_storage_off", "block/pattern_storage").texture("base", blockLoc("pattern_storage"))
-						.texture("vent", blockLoc("vent_closed")).texture("particle", "#base"),
-				getObjModel("pattern_storage_on", "block/pattern_storage").texture("base", blockLoc("pattern_storage"))
-						.texture("vent", blockLoc("vent_open")).texture("particle", "#base"),
-				true);
+		horrRotatedLitBlock(BlockRegistry.BLOCK_PATTERN_STORAGE, getPatternStorageBase("off", "closed"),
+				getPatternStorageBase("on", "open"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR,
 				existingBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), true);
 		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, existingBlock(BlockRegistry.BLOCK_PATTERN_MONITOR), true);
@@ -333,11 +325,11 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 				new ResourceLocation(References.ID, top));
 	}
 
-	private BlockModelBuilder getMatAnaBase(String name, String frontText) {
+	private BlockModelBuilder getMatAnaBase(String name, String frontText, String vent) {
 		return models().withExistingParent("block/matter_analyzer" + name, modLoc("block/parent/matter_analyzer_base"))
 				.texture("bottom", modLoc("block/base"))
 				.texture("top", modLoc("block/matter_analyzer/matter_analyzer_top"))
-				.texture("side", modLoc("block/vent_closed")).texture("back", modLoc("block/network_port"))
+				.texture("side", modLoc("block/vent_" + vent)).texture("back", modLoc("block/network_port"))
 				.texture("particle", "block/matter_analyzer/matter_analyzer_front")
 				.texture("front", modLoc("block/matter_analyzer/matter_analyzer_front" + frontText));
 	}
@@ -364,6 +356,18 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		return models().withExistingParent("block/chunkloader_" + name, modLoc("block/parent/chunkloader_base"))
 				.texture("0", modLoc("block/chunkloader/chunkloader_" + name))
 				.texture("particle", modLoc("block/base_stripes"));
+	}
+
+	private BlockModelBuilder getPatternStorageBase(String name, String vent) {
+		return getObjModel("pattern_storage_" + name, "block/pattern_storage")
+				.texture("base", blockLoc("pattern_storage")).texture("vent", blockLoc("vent_" + vent))
+				.texture("particle", "#base");
+	}
+
+	private BlockModelBuilder getMatterRepBase(String name, String vent) {
+		return getObjModel("matter_replicator_" + name, "block/matter_replicator").texture("bottom", blockLoc("base"))
+				.texture("back", blockLoc("network_port")).texture("sides", blockLoc("vent_" + vent))
+				.texture("front", blockLoc("matter_replicator")).texture("particle", "#bottom").renderType("cutout");
 	}
 
 	private ResourceLocation key(Block block) {
