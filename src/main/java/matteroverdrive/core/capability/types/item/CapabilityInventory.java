@@ -8,13 +8,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import matteroverdrive.common.item.ItemUpgrade;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.tile.GenericTile;
-import matteroverdrive.core.tile.utils.IUpgradableTile;
 import matteroverdrive.core.utils.UtilsDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -525,46 +523,7 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 	@Override
 	protected void onContentsChanged(int slot) {
 		if (hasOwner && !owner.getLevel().isClientSide()) {
-			if (slot >= upgradeIndex() && upgrades() > 0 && owner instanceof IUpgradableTile upgradable) {
-				double speed = upgradable.getDefaultSpeed();
-				double matterUsage = upgradable.getDefaultMatterUsage();
-				double matterStorage = upgradable.getDefaultMatterStorage();
-				float failure = upgradable.getDefaultFailure();
-				double powerStorage = upgradable.getDefaultPowerStorage();
-				double powerUsage = upgradable.getDefaultPowerUsage();
-				double range = upgradable.getDefaultRange();
-				boolean isMuffled = upgradable.isMuffled();
-				
-				double[] prevValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
-				
-				for (ItemStack stack : getUpgrades()) {
-					if (!stack.isEmpty()) {
-						UpgradeType upgrade = ((ItemUpgrade) stack.getItem()).type;
-						speed *= upgrade.speedBonus;
-						matterUsage *= upgrade.matterUsageBonus;
-						matterStorage *= upgrade.matterStorageBonus;
-						failure *= upgrade.failureChanceBonus;
-						powerStorage *= upgrade.powerStorageBonus;
-						powerUsage *= upgrade.powerUsageBonus;
-						range *= upgrade.rangeBonus;
-						if (upgrade == UpgradeType.MUFFLER)
-							isMuffled = true;
-					}
-				}
-				upgradable.setSpeed(speed);
-				upgradable.setMatterUsage(matterUsage);
-				upgradable.setMatterStorage(matterStorage);
-				upgradable.setFailure(failure);
-				upgradable.setPowerStorage((int) powerStorage);
-				upgradable.setPowerUsage((int) powerUsage);
-				upgradable.setRange((int) range);
-				upgradable.setMuffled(isMuffled);
-				
-				double[] newValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
-				
-				upgradable.onUpgradesChange(prevValues, newValues);
-				
-			}
+			owner.onInventoryChange(slot, this);
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}

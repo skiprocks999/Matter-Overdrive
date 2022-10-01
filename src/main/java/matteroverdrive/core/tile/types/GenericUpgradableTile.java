@@ -1,10 +1,14 @@
 package matteroverdrive.core.tile.types;
 
+import matteroverdrive.common.item.ItemUpgrade;
+import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.utils.IUpgradableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -148,7 +152,7 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public boolean setSpeed(double speed) {
 		this.currSpeedProp.set(speed);
-		return currSpeedProp.isDirty();
+		return currSpeedProp.isDirtyNoUpdate();
 	}
 
 	@Override
@@ -190,6 +194,52 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	@Override
 	public double getProcessingTime() {
 		return currentProcessingTime;
+	}
+	
+	@Override
+	public void onInventoryChange(int slot, CapabilityInventory inv) {
+		
+		if (slot >= inv.upgradeIndex() && inv.upgrades() > 0) {
+			
+			double speed = getDefaultSpeed();
+			double matterUsage = getDefaultMatterUsage();
+			double matterStorage = getDefaultMatterStorage();
+			float failure = getDefaultFailure();
+			double powerStorage = getDefaultPowerStorage();
+			double powerUsage = getDefaultPowerUsage();
+			double range = getDefaultRange();
+			boolean isMuffled = isMuffled();
+			
+			double[] prevValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
+			
+			for (ItemStack stack : inv.getUpgrades()) {
+				if (!stack.isEmpty()) {
+					UpgradeType upgrade = ((ItemUpgrade) stack.getItem()).type;
+					speed *= upgrade.speedBonus;
+					matterUsage *= upgrade.matterUsageBonus;
+					matterStorage *= upgrade.matterStorageBonus;
+					failure *= upgrade.failureChanceBonus;
+					powerStorage *= upgrade.powerStorageBonus;
+					powerUsage *= upgrade.powerUsageBonus;
+					range *= upgrade.rangeBonus;
+					if (upgrade == UpgradeType.MUFFLER)
+						isMuffled = true;
+				}
+			}
+			setSpeed(speed);
+			setMatterUsage(matterUsage);
+			setMatterStorage(matterStorage);
+			setFailure(failure);
+			setPowerStorage((int) powerStorage);
+			setPowerUsage((int) powerUsage);
+			setRange((int) range);
+			setMuffled(isMuffled);
+			
+			double[] newValues = {speed, matterUsage, matterStorage, failure, powerStorage, powerUsage, range, isMuffled ? 1.0D : 0.0D};
+			
+			onUpgradesChange(prevValues, newValues);
+			
+		}
 	}
 	
 	@Override

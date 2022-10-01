@@ -17,6 +17,7 @@ public class ScreenComponentUpgradeInfo extends OverdriveScreenComponent {
 	private boolean powerNonTick = false;
 	private boolean customTime = false;
 	private String customTimeKey = null;
+	private boolean zeroSpeed = false;
 
 	public ScreenComponentUpgradeInfo(GenericScreen<?> gui, int x, int y, int[] screenNumbers) {
 		super(OverdriveTextures.NONE, gui, x, y, 0, 0, screenNumbers);

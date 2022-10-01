@@ -3,6 +3,7 @@ package matteroverdrive.core.tile;
 import matteroverdrive.References;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
+import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import net.minecraft.core.BlockPos;
@@ -224,6 +225,12 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 			return InteractionResult.CONSUME;
 		}
 		return InteractionResult.PASS;
+	}
+	
+	//Called by an inventory capability if it changes
+	//Server-side only
+	public void onInventoryChange(int slot, CapabilityInventory inv) {
+		
 	}
 
 }
