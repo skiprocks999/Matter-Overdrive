@@ -63,8 +63,7 @@ public class RendererPatternMonitor extends AbstractTileRenderer<TilePatternMoni
 
 			TextureAtlasSprite holoGrid = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_GRID);
 			float[] holo_uv = { holoGrid.getU0(), holoGrid.getU1(), holoGrid.getV0(), holoGrid.getV1() };
-			float[] holoColor = Colors.HOLO.getFloatArr();
-			holoColor[3] = 0.2F;
+			float[] holoColor = Colors.HOLO.getFloatArrModAlpha(0.2F);
 
 			TextureAtlasSprite holoGlow = ClientRegister.CACHED_TEXTUREATLASSPRITES.get(AtlasTextures.HOLO_GLOW);
 			float[] glow_uv = { holoGlow.getU0(), holoGlow.getU1(), holoGlow.getV0(), holoGlow.getV1() };

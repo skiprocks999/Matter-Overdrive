@@ -115,7 +115,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		if (!scanner.isEmpty() && scanner.getItem() instanceof ItemMatterScanner && inv.getStackInSlot(7).isEmpty()) {
 			scanner.getOrCreateTag().put(UtilsNbt.BLOCK_POS, NbtUtils.writeBlockPos(getBlockPos()));
 			inv.setStackInSlot(7, scanner.copy());
-			scanner.shrink(1);
+			inv.setStackInSlot(6, ItemStack.EMPTY);
 		}
 	}
 
