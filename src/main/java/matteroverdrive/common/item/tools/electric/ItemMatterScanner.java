@@ -220,6 +220,7 @@ public class ItemMatterScanner extends ItemElectric {
 
 	@Override
 	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
+		super.appendPostSuperTooltip(stack, level, tooltips, advanced);
 		if (stack.hasTag() && stack.getTag().contains(UtilsNbt.BLOCK_POS)) {
 			tooltips.add(UtilsText
 					.tooltip("has_storage_loc",

@@ -5,14 +5,17 @@ import com.mojang.math.Matrix4f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 
-public abstract class AbstractRenderLevelLastHandler {
+public abstract class AbstractRenderLevelStageHandler {
 
-	public AbstractRenderLevelLastHandler() {
+	public AbstractRenderLevelStageHandler() {
 
 	}
 
 	public abstract void handleRendering(Minecraft minecraft, LevelRenderer renderer, PoseStack matrix,
 			Matrix4f projMatrix, float partialTick, long startNano);
+	
+	public abstract boolean isStageCorrect(Stage stage);
 
 }

@@ -7,13 +7,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 
 import matteroverdrive.client.keys.handlers.KeyHandlerMatterScanner;
-import matteroverdrive.client.render.rllhandler.RLLHandlerMatterScanner;
+import matteroverdrive.client.render.rlshandler.RLSHandlerMatterScanner;
 import matteroverdrive.client.render.tile.RendererStationAndroid;
 import matteroverdrive.client.render.tooltip.MatterValueTooltipHandler;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.event.handler.client.AbstractKeyPressHandler;
-import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.event.handler.client.AbstractRenderLevelStageHandler;
 import matteroverdrive.core.event.handler.client.AbstractTooltipHandler;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.client.Minecraft;
@@ -35,14 +35,14 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEventHandler {
 
-	private static final List<AbstractRenderLevelLastHandler> RLL_HANDLERS = new ArrayList<>();
+	private static final List<AbstractRenderLevelStageHandler> RLS_HANDLERS = new ArrayList<>();
 
 	private static final List<AbstractKeyPressHandler> KEY_PRESS_HANDLERS = new ArrayList<>();
 
 	private static final List<AbstractTooltipHandler> TOOLTIP_HANDLERS = new ArrayList<>();
 
 	protected static void init() {
-		RLL_HANDLERS.add(new RLLHandlerMatterScanner());
+		RLS_HANDLERS.add(new RLSHandlerMatterScanner());
 		KEY_PRESS_HANDLERS.add(new KeyHandlerMatterScanner());
 		TOOLTIP_HANDLERS.add(new MatterValueTooltipHandler());
 	}
@@ -74,7 +74,7 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void handleRenderLevelLastEvents(RenderLevelStageEvent event) {
+	public static void handleRenderLevelStageEvents(RenderLevelStageEvent event) {
 
 		Minecraft minecraft = Minecraft.getInstance();
 		PoseStack matrix = event.getPoseStack();
@@ -83,8 +83,10 @@ public class ClientEventHandler {
 		float partialTicks = event.getPartialTick();
 		long stateNS = event.getRenderTick();
 
-		for (AbstractRenderLevelLastHandler handler : RLL_HANDLERS) {
-			handler.handleRendering(minecraft, renderer, matrix, projMatrix, partialTicks, stateNS);
+		for (AbstractRenderLevelStageHandler handler : RLS_HANDLERS) {
+			if(handler.isStageCorrect(event.getStage())) {
+				handler.handleRendering(minecraft, renderer, matrix, projMatrix, partialTicks, stateNS);
+			}
 		}
 
 	}

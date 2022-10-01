@@ -1,4 +1,4 @@
-package matteroverdrive.client.render.rllhandler;
+package matteroverdrive.client.render.rlshandler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,7 +12,7 @@ import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.ClientRegister;
 import matteroverdrive.client.render.shaders.MORenderTypes;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
-import matteroverdrive.core.event.handler.client.AbstractRenderLevelLastHandler;
+import matteroverdrive.core.event.handler.client.AbstractRenderLevelStageHandler;
 import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsRendering;
@@ -36,9 +36,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraft.world.phys.HitResult.Type;
 
-public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
+public class RLSHandlerMatterScanner extends AbstractRenderLevelStageHandler {
 
 	private static final float[] GRID_COORDS = UtilsRendering
 			.getCoordsFromAABB(UtilsRendering.AABB_BLOCK.inflate(0.001));
@@ -407,6 +408,11 @@ public class RLLHandlerMatterScanner extends AbstractRenderLevelLastHandler {
 			this.stack = stack;
 		}
 
+	}
+
+	@Override
+	public boolean isStageCorrect(Stage stage) {
+		return stage == Stage.AFTER_TRANSLUCENT_BLOCKS;
 	}
 
 }
