@@ -77,11 +77,11 @@ public class OverdriveBlockStateProvider extends BlockStateProvider {
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_DECOMPOSER, getMatDecomBase("", "empty"), getMatDecomBase("_on", "full"), true);
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MATTER_RECYCLER, getMatRecBase("", ""), getMatRecBase("_on", "_anim"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_MATTER_REPLICATOR, getObjModel("matter_replicator", "block/matter_replicator")
-				.texture("bottom", blockLoc("base")).texture("back", blockLoc("network_port")).texture("sides", blockLoc("vent"))
+				.texture("bottom", blockLoc("base")).texture("back", blockLoc("network_port")).texture("sides", blockLoc("vent_open"))
 				.texture("front", blockLoc("matter_replicator")).texture("particle", "#bottom").renderType("cutout"), true);
 		horrRotatedLitBlock(BlockRegistry.BLOCK_MICROWAVE, getMicroBase("", ""), getMicroBase("_on", "_on"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_PATTERN_STORAGE, getObjModel("pattern_storage", "block/pattern_storage")
-				.texture("base", blockLoc("pattern_storage")).texture("vent", blockLoc("vent")).texture("particle", "#base"), true);
+				.texture("base", blockLoc("pattern_storage")).texture("vent", blockLoc("vent_open")).texture("particle", "#base"), true);
 		horrRotatedBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR, existingBlock(BlockRegistry.BLOCK_SPACETIME_ACCELERATOR), true);
 		omniDirBlock(BlockRegistry.BLOCK_PATTERN_MONITOR, existingBlock(BlockRegistry.BLOCK_PATTERN_MONITOR), true);
 		//charger TileRenderer JSON

@@ -6,6 +6,6 @@
   "textures": {
     "base": "matteroverdrive:block/pattern_storage",
     "particle": "#base",
-    "vent": "matteroverdrive:block/vent"
+    "vent": "matteroverdrive:block/vent_open"
   }
 }

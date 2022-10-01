@@ -9,6 +9,6 @@
     "bottom": "matteroverdrive:block/base",
     "front": "matteroverdrive:block/matter_replicator",
     "particle": "#bottom",
-    "sides": "matteroverdrive:block/vent"
+    "sides": "matteroverdrive:block/vent_open"
   }
 }
