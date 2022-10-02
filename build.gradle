@@ -92,8 +92,6 @@ minecraft {
 mixin {
     // MixinGradle Settings
     add sourceSets.main, 'matteroverdrive.refmap.json'
-    add sourceSets.client, 'matteroverdrive.client.refmap.json'
-    add sourceSets.api, 'matteroverdrive.api.refmap.json'
 
     config 'mixins/matteroverdrive.mixins.json'
     
@@ -129,8 +127,6 @@ dependencies {
     
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    clientAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    apiAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {
