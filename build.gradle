@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 		classpath 'org.parchmentmc:librarian:1.+'
+		classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -18,6 +19,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 apply plugin: 'eclipse'
+
+// MixinGradle:
+apply plugin: 'org.spongepowered.mixin'
 
 libsDirName = "../output"
 distsDirName = "../output"
@@ -36,7 +40,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: 'official', version: project.minecraft_version
+    mappings channel: 'parchment', version: '2022.09.18-1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -85,6 +89,18 @@ minecraft {
     }
 }
 
+mixin {
+    // MixinGradle Settings
+    add sourceSets.main, 'matteroverdrive.refmap.json'
+    add sourceSets.client, 'matteroverdrive.client.refmap.json'
+    add sourceSets.api, 'matteroverdrive.api.refmap.json'
+
+    config 'mixins/matteroverdrive.mixins.json'
+    
+    debug.verbose = true
+    debug.export = true
+}
+
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
@@ -110,6 +126,11 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
+    
+    // Apply Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    clientAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    apiAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {
