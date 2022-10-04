@@ -84,3 +84,4 @@ runData.launch
 
 runServer.launch
 
+gradle logs/

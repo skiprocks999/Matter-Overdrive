@@ -1,7 +1,5 @@
 package matteroverdrive.client.render.tile;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
@@ -9,7 +7,6 @@ import matteroverdrive.client.render.item.VariableAlphaItemRenderer;
 import matteroverdrive.client.render.tile.utils.AbstractTileRenderer;
 import matteroverdrive.common.tile.matter_network.matter_replicator.TileMatterReplicator;
 import matteroverdrive.common.tile.matter_network.matter_replicator.utils.QueuedReplication;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -21,15 +18,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterReplicator> {
 
-	private static final int SEED = 64;
-
 	private int simLifespan = 0;
-
-	private final Random random;
 
 	public RendererMatterReplicator(Context context) {
 		super(context);
-		random = new Random();
 	}
 
 	@Override
@@ -50,12 +42,11 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 
 			matrix.translate(0.5, 0.3, 0.5);
 
-			VariableAlphaItemRenderer renderer = new VariableAlphaItemRenderer(
-					Minecraft.getInstance().getItemRenderer());
+			VariableAlphaItemRenderer renderer = new VariableAlphaItemRenderer(getItemRenderer());
 
 			random.setSeed((long) (Item.getId(stack.getItem()) + stack.getDamageValue()));
 
-			BakedModel model = renderer.getModel(stack, replicator.getLevel(), (LivingEntity) null, SEED);
+			BakedModel model = renderer.getModel(stack, replicator.getLevel(), (LivingEntity) null, ITEM_RENDERER_SEED);
 
 			boolean isGui3D = model.isGui3d();
 

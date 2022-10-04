@@ -1,13 +1,14 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
+       // maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 		maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 		classpath 'org.parchmentmc:librarian:1.+'
-		classpath 'org.spongepowered:mixingradle:0.7.+'
+		//classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -17,11 +18,11 @@ plugins {
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
-
+// MixinGradle:
+//apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 
-// MixinGradle:
-apply plugin: 'org.spongepowered.mixin'
+
 
 libsDirName = "../output"
 distsDirName = "../output"
@@ -40,6 +41,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
+    //mappings channel: 'official', version: '1.19' 
     mappings channel: 'parchment', version: '2022.09.18-1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
@@ -88,17 +90,17 @@ minecraft {
         }
     }
 }
-
+/*
 mixin {
     // MixinGradle Settings
     add sourceSets.main, 'matteroverdrive.refmap.json'
 
-    config 'mixins/matteroverdrive.mixins.json'
+    config 'matteroverdrive.mixins.json'
     
     debug.verbose = true
     debug.export = true
 }
-
+*/
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
@@ -126,7 +128,7 @@ dependencies {
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
     
     // Apply Mixin AP
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {
