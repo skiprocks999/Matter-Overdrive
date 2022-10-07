@@ -35,14 +35,8 @@ public interface ITickableTile {
 
 	}
 	
-	/**
-	 * This should only be called when the BlockEntityTicker is created. It allows
-	 * for a simple filter option for tiles that might be an instance of this 
-	 * interface but are not intended to tick. Note, if the logic that affects this
-	 * is modified from an internal tick method, then the block might cease to tick!
-	 * @return
-	 */
-	@Deprecated
 	boolean canTick();
+	
+	boolean updateTickable(boolean tickable);
 
 }

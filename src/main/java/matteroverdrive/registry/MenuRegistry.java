@@ -41,7 +41,8 @@ public class MenuRegistry {
 			.register(TypeMachine.PATTERN_MONITOR.id(), () -> new MenuType<>(InventoryPatternMonitor::new));
 	public static final RegistryObject<MenuType<InventoryMatterAnalyzer>> MENU_MATTER_ANALYZER = MENUS
 			.register(TypeMachine.MATTER_ANALYZER.id(), () -> new MenuType<>(InventoryMatterAnalyzer::new));
-
 	public static final RegistryObject<MenuType<InventoryAndroidStation>> MENU_ANDROID_STATION = MENUS
 			.register(TypeMachine.ANDROID_STATION.id(), () -> new MenuType<>(InventoryAndroidStation::new));
+	public static final RegistryObject<MenuType<InventoryDiscManipulator>> MENU_DISC_MANIPULATOR = MENUS
+			.register(TypeMachine.DISC_MANIPULATOR.id(), () -> new MenuType<>(InventoryDiscManipulator::new));
 }

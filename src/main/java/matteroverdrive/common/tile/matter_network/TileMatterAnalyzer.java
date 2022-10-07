@@ -88,23 +88,23 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 		handleOnState();
 		
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY), updateTickable(false));
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY), updateTickable(false));
 			return;
 		}
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack scanned = inv.getStackInSlot(0);
 		if (scanned.isEmpty()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY), updateTickable(false));
 			return;
 		}
 		NetworkMatter network = getConnectedNetwork();
 		if (network == null || !hasAttachedDrives(network)) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY), updateTickable(false));
 			return;
 		}
 
@@ -120,11 +120,11 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 
 		}
 		if (!shouldAnalyze) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(ItemStack.EMPTY), updateTickable(false));
 			return;
 		}
 		if (!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(scanned));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(scanned), updateTickable(false));
 			int[] stored = network.getHighestStorageLocationForItem(scannedItemProp.get().getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
 			if (val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {

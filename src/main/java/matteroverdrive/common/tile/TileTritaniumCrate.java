@@ -24,6 +24,11 @@ public class TileTritaniumCrate extends GenericTile {
 						exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()),
 				getContainerName("tritanium_crate")));
 	}
+	
+	@Override
+	public void onInventoryChange(int slot, CapabilityInventory inv) {
+		setChanged();
+	}
 
 	public static enum CrateColors implements IBulkRegistryObject {
 

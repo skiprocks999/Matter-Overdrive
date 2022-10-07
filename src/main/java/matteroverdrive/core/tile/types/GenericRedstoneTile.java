@@ -44,6 +44,7 @@ public abstract class GenericRedstoneTile extends GenericTickingTile implements 
 	@Override
 	public void setMode(int mode) {
 		currRedstoneModeProp.set(mode);
+		onRedstoneUpdate();
 	}
 
 	@Override
@@ -60,6 +61,12 @@ public abstract class GenericRedstoneTile extends GenericTickingTile implements 
 	@Override
 	public int getMaxMode() {
 		return 2;
+	}
+	
+	@Override
+	public void onRedstoneUpdate() {
+		updateTickable(true);
+		setShouldSaveData(true);
 	}
 
 }

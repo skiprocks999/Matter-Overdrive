@@ -9,10 +9,12 @@ import matteroverdrive.core.tile.GenericTile;
 import matteroverdrive.core.tile.utils.ITickableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -143,17 +145,9 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 
 	@Override
 	public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean moving) {
-		if (!level.isClientSide()) {
-			BlockEntity entity = level.getBlockEntity(pos);
-			if (entity != null && entity instanceof GenericTile tile) {
-				if (newState.hasProperty(FACING) && oldState.getValue(FACING) != newState.getValue(FACING)) {
-					tile.refreshCapabilities();
-				}
-				if(newState.isAir()) {
-					tile.onBlockBroken(level, pos);
-				}
-			}
-			
+		BlockEntity entity = level.getBlockEntity(pos);
+		if (entity != null && entity instanceof GenericTile tile) {
+			tile.onBlockStateChange(oldState, newState, moving);
 		}
 		super.onRemove(oldState, level, pos, newState, moving);
 	}
@@ -179,6 +173,24 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return ((OverdriveBlockProperties) this.properties).canConnectToRedstone();
+	}
+	
+	@Override
+	public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+		BlockEntity entity = level.getBlockEntity(pos);
+		if(entity != null && entity instanceof GenericTile generic) {
+			generic.onNeighborChange(state, neighbor);
+		}
+		super.onNeighborChange(state, level, pos, neighbor);
+	}
+	
+	@Override
+	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		super.entityInside(state, level, pos, entity);
+		BlockEntity block = level.getBlockEntity(pos);
+		if(block != null && block instanceof GenericTile tile) {
+			tile.onEntityContact(state, entity);
+		}
 	}
 
 }

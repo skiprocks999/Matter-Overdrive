@@ -3,7 +3,9 @@ package matteroverdrive.core.tile;
 import matteroverdrive.References;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.capability.IOverdriveCapability;
+import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
+import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
 import matteroverdrive.core.property.IPropertyManaged;
 import matteroverdrive.core.property.manager.BlockEntityPropertyManager;
 import net.minecraft.core.BlockPos;
@@ -16,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
@@ -36,7 +39,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 
 	public boolean hasMenu = false;
 	private MenuProvider menu;
-	
+
 	private boolean shouldSaveData = false;
 
 	/**
@@ -59,29 +62,32 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 	public MenuProvider getMenuProvider() {
 		return menu;
 	}
-	
+
 	public boolean shouldSaveData() {
 		return shouldSaveData;
 	}
-	
+
 	/**
-	 * This is a less efficient solution than just using the bitwise boolean operator |
+	 * This is a less efficient solution than just using the bitwise boolean
+	 * operator |
 	 * 
-	 * However, being forced to use a specific boolean operator will ultimately lead to
-	 * someone forgetting and causing a bug that takes forever to track down.
+	 * However, being forced to use a specific boolean operator will ultimately lead
+	 * to someone forgetting and causing a bug that takes forever to track down.
 	 * 
-	 * Maybe we can revisit the concept when we are looking at making performance improvements
+	 * Maybe we can revisit the concept when we are looking at making performance
+	 * improvements
+	 * 
 	 * @param bool
 	 */
-	public void setShouldSaveData(boolean...changes) {
-		for(boolean bool : changes) {
-			if(bool) {
+	public void setShouldSaveData(boolean... changes) {
+		for (boolean bool : changes) {
+			if (bool) {
 				shouldSaveData = true;
 				break;
 			}
 		}
 	}
-	
+
 	protected void resetShouldSaveData() {
 		shouldSaveData = false;
 	}
@@ -159,7 +165,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
 		CompoundTag tag = super.getUpdateTag();
-		//getFirstContactData(tag);
+		// getFirstContactData(tag);
 		saveAdditional(tag);
 		return tag;
 	}
@@ -209,27 +215,56 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 	public BlockEntityPropertyManager getPropertyManager() {
 		return this.propertyManager;
 	}
-	
+
 	public void onBlockBroken(Level world, BlockPos pos) {
-		
+
 	}
-	
+
 	public InteractionResult useClient(Player player, InteractionHand hand, BlockHitResult hit) {
 		return hasMenu ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
-	
+
 	public InteractionResult useServer(Player player, InteractionHand hand, BlockHitResult hit) {
-		if(hasMenu) {
+		if (hasMenu) {
 			player.awardStat(Stats.INTERACT_WITH_FURNACE);
 			player.openMenu(getMenuProvider());
 			return InteractionResult.CONSUME;
 		}
 		return InteractionResult.PASS;
 	}
-	
-	//Called by an inventory capability if it changes
-	//Server-side only
+
+	// Called by an inventory capability if it changes
+	// Server-side only
+	// I don't like these methods, but I can't think of a cleaner solution
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
+
+	}
+
+	public void onEnergyStorageChange(CapabilityEnergyStorage energy) {
+
+	}
+
+	public void onMatterStorageChange(CapabilityMatterStorage matter) {
+
+	}
+
+	public void onBlockStateChange(BlockState oldState, BlockState newState, boolean moving) {
+		if (!level.isClientSide()) {
+			if (newState.hasProperty(GenericEntityBlock.FACING)
+					&& oldState.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING)) {
+				refreshCapabilities();
+			}
+			if (newState.isAir()) {
+				onBlockBroken(level, getBlockPos());
+			} 
+		}
+	}
+
+	public void onNeighborChange(BlockState state, BlockPos neighbor) {
+
+	}
+	
+	public void onEntityContact(BlockState state, Entity entity) {
 		
 	}
 

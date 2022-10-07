@@ -51,7 +51,7 @@ public class TileSolarPanel extends GenericMachineTile {
 	@Override
 	public void tickServer() {
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		} 
 		UtilsTile.outputEnergy(this);

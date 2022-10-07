@@ -15,6 +15,8 @@ public interface IRedstoneModeTile {
 	int getMaxMode();
 
 	boolean canRun();
+	
+	void onRedstoneUpdate();
 
 	default void saveMode(CompoundTag tag) {
 		tag.putInt("redmode", getCurrMode());

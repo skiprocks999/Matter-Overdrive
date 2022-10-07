@@ -15,6 +15,7 @@ import matteroverdrive.common.tile.TileMicrowave;
 import matteroverdrive.common.tile.TileSolarPanel;
 import matteroverdrive.common.tile.TileSpacetimeAccelerator;
 import matteroverdrive.common.tile.TileTritaniumCrate;
+import matteroverdrive.common.tile.matter_network.TileDiscManipulator;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.common.tile.matter_network.TileMatterNetworkCable;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
@@ -85,5 +86,7 @@ public class TileRegistry {
 	public static final RegistryObject<BlockEntityType<TileAndroidStation>> TILE_ANDROID_STATION = TILES
 					.register(TypeMachine.ANDROID_STATION.id(), () -> new BlockEntityType<>(TileAndroidStation::new,
 									Sets.newHashSet(BlockRegistry.BLOCK_ANDROID_STATION.get()), null));
+	public static final RegistryObject<BlockEntityType<TileDiscManipulator>> TILE_DISC_MANIPULATOR = TILES
+			.register(TypeMachine.DISC_MANIPULATOR.id(), () -> new BlockEntityType<>(TileDiscManipulator::new, Sets.newHashSet(BlockRegistry.BLOCK_DISC_MANIPULATOR.get()), null));
 
 }

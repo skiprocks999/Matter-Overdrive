@@ -132,6 +132,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		tag.putInt("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
+		tag.putBoolean("hasOwner", hasOwner);
 
 		return tag;
 	}
@@ -159,6 +160,7 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 		maxStorage = nbt.getInt("maxStorage");
 		hasInput = nbt.getBoolean("hasInput");
 		hasOutput = nbt.getBoolean("hasOutput");
+		hasOwner = nbt.getBoolean("hasOwner");
 	}
 
 	@Override
@@ -215,6 +217,9 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 
 	@Override
 	public void onLoad(BlockEntity tile) {
+		if(hasOwner && tile instanceof GenericTile generic) {
+			owner = generic;
+		}
 		refreshCapability();
 	}
 
@@ -320,7 +325,6 @@ public class CapabilityEnergyStorage implements IEnergyStorage, IOverdriveCapabi
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}
-			owner.setShouldSaveData(true);
 		}
 	}
 

@@ -130,13 +130,13 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 		orderManager.removeCompletedOrders();
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 		setPowered(true);
@@ -161,7 +161,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		}
 
 		if (orderManager.isEmpty()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 
@@ -169,7 +169,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 		if (value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
 			orderManager.cancelOrder(0);
-			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 		setRecipeValue(value);
@@ -179,20 +179,20 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		ItemStack dust = outputs.get(1);
 		boolean dustEmpty = dust.isEmpty();
 		if (!dustEmpty && !(UtilsNbt.readMatterVal(dust) == value && dust.getCount() < dust.getMaxStackSize())) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
 		ItemStack output = outputs.get(0);
 		boolean outputEmpty = output.isEmpty();
 		if (!outputEmpty && !(ItemStack.isSame(stack, output) && output.getCount() < output.getMaxStackSize())) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getRecipeValue()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 

@@ -131,6 +131,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		tag.putDouble("maxStorage", maxStorage);
 		tag.putBoolean("hasInput", hasInput);
 		tag.putBoolean("hasOutput", hasOutput);
+		tag.putBoolean("hasOwner", hasOwner);
 
 		return tag;
 	}
@@ -158,6 +159,7 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 		maxStorage = nbt.getDouble("maxStorage");
 		hasInput = nbt.getBoolean("hasInput");
 		hasOutput = nbt.getBoolean("hasOutput");
+		hasOwner = nbt.getBoolean("hasOwner");
 	}
 
 	@Override
@@ -209,6 +211,9 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	@Override
 	public void onLoad(BlockEntity tile) {
+		if(hasOwner && tile instanceof GenericTile generic) {
+			owner = generic;
+		}
 		refreshCapability();
 	}
 
@@ -315,10 +320,10 @@ public class CapabilityMatterStorage implements IOverdriveCapability, ICapabilit
 
 	private void onChange() {
 		if(hasOwner && !owner.getLevel().isClientSide()) {
+			owner.onMatterStorageChange(this);
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}
-			owner.setShouldSaveData(true);
 		}
 	}
 

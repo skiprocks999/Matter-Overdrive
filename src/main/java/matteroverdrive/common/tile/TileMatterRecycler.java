@@ -70,7 +70,7 @@ public class TileMatterRecycler extends GenericMachineTile {
 		handleOnState();
 
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setProgress(0));
+			setShouldSaveData(setRunning(false), setProgress(0), updateTickable(false));
 			return;
 		}
 
@@ -79,27 +79,27 @@ public class TileMatterRecycler extends GenericMachineTile {
 		ItemStack input = inv.getInputs().get(0);
 
 		if (input.isEmpty() || !UtilsMatter.isRawDust(input)) {
-			setShouldSaveData(setRunning(false), setProgress(0));
+			setShouldSaveData(setRunning(false), setProgress(0), updateTickable(false));
 			return;
 		}
 
 		double value = UtilsNbt.readMatterVal(input);
 		if (value <= 0) {
-			setShouldSaveData(setRunning(false), setProgress(0));
+			setShouldSaveData(setRunning(false), setProgress(0), updateTickable(false));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
 		ItemStack output = inv.getOutputs().get(0);
 		if (!(output.isEmpty()
 				|| (output.getCount() < output.getMaxStackSize() && UtilsNbt.readMatterVal(output) == value))) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 

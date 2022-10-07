@@ -50,7 +50,8 @@ public enum TypeMachine {
 	MATTER_REPLICATOR(OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES)
 			.redstoneConnectivity().setCanBeLit(false).setCanBeWaterlogged().setHasFacing(false)),
 	ANDROID_STATION(Shapes.box(0.0D,0.0D,0.0D, 1.0D, 0.5D, 1.0D),
-					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).setHasFacing(true));
+					OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES).setHasFacing(true)),
+	DISC_MANIPULATOR(Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), OverdriveBlockProperties.from(GenericMachineBlock.DEFAULT_MACHINE_PROPERTIES));
 
 	// DUNSEW
 	public final OverdriveBlockProperties properties;

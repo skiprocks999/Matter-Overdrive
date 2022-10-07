@@ -41,6 +41,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Material;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
+import matteroverdrive.common.tile.matter_network.TileDiscManipulator;
 import matteroverdrive.common.tile.matter_network.TileMatterAnalyzer;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
 import matteroverdrive.common.tile.matter_network.TilePatternStorage;
@@ -190,6 +191,10 @@ public class BlockRegistry {
 			() -> new BlockMachine<TileAndroidStation>(TileAndroidStation::new, TypeMachine.ANDROID_STATION,
 					TileRegistry.TILE_ANDROID_STATION),
 			false);
+	
+	public static final RegistryObject<Block> BLOCK_DISC_MANIPULATOR = registerBlock(TypeMachine.DISC_MANIPULATOR.id(),
+			() -> new BlockMachine<TileDiscManipulator>(TileDiscManipulator::new, TypeMachine.DISC_MANIPULATOR, TileRegistry.TILE_DISC_MANIPULATOR),
+			true);
 
 	// Functional Methods
 

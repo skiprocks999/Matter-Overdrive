@@ -86,7 +86,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		handleOnState();
 		
 		if (!canRun()) {
-			setShouldSaveData(setRecipeValue(0), setRunning(false), setProgress(0));
+			setShouldSaveData(setRecipeValue(0), setRunning(false), setProgress(0), updateTickable(false));
 			return;
 		}
 		
@@ -94,7 +94,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		CapabilityInventory inv = getInventoryCap();
 		ItemStack input = inv.getInputs().get(0);
 		if (input.isEmpty()) {
-			setShouldSaveData(setRunning(false), setRecipeValue(0), setProgress(0));
+			setShouldSaveData(setRunning(false), setRecipeValue(0), setProgress(0), updateTickable(false));
 			return;
 		}
 
@@ -105,13 +105,13 @@ public class TileMatterDecomposer extends GenericMachineTile {
 				matterVal = UtilsNbt.readMatterVal(input);
 			}
 			if (matterVal <= 0.0) {
-				setShouldSaveData(setRunning(false), setRecipeValue(0), setProgress(0));
+				setShouldSaveData(setRunning(false), setRecipeValue(0), setProgress(0), updateTickable(false));
 				return;
 			}
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 		CapabilityMatterStorage storage = getMatterStorageCap();
 
 		if ((storage.getMaxMatterStored() - storage.getMatterStored()) < getRecipeValue()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
@@ -129,7 +129,7 @@ public class TileMatterDecomposer extends GenericMachineTile {
 
 		if (!(output.isEmpty() || (UtilsNbt.readMatterVal(output) == getRecipeValue()
 				&& (output.getCount() + 1 <= output.getMaxStackSize())))) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		setRunning(true);

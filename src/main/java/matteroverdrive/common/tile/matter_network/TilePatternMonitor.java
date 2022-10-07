@@ -33,6 +33,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TilePatternMonitor extends GenericTickingTile implements IMatterNetworkMember {
 
@@ -51,12 +52,10 @@ public class TilePatternMonitor extends GenericTickingTile implements IMatterNet
 
 	@Override
 	public void tickServer() {
-		if (getTicks() % 4 == 0) {
-			if (getConnectedNetwork() != null) {
-				UtilsTile.updateLit(this, true);
-			} else {
-				UtilsTile.updateLit(this, false);
-			}
+		boolean currState = getLevel().getBlockState(getBlockPos()).getValue(BlockStateProperties.LIT);
+		if (currState ^ getConnectedNetwork() != null) {
+			UtilsTile.updateLit(this, getConnectedNetwork() != null);
+			setShouldSaveData(updateTickable(false));
 		}
 	}
 

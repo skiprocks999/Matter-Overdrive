@@ -72,7 +72,7 @@ public class TileInscriber extends GenericMachineTile {
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0));
+			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0), updateTickable(false));
 			return;
 		}
 		
@@ -81,7 +81,7 @@ public class TileInscriber extends GenericMachineTile {
 		ItemStack input1 = inputs.get(0);
 		ItemStack input2 = inputs.get(1);
 		if (input1.isEmpty() || input2.isEmpty()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0));
+			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0), updateTickable(false));
 			return;
 		}
 		boolean matched = false;
@@ -96,14 +96,14 @@ public class TileInscriber extends GenericMachineTile {
 			matched = cachedRecipe.matchesRecipe(inv, 0);
 		}
 		if (!matched) {
-			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0));
+			setShouldSaveData(setRunning(false), setProgress(0), setProcessingTime(0), setPowerUsage(0), updateTickable(false));
 			return;
 		}
 		
 		setShouldSaveData(setProcessingTime(cachedRecipe.getProcessTime()), updatePowerUsageFromRecipe(cachedRecipe.getUsagePerTick()));
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		ItemStack output = inv.getOutputs().get(0);
@@ -127,7 +127,7 @@ public class TileInscriber extends GenericMachineTile {
 			}
 			setShouldSaveData(true);
 		} else {
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 		}
 	}
 

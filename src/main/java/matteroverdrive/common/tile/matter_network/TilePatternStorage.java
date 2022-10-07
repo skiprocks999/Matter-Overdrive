@@ -91,7 +91,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		handleOnState();
 		
 		if (!canRun()) {
-			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false));
+			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false), updateTickable(false));
 			return;
 		}
 
@@ -107,7 +107,7 @@ public class TilePatternStorage extends GenericMachineTile implements IMatterNet
 		setShouldSaveData(true);
 		
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false));
+			setShouldSaveData(setPowered(false), setPowerUsage(0), setRunning(false), updateTickable(false));
 			return;
 		}
 		energy.removeEnergy((int) getCurrentPowerUsage());

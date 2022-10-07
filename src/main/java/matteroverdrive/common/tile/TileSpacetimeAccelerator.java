@@ -78,21 +78,21 @@ public class TileSpacetimeAccelerator extends GenericMachineTile {
 		UtilsTile.drainMatterSlot(this);
 		if (!canRun()) {
 			resetRadiusMultipliers();
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
 			resetRadiusMultipliers();
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
 			resetRadiusMultipliers();
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 

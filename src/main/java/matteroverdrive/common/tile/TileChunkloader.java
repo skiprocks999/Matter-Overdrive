@@ -81,7 +81,7 @@ public class TileChunkloader extends GenericMachineTile {
 				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		CapabilityMatterStorage matter = getMatterStorageCap();
@@ -90,7 +90,7 @@ public class TileChunkloader extends GenericMachineTile {
 				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
@@ -99,7 +99,7 @@ public class TileChunkloader extends GenericMachineTile {
 				updateChunks(false, getLevel(), getBlockPos());
 				didRangeChange = true;
 			}
-			setShouldSaveData(setRunning(false));
+			setShouldSaveData(setRunning(false), updateTickable(false));
 			return;
 		}
 		matter.removeMatter(getCurrentMatterUsage());

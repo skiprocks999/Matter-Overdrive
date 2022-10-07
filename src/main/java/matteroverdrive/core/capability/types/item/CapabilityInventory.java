@@ -259,6 +259,9 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 
 	@Override
 	public void onLoad(BlockEntity tile) {
+		if(hasOwner && tile instanceof GenericTile generic) {
+			owner = generic;
+		}
 		refreshCapability();
 	}
 
@@ -298,6 +301,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		int[] vals = new int[] { inputs, outputs, byproducts, energyInputSlot, matterInputSlot, energyOutputSlot, matterOutputSlot, upgrades };
 
 		tag.putIntArray("sizes", vals);
+		
+		tag.putBoolean("hasOwner", hasOwner);
 
 		return tag;
 	}
@@ -332,6 +337,8 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 		energyOutputSlot = vals[5];
 		matterOutputSlot = vals[6];
 		upgrades = vals[7];
+		
+		hasOwner = nbt.getBoolean("hasOwner");
 	}
 
 	@Override
@@ -527,7 +534,6 @@ public class CapabilityInventory extends ItemStackHandler implements IOverdriveC
 			if (propertyHandler != null) {
 				propertyHandler.set(serializeNBT());
 			}
-			owner.setShouldSaveData(true);
 		}
 	}
 

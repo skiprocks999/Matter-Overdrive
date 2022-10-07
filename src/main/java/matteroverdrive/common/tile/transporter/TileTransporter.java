@@ -130,20 +130,20 @@ public class TileTransporter extends GenericMachineTile {
 		UtilsTile.drainMatterSlot(this);
 		
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
 		if (cooldownProp.get() < COOLDOWN) {
 			cooldownProp.set(cooldownProp.get() + 1);
-			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
-			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
@@ -151,19 +151,19 @@ public class TileTransporter extends GenericMachineTile {
 		Pair<Boolean, Integer> validData = validDestination(curLoc);
 
 		if (!validData.getFirst()) {
-			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
 		CapabilityMatterStorage matter = getMatterStorageCap();
 		if (matter.getMatterStored() < getCurrentMatterUsage()) {
-			setShouldSaveData(setRunning(false), entityDataManager.wipe());
+			setShouldSaveData(setRunning(false), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
@@ -280,6 +280,14 @@ public class TileTransporter extends GenericMachineTile {
 			return level;
 		}
 		return (ServerLevel) getLevel();
+	}
+	
+	@Override
+	public void onEntityContact(BlockState state, Entity entity) {
+		if(!level.isClientSide) {
+			updateTickable(true);
+			setShouldSaveData(true);
+		}
 	}
 
 }

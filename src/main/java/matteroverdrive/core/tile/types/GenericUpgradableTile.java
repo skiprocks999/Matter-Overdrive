@@ -198,7 +198,7 @@ public abstract class GenericUpgradableTile extends GenericRedstoneTile implemen
 	
 	@Override
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
-		
+		super.onInventoryChange(slot, inv);
 		if (slot >= inv.upgradeIndex() && inv.upgrades() > 0) {
 			
 			double speed = getDefaultSpeed();
