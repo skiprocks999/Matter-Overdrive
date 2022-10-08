@@ -65,8 +65,7 @@ public abstract class GenericRedstoneTile extends GenericTickingTile implements 
 	
 	@Override
 	public void onRedstoneUpdate() {
-		updateTickable(true);
-		setShouldSaveData(true);
+		setShouldSaveData(updateTickable(true));
 	}
 
 }

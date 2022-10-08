@@ -136,7 +136,7 @@ public class TileTransporter extends GenericMachineTile {
 
 		if (cooldownProp.get() < COOLDOWN) {
 			cooldownProp.set(cooldownProp.get() + 1);
-			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
+			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
@@ -283,10 +283,9 @@ public class TileTransporter extends GenericMachineTile {
 	}
 	
 	@Override
-	public void onEntityContact(BlockState state, Entity entity) {
+	public void onEntityContact(BlockState state, Entity entity, boolean inside) {
 		if(!level.isClientSide) {
-			updateTickable(true);
-			setShouldSaveData(true);
+			setShouldSaveData(updateTickable(true));
 		}
 	}
 

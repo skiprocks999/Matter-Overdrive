@@ -185,11 +185,20 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 	}
 	
 	@Override
+	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+		super.stepOn(level, pos, state, entity);
+		BlockEntity block = level.getBlockEntity(pos);
+		if(block != null && block instanceof GenericTile tile) {
+			tile.onEntityContact(state, entity, false);
+		}
+	}
+	
+	@Override
 	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
 		super.entityInside(state, level, pos, entity);
 		BlockEntity block = level.getBlockEntity(pos);
 		if(block != null && block instanceof GenericTile tile) {
-			tile.onEntityContact(state, entity);
+			tile.onEntityContact(state, entity, true);
 		}
 	}
 	

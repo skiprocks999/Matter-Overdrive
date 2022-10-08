@@ -262,7 +262,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 
 	}
 	
-	public void onEntityContact(BlockState state, Entity entity) {
+	public void onEntityContact(BlockState state, Entity entity, boolean inside) {
 		
 	}
 	

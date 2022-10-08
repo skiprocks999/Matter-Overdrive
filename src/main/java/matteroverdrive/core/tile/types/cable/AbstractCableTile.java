@@ -163,6 +163,11 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 		}
 		refreshNetwork();
 	}
+	
+	@Override
+	public void onBlockStateChange(BlockState oldState, BlockState newState, boolean moving) {
+		
+	}
 
 	public abstract boolean isCable(BlockEntity entity);
 

@@ -79,26 +79,23 @@ public abstract class GenericTickingTile extends GenericTile implements ITickabl
 	
 	@Override
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
-		updateTickable(true);
-		setShouldSaveData(true);
+		setShouldSaveData(updateTickable(true));
 	}
 	
 	@Override
 	public void onMatterStorageChange(CapabilityMatterStorage matter) {
-		updateTickable(true);
-		setShouldSaveData(true);
+		setShouldSaveData(updateTickable(true));
 	}
 	
 	@Override
 	public void onEnergyStorageChange(CapabilityEnergyStorage energy) {
-		updateTickable(true);
-		setShouldSaveData(true);
+		setShouldSaveData(updateTickable(true));
 	}
 	
 	@Override
 	public void onNeighborChange(BlockState state, BlockPos neighbor) {
 		if(!level.isClientSide) {
-			updateTickable(true);
+			setShouldSaveData(updateTickable(true));
 		}
 	}
 	
@@ -106,7 +103,7 @@ public abstract class GenericTickingTile extends GenericTile implements ITickabl
 	public void onBlockStateChange(BlockState oldState, BlockState newState, boolean moving) {
 		super.onBlockStateChange(oldState, newState, moving);
 		if(!level.isClientSide && !newState.isAir()) {
-			updateTickable(true);
+			setShouldSaveData(updateTickable(true));
 		}
 	}
 
