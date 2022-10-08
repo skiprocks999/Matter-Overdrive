@@ -42,14 +42,4 @@ public class BlockMatterNetworkCable extends AbstractCableBlock {
 		return new TileMatterNetworkCable(pos, state);
 	}
 
-	@Override
-	public boolean checkCableClass(BlockEntity entity) {
-		return entity instanceof TileMatterNetworkCable;
-	}
-
-	@Override
-	public boolean isValidConnection(BlockEntity facingTile, Direction facing) {
-		return facingTile instanceof IMatterNetworkMember member && member.canConnectToFace(facing);
-	}
-
 }

@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -109,28 +108,6 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 	}
 
 	@Override
-	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onPlace(state, worldIn, pos, oldState, isMoving);
-		if (!worldIn.isClientSide) {
-			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (checkCableClass(tile)) {
-				((AbstractCableTile<?>) tile).refreshNetwork();
-			}
-		}
-	}
-
-	@Override
-	public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-		super.onNeighborChange(state, world, pos, neighbor);
-		if (!world.isClientSide()) {
-			BlockEntity tile = world.getBlockEntity(pos);
-			if (checkCableClass(tile)) {
-				((AbstractCableTile<?>) tile).refreshNetwork();
-			}
-		}
-	}
-
-	@Override
 	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
 	}
@@ -179,7 +156,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 
-		if (shouldntChange(stateIn, facingState, facing, world.getBlockEntity(facingPos))) {
+		if (shouldntChange(stateIn, facingState, facing, (AbstractCableTile<?>) world.getBlockEntity(currentPos), world.getBlockEntity(facingPos))) {
 			return stateIn;
 		}
 
@@ -187,7 +164,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 	}
 
 	protected boolean shouldntChange(BlockState thisState, BlockState changedState, Direction facing,
-			BlockEntity facingTile) {
+			AbstractCableTile<?> thisTile, BlockEntity facingTile) {
 
 		EnumProperty<CableConnectionType> thisProperty = DIRECTION_TO_PROPERTY_MAP.get(facing);
 		EnumProperty<CableConnectionType> facingProperty = DIRECTION_TO_PROPERTY_MAP.get(facing.getOpposite());
@@ -200,7 +177,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 		} else {
 			if (thisType == CableConnectionType.IGNORED || thisType == CableConnectionType.NONE
 					|| thisType == CableConnectionType.NONE_SEAMLESS) {
-				return !isValidConnection(facingTile, facing.getOpposite());
+				return !thisTile.isValidConnection(facingTile, facing.getOpposite());
 			}
 			return false;
 		}
@@ -276,11 +253,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 		return type;
 	}
 
-	public abstract boolean checkCableClass(BlockEntity entity);
-
 	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory,
 			HashSet<Direction> cable, LevelAccessor world, BlockPos pos);
-
-	public abstract boolean isValidConnection(BlockEntity facingTile, Direction facing);
 
 }

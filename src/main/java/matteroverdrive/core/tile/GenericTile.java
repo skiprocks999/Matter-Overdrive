@@ -233,9 +233,7 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 		return InteractionResult.PASS;
 	}
 
-	// Called by an inventory capability if it changes
-	// Server-side only
-	// I don't like these methods, but I can't think of a cleaner solution
+	// I don't like the hard-coded capability types, however I can't see a cleaner way of doing it
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
 
 	}
@@ -265,6 +263,10 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 	}
 	
 	public void onEntityContact(BlockState state, Entity entity) {
+		
+	}
+	
+	public void onTilePlaced(BlockState state, BlockState oldState, boolean isMoving) {
 		
 	}
 

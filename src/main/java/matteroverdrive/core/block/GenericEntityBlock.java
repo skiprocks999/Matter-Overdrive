@@ -192,5 +192,15 @@ public abstract class GenericEntityBlock extends BaseEntityBlock {
 			tile.onEntityContact(state, entity);
 		}
 	}
+	
+	@Override
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, level, pos, oldState, isMoving);
+		BlockEntity block = level.getBlockEntity(pos);
+		if(block != null && block instanceof GenericTile tile) {
+			tile.onTilePlaced(state, oldState, isMoving);
+		}
+
+	}
 
 }

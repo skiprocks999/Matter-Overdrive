@@ -144,6 +144,25 @@ public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> ex
 		}
 		return set;
 	}
+	
+	@Override
+	public void onNeighborChange(BlockState state, BlockPos neighbor) {
+		if(level.isClientSide) {
+			return;
+		}
+		BlockEntity tile = level.getBlockEntity(neighbor);
+		if (isCable(tile)) {
+			((AbstractCableTile<?>) tile).refreshNetwork();
+		}
+	}
+	
+	@Override
+	public void onTilePlaced(BlockState state, BlockState oldState, boolean isMoving) {
+		if(level.isClientSide) {
+			return;
+		}
+		refreshNetwork();
+	}
 
 	public abstract boolean isCable(BlockEntity entity);
 
