@@ -40,8 +40,6 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 	public boolean hasMenu = false;
 	private MenuProvider menu;
 
-	private boolean shouldSaveData = false;
-
 	/**
 	 * Property Manager for the BlockEntity. See: <a href=
 	 * "https://github.com/BrassGoggledCoders/Transport/blob/develop/1.16.x/src/main/java/xyz/brassgoggledcoders/transport/container/locomotive/SteamLocomotiveContainer.java">...</a>
@@ -61,35 +59,6 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 
 	public MenuProvider getMenuProvider() {
 		return menu;
-	}
-
-	public boolean shouldSaveData() {
-		return shouldSaveData;
-	}
-
-	/**
-	 * This is a less efficient solution than just using the bitwise boolean
-	 * operator |
-	 * 
-	 * However, being forced to use a specific boolean operator will ultimately lead
-	 * to someone forgetting and causing a bug that takes forever to track down.
-	 * 
-	 * Maybe we can revisit the concept when we are looking at making performance
-	 * improvements
-	 * 
-	 * @param bool
-	 */
-	public void setShouldSaveData(boolean... changes) {
-		for (boolean bool : changes) {
-			if (bool) {
-				shouldSaveData = true;
-				break;
-			}
-		}
-	}
-
-	protected void resetShouldSaveData() {
-		shouldSaveData = false;
 	}
 
 	@Override
@@ -232,6 +201,8 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 		return InteractionResult.PASS;
 	}
 
+	/* Interrupt Methods */
+	
 	// I don't like the hard-coded capability types, however I can't see a cleaner way of doing it
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
 
