@@ -165,7 +165,6 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 			this.propertyManager.sendBlockEntityChanges(this.getBlockPos());
 		}
 		CompoundTag tag = super.getUpdateTag();
-		// getFirstContactData(tag);
 		saveAdditional(tag);
 		return tag;
 	}
@@ -247,15 +246,16 @@ public abstract class GenericTile extends BlockEntity implements Nameable, IProp
 	}
 
 	public void onBlockStateChange(BlockState oldState, BlockState newState, boolean moving) {
-		if (!level.isClientSide()) {
-			if (newState.hasProperty(GenericEntityBlock.FACING)
-					&& oldState.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING)) {
-				refreshCapabilities();
-			}
-			if (newState.isAir()) {
-				onBlockBroken(level, getBlockPos());
-			} 
+		if (level.isClientSide()) {
+			return;
 		}
+		if (newState.hasProperty(GenericEntityBlock.FACING)
+				&& oldState.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING)) {
+			refreshCapabilities();
+		}
+		if (newState.isAir()) {
+			onBlockBroken(level, getBlockPos());
+		} 
 	}
 
 	public void onNeighborChange(BlockState state, BlockPos neighbor) {
