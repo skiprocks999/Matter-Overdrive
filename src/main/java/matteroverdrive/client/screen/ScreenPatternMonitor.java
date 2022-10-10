@@ -10,7 +10,6 @@ import matteroverdrive.core.screen.component.ScreenComponentVerticalSlider;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorOrders;
 import matteroverdrive.core.screen.component.wrappers.WrapperPatternMonitorScreen;
@@ -56,7 +55,7 @@ public class ScreenPatternMonitor extends GenericOverdriveScreen<InventoryPatter
 	protected void init() {
 		super.init();
 
-		close = new ButtonGeneric(this, 207, 6, ButtonType.CLOSE_SCREEN, button -> onClose());
+		close = getCloseButton(207, 6);
 		menu = new ButtonMenuBar(this, 212, 33, 143, EXTENDED, button -> {
 			toggleBarOpen();
 			home.visible = !home.visible;

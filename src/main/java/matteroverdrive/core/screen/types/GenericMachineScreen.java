@@ -8,9 +8,7 @@ import matteroverdrive.core.packet.type.serverbound.misc.PacketUpdateCapabilityS
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
-import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
-import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.tile.types.GenericMachineTile;
 import net.minecraft.core.BlockPos;
@@ -23,10 +21,6 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 
 	public GenericMachineScreen(T menu, Inventory playerinventory, Component title, int guiWidth, int guiHeight) {
 		super(menu, playerinventory, title, guiWidth, guiHeight);
-	}
-
-	public ButtonGeneric getCloseButton(int x, int y) {
-		return new ButtonGeneric(this, x, y, ButtonType.CLOSE_SCREEN, button -> onClose());
 	}
 
 	public ButtonRedstoneMode redstoneButton(int x, int y) {

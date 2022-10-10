@@ -41,7 +41,6 @@ public class RendererMatterReplicator extends AbstractTileRenderer<TileMatterRep
 			matrix.pushPose();
 
 			matrix.translate(0.5, 0.3, 0.5);
-
 			VariableAlphaItemRenderer renderer = new VariableAlphaItemRenderer(getItemRenderer());
 
 			random.setSeed((long) (Item.getId(stack.getItem()) + stack.getDamageValue()));

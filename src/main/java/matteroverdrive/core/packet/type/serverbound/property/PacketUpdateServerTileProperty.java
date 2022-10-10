@@ -51,6 +51,7 @@ public class PacketUpdateServerTileProperty extends AbstractOverdrivePacket<Pack
 				BlockEntity entity = playerEntity.level.getBlockEntity(blockPos);
 				if (entity instanceof IPropertyManaged managed) {
 					managed.getPropertyManager().update(propertyType, property, value);
+					entity.setChanged();
 				}
 			}
 		});

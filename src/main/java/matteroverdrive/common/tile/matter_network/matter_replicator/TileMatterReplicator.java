@@ -130,13 +130,15 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 		orderManager.removeCompletedOrders();
 		if (!canRun()) {
-			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0),
+					setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 
 		CapabilityEnergyStorage energy = getEnergyStorageCap();
 		if (energy.getEnergyStored() < getCurrentPowerUsage()) {
-			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
+			setShouldSaveData(setRunning(false), setPowered(false), setProgress(0),
+					setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
 			return;
 		}
 		setPowered(true);
@@ -153,15 +155,17 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 				LazyOptional<ICapabilityItemPatternStorage> lazy = drive
 						.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
 				if (lazy.isPresent()) {
-					orderManager.addOrder(new QueuedReplication(
-							((ICapabilityItemPatternStorage) (lazy.cast().resolve().get())).getStoredPatterns()[0], 1));
+					orderManager.addOrder(
+							new QueuedReplication(((ICapabilityItemPatternStorage) (lazy.cast().resolve().get()))
+									.getStoredPatterns()[getFuseIndex(drive)], 1));
 				}
 			}
 			usingFused = true;
 		}
 
 		if (orderManager.isEmpty()) {
-			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY),
+					updateTickable(false));
 			return;
 		}
 
@@ -169,7 +173,8 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		double value = MatterRegister.INSTANCE.getServerMatterValue(stack);
 		if (value <= 0.0 || orderManager.getOrder(0).getPercentage() <= 0) {
 			orderManager.cancelOrder(0);
-			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY), updateTickable(false));
+			setShouldSaveData(setRunning(false), setProgress(0), setCurrentOrder(QueuedReplication.EMPTY),
+					updateTickable(false));
 			return;
 		}
 		setRecipeValue(value);
@@ -254,7 +259,7 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 		soundHandler.tick(getAdjustedTicks(), clientSoundPlaying);
 		QueuedReplication currentOrder = getCurrentOrder();
 		if (isRunning() && !currentOrder.isEmpty()) {
-			if(MatterOverdriveConfig.MATTER_REPLICATOR_ITEM_PARTICLES.get()) {
+			if (MatterOverdriveConfig.MATTER_REPLICATOR_ITEM_PARTICLES.get()) {
 				Level world = getLevel();
 				BlockPos blockPos = getBlockPos();
 				ItemEntity entity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.25,
@@ -276,19 +281,20 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 					Vector3f offset = UtilsMath.randomCirclePoint((float) entityRadius / 1.5F, MatterOverdrive.RANDOM);
 					Vector3f pos = new Vector3f(origin.x() + offset.x(), origin.y(), origin.z() + offset.z());
 
-					world.addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.01F).setAge(2), pos.x(),
-							pos.y(), pos.z(), 0, speed, 0);
+					world.addParticle(new ParticleOptionReplicator().setGravity(gravity).setScale(0.01F).setAge(2),
+							pos.x(), pos.y(), pos.z(), 0, speed, 0);
 				}
 			}
-			if(MatterOverdriveConfig.MATTER_REPLICATOR_VENT_PARTICLES.get()) {
-				//left of block
+			if (MatterOverdriveConfig.MATTER_REPLICATOR_VENT_PARTICLES.get()) {
+				// left of block
 				if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
 					Vector3f pos = UtilsMath.moveToEdgeOfFaceAndCenter(getFacing().getClockWise(), getBlockPos());
 					UtilsParticle.spawnVentParticlesAtFace(pos, 0.03F, getFacing().getClockWise(), 1);
 				}
-				//right of block
+				// right of block
 				if (MatterOverdrive.RANDOM.nextFloat() < 0.2F) {
-					Vector3f pos = UtilsMath.moveToEdgeOfFaceAndCenter(getFacing().getCounterClockWise(), getBlockPos());
+					Vector3f pos = UtilsMath.moveToEdgeOfFaceAndCenter(getFacing().getCounterClockWise(),
+							getBlockPos());
 					UtilsParticle.spawnVentParticlesAtFace(pos, 0.03F, getFacing().getCounterClockWise(), 1);
 				}
 			}
@@ -403,6 +409,10 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 	public boolean setCurrentOrder(QueuedReplication replication) {
 		currentOrderProp.set(replication.writeToNbt());
 		return currentOrderProp.isDirtyNoUpdate();
+	}
+
+	public int getFuseIndex(ItemStack drive) {
+		return drive.getOrCreateTag().getInt(UtilsNbt.INDEX);
 	}
 
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {

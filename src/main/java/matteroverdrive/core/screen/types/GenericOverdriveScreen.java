@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.core.inventory.GenericInventory;
+import matteroverdrive.core.screen.component.button.ButtonGeneric;
+import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.utils.UtilsRendering;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,7 +23,7 @@ public abstract class GenericOverdriveScreen<T extends GenericInventory> extends
 	private static final float TITLE_OFFSET_RATIO = 144.0F / 224.0F;
 
 	public GenericOverdriveScreen(T menu, Inventory playerinventory, Component title, GuiTextures texture, int guiWidth, int guiHeight) {
-		super(menu, playerinventory, title, GuiTextures.OVERDRIVE_MENU, guiWidth, guiHeight);
+		super(menu, playerinventory, title, texture, guiWidth, guiHeight);
 		if(guiWidth < MIN_WIDTH) {
 			throw new UnsupportedOperationException("Gui width must be a minumum of " + MIN_WIDTH);
 		}
@@ -158,6 +160,10 @@ public abstract class GenericOverdriveScreen<T extends GenericInventory> extends
 			
 		}
 		
+	}
+	
+	public ButtonGeneric getCloseButton(int x, int y) {
+		return new ButtonGeneric(this, x, y, ButtonType.CLOSE_SCREEN, button -> onClose());
 	}
 	
 }

@@ -9,7 +9,6 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ICapabilityItemPatternStorage;
 import matteroverdrive.core.capability.types.item_pattern.ItemPatternWrapper;
-import matteroverdrive.core.matter.MatterRegister;
 import matteroverdrive.core.utils.UtilsNbt;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.ChatFormatting;
@@ -23,14 +22,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+
+
+
 public class ItemPatternDrive extends OverdriveItem {
 
-	// any item past 64 km will only get 1 scan
-	// idea is high utility for low value items and poor utility for high-value
-	// diamonds to dirt but not the other way around in other words
-	public static final double MATTER_PER_FUSE = 1000000.0D;
-
-	private static final String FUSED_KEY = "fused";
+	public static final String FUSED_KEY = "fused";
 
 	public ItemPatternDrive() {
 		super(new Item.Properties().stacksTo(1).tab(References.MAIN), true);
@@ -47,7 +44,7 @@ public class ItemPatternDrive extends OverdriveItem {
 			tooltips.add(UtilsText.tooltip("fused").withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW));
 			stack.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS).ifPresent(cap -> {
 				if (Screen.hasControlDown()) {
-					ItemPatternWrapper wrapper = cap.getStoredPatterns()[0];
+					ItemPatternWrapper wrapper = cap.getStoredPatterns()[stack.getOrCreateTag().getInt(UtilsNbt.INDEX)];
 					MutableComponent name = Component.translatable(wrapper.getItem().getDescriptionId());
 					ChatFormatting color = ChatFormatting.RED;
 					int percentage = wrapper.getPercentage();
@@ -58,29 +55,8 @@ public class ItemPatternDrive extends OverdriveItem {
 					} else {
 						color = ChatFormatting.RED;
 					}
-					tooltips.add(
-							UtilsText.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage))
-									.withStyle(color));
-					double value = MatterRegister.INSTANCE.getClientMatterValue(new ItemStack(wrapper.getItem()));
-					// datapack fuckery prevention
-					if (value > 0.0) {
-						double decayFactor = getDecayFactor(value);
-						double usage = value * decayFactor;
-						ChatFormatting warning;
-						if (decayFactor <= 128) {
-							warning = ChatFormatting.GREEN;
-						} else if (decayFactor <= 4096) {
-							warning = ChatFormatting.YELLOW;
-						} else {
-							warning = ChatFormatting.RED;
-						}
-						int effectiveUses = (int) Math.floor(MATTER_PER_FUSE / usage);
-						tooltips.add(UtilsText.tooltip("effectiveuses",
-								Component.literal(effectiveUses + "").withStyle(warning)));
-					} else {
-						tooltips.add(UtilsText.tooltip("effectiveuses",
-								Component.literal("0").withStyle(ChatFormatting.RED)));
-					}
+					tooltips.add(UtilsText.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage))
+							.withStyle(color));
 				}
 			});
 		} else {
@@ -98,8 +74,9 @@ public class ItemPatternDrive extends OverdriveItem {
 							} else {
 								color = ChatFormatting.RED;
 							}
-							tooltips.add(UtilsText
-									.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage)).withStyle(color));
+							tooltips.add(
+									UtilsText.tooltip("storedpattern", name, UtilsText.formatPercentage(percentage))
+											.withStyle(color));
 						} else {
 							tooltips.add(UtilsText.tooltip("empty").withStyle(ChatFormatting.GREEN));
 						}
@@ -107,19 +84,6 @@ public class ItemPatternDrive extends OverdriveItem {
 				}
 			});
 		}
-	}
-
-	@Override
-	public int getBarWidth(ItemStack stack) {
-		return (int) ((stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY) / MATTER_PER_FUSE) * 13.0D);
-	}
-
-	@Override
-	public boolean isBarVisible(ItemStack stack) {
-		if (stack.hasTag()) {
-			return isFused(stack);
-		}
-		return super.isBarVisible(stack);
 	}
 
 	@Override
@@ -147,10 +111,6 @@ public class ItemPatternDrive extends OverdriveItem {
 			});
 		}
 		super.readShareTag(stack, nbt);
-	}
-
-	public double getDurability(ItemStack stack) {
-		return stack.getOrCreateTag().getDouble(UtilsNbt.DURABILITY);
 	}
 
 	public boolean isFused(ItemStack stack) {
@@ -184,28 +144,33 @@ public class ItemPatternDrive extends OverdriveItem {
 			return 1000000.0D;
 		}
 	}
-	
+
 	@Override
 	public boolean isColored() {
 		return true;
 	}
-	
+
 	@Override
 	public int getColor(ItemStack item, int layer) {
-		if(layer > 0) {
+		if (layer > 0) {
 			LazyOptional<ICapabilityItemPatternStorage> lazyOp = item
 					.getCapability(MatterOverdriveCapabilities.STORED_PATTERNS);
 			if (lazyOp.isPresent()) {
+				int layerIndex = layer - 1;
+				boolean fused = item.getOrCreateTag().getBoolean(FUSED_KEY);
+				int index = item.getOrCreateTag().getInt(UtilsNbt.INDEX);
 				ICapabilityItemPatternStorage storage = lazyOp.resolve().get();
-				ItemPatternWrapper pattern = storage.getStoredPatterns()[layer - 1];
-				if (pattern.isNotAir()) {
-					int percentage = pattern.getPercentage();
-					if (percentage >= 100) {
-						return Colors.GREEN.getColor();
-					} else if (percentage < 100 && percentage > 50) {
-						return Colors.YELLOW.getColor();
+				ItemPatternWrapper pattern = storage.getStoredPatterns()[layerIndex];
+				if(fused) {
+					if(index == layerIndex) {
+						return handleCapColor(pattern);
 					} else {
-						return Colors.RED.getColor();
+						return Colors.PATTERN_DRIVE_NONE.getColor();
+					}
+				} else {
+					
+					if (pattern.isNotAir()) {
+						return handleCapColor(pattern);
 					}
 				}
 			}
@@ -214,6 +179,17 @@ public class ItemPatternDrive extends OverdriveItem {
 		return Colors.WHITE.getColor();
 	}
 	
+	private int handleCapColor(ItemPatternWrapper wrapper) {
+		int percentage = wrapper.getPercentage();
+		if (percentage >= 100) {
+			return Colors.GREEN.getColor();
+		} else if (percentage < 100 && percentage > 50) {
+			return Colors.YELLOW.getColor();
+		} else {
+			return Colors.RED.getColor();
+		}
+	}
+
 	@Override
 	public int getNumOfLayers() {
 		return 4;

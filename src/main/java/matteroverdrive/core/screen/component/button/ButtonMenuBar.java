@@ -45,7 +45,7 @@ public class ButtonMenuBar extends AbstractOverdriveButton {
 
 	@Override
 	public void renderBackground(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionShader);
 		UtilsRendering.setShaderColor(Colors.WHITE.getColor());
 		UtilsRendering.bindTexture(ButtonTextures.MENU_BAR.getTexture());
 		

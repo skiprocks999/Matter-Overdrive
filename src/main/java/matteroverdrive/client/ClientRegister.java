@@ -24,6 +24,7 @@ import matteroverdrive.client.screen.ScreenMicrowave;
 import matteroverdrive.client.screen.ScreenPatternMonitor;
 import matteroverdrive.client.screen.ScreenPatternStorage;
 import matteroverdrive.client.screen.ScreenChunkloader;
+import matteroverdrive.client.screen.ScreenDiscManipulator;
 import matteroverdrive.client.screen.ScreenSolarPanel;
 import matteroverdrive.client.screen.ScreenSpacetimeAccelerator;
 import matteroverdrive.client.screen.ScreenTransporter;
@@ -82,6 +83,7 @@ public class ClientRegister {
 		MenuScreens.register(MenuRegistry.MENU_PATTERN_MONITOR.get(), ScreenPatternMonitor::new);
 		MenuScreens.register(MenuRegistry.MENU_MATTER_ANALYZER.get(), ScreenMatterAnalyzer::new);
 		MenuScreens.register(MenuRegistry.MENU_ANDROID_STATION.get(), ScreenAndroidStation::new);
+		MenuScreens.register(MenuRegistry.MENU_DISC_MANIPULATOR.get(), ScreenDiscManipulator::new);
 
 		ItemProperties.register(ItemRegistry.ITEM_BATTERIES.get(BatteryType.REGULAR).get(), CHARGE,
 				(stack, world, entity, call) -> {

@@ -124,5 +124,19 @@
 		"sounds": [
 			"matteroverdrive:item/matter_scanner_scanbeep"
 		]
+	},
+	"electric_arc_0": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.electric_arc",
+		"sounds": [
+			"matteroverdrive:electric_arc_0"
+		]
+	},
+	"electric_arc_1": {
+		"category": "master",
+		"subtitle": "subtitles.matteroverdrive.electric_arc",
+		"sounds": [
+			"matteroverdrive:electric_arc_1"
+		]
 	}
 }

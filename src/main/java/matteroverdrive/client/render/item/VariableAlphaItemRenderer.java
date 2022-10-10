@@ -37,7 +37,6 @@ public class VariableAlphaItemRenderer extends ItemRenderer {
 			}
 
 			float[] colorArr = UtilsRendering.getColorArray(color);
-
 			consumer.putBulkData(pose, bakedquad, colorArr[0], colorArr[1], colorArr[2], alpha, light, overlay, true);
 		}
 

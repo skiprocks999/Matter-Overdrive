@@ -24,6 +24,7 @@ public class UtilsNbt {
 	public static final String TIMER = "timer";
 	public static final String USE_TIME = "use_time";
 	public static final String DURABILITY = "durability";
+	public static final String INDEX = "index";
 
 	/* COMPOUND TAG */
 

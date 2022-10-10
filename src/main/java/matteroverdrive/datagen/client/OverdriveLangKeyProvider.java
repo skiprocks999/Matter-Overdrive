@@ -120,6 +120,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlock(BlockRegistry.BLOCK_MATTER_NETWORK_CABLES.get(TypeMatterNetworkCable.REGULAR), "Network Cable");
 			
 			addBlock(BlockRegistry.BLOCK_ANDROID_STATION, "Android Station");
+			addBlock(BlockRegistry.BLOCK_DISC_MANIPULATOR, "Disc Manipulator");
 
 			addTooltip("energystored", "%1$s / %2$s %3$sFE");
 			addTooltip("creativeenergystored", "INFINITE");
@@ -170,6 +171,11 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addTooltip("effectiveuses", "Uses: %s");
 			addTooltip("hasshifttip", "Hold %s for info...");
 			addTooltip("shiftkey", "Shift");
+			addTooltip("fusedrive", "Fuse Drive");
+			addTooltip("erasepattern", "Erase");
+			addTooltip("erasedrive", "Erase Drive");
+			addTooltip("fusedpattern", "Fused");
+			addTooltip("fusepattern", "Fuse");
 			
 			addItemDescTooltip(ItemRegistry.ITEM_RAW_MATTER_DUST, "A failure, but recyclable");
 			addItemDescTooltip(ItemRegistry.ITEM_MATTER_DUST, "Ready to decompose");
@@ -207,6 +213,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_PATTERN_STORAGE, "Holds 6 Pattern Drives");
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_PATTERN_MONITOR, "Queues Replication tasks");
 			addBlockItemDescTooltip(BlockRegistry.BLOCK_MATTER_REPLICATOR, "Makes ordered items from matter");
+			addBlockItemDescTooltip(BlockRegistry.BLOCK_DISC_MANIPULATOR, "Wipe patterns and more");
 			
 
 			addGuiLabel("redstonelow", "Low");
@@ -249,6 +256,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addContainer(TypeMachine.PATTERN_STORAGE.id(), "Pattern Storage");
 			addContainer(TypeMachine.MATTER_ANALYZER.id(), "Matter Analyzer");
 			addContainer(TypeMachine.MATTER_REPLICATOR.id(), "Matter Replicator");
+			addContainer(TypeMachine.DISC_MANIPULATOR.id(), "Disc Manipulator");
+			
 
 			addCommand("startmattercalc", "Starting Matter calculations...");
 			addCommand("endmattercalc", "Finshed Matter calculations. Saved under \"Matter Overdrive/generated.json\"");

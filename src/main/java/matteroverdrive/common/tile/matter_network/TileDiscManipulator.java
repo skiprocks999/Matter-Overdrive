@@ -18,8 +18,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileDiscManipulator extends GenericTile {
 
-	public static final int SIZE = 2;
-	
+	public static final int SIZE = 1;
+
 	public final Property<CompoundTag> capInventoryProp;
 
 	public TileDiscManipulator(BlockPos pos, BlockState state) {
@@ -27,22 +27,21 @@ public class TileDiscManipulator extends GenericTile {
 
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
-		
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-				new CapabilityInventory(SIZE, false, false).setOwner(this).setInputs(1).setOutputs(1)
-				.setValidator((getValidator())).setPropertyManager(capInventoryProp));
+
+		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new CapabilityInventory(SIZE, false, false)
+				.setOwner(this).setInputs(1).setValidator((getValidator())).setPropertyManager(capInventoryProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryDiscManipulator(id, play.getInventory(),
 						exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()),
 				getContainerName(TypeMachine.DISC_MANIPULATOR.id())));
 
 	}
-	
+
 	@Override
 	public void onInventoryChange(int slot, CapabilityInventory inv) {
 		setChanged();
 	}
-	
+
 	public CapabilityInventory getInventoryCap() {
 		return exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 	}

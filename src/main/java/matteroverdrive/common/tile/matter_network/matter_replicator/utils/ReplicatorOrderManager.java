@@ -35,6 +35,7 @@ public class ReplicatorOrderManager {
 	public void addOrder(QueuedReplication order) {
 		orders.add(order);
 		setChanged();
+		owner.updateTickable(true);
 	}
 
 	public void decRemaining(int index) {
