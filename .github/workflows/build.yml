@@ -25,4 +25,4 @@ jobs:
         with:
           name: matter-overdrive
           path: |
-            build/libs/*.jar
+            output/*.jar
