@@ -1,6 +1,7 @@
 package matteroverdrive.core.screen.component.button;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -25,7 +26,7 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 	protected int textColor = Colors.HOLO.getColor();
 	protected Consumer<SoundManager> downSound = null;
 
-	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> message,
 			OnPress onPress, OnTooltip onTooltip) {
 		super(gui, x, y, width, height, message, onPress, onTooltip);
 		defaultText = ButtonTextures.OVERDRIVE_NONE_REG;
@@ -33,7 +34,7 @@ public class ButtonOverdrive extends AbstractOverdriveButton {
 		pressedText = ButtonTextures.OVERDRIVE_PRESS_REG;
 	}
 
-	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+	public ButtonOverdrive(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> message,
 			OnPress onPress) {
 		super(gui, x, y, width, height, message, onPress);
 		defaultText = ButtonTextures.OVERDRIVE_NONE_REG;

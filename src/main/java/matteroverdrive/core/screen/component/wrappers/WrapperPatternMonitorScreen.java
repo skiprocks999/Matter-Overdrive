@@ -20,6 +20,7 @@ import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxSearchbar;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
+import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
@@ -101,7 +102,7 @@ public class WrapperPatternMonitorScreen {
 			pattern.isActivated = true;
 			pattern.setPattern(null);
 		}, renderer, -1, -1, this).setNoHover();
-		incVal = new ButtonOverdrive(screen, x + 98, y + 123, 15, 15, PLUS, (button) -> {
+		incVal = new ButtonOverdrive(screen, x + 98, y + 123, 15, 15, () -> PLUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
 			if (order.length() > 0) {
@@ -111,7 +112,7 @@ public class WrapperPatternMonitorScreen {
 			orderVal = Mth.clamp(orderVal += inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setRight().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
-		decVal = new ButtonOverdrive(screen, x + 29, y + 123, 15, 15, MINUS, (button) -> {
+		decVal = new ButtonOverdrive(screen, x + 29, y + 123, 15, 15, () -> MINUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
 			if (order.length() > 0) {
@@ -121,7 +122,7 @@ public class WrapperPatternMonitorScreen {
 			orderVal = Mth.clamp(orderVal -= inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setLeft().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
-		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, Component.empty(), (button) -> {
+		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, OverdriveScreenComponent.NO_TEXT, (button) -> {
 			Minecraft minecraft = Minecraft.getInstance();
 			ItemPatternWrapper wrapper = selectedItem.getPattern();
 			if (wrapper == null || wrapper.isAir()) {

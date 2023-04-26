@@ -16,6 +16,7 @@ import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
 import matteroverdrive.common.item.tools.ItemTransporterFlashdrive;
 import matteroverdrive.common.item.tools.electric.ItemBattery;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
+import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.tools.electric.ItemEnergyWeapon;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
@@ -92,6 +93,9 @@ public class ItemRegistry {
 	public static final RegistryObject<Item> ITEM_ANDROID_PILL_YELLOW = ITEMS.register("android_pill_yellow",
 			() -> new ItemAndroidYellowPill(new Item.Properties().food(ItemAndroidPill.PILLS).tab(References.MAIN),
 					Colors.PILL_YELLOW, true));
+
+	public static final RegistryObject<Item> ITEM_COMMUNICATOR = ITEMS.register("communicator",
+			() -> new ItemCommunicator(new Item.Properties().tab(References.MAIN).stacksTo(1)));
 
 	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {

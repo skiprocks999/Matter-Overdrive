@@ -31,7 +31,7 @@ public class WrapperFusePatternDrive {
 	public void init(ItemRenderer renderer) {
 		for(int i = 0; i < 3; i++) {
 			final int index = i;
-			fuseButtons[i] = new ButtonOverdrive(screen, x + 102, y + 1 + 21 * i, 50, 18, UtilsText.tooltip("fusepattern"), button -> {
+			fuseButtons[i] = new ButtonOverdrive(screen, x + 102, y + 1 + 21 * i, 50, 18, () -> UtilsText.tooltip("fusepattern"), button -> {
 				TileDiscManipulator manipulator = screen.getMenu().getTile();
 				if(manipulator == null) {
 					return;

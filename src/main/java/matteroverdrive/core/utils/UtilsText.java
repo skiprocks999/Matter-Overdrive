@@ -24,6 +24,7 @@ public class UtilsText {
 	public static final String TOOLTIP_BASE = "tooltip";
 	public static final String DIMENSION_BASE = "dimension";
 	public static final String JEI_BASE = "jei";
+	public static final String CHAT_BASE = "chat";
 
 	public static void init() {
 		MATTER_FORMAT = new DecimalFormat("0." + getAdditionalDigits(MatterOverdriveConfig.MATTER_DECIMALS.get()));
@@ -138,6 +139,10 @@ public class UtilsText {
 	
 	public static MutableComponent jeiTranslated(String key, Object... additional) {
 		return translated(JEI_BASE, key, additional);
+	}
+	
+	public static MutableComponent chatMessage(String key, Object...additional) {
+		return translated(CHAT_BASE, key, additional);
 	}
 
 	public static MutableComponent translated(String base, String key, Object... additional) {

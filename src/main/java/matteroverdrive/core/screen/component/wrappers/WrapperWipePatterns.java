@@ -33,7 +33,7 @@ public class WrapperWipePatterns {
 	public void init(ItemRenderer renderer) {
 		for(int i = 0; i < 3; i++) {
 			final int index = i;
-			eraseButtons[i] = new ButtonOverdrive(screen, x + 102, y + 1 + 21 * i, 50, 18, UtilsText.tooltip("erasepattern"), button -> {
+			eraseButtons[i] = new ButtonOverdrive(screen, x + 102, y + 1 + 21 * i, 50, 18, () -> UtilsText.tooltip("erasepattern"), button -> {
 				TileDiscManipulator manipulator = screen.getMenu().getTile();
 				if(manipulator == null) {
 					return;

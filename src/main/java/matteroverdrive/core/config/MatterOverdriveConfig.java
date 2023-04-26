@@ -9,10 +9,12 @@ public final class MatterOverdriveConfig {
 	private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
 	public static final ForgeConfigSpec COMMON_CONFIG;
+	//machine options
 	public static final ForgeConfigSpec.ConfigValue<Boolean> CRATE_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MACHINES_DROP_ITEMS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> ACCURATE_TRANSPORTER;
 	public static final ForgeConfigSpec.ConfigValue<Integer> CHUNKLOADER_RANGE;
+	public static final ForgeConfigSpec.ConfigValue<Integer> TRANSPORTER_COOLDOWN;
 	//matter generator options
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_DEFAULT_GENERATORS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> USE_SMELTING_GENERATOR;
@@ -71,6 +73,14 @@ public final class MatterOverdriveConfig {
 				" ",
 				"default value = false"
 				).defineInRange("chunkloader_range", 5, 0, 16);
+		TRANSPORTER_COOLDOWN = COMMON_BUILDER.comment(
+				" ",
+				" ",
+				"Determines how long in ticks between transports for a Transporter. Default is 80 ticks or",
+				"4 seconds. Set to 0 for no cooldown.",
+				" ",
+				"default value = false"
+				).defineInRange("chunkloader_range", 80, 0, 1000);
 		USE_DEFAULT_GENERATORS = COMMON_BUILDER.comment(
 				" ",
 				" ",

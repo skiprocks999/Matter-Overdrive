@@ -132,17 +132,17 @@ public class WrapperTransporterLocationEditer {
 
 		for (int i = 0; i < incButtons.length; i++) {
 			final int ref = i;
-			incButtons[i] = new ButtonOverdrive(gui, 79 + xOffset, 50 + 20 * i + yOffset, 15, 15, PLUS, button -> {
+			incButtons[i] = new ButtonOverdrive(gui, 79 + xOffset, 50 + 20 * i + yOffset, 15, 15, () -> PLUS, button -> {
 				handleIncDec(ref, 1);
 			}).setLeft().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		}
 		for (int i = 0; i < decButtons.length; i++) {
 			final int ref = i;
-			decButtons[i] = new ButtonOverdrive(gui, 164 + xOffset, 50 + 20 * i + yOffset, 15, 15, MINUS, button -> {
+			decButtons[i] = new ButtonOverdrive(gui, 164 + xOffset, 50 + 20 * i + yOffset, 15, 15, () -> MINUS, button -> {
 				handleIncDec(ref, -1);
 			}).setRight().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		}
-		resetLocation = new ButtonOverdrive(gui, 133 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("resetpos"),
+		resetLocation = new ButtonOverdrive(gui, 133 + xOffset, 125 + yOffset, 60, 20, () -> UtilsText.gui("resetpos"),
 				button -> {
 					TileTransporter transporter = transporterSupplier.get();
 					if(transporter != null) {
@@ -155,11 +155,11 @@ public class WrapperTransporterLocationEditer {
 					}
 				}).setSound(getDefaultSound());
 
-		importFlashdriveData = new ButtonOverdrive(gui, 57 + xOffset, 125 + yOffset, 60, 20, UtilsText.gui("importpos"),
+		importFlashdriveData = new ButtonOverdrive(gui, 57 + xOffset, 125 + yOffset, 60, 20, () -> UtilsText.gui("importpos"),
 				button -> {
 					TileTransporter transporter = transporterSupplier.get();
 					if(transporter != null) {
-						ItemStack flashdrive = transporter.getInventoryCap().getStackInSlot(0);
+						ItemStack flashdrive = transporter.getInventoryCap().getStackInSlot(1);
 						if (!flashdrive.isEmpty() && flashdrive.hasTag()
 								&& flashdrive.getTag().contains(UtilsNbt.BLOCK_POS)) {
 							CompoundTag tag = flashdrive.getTag();

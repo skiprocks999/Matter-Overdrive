@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class ButtonIO extends AbstractOverdriveButton {
@@ -40,7 +39,7 @@ public class ButtonIO extends AbstractOverdriveButton {
 
 	public ButtonIO(int x, int Y, Supplier<IOMode> startingMode, final BlockSide side, WrapperIOConfig owner,
 			Supplier<Boolean> canInput, Supplier<Boolean> canOutput) {
-		super(owner.gui, x, Y, WIDTH, HEIGHT, Component.empty(), button -> {
+		super(owner.gui, x, Y, WIDTH, HEIGHT, NO_TEXT, button -> {
 		}, (button, stack, mouseX, mouseY) -> {
 			ButtonIO io = (ButtonIO) button;
 			owner.displayTooltip(stack, UtilsText.tooltip("io", io.mode.name, io.side.name), mouseX, mouseY);

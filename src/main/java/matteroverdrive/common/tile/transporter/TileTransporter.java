@@ -12,6 +12,9 @@ import matteroverdrive.client.particle.replicator.ParticleOptionReplicator;
 import matteroverdrive.common.block.type.TypeMachine;
 import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.common.inventory.InventoryTransporter;
+import matteroverdrive.common.item.ItemUpgrade;
+import matteroverdrive.common.item.tools.ItemTransporterFlashdrive;
+import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.tile.transporter.utils.ActiveTransportDataWrapper;
 import matteroverdrive.common.tile.transporter.utils.EntityDataWrapper;
 import matteroverdrive.common.tile.transporter.utils.TransporterDimensionManager;
@@ -22,10 +25,12 @@ import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.capability.types.matter.CapabilityMatterStorage;
+import matteroverdrive.core.config.MatterOverdriveConfig;
 import matteroverdrive.core.property.Property;
 import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.sound.SoundBarrierMethods;
 import matteroverdrive.core.tile.types.GenericMachineTile;
+import matteroverdrive.core.utils.UtilsCapability;
 import matteroverdrive.core.utils.UtilsMath;
 import matteroverdrive.core.utils.UtilsTile;
 import matteroverdrive.registry.SoundRegistry;
@@ -38,22 +43,23 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.util.TriPredicate;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class TileTransporter extends GenericMachineTile {
 
-	public static final int SLOT_COUNT = 8;
+	public static final int SLOT_COUNT = 10;
 
-	private static final int COOLDOWN = 80;
 	public static final int ENTITIES_PER_BATCH = 3;
 
 	public static final int BUILD_UP_TIME = 70;
 	private static final int USAGE_PER_TICK = 80;
 	private static final int MATTER_STORAGE = 512;
-	private static final int MATTER_USAGE = 25;
+	public static final int MATTER_USAGE = 25;
 	private static final int ENERGY_STORAGE = 1024000;
 	private static final int DEFAULT_SPEED = 1;
 	private static final int DEFAULT_RADIUS = 32;
@@ -62,8 +68,9 @@ public class TileTransporter extends GenericMachineTile {
 	private int currDestination = -1;
 	public TransporterLocationManager locationManager = new TransporterLocationManager(5);
 	public TransporterEntityDataManager entityDataManager = new TransporterEntityDataManager();
-
-	private static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
+	private boolean isReciever = false;
+	
+	public static final TransporterDimensionManager MANAGER = new TransporterDimensionManager();
 
 	public final Property<CompoundTag> capInventoryProp;
 	public final Property<CompoundTag> capEnergyStorageProp;
@@ -72,6 +79,7 @@ public class TileTransporter extends GenericMachineTile {
 	public final Property<Integer> destinationProp;
 	public final Property<CompoundTag> locationManagerProp;
 	public final Property<CompoundTag> entityDataProp;
+	public final Property<Boolean> recieverProp;
 
 	public TileTransporter(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRANSPORTER.get(), pos, state);
@@ -103,11 +111,12 @@ public class TileTransporter extends GenericMachineTile {
 				PropertyTypes.NBT.create(locationManager::serializeNbt, locationManager::deserializeNbt));
 		entityDataProp = this.getPropertyManager().addTrackedProperty(
 				PropertyTypes.NBT.create(entityDataManager::serializeNbt, entityDataManager::deserializeNbt));
+		recieverProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.BOOLEAN.create(() -> isReciever, recieve -> isReciever = recieve));
 
-		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(1).setEnergyInputSlots(1).setMatterInputSlots(1)
+		addInventoryCap(new CapabilityInventory(SLOT_COUNT, true, true).setInputs(2).setOutputs(1).setEnergyInputSlots(1).setMatterInputSlots(1)
 				.setUpgrades(5).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.SOUTH }, new Direction[] { Direction.DOWN })
-				.setValidator(machineValidator()).setValidUpgrades(InventoryTransporter.UPGRADES)
+				.setValidator(getValidator()).setValidUpgrades(InventoryTransporter.UPGRADES)
 				.setPropertyManager(capInventoryProp));
 		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, false).setOwner(this)
 				.setDefaultDirections(state, new Direction[] { Direction.WEST, Direction.EAST }, null)
@@ -129,17 +138,32 @@ public class TileTransporter extends GenericMachineTile {
 		UtilsTile.drainElectricSlot(this);
 		UtilsTile.drainMatterSlot(this);
 		
+		CapabilityInventory inv = getInventoryCap();
+		
+		ItemStack stack = inv.getStackInSlot(0);
+		
+		if(stack.getItem() instanceof ItemCommunicator communicator && inv.getStackInSlot(2).isEmpty()) {
+			communicator.writeDimension(stack, level.dimension());
+			communicator.bindCoordinates(stack, getBlockPos().above());
+			inv.setStackInSlot(2, stack.copy());
+			inv.setStackInSlot(0, ItemStack.EMPTY);
+		}
+		
 		if (!canRun()) {
 			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe(), updateTickable(false));
 			return;
 		}
 
-		if (cooldownProp.get() < COOLDOWN) {
+		if (cooldownProp.get() < MatterOverdriveConfig.TRANSPORTER_COOLDOWN.get()) {
 			cooldownProp.set(cooldownProp.get() + 1);
 			setShouldSaveData(setRunning(false), setProgress(0), entityDataManager.wipe());
 			return;
 		}
 
+		if(isReciever) {
+			return;
+		}
+		
 		List<Entity> currentEntities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos().above()));
 
 		if (currentEntities.size() <= 0 || destinationProp.get() < 0) {
@@ -185,10 +209,10 @@ public class TileTransporter extends GenericMachineTile {
 				ServerLevel dim = handleDimensionChange(entity);
 				entity.teleportToWithTicket(x, y, z);
 				entity.getCapability(MatterOverdriveCapabilities.ENTITY_DATA).ifPresent(h -> {
-					h.setTransporterTimer(70);
+					h.setTransporterTimer(BUILD_UP_TIME);
 				});
 				level.getCapability(MatterOverdriveCapabilities.OVERWORLD_DATA).ifPresent(h -> {
-					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), 70, dim.dimension()));
+					h.addActiveTransport(new ActiveTransportDataWrapper(entity.getUUID(), BUILD_UP_TIME, dim.dimension()));
 				});
 				ServerEventHandler.TASK_HANDLER.queueTask(() -> {
 					dim.playSound(null, curLoc.getDestination(), SoundRegistry.SOUND_TRANSPORTER_ARRIVE.get(),
@@ -225,6 +249,7 @@ public class TileTransporter extends GenericMachineTile {
 		additional.putInt("cooldown", cooldownProp.get());
 		additional.putInt("dest", destinationProp.get());
 		additional.put("locations", locationManager.serializeNbt());
+		additional.putBoolean("reciever", recieverProp.get());
 
 		tag.put("additional", additional);
 	}
@@ -237,6 +262,7 @@ public class TileTransporter extends GenericMachineTile {
 		cooldownProp.set(additional.getInt("cooldown"));
 		destinationProp.set(additional.getInt("dest"));
 		locationManagerProp.set(additional.getCompound("locations"));
+		recieverProp.set(additional.getBoolean("reciever"));
 	}
 
 	public Pair<Boolean, Integer> validDestination(TransporterLocationWrapper loc) {
@@ -287,6 +313,17 @@ public class TileTransporter extends GenericMachineTile {
 		if(!level.isClientSide) {
 			setShouldSaveData(updateTickable(true));
 		}
+	}
+	
+	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {
+		return (x, y, i) -> x == 0 && y.getItem() instanceof ItemCommunicator
+						|| x == 1 && y.getItem() instanceof ItemTransporterFlashdrive
+						|| x >= i.energyInputSlotsIndex() && x < i.matterInputSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+						|| x >= i.matterInputSlotsIndex() && x < i.energyOutputSlotsIndex() && UtilsCapability.hasMatterCap(y)
+						|| x >= i.energyOutputSlotsIndex() && x < i.matterOutputSlotsIndex() && UtilsCapability.hasEnergyCap(y)
+						|| x >= i.matterOutputSlotsIndex() && x < i.upgradeIndex() && UtilsCapability.hasMatterCap(y)
+						|| x >= i.upgradeIndex() && y.getItem() instanceof ItemUpgrade upgrade
+								&& i.isUpgradeValid(upgrade.type);
 	}
 
 }

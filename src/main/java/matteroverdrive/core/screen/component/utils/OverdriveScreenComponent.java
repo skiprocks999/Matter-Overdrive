@@ -1,5 +1,7 @@
 package matteroverdrive.core.screen.component.utils;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import matteroverdrive.References;
@@ -23,21 +25,22 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 	protected ITexture resource;
 	protected GenericScreen<?> gui;
 	protected int[] screenNumbers;
+	protected Supplier<Component> message;
+	
+	public static final Supplier<Component> NO_TEXT = () -> Component.empty();
 
 	protected OverdriveScreenComponent(ITexture resource, GenericScreen<?> gui, int x, int y, int width,
 			int height, int[] screenNumbers) {
+		this(resource, gui, x, y, width, height, screenNumbers, NO_TEXT);
+	}
+
+	protected OverdriveScreenComponent(ITexture resource, GenericScreen<?> gui, int x, int y, int width,
+			int height, int[] screenNumbers, Supplier<Component> component) {
 		super(x, y, width, height, Component.empty());
 		this.resource = resource;
 		this.gui = gui;
 		this.screenNumbers = screenNumbers;
-	}
-
-	protected OverdriveScreenComponent(ITexture resource, GenericScreen<?> gui, int x, int y, int width,
-			int height, int[] screenNumbers, Component component) {
-		super(x, y, width, height, component);
-		this.resource = resource;
-		this.gui = gui;
-		this.screenNumbers = screenNumbers;
+		message = component;
 	}
 
 	public void initScreenSize() {
@@ -137,6 +140,11 @@ public abstract class OverdriveScreenComponent extends AbstractWidget {
 
 	@Override
 	public void playDownSound(SoundManager pHandler) {
+	}
+	
+	@Override
+	public Component getMessage() {
+		return message.get();
 	}
 	
 	public static enum OverdriveTextures implements ITexture {

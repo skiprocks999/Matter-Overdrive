@@ -9,10 +9,10 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
-import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.component.button.ButtonIO;
 import matteroverdrive.core.screen.component.button.ButtonIOConfig.IOConfigButtonType;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.utils.UtilsText;
@@ -32,7 +32,7 @@ public class ScreenMatterDecomposer extends GenericMachineScreen<InventoryMatter
 	private ButtonMenuOption upgrades;
 	private ButtonMenuOption ioconfig;
 
-	private ButtonRedstoneMode redstone;
+	private ButtonOverdrive redstone;
 
 	private ButtonIOConfig items;
 	private ButtonIOConfig energy;

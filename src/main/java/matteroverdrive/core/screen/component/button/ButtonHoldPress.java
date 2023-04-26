@@ -1,5 +1,7 @@
 package matteroverdrive.core.screen.component.button;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -12,12 +14,12 @@ public class ButtonHoldPress extends ButtonOverdrive {
 
 	public boolean isActivated = false;
 
-	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> message,
 			OnPress onPress) {
 		super(gui, x, y, width, height, message, onPress);
 	}
 
-	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+	public ButtonHoldPress(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> message,
 			OnPress onPress, OnTooltip pOnTooltip) {
 		super(gui, x, y, width, height, message, onPress, pOnTooltip);
 	}

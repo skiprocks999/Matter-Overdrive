@@ -1,6 +1,7 @@
 package matteroverdrive.core.screen.component.utils;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -21,12 +22,12 @@ public abstract class AbstractOverdriveButton extends OverdriveScreenComponent {
 	protected final OnPress onPress;
 	protected final OnTooltip onTooltip;
 
-	public AbstractOverdriveButton(GenericScreen<?> gui, int x, int y, int width, int height, Component component,
+	public AbstractOverdriveButton(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> component,
 			OnPress onPress) {
 		this(gui, x, y, width, height, component, onPress, NO_TOOLTIP);
 	}
 
-	public AbstractOverdriveButton(GenericScreen<?> gui, int x, int y, int width, int height, Component message,
+	public AbstractOverdriveButton(GenericScreen<?> gui, int x, int y, int width, int height, Supplier<Component> message,
 			OnPress onPress, OnTooltip onTooltip) {
 		super(OverdriveTextures.NONE, gui, x, y, width, height, new int[] {}, message);
 		this.onPress = onPress;

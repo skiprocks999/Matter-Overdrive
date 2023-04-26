@@ -8,7 +8,6 @@ import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ButtonIOConfig extends ButtonHoldPress {
@@ -21,7 +20,7 @@ public class ButtonIOConfig extends ButtonHoldPress {
 	private static final int HEIGHT = 27;
 
 	public ButtonIOConfig(GenericScreen<?> gui, int x, int y, OnPress onPress, IOConfigButtonType type) {
-		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress);
+		super(gui, x, y, WIDTH, HEIGHT, NO_TEXT, onPress);
 		this.type = type;
 		iconDarkLoc = type.iconDark.getTexture();
 		iconLightLoc = type.iconLight.getTexture();

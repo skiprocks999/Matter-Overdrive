@@ -61,6 +61,8 @@ public class OverdriveItemModelsProvider extends ItemModelProvider {
 		layeredItem(ItemRegistry.ITEM_ANDROID_PILL_RED, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
 		layeredItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, Parent.GENERATED, itemLoc("pill/pill_bottom"), itemLoc("pill/pill_top"));
 		
+		layeredItem(ItemRegistry.ITEM_COMMUNICATOR, Parent.GENERATED, itemLoc("communicator"));
+		
 		generateBatteries();
 		generateMatterContainers();
 		generateGuns();

@@ -138,5 +138,19 @@
 		"sounds": [
 			"matteroverdrive:electric_arc_1"
 		]
+	},
+	"communicator_success": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.communicator_success",
+		"sounds": [
+			"matteroverdrive:item/communicator_success"
+		]
+	},
+	"communicator_fail": {
+		"category": "players",
+		"subtitle": "subtitles.matteroverdrive.communicator_fail",
+		"sounds": [
+			"matteroverdrive:item/communicator_fail"
+		]
 	}
 }

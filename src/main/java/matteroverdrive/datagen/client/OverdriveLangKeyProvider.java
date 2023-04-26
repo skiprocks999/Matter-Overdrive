@@ -7,6 +7,7 @@ import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
+import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
@@ -79,6 +80,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Blue Pill");
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_RED, "Red Pill");
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Yellow Pill");
+			
+			addItem(ItemRegistry.ITEM_COMMUNICATOR, "Communicator");
 			
 
 			for (OverdriveBlockColors color : OverdriveBlockColors.values()) {
@@ -190,6 +193,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_RED, "Makes you an android");
 			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Makes you an human for a price");
 			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Resets all android abilities");
+			addItemDescTooltip(ItemRegistry.ITEM_COMMUNICATOR, "Link to a Transporter for on the go");
 			
 			for (CrateColors color : TileTritaniumCrate.CrateColors.values()) {
 				addBlockItemDescTooltip(BlockRegistry.BLOCK_TRITANIUM_CRATES.get(color), "Retains items when broken");
@@ -241,6 +245,9 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addGuiLabel("orderratio", "%1$s / %2$s");
 			addGuiLabel("replicatorqueue", "Local Orders");
 			addGuiLabel("systemqueue", "Global Orders");
+			addGuiLabel("isreciever", "Recieve");
+			addGuiLabel("notreciever", "Transmit");
+			addGuiLabel("transportermode", "Function");
 
 			addContainer("tritanium_crate", "Tritanium Crate");
 			addContainer(TypeMachine.SOLAR_PANEL.id(), "Solar Panel");
@@ -297,6 +304,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addJei("processtime", "Time: ");
 			
 			addDamageSource("android_transformation", "%s became human again");
+			
+			addChatMessage(ItemCommunicator.CHAT_MESSAGE, "Transporter location corrupted. Attempting Cancelation...");
 		}
 	}
 
@@ -354,6 +363,10 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	
 	private void addDamageSource(String key, String translation) {
 		add("death.attack." + key, translation);
+	}
+	
+	private void addChatMessage(String key, String translation) {
+		add("chat." + References.ID + "." + key, translation);
 	}
 	
 	private String name(Item item) {

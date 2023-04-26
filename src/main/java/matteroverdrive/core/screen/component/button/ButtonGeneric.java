@@ -1,5 +1,7 @@
 package matteroverdrive.core.screen.component.button;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -17,14 +19,14 @@ public class ButtonGeneric extends AbstractOverdriveButton {
 
 	private ButtonType type;
 
-	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, Component message, OnPress onPress,
+	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, Supplier<Component> message, OnPress onPress,
 			OnTooltip onTooltip) {
 		super(gui, x, y, type.width, type.height, message, onPress, onTooltip);
 		this.type = type;
 	}
 
 	public ButtonGeneric(GenericScreen<?> gui, int x, int y, ButtonType type, OnPress onPress) {
-		this(gui, x, y, type, Component.empty(), onPress, NO_TOOLTIP);
+		this(gui, x, y, type, NO_TEXT, onPress, NO_TOOLTIP);
 		this.type = type;
 	}
 

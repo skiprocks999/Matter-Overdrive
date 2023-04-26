@@ -24,7 +24,7 @@ public class ButtonTransporterLocation extends ButtonHoldPress {
 
 	public ButtonTransporterLocation(GenericScreen<?> gui, int x, int y, int index, OnPress onPress,
 			Supplier<TileTransporter> transporter) {
-		super(gui, x, y, WIDTH, HEIGHT, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, WIDTH, HEIGHT, NO_TEXT, onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonTransporterLocation loc = (ButtonTransporterLocation) button;
 			TileTransporter transport = loc.transporter.get();
 			TransporterLocationWrapper wrapper = transport.locationManager.getLocation(loc.index);

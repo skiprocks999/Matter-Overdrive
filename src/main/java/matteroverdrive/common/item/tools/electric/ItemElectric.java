@@ -2,6 +2,8 @@ package matteroverdrive.common.item.tools.electric;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.utils.UtilsText;
@@ -108,6 +110,11 @@ public class ItemElectric extends OverdriveItem {
 			tooltips.add(UtilsText.tooltip("energystored", stored, maxE, UtilsText.getPrefixForBase(base))
 					.withStyle(ChatFormatting.YELLOW));
 		});
+	}
+	
+	@Nullable
+	public CapabilityEnergyStorage getEnergyCap(ItemStack stack) {
+		return (CapabilityEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve().get();
 	}
 
 }

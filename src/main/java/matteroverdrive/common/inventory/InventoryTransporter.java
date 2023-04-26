@@ -35,8 +35,11 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 
 	@Override
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 58, new int[] { 1 }, SlotType.BIG,
+				IconType.COMMUNICATOR_DARK, ItemRegistry.ITEM_COMMUNICATOR.get()));
 		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 78, new int[] { 4 }, SlotType.BIG, IconType.FLASHDRIVE_DARK,
 				ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE.get()));
+		addSlot(new SlotRestricted(invcap, nextIndex(), 8, 106, new int[] { 1 }, SlotType.BIG, IconType.NONE));
 		addSlot(new SlotEnergyCharging(invcap, nextIndex(), 8, 48, new int[] { 0 }));
 		addSlot(new SlotMatterCharging(invcap, nextIndex(), 8, 107, new int[] { 0 }));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 70, 55, new int[] { 2 }, UPGRADES));
@@ -45,7 +48,7 @@ public class InventoryTransporter extends GenericInventoryTile<TileTransporter> 
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 142, 55, new int[] { 2 }, UPGRADES));
 		addSlot(new SlotUpgrade(invcap, nextIndex(), 166, 55, new int[] { 2 }, UPGRADES));
 	}
-	
+
 	@Override
 	public PlayerSlotDataWrapper getDataWrapper(Player player) {
 		return defaultOverdriveScreen(new int[] { 0, 1, 2, 3, 4 }, new int[] {});

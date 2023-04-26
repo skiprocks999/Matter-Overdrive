@@ -8,9 +8,12 @@ import matteroverdrive.core.packet.type.serverbound.misc.PacketUpdateCapabilityS
 import matteroverdrive.core.screen.component.ScreenComponentCharge;
 import matteroverdrive.core.screen.component.ScreenComponentIndicator;
 import matteroverdrive.core.screen.component.ScreenComponentProgress;
-import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.wrappers.WrapperIOConfig;
 import matteroverdrive.core.tile.types.GenericMachineTile;
+import matteroverdrive.core.utils.UtilsText;
+import matteroverdrive.registry.SoundRegistry;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -23,20 +26,29 @@ public abstract class GenericMachineScreen<T extends GenericInventoryTile<? exte
 		super(menu, playerinventory, title, guiWidth, guiHeight);
 	}
 
-	public ButtonRedstoneMode redstoneButton(int x, int y) {
-		return new ButtonRedstoneMode(this, x, y, button -> {
+	public ButtonOverdrive redstoneButton(int x, int y) {
+		return new ButtonOverdrive(this, x, y, 58, 20, () -> {
+			GenericMachineTile machine = getMenu().getTile();
+			if (machine != null) {
+				switch (machine.getCurrMode()) {
+				case 0:
+					return UtilsText.gui("redstonelow");
+				case 1:
+					return UtilsText.gui("redstonehigh");
+				case 2:
+					return UtilsText.gui("redstonenone");
+				default:
+					return Component.empty();
+				}
+			}
+			return Component.empty();
+		}, button -> {
 			GenericMachineTile machine = getMenu().getTile();
 			if (machine != null) {
 				machine.getPropertyManager().updateServerBlockEntity(machine.currRedstoneModeProp,
 						machine.getCurrMode() + 1);
 			}
-		}, () -> {
-			GenericMachineTile machine = getMenu().getTile();
-			if (machine != null) {
-				return machine.getCurrMode();
-			}
-			return 0;
-		});
+		}).setSound(handler -> handler.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F)));
 	}
 
 	public ScreenComponentCharge defaultEnergyBar(int x, int y, int[] screenNumbers) {

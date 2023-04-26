@@ -9,9 +9,9 @@ import matteroverdrive.core.screen.component.ScreenComponentProgress;
 import matteroverdrive.core.screen.component.button.ButtonGeneric;
 import matteroverdrive.core.screen.component.button.ButtonMenuBar;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption;
-import matteroverdrive.core.screen.component.button.ButtonRedstoneMode;
 import matteroverdrive.core.screen.types.GenericMachineScreen;
 import matteroverdrive.core.screen.component.button.ButtonMenuOption.MenuButtonType;
+import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.utils.UtilsText;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +27,7 @@ public class ScreenPatternStorage extends GenericMachineScreen<InventoryPatternS
 	private ButtonMenuOption home;
 	private ButtonMenuOption settings;
 
-	private ButtonRedstoneMode redstone;
+	private ButtonOverdrive redstone;
 
 	private static final int BETWEEN_MENUS = 26;
 	private static final int FIRST_HEIGHT = 40;

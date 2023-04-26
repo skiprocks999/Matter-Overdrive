@@ -31,6 +31,9 @@ public class SoundRegistry {
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_BEEP = sound("matter_scanner_beep");
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_FAIL = sound("matter_scanner_fail");
 	public static final RegistryObject<SoundEvent> SOUND_MATTER_SCANNER_SUCCESS = sound("matter_scanner_success");
+	
+	public static final RegistryObject<SoundEvent> SOUND_COMMUNICATOR_SUCCESS = sound("communicator_success");
+	public static final RegistryObject<SoundEvent> SOUND_COMMUNICATOR_FAIL = sound("communicator_fail");
 
 	public static final RegistryObject<SoundEvent> SOUND_ELECTRIC_ARC_0 = sound("electric_arc_0");
 	public static final RegistryObject<SoundEvent> SOUND_ELECTRIC_ARC_1 = sound("electric_arc_1");

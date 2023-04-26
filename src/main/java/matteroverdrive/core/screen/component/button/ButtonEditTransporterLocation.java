@@ -7,8 +7,7 @@ import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.utils.UtilsRendering;
 import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.sounds.SoundManager;;
 
 public class ButtonEditTransporterLocation extends ButtonOverdrive {
 
@@ -16,7 +15,7 @@ public class ButtonEditTransporterLocation extends ButtonOverdrive {
 	public int index;
 
 	public ButtonEditTransporterLocation(GenericScreen<?> gui, int x, int y, OnPress press, int index) {
-		super(gui, x, y, 20, 20, Component.empty(), press);
+		super(gui, x, y, 20, 20, NO_TEXT, press);
 		this.index = index;
 	}
 

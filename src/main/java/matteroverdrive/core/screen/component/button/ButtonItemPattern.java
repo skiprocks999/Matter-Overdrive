@@ -41,7 +41,7 @@ public class ButtonItemPattern extends ButtonHoldPress {
 
 	public ButtonItemPattern(GenericScreen<?> gui, int x, int y, OnPress onPress, ItemRenderer renderer, int row,
 			int col, WrapperPatternMonitorScreen parent) {
-		super(gui, x, y, 22, 22, Component.empty(), onPress, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, 22, 22, NO_TEXT, onPress, (button, stack, mouseX, mouseY) -> {
 			ButtonItemPattern pattern = (ButtonItemPattern) button;
 			if (pattern.wrapper != null) {
 				Item item = pattern.wrapper.getItem();

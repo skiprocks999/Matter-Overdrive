@@ -13,7 +13,6 @@ import matteroverdrive.registry.SoundRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,7 +27,7 @@ public class ButtonMenuOption extends AbstractOverdriveButton {
 
 	public ButtonMenuOption(GenericScreen<?> gui, int x, int y, OnPress press, MenuButtonType type, ButtonMenuBar bar,
 			boolean isActivated) {
-		super(gui, x, y, 18, 18, Component.empty(), press, (button, stack, mouseX, mouseY) -> {
+		super(gui, x, y, 18, 18, NO_TEXT, press, (button, stack, mouseX, mouseY) -> {
 			ButtonMenuOption menuOption = (ButtonMenuOption) button;
 			menuOption.gui.renderTooltip(stack, type.tooltip, mouseX, mouseY);
 		});
