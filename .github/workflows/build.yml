@@ -1,0 +1,31 @@
+on:
+  push:
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Set up JDK 17
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Build
+        run: |
+          ./gradlew build
+      - name: Upload Release Asset(s)
+        uses: actions/upload-artifact@v2
+        with:
+          name: matter-overdrive
+          path: |
+            build/libs/*.jar
