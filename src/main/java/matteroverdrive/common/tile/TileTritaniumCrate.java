@@ -32,7 +32,7 @@ public class TileTritaniumCrate extends GenericTile {
 
 	public static enum CrateColors implements IBulkRegistryObject {
 
-		BLACK, BLUE, BROWN, CYAN, DARK_GREY, GREEN, LIGHT_BLUE, LIGHT_GREY, LIME_GREEN, MAGENTA, ORANGE, PINK, PURPLE,
+		BLACK, BLUE, BROWN, CYAN, DARK_GRAY, GREEN, LIGHT_BLUE, LIGHT_GRAY, LIME_GREEN, MAGENTA, ORANGE, PINK, PURPLE,
 		RED, REG, WHITE, YELLOW;
 
 		@Override

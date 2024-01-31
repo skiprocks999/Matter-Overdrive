@@ -38,10 +38,10 @@
               "function": "minecraft:set_contents"
             }
           ],
-          "name": "matteroverdrive:tritanium_crate_light_grey"
+          "name": "matteroverdrive:tritanium_crate_dark_gray"
         }
       ],
-      "name": "tritanium_crate_light_grey",
+      "name": "tritanium_crate_dark_gray",
       "rolls": 1.0
     }
   ]

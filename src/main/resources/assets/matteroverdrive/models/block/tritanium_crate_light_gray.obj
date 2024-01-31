@@ -1,7 +1,7 @@
 # Blender 3.1.0
 # www.blender.org
-mtllib tritanium_crate_dark_grey.mtl
-o tritanium_crate_gray
+mtllib tritanium_crate_light_gray.mtl
+o tritanium_crate_silver
 v 0.997900 -0.000000 0.787300
 v 0.921300 -0.000000 0.863900
 v 0.078700 -0.000000 0.863900
@@ -175,7 +175,7 @@ vt 0.843800 0.609400
 vt 0.390600 0.968800
 vt 0.750000 0.609400
 s 1
-usemtl CrateDarkGrey
+usemtl CrateLightGray
 f 1/1/1 2/4/1 3/6/1 4/8/1
 f 3/6/1 5/10/1 6/13/1 4/8/1
 f 1/1/1 4/8/1 7/16/1 8/18/1

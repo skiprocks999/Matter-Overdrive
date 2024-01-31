@@ -6,10 +6,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "matteroverdrive:tritanium_plating_light_grey"
+          "name": "matteroverdrive:floor_tile_dark_gray"
         }
       ],
-      "name": "tritanium_plating_light_grey",
+      "name": "floor_tile_dark_gray",
       "rolls": 1.0
     }
   ]

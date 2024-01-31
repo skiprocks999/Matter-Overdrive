@@ -6,10 +6,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "matteroverdrive:floor_tiles_light_grey"
+          "name": "matteroverdrive:floor_tiles_light_gray"
         }
       ],
-      "name": "floor_tiles_light_grey",
+      "name": "floor_tiles_light_gray",
       "rolls": 1.0
     }
   ]
