@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "matteroverdrive:inscriber"
+  },
+  "pattern": [
+    "IDI",
+    "TPT",
+    "RMR"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "D": {
+      "item": "matteroverdrive:dilithium_crystal"
+    },
+    "T": {
+      "item": "matteroverdrive:tritanium_plate"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "M": {
+      "item": "matteroverdrive:machine_casing"
+    }
+  }
+}

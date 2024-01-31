@@ -1,0 +1,28 @@
+{
+  "result": {
+    "item": "matteroverdrive:integration_matrix"
+  },
+  "pattern": [
+    " M ",
+    "ABA",
+    "CEC"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "A": {
+      "tag": "forge:glass"
+    },
+    "B": {
+      "item": "matteroverdrive:isolinear_circuit_tier2"
+    },
+    "M": {
+      "item": "matteroverdrive:machine_casing"
+    },
+    "C": {
+      "item": "matteroverdrive:dilithium_crystal"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:battery_regular"
+  },
+  "pattern": [
+    " R ",
+    "IGI",
+    "IEI"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "I": {
+      "item": "matteroverdrive:tritanium_ingot"
+    },
+    "E": {
+      "item": "matteroverdrive:dilithium_crystal"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  }
+}

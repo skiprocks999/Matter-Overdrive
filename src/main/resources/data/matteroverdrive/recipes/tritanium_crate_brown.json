@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "matteroverdrive:tritanium_crate_brown"
+  },
+  "pattern": [
+    " D ",
+    "TCT",
+    " T "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:chests/wooden"
+    },
+    "T": {
+      "item": "matteroverdrive:tritanium_plate"
+    },
+    "D": {
+      "tag": "forge:dyes/brown"
+    }
+  }
+}

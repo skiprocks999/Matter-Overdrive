@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "matteroverdrive:floor_tiles_lime_green",
+    "count": 16
+  },
+  "pattern": [
+    "# #",
+    "#D#",
+    "# #"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "matteroverdrive:floor_tile_lime_green"
+    },
+	"#": {
+      "item": "minecraft:clay"
+    }
+  }
+}

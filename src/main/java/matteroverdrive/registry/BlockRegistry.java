@@ -63,6 +63,12 @@ public class BlockRegistry {
 	public static final RegistryObject<Block> BLOCK_REGULAR_TRITANIUM_PLATING = registerBlock("tritanium_plating",
 			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)),
 			false);
+	public static final RegistryObject<Block> BLOCK_MACHINE_HULL = registerBlock("machine_hull",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)),
+			false);
+	public static final RegistryObject<Block> BLOCK_TRITANIUM = registerBlock("tritanium_block",
+			() -> new BlockOverdrive(Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1F, 100F)),
+			false);
 	public static final BulkRegister<Block> BLOCK_COLORED_TRITANIUM_PLATING = bulkBlock(
 			color -> registerColoredBlock(((OverdriveBlockColors) color).id("tritanium_plating_"),
 					() -> new BlockColored(

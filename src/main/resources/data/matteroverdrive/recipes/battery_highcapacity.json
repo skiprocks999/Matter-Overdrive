@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "matteroverdrive:battery_highcapacity"
+  },
+  "pattern": [
+    " P ",
+    "CBC",
+    " P "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "matteroverdrive:battery_regular"
+    },
+    "P": {
+      "item": "matteroverdrive:tritanium_plate"
+    },
+    "C": {
+      "item": "matteroverdrive:dilithium_crystal"
+    }
+  }
+}

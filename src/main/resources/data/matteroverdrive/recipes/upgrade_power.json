@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_power"
+  },
+  "pattern": [
+    " B ",
+    "RUR",
+    " C "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "matteroverdrive:battery_regular"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "C": {
+      "tag": "forge:gems/quartz"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "result": {
+    "item": "matteroverdrive:solar_panel"
+  },
+  "pattern": [
+    "CGC",
+    "GBG",
+    "IMI"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:coal"
+    },
+    "I": {
+      "item": "matteroverdrive:isolinear_circuit_tier2"
+    },
+    "M": {
+      "item": "matteroverdrive:machine_casing"
+    },
+    "B": {
+      "tag": "forge:storage_blocks/quartz"
+    },
+    "G": {
+      "tag": "forge:glass"
+    }
+  }
+}

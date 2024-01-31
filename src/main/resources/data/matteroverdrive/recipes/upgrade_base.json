@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_base"
+  },
+  "pattern": [
+    " R ",
+    " C ",
+    " T "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier1"
+    },
+    "T": {
+      "item": "matteroverdrive:tritanium_plate"
+    }
+  }
+}

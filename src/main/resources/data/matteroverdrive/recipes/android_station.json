@@ -1,0 +1,46 @@
+{
+ "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "THA",
+    "2F3",
+    "GMR"
+  ],
+  "key": {
+    "A": {
+      "item": "matteroverdrive:android_station",
+      "data": 1
+    },
+    "2": {
+      "item": "matteroverdrive:android_station",
+      "data": 1
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "3": {
+      "item": "matteroverdrive:android_station",
+      "data": 2
+    },
+    "T": {
+      "item": "matteroverdrive:android_station",
+      "data": 3
+    },
+    "F": {
+      "item": "matteroverdrive:android_station"
+    },
+    "G": {
+      "tag": "forge:dusts/glowstone"
+    },
+    "H": {
+      "item": "matteroverdrive:android_station",
+      "data": 0
+    },
+    "M": {
+      "item": "matteroverdrive:android_station"
+    }
+  },
+  "result": {
+    "item": "matteroverdrive:android_station",
+    "count": 1
+  }
+}

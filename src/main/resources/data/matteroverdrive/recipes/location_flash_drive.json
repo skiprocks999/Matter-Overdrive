@@ -1,0 +1,22 @@
+{
+    "result": {
+        "item": "matteroverdrive:transporter_flashdrive"
+    },
+    "pattern": [
+        " I ",
+        "RCR",
+        " I "
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "R": {
+            "tag": "forge:dusts/redstone"
+        },
+        "C": {
+            "item": "matteroverdrive:isolinear_circuit_tier1"
+        },
+        "I": {
+            "tag": "forge:ingots/iron"
+        }
+    }
+}

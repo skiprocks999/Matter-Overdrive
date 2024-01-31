@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "matteroverdrive:charger"
+  },
+  "pattern": [
+    " F ",
+    "EDR",
+    "BMB"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "matteroverdrive:battery_highcapacity"
+    },
+    "R": {
+      "item": "minecraft:repeater"
+    },
+    "D": {
+      "item": "matteroverdrive:dilithium_crystal"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "F": {
+      "item": "matteroverdrive:forcefield_emitter"
+    },
+    "M": {
+      "item": "matteroverdrive:machine_casing"
+    }
+  }
+}

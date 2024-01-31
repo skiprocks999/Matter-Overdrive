@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "matteroverdrive:s_magnet",
+    "count": 4
+  },
+  "pattern": [
+    "RRR",
+    "TET",
+    "RRR"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "T": {
+      "item": "matteroverdrive:tritanium_ingot"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    }
+  }
+}

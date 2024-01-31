@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "matteroverdrive:machine_hull"
+  },
+  "pattern": [
+    " I ",
+    "I I",
+    " I "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "matteroverdrive:tritanium_plate"
+    }
+  }
+}

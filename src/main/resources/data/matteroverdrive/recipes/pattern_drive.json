@@ -1,0 +1,25 @@
+{
+    "result": {
+        "item": "matteroverdrive:pattern_drive"
+    },
+    "pattern": [
+        " E ",
+        "RMR",
+        " I "
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "M": {
+            "item": "matteroverdrive:machine_casing"
+        },
+        "R": {
+            "tag": "forge:dusts/redstone"
+        },
+        "I": {
+            "item": "matteroverdrive:isolinear_circuit_tier2"
+        },
+        "E": {
+            "tag": "forge:ender_pearls"
+        }
+    }
+}

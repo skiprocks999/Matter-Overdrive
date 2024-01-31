@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:machine_casing"
+  },
+  "pattern": [
+    " P ",
+    "I I",
+    "GRG"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "matteroverdrive:tritanium_ingot"
+    },
+    "P": {
+      "item": "matteroverdrive:tritanium_plate"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  }
+}
