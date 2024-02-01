@@ -23,6 +23,7 @@ import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTe
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.registry.SoundRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -156,6 +157,14 @@ public class WrapperPatternMonitorScreen {
 						.play(SimpleSoundInstance.forUI(SoundRegistry.SOUND_BUTTON_LOUD3.get(), 1.0F));
 			}
 
+			// Reset order window.
+			orderQuantityBox.setValue("1");
+
+			selectedItem.setPattern(null);
+			selectedItem.isActivated = false;
+
+			Minecraft.getInstance().player.sendSystemMessage(Component.literal("Sent request to queue.")
+				.withStyle(ChatFormatting.AQUA));
 		}, (button, stack, x, y) -> {
 			screen.renderTooltip(stack, ORDER, x, y);
 		});
