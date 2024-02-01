@@ -35,7 +35,6 @@ import java.util.HashMap;
 
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientRegister {
-
 	public static final ResourceLocation CHARGE = new ResourceLocation("charge");
 
 	/* MODELS */
@@ -151,7 +150,6 @@ public class ClientRegister {
 
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
-
 		event.registerBlockEntityRenderer(TileRegistry.TILE_CHARGER.get(), RendererCharger::new);
 		event.registerBlockEntityRenderer(TileRegistry.TILE_INSCRIBER.get(), RendererInscriber::new);
 		event.registerBlockEntityRenderer(TileRegistry.TILE_PATTERN_MONITOR.get(), RendererPatternMonitor::new);
@@ -194,5 +192,4 @@ public class ClientRegister {
 			}
 		}
 	}
-
 }

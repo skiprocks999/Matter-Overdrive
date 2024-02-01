@@ -141,4 +141,13 @@ public class PacketBarrierMethods {
 		}
 	}
 
+	public static void handlePacketUpdateMNScreen(BlockPos monitorPos) {
+		Level world = Minecraft.getInstance().level;
+		if (world != null) {
+			BlockEntity tile = world.getBlockEntity(monitorPos);
+			if (tile instanceof TilePatternMonitor monitor) {
+//				monitor.handleScreenUpdate(monitorPos, world);
+			}
+		}
+	}
 }

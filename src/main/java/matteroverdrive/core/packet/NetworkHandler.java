@@ -26,7 +26,6 @@ import net.minecraftforge.network.simple.SimpleChannel.MessageBuilder;
 import net.minecraftforge.network.simple.SimpleChannel.MessageBuilder.ToBooleanBiFunction;
 
 public class NetworkHandler {
-
 	private static final String PROTOCOL_VERSION = "1";
 	private static int disc = 0;
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -34,7 +33,6 @@ public class NetworkHandler {
 			PROTOCOL_VERSION::equals);
 
 	public static void init() {
-
 		/* SERVER-BOUND */
 
 		serverMessage(PacketUpdateCapabilitySides.class, PacketUpdateCapabilitySides::encode,
@@ -101,7 +99,9 @@ public class NetworkHandler {
 		
 		clientMessage(PacketAndroidTurningTimeSync.class, PacketAndroidTurningTimeSync::encode, PacketAndroidTurningTimeSync::decode,
 				PacketAndroidTurningTimeSync::handle);
-		
+
+		clientMessage(PacketClientUpdateMNScreen.class, PacketClientUpdateMNScreen::encode,
+			PacketClientUpdateMNScreen::decode,	PacketClientUpdateMNScreen::handle);
 	}
 	
 	public static void sendToClientPlayer(ServerPlayer player, AbstractOverdrivePacket<?> packet) {
@@ -139,5 +139,4 @@ public class NetworkHandler {
 	private static <T extends AbstractOverdrivePacket<T>> MessageBuilder<T> message(Class<T> clazz, NetworkDirection dir) {
 		return CHANNEL.messageBuilder(clazz, disc++, dir);
 	}
-
 }
