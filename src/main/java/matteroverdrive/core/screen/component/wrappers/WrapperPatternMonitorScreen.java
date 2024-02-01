@@ -166,7 +166,6 @@ public class WrapperPatternMonitorScreen {
 					.withStyle(ChatFormatting.AQUA));
 			}
 		}, (button, stack, x, y) -> screen.renderTooltip(stack, ORDER, x, y));
-
 		screen.addEditBox(searchbar);
 		screen.addEditBox(orderQuantityBox);
 		screen.addButton(incVal);
