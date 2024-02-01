@@ -1,11 +1,5 @@
 package matteroverdrive.core.screen.component.wrappers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Consumer;
-
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.ClientReferences.Colors;
 import matteroverdrive.client.screen.ScreenPatternMonitor;
@@ -18,8 +12,8 @@ import matteroverdrive.core.screen.component.button.ButtonGeneric.ButtonType;
 import matteroverdrive.core.screen.component.button.ButtonItemPattern;
 import matteroverdrive.core.screen.component.button.ButtonOverdrive;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive;
-import matteroverdrive.core.screen.component.edit_box.EditBoxSearchbar;
 import matteroverdrive.core.screen.component.edit_box.EditBoxOverdrive.EditBoxTextures;
+import matteroverdrive.core.screen.component.edit_box.EditBoxSearchbar;
 import matteroverdrive.core.screen.component.utils.OverdriveScreenComponent;
 import matteroverdrive.core.utils.UtilsText;
 import matteroverdrive.registry.SoundRegistry;
@@ -34,12 +28,16 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 public class WrapperPatternMonitorScreen {
 
 	private final ScreenPatternMonitor screen;
 	private final int x;
 	private final int y;
-	private ButtonItemPattern[][] patterns = new ButtonItemPattern[4][6];
+	private final ButtonItemPattern[][] patterns = new ButtonItemPattern[4][6];
 	private EditBoxSearchbar searchbar;
 	public ButtonItemPattern selectedItem;
 
@@ -106,21 +104,21 @@ public class WrapperPatternMonitorScreen {
 		incVal = new ButtonOverdrive(screen, x + 98, y + 123, 15, 15, () -> PLUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if (order.length() > 0) {
+			if (!order.isEmpty()) {
 				orderVal = Integer.parseInt(order);
 			}
 			int inc = Screen.hasShiftDown() ? 16 : 1;
-			orderVal = Mth.clamp(orderVal += inc, 1, 9999999);
+			orderVal = Mth.clamp(orderVal + inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setRight().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		decVal = new ButtonOverdrive(screen, x + 29, y + 123, 15, 15, () -> MINUS, (button) -> {
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if (order.length() > 0) {
+			if (!order.isEmpty()) {
 				orderVal = Integer.parseInt(order);
 			}
 			int inc = Screen.hasShiftDown() ? 16 : 1;
-			orderVal = Mth.clamp(orderVal -= inc, 1, 9999999);
+			orderVal = Mth.clamp(orderVal - inc, 1, 9999999);
 			orderQuantityBox.setValue(orderVal + "");
 		}).setLeft().setColor(Colors.WHITE.getColor()).setSound(getIncDecSound());
 		sendOrder = new ButtonGeneric(screen, x + 129, y + 125, ButtonType.ORDER_ITEMS, OverdriveScreenComponent.NO_TEXT, (button) -> {
@@ -146,7 +144,7 @@ public class WrapperPatternMonitorScreen {
 			}
 			String order = orderQuantityBox.getValue();
 			int orderVal = 1;
-			if (order.length() > 0) {
+			if (!order.isEmpty()) {
 				orderVal = Integer.parseInt(order);
 			}
 			if (monitor.postOrderToNetwork(wrapper, orderVal, true, true)) {
@@ -163,11 +161,11 @@ public class WrapperPatternMonitorScreen {
 			selectedItem.setPattern(null);
 			selectedItem.isActivated = false;
 
-			Minecraft.getInstance().player.sendSystemMessage(Component.literal("Sent request to queue.")
-				.withStyle(ChatFormatting.AQUA));
-		}, (button, stack, x, y) -> {
-			screen.renderTooltip(stack, ORDER, x, y);
-		});
+			if (Minecraft.getInstance().player != null) {
+				Minecraft.getInstance().player.sendSystemMessage(Component.literal("Sent request to queue.")
+					.withStyle(ChatFormatting.AQUA));
+			}
+		}, (button, stack, x, y) -> screen.renderTooltip(stack, ORDER, x, y));
 
 		screen.addEditBox(searchbar);
 		screen.addEditBox(orderQuantityBox);
@@ -194,16 +192,11 @@ public class WrapperPatternMonitorScreen {
 		List<ItemPatternWrapper> patterns = new ArrayList<>();
 		if (monitor != null) {
 			patterns = monitor.getStoredPatterns(true);
-			Collections.sort(patterns, new Comparator<ItemPatternWrapper>() {
-				@Override
-				public int compare(ItemPatternWrapper pattern1, ItemPatternWrapper pattern2) {
-					return pattern1.getItem().getDescription().getString()
-							.compareToIgnoreCase(pattern2.getItem().getDescription().getString());
-				}
-			});
+			patterns.sort((pattern1, pattern2) -> pattern1.getItem().getDescription().getString()
+				.compareToIgnoreCase(pattern2.getItem().getDescription().getString()));
 		}
 		List<ItemPatternWrapper> searchedFor = new ArrayList<>();
-		if (searchContents.length() > 0) {
+		if (!searchContents.isEmpty()) {
 			for (ItemPatternWrapper wrapper : patterns) {
 				if (wrapper.getItem().getDescription().getString().toLowerCase()
 						.contains(searchContents.toLowerCase())) {
@@ -233,7 +226,7 @@ public class WrapperPatternMonitorScreen {
 				int moveRoom = screen.slider.getHeight() - 15 - 4;
 
 				// int moveRoom = 102 - 2;
-				double moved = (double) topRowIndex / (double) (lastRowCount - 4.0D);
+				double moved = (double) topRowIndex / (lastRowCount - 4.0D);
 				slider.setSliderYOffset((int) ((double) moveRoom * moved));
 			}
 		} else {
@@ -255,7 +248,7 @@ public class WrapperPatternMonitorScreen {
 			if (topRowIndex >= lastRowCount) {
 				topRowIndex = lastRowIndex - 3;
 			}
-			topRowIndex = Mth.clamp(topRowIndex += dir, 0, lastRowIndex - 3);
+			topRowIndex = Mth.clamp(topRowIndex + dir, 0, lastRowIndex - 3);
 		} else {
 			topRowIndex = 0;
 		}
@@ -282,7 +275,7 @@ public class WrapperPatternMonitorScreen {
 	}
 
 	private void handleQuantityBar(String string) {
-		if (string.length() == 0) {
+		if (string.isEmpty()) {
 			orderQuantityBox.setValue("1");
 		}
 	}
@@ -304,7 +297,7 @@ public class WrapperPatternMonitorScreen {
 					double heightRatio = (double) mouseHeight / (double) sliderHeight;
 					topRowIndex = (int) Math.round((lastRowCount - 4) * heightRatio);
 					int moveRoom = screen.slider.getHeight() - 15 - 4;
-					double moved = (double) topRowIndex / (double) (lastRowCount - 4.0D);
+					double moved = (double) topRowIndex / (lastRowCount - 4.0D);
 					screen.slider.setSliderYOffset((int) ((double) moveRoom * moved));
 				}
 			}
