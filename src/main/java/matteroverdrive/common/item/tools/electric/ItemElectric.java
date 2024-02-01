@@ -1,9 +1,5 @@
 package matteroverdrive.common.item.tools.electric;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import matteroverdrive.common.item.utils.OverdriveItem;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.utils.UtilsText;
@@ -15,10 +11,13 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemElectric extends OverdriveItem {
 
@@ -38,7 +37,7 @@ public class ItemElectric extends OverdriveItem {
 		if (allowedIn(category)) {
 			items.add(new ItemStack(this));
 			ItemStack filled = new ItemStack(this);
-			filled.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+			filled.getCapability(ForgeCapabilities.ENERGY).ifPresent(h -> {
 				h.receiveEnergy(h.getMaxEnergyStored(), false);
 			});
 			items.add(filled);
@@ -52,8 +51,8 @@ public class ItemElectric extends OverdriveItem {
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-			CapabilityEnergyStorage cap = (CapabilityEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast()
+		if (stack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+			CapabilityEnergyStorage cap = (CapabilityEnergyStorage) stack.getCapability(ForgeCapabilities.ENERGY).cast()
 					.resolve().get();
 			return cap.getEnergyStored() < cap.getMaxEnergyStored();
 		}
@@ -62,8 +61,8 @@ public class ItemElectric extends OverdriveItem {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-			return (int) Math.round(stack.getCapability(CapabilityEnergy.ENERGY).map(h -> {
+		if (stack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+			return (int) Math.round(stack.getCapability(ForgeCapabilities.ENERGY).map(h -> {
 				if (h.getMaxEnergyStored() > 0) {
 					return 13.0 * h.getEnergyStored() / h.getMaxEnergyStored();
 				}
@@ -80,7 +79,7 @@ public class ItemElectric extends OverdriveItem {
 			tag = new CompoundTag();
 		}
 		// had to expose cap because it whined about tag not being effectively final
-		LazyOptional<IEnergyStorage> cap = stack.getCapability(CapabilityEnergy.ENERGY);
+		LazyOptional<IEnergyStorage> cap = stack.getCapability(ForgeCapabilities.ENERGY);
 		if (cap.isPresent()) {
 			CapabilityEnergyStorage energy = ((CapabilityEnergyStorage) cap.resolve().get());
 			tag.put(energy.getSaveKey(), energy.serializeNBT());
@@ -91,7 +90,7 @@ public class ItemElectric extends OverdriveItem {
 	@Override
 	public void readShareTag(ItemStack stack, CompoundTag nbt) {
 		if (nbt != null) {
-			stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+			stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(h -> {
 				CapabilityEnergyStorage energy = (CapabilityEnergyStorage) h;
 				energy.deserializeNBT(nbt.getCompound(energy.getSaveKey()));
 				nbt.remove(energy.getSaveKey());
@@ -102,7 +101,7 @@ public class ItemElectric extends OverdriveItem {
 
 	@Override
 	public void appendPostSuperTooltip(ItemStack stack, Level level, List<Component> tooltips, TooltipFlag advanced) {
-		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+		stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(h -> {
 			int max = h.getMaxEnergyStored();
 			int base = UtilsText.getBigBase(max);
 			String stored = UtilsText.getFormattedBigPower(h.getEnergyStored(), base);
@@ -114,7 +113,7 @@ public class ItemElectric extends OverdriveItem {
 	
 	@Nullable
 	public CapabilityEnergyStorage getEnergyCap(ItemStack stack) {
-		return (CapabilityEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve().get();
+		return (CapabilityEnergyStorage) stack.getCapability(ForgeCapabilities.ENERGY).cast().resolve().get();
 	}
 
 }

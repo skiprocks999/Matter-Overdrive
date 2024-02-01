@@ -1,11 +1,5 @@
 package matteroverdrive.core.packet.type.clientbound;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.common.item.tools.electric.ItemMatterScanner;
 import matteroverdrive.common.tile.matter_network.TilePatternMonitor;
@@ -29,8 +23,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class PacketBarrierMethods {
 
@@ -78,7 +77,7 @@ public class PacketBarrierMethods {
 	}
 
 	public static void handlePacketAndroidEnergySync(int energy, int maxEnergy) {
-		Minecraft.getInstance().player.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyStorage -> {
+		Minecraft.getInstance().player.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
 			if (energyStorage instanceof AndroidEnergy) {
 				((AndroidEnergy) energyStorage).setEnergy(energy);
 			}

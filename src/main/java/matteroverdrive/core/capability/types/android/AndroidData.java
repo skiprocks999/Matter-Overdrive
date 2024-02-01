@@ -22,9 +22,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -178,7 +178,7 @@ public class AndroidData implements ICapabilityAndroid, ICapabilityProvider {
     }
     if (transformationTime <= 0) {
       setAndroid(true);
-      entity.getCapability(CapabilityEnergy.ENERGY).ifPresent(iEnergyStorage -> iEnergyStorage.receiveEnergy((int) (AndroidEnergy.DEFAULT_ENERGY * 0.25), false));
+      entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(iEnergyStorage -> iEnergyStorage.receiveEnergy((int) (AndroidEnergy.DEFAULT_ENERGY * 0.25), false));
       requestUpdate();
       if (entity instanceof Player player && !player.isCreative() && !entity.level.getLevelData().isHardcore()) {
         entity.hurt(fake, Integer.MAX_VALUE);

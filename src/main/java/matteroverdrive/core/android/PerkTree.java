@@ -1,7 +1,6 @@
 package matteroverdrive.core.android;
 
 import com.google.common.collect.ImmutableMultimap;
-
 import matteroverdrive.common.item.pill.ItemAndroidPill;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.android.AndroidEnergy;
@@ -13,7 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 
@@ -43,7 +42,7 @@ public class PerkTree {
           .canShowOnHUD((iAndroid, integer) -> true)
           .onAndroidTick((iAndroid, integer) -> {
             if (iAndroid.getHolder().getLevel().getGameTime() % 20 == 0 && iAndroid.getHolder().getHealth() < iAndroid.getHolder().getMaxHealth()) {
-              return iAndroid.getHolder().getCapability(CapabilityEnergy.ENERGY).map(energyStorage -> {
+              return iAndroid.getHolder().getCapability(ForgeCapabilities.ENERGY).map(energyStorage -> {
                 if (energyStorage.getEnergyStored() >= 1048) {
                   iAndroid.getHolder().heal(1);
                   energyStorage.extractEnergy(1048, false);
@@ -82,7 +81,7 @@ public class PerkTree {
                           .child(new BasePerkBuilder("cloak")
                                   .xpNeeded(36)
                                   .onAndroidTick((iAndroid, integer) -> {
-                                    iAndroid.getHolder().getCapability(CapabilityEnergy.ENERGY).ifPresent(iEnergyStorage -> iEnergyStorage.extractEnergy(128, false));
+                                    iAndroid.getHolder().getCapability(ForgeCapabilities.ENERGY).ifPresent(iEnergyStorage -> iEnergyStorage.extractEnergy(128, false));
                                     return false;
                                   })
                           )
@@ -133,7 +132,7 @@ public class PerkTree {
             .canShowOnHUD((iAndroid, integer) -> iAndroid.getPerkManager().hasPerkEnabled(NIGHT_VISION))
             .onAndroidTick((iAndroid, integer) -> {
               if (iAndroid.getPerkManager().hasPerkEnabled(NIGHT_VISION)) {
-                iAndroid.getHolder().getCapability(CapabilityEnergy.ENERGY).ifPresent(energyStorage -> {
+                iAndroid.getHolder().getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
                   if (energyStorage.getEnergyStored() >= 16) {
                     energyStorage.extractEnergy(16, false);
                     iAndroid.getHolder().addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 15 * 20, 0, true, false));

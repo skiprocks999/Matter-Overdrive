@@ -1,8 +1,5 @@
 package matteroverdrive.common.block;
 
-import java.util.Arrays;
-import java.util.List;
-
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.core.block.GenericEntityBlock;
 import matteroverdrive.core.block.OverdriveBlockProperties;
@@ -29,7 +26,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BlockTritaniumCrate extends GenericEntityBlock {
 
@@ -80,7 +80,7 @@ public class BlockTritaniumCrate extends GenericEntityBlock {
 	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		BlockEntity blockentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockentity instanceof TileTritaniumCrate crate) {
-			CapabilityInventory inv = crate.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			CapabilityInventory inv = crate.exposeCapability(ForgeCapabilities.ITEM_HANDLER);
 			if (MatterOverdriveConfig.CRATE_DROP_ITEMS.get()) {
 				Containers.dropContents(crate.getLevel(), crate.getBlockPos(), inv.getItems());
 				return Arrays.asList(new ItemStack(this));

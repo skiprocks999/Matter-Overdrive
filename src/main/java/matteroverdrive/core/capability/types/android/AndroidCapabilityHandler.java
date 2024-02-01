@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -35,8 +35,8 @@ public class AndroidCapabilityHandler {
         future.requestUpdate();
       });
     });
-    event.getOriginal().getCapability(CapabilityEnergy.ENERGY).ifPresent(original -> {
-      event.getEntity().getCapability(CapabilityEnergy.ENERGY).ifPresent(future -> {
+    event.getOriginal().getCapability(ForgeCapabilities.ENERGY).ifPresent(original -> {
+      event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(future -> {
         if (original instanceof AndroidEnergy && future instanceof AndroidEnergy) {
           ((AndroidEnergy) future).setEnergy(original.getEnergyStored());
           if (event.getEntity() instanceof ServerPlayer serverPlayer)

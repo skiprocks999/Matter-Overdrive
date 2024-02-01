@@ -22,9 +22,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.TriPredicate;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class GenericMachineTile extends GenericSoundTile {
 
@@ -126,7 +125,7 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	}
 
 	public void addEnergyStorageCap(CapabilityEnergyStorage cap) {
-		addCapability(CapabilityEnergy.ENERGY, cap);
+		addCapability(ForgeCapabilities.ENERGY, cap);
 	}
 
 	public void addMatterStorageCap(CapabilityMatterStorage cap) {
@@ -134,12 +133,12 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	}
 
 	public void addInventoryCap(CapabilityInventory cap) {
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, cap);
+		addCapability(ForgeCapabilities.ITEM_HANDLER, cap);
 	}
 
 	// Serverside only!
 	public CapabilityEnergyStorage getEnergyStorageCap() {
-		return exposeCapability(CapabilityEnergy.ENERGY);
+		return exposeCapability(ForgeCapabilities.ENERGY);
 	}
 
 	public CapabilityMatterStorage getMatterStorageCap() {
@@ -147,15 +146,15 @@ public abstract class GenericMachineTile extends GenericSoundTile {
 	}
 
 	public CapabilityInventory getInventoryCap() {
-		return exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		return exposeCapability(ForgeCapabilities.ITEM_HANDLER);
 	}
 
 	public boolean hasInventoryCap() {
-		return hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		return hasCapability(ForgeCapabilities.ITEM_HANDLER);
 	}
 
 	public boolean hasEnergyStorageCap() {
-		return hasCapability(CapabilityEnergy.ENERGY);
+		return hasCapability(ForgeCapabilities.ENERGY);
 	}
 
 	public boolean hasMatterStorageCap() {
