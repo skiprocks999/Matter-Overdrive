@@ -8,7 +8,7 @@ import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class TileTritaniumCrate extends GenericTile {
 
@@ -17,11 +17,11 @@ public class TileTritaniumCrate extends GenericTile {
 	public TileTritaniumCrate(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_TRITANIUM_CRATE.get(), pos, state);
 
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+		addCapability(ForgeCapabilities.ITEM_HANDLER,
 				new CapabilityInventory(SIZE, true, true).setOwner(this).setInputs(SIZE));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryTritaniumCrate(id, play.getInventory(),
-						exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()),
+						exposeCapability(ForgeCapabilities.ITEM_HANDLER), getCoordsData()),
 				getContainerName("tritanium_crate")));
 	}
 	

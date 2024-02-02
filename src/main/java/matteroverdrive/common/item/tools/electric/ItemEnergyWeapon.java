@@ -6,7 +6,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class ItemEnergyWeapon extends ItemElectric {
 
@@ -22,7 +22,7 @@ public class ItemEnergyWeapon extends ItemElectric {
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 		if (!level.isClientSide) {
 			ItemStack handStack = player.getItemInHand(hand);
-			handStack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> {
+			handStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(h -> {
 				((CapabilityEnergyStorage) h).removeEnergy(defaultUsage);
 			});
 		}

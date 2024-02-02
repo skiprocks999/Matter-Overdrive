@@ -33,7 +33,7 @@ public class OverdriveBackgroundManager {
 	}
 	
 	public ScreenObjectWrapper[] getBackgroundExtras() {
-		return getBackgroundExtras(null);
+		return getBackgroundExtras(new ScreenObjectWrapper[] {});
 	}
 	
 	public ScreenObjectWrapper[] getBackgroundExtras(@Nullable ScreenObjectWrapper...additional) {

@@ -1,7 +1,5 @@
 package matteroverdrive.core.utils;
 
-import java.util.HashSet;
-
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -14,16 +12,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
+
+import java.util.HashSet;
 
 public class UtilsTile {
 
 	public static void outputEnergy(GenericTile tile) {
-		if (tile.hasCapability(CapabilityEnergy.ENERGY)) {
-			CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
+		if (tile.hasCapability(ForgeCapabilities.ENERGY)) {
+			CapabilityEnergyStorage energy = tile.exposeCapability(ForgeCapabilities.ENERGY);
 			Level world = tile.getLevel();
 			BlockPos pos = tile.getBlockPos();
 			if (energy.canExtract()) {
@@ -35,7 +34,7 @@ public class UtilsTile {
 							Direction relative = UtilsDirection.getRelativeSide(facing, direction);
 							BlockEntity entity = world.getBlockEntity(pos.relative(relative));
 							if (entity != null && energy.getEnergyStored() > 0) {
-								LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY,
+								LazyOptional<IEnergyStorage> lazy = entity.getCapability(ForgeCapabilities.ENERGY,
 										relative.getOpposite());
 								if (lazy.isPresent()) {
 									IEnergyStorage storage = lazy.resolve().get();
@@ -54,7 +53,7 @@ public class UtilsTile {
 					for (Direction dir : Direction.values()) {
 						BlockEntity entity = world.getBlockEntity(pos.relative(dir));
 						if (entity != null && energy.getEnergyStored() > 0) {
-							LazyOptional<IEnergyStorage> lazy = entity.getCapability(CapabilityEnergy.ENERGY,
+							LazyOptional<IEnergyStorage> lazy = entity.getCapability(ForgeCapabilities.ENERGY,
 									dir.getOpposite());
 							if (lazy.isPresent()) {
 								IEnergyStorage storage = lazy.resolve().get();
@@ -74,11 +73,11 @@ public class UtilsTile {
 	}
 
 	public static void drainElectricSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		CapabilityEnergyStorage energy = tile.exposeCapability(CapabilityEnergy.ENERGY);
+		CapabilityInventory inv = tile.exposeCapability(ForgeCapabilities.ITEM_HANDLER);
+		CapabilityEnergyStorage energy = tile.exposeCapability(ForgeCapabilities.ENERGY);
 		for (ItemStack stack : inv.getEnergyInputItems()) {
-			if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-				IEnergyStorage storage = (IEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY).cast().resolve()
+			if (stack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+				IEnergyStorage storage = (IEnergyStorage) stack.getCapability(ForgeCapabilities.ENERGY).cast().resolve()
 						.get();
 				if (storage.canExtract()) {
 					int accepted = energy.receiveEnergy(storage.getEnergyStored(), true);
@@ -135,7 +134,7 @@ public class UtilsTile {
 	}
 
 	public static void drainMatterSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		CapabilityInventory inv = tile.exposeCapability(ForgeCapabilities.ITEM_HANDLER);
 		CapabilityMatterStorage energy = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 		for (ItemStack stack : inv.getMatterInputItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
@@ -151,7 +150,7 @@ public class UtilsTile {
 	}
 
 	public static void fillMatterSlot(GenericTile tile) {
-		CapabilityInventory inv = tile.exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		CapabilityInventory inv = tile.exposeCapability(ForgeCapabilities.ITEM_HANDLER);
 		CapabilityMatterStorage matter = tile.exposeCapability(MatterOverdriveCapabilities.MATTER_STORAGE);
 		for (ItemStack stack : inv.getMatterOutputItems()) {
 			if (stack.getCapability(MatterOverdriveCapabilities.MATTER_STORAGE).isPresent()) {
@@ -168,7 +167,7 @@ public class UtilsTile {
 
 	public static boolean isFEReciever(BlockEntity acceptor, Direction dir) {
 		if (acceptor != null) {
-			if (acceptor.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {
+			if (acceptor.getCapability(ForgeCapabilities.ENERGY, dir).isPresent()) {
 				return true;
 			}
 		}
