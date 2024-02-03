@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import static org.lwjgl.opengl.GL11.GL_ONE;
 
 public class RendererStationBase<T extends BaseStationTile> extends AbstractTileRenderer<T> {
-
 	public RendererStationBase(Context context) {
 		super(context);
 	}
@@ -42,7 +41,9 @@ public class RendererStationBase<T extends BaseStationTile> extends AbstractTile
 		float green;
 		float blue;
 
-		if (tile.isUsableByPlayer(Minecraft.getInstance().player)) {
+		LocalPlayer player = Minecraft.getInstance().player;
+
+		if (tile.isUsableByPlayer(player)) {
 			red = Colors.HOLO.getRFloat();
 			green = Colors.HOLO.getGFloat();
 			blue = Colors.HOLO.getBFloat();

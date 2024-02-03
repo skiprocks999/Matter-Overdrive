@@ -29,7 +29,7 @@ public class TileAndroidStation extends BaseStationTile {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(LocalPlayer player) {
+	public boolean isUsableByPlayer(Player player) {
 		return player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).map(ICapabilityAndroid::isAndroid)
 				.orElse(false);
 	}

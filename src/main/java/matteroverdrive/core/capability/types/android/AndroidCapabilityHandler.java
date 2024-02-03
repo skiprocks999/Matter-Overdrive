@@ -4,6 +4,7 @@ import matteroverdrive.References;
 import matteroverdrive.core.android.api.ICapabilityAndroid;
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -57,9 +58,22 @@ public class AndroidCapabilityHandler {
   @SubscribeEvent
   public static void onClientTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.START) return;
-    if (Minecraft.getInstance().player != null) {
-      Minecraft.getInstance().player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).ifPresent(iAndroid -> iAndroid.tickClient(Minecraft.getInstance().player));
+
+    LocalPlayer player = Minecraft.getInstance().player;
+
+    if (player == null) { return; }
+
+    if (!player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).isPresent()) {
+      return;
     }
+
+    player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).ifPresent(iAndroid -> {
+//      iAndroid.tickClient(player);
+    });
+
+//    if (Minecraft.getInstance().player != null) {
+//      Minecraft.getInstance().player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).ifPresent(iAndroid -> iAndroid.tickClient(Minecraft.getInstance().player));
+//    }
   }
 
   @SubscribeEvent

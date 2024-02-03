@@ -18,7 +18,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 
 public class RendererStationAndroid extends RendererStationBase<TileAndroidStation> {
 
@@ -32,7 +34,7 @@ public class RendererStationAndroid extends RendererStationBase<TileAndroidStati
 
   @Override
   public void drawAdditional(PoseStack stack, MultiBufferSource bufferIn, TileAndroidStation tile, double x, double y, double z, float partialTicks) {
-    LocalPlayer player = Minecraft.getInstance().player;
+    Player player = Minecraft.getInstance().player;
     if (player != null && tile.isUsableByPlayer(player)) {
       stack.pushPose();
       stack.translate(0.5,  2,  0.5);
