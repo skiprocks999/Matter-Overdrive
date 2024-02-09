@@ -7,23 +7,20 @@ import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
-import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
+import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
 import matteroverdrive.common.tile.TileTritaniumCrate;
 import matteroverdrive.common.tile.TileTritaniumCrate.CrateColors;
 import matteroverdrive.registry.BlockRegistry;
-import matteroverdrive.registry.FluidRegistry;
 import matteroverdrive.registry.ItemRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.apache.logging.log4j.core.appender.routing.Route;
 
 public class OverdriveLangKeyProvider extends LanguageProvider {
 
@@ -57,17 +54,18 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(ItemRegistry.ITEM_SUPERCONDUCTOR_MAGNET, "Сверхпроводящий магнит");
 //			item.matteroverdrive.matter_dust_refined.name=Очишенная материальная пыль
 			addItem(ItemRegistry.ITEM_MATTER_DUST, "Материальная пыль");
-//			item.matteroverdrive.matter_dust.details=Положить в утилизатор, чтобы очистить
+
+			addItemDescTooltip(ItemRegistry.ITEM_MATTER_DUST, "Положить в утилизатор, чтобы очистить");
 			addItem(ItemRegistry.ITEM_MACHINE_CASING, "Машинный корпус");
 			addItem(ItemRegistry.ITEM_DILITHIUM_CRYSTAL, "Дилитиевый кристалл");
 			addItem(ItemRegistry.ITEM_TRITANIUM_INGOT, "Тритановый слиток");
 			addItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "Тритановая пластина");
 			addItem(ItemRegistry.ITEM_TRITANIUM_DUST, "Тритановая пыль");
 			addItem(ItemRegistry.ITEM_PATTERN_DRIVE, "Шаблон привода");
-//			item.matteroverdrive.pattern_drive.details=Хранит 2 шаблона предмета
+			addItemDescTooltip(ItemRegistry.ITEM_PATTERN_DRIVE, "Хранит 2 шаблона предмета");
 			addItem(ItemRegistry.ITEM_EARL_GRAY_TEA, "Чай. Эрл Грей. Горячий.");
 			addItem(ItemRegistry.ITEM_ROMULAN_ALE, "Ромуланский эль");
-//			item.matteroverdrive.romulan_ale.details=Высоко опьяняющий алкогольный напиток ромуланского происхождения
+			addItemDescTooltip(ItemRegistry.ITEM_ROMULAN_ALE, "Высоко опьяняющий алкогольный напиток ромуланского происхождения");
 
 			// Not implemented yet.
 
@@ -82,7 +80,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 
 			addItem(ItemRegistry.ITEM_TRITANIUM_WRENCH, "Тритановый ключ");
-//			item.matteroverdrive.tritanium_wrench.details=Безопасно демонтирует и вращает машины
+			addItemDescTooltip(ItemRegistry.ITEM_TRITANIUM_WRENCH, "Безопасно демонтирует и вращает машины");
 
 			// Not implemented yet.
 //			item.matteroverdrive.spacetime_equalizer.name=Пространственно-временной эквалайзер
@@ -100,8 +98,8 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_RED, "Красная пилюля");
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Синяя пилюля");
 
-//			item.matteroverdrive.android_pill_red.details=Примите красную пилюлю /n и забудьте о том, что вас сдерживает
-//			item.matteroverdrive.android_pill_blue.details=Примите синюю пилюлю /n и вы проснетесь в постели более мудрым
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_RED, "Примите красную пилюлю /n и забудьте о том, что вас сдерживает");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Примите синюю пилюлю /n и вы проснетесь в постели более мудрым");
 
 			// Not implemented yet.
 //			item.matteroverdrive.creative_pattern_drive.name=Творческий шаблон привода
@@ -116,12 +114,13 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 
 			addItem(ItemRegistry.ITEM_PHASER_RIFLE, "Фазерная винтовка");
 			addItem(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Транспортный флэш-накопитель");
-//			item.matteroverdrive.transport_flash_drive.details=Используется для обозначения места для быстрого использования Транспортера
+			addItemDescTooltip(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Используется для обозначения места для быстрого использования Транспортера");
 
 			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Контейнер материи (Пустой)");
 
 			// Not implemented. I don't know why this is even a thing as a separate item.
 //			item.matteroverdrive.matter_container_full.name=Контейнер материи (Полный)
+			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Контейнер материи");
 
 			addItem(ItemRegistry.ITEM_TRITANIUM_NUGGET, "Тритановый самородок");
 
@@ -129,12 +128,12 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 //			item.matteroverdrive.tritanium_spine.name=Тритановый позвоночник
 
 			addItem(ItemRegistry.ITEM_DATAPAD, "Датапад");
-//			item.matteroverdrive.data_pad.details=Содержит информацию о всём в Matter Overdrive
+			addItemDescTooltip(ItemRegistry.ITEM_DATAPAD, "Содержит информацию о всём в Matter Overdrive");
 
 			addItem(ItemRegistry.ITEM_OMNI_TOOL, "Омнитул");
 
 			addItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Жёлтая пилюля");
-//			item.matteroverdrive.android_pill_yellow.details=Используется для сброса всех разблокированных способностей Андроида
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Используется для сброса всех разблокированных способностей Андроида");
 
 			// Not Implemented
 //			item.matteroverdrive.tritanium_helmet.name=Тритановый шлем
@@ -172,7 +171,7 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 //			item.matteroverdrive.matter.name=Материя
 
 			case "en_us":
-		default:
+			default:
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 
