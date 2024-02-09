@@ -125,6 +125,9 @@ public class ItemRegistry {
 	public static final RegistryObject<Item> ITEM_COMMUNICATOR = ITEMS.register("communicator",
 			() -> new ItemCommunicator(new Item.Properties().tab(References.MAIN).stacksTo(1)));
 
+	public static final RegistryObject<Item> ITEM_DATAPAD = ITEMS.register("data_pad",
+			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(1)));
+
 	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {
 		return new BulkRegister<>(factory, bulkValues);

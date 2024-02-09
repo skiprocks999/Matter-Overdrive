@@ -19,13 +19,13 @@ public class BlockMatterConduit extends AbstractCableBlock {
 	public static final HashSet<Block> PIPESET = new HashSet<>();
 
 	public BlockMatterConduit(TypeMatterConduit type) {
-		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
+		super(OverdriveBlockProperties.from(DEFAULT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 		PIPESET.add(this);
 	}
 
 	@Override
 	protected void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable,
-			LevelAccessor world, BlockPos pos) {
+			HashSet<Direction> energy, LevelAccessor world, BlockPos pos) {
 		BlockEntity entity;
 		for (Direction dir : Direction.values()) {
 			entity = world.getBlockEntity(pos.relative(dir));

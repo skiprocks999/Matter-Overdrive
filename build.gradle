@@ -125,7 +125,15 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-1.19.2-common-api:11.5.0.297"))
     compileOnly(fg.deobf("mezz.jei:jei-1.19.2-forge-api:11.5.0.297"))
     runtimeOnly(fg.deobf("mezz.jei:jei-1.19.2-forge:11.5.0.297"))
-    
+
+    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+
+    // If you want to test/use Mekanism & its modules during `runClient` invocation, use the following
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")// Mekanism: Additions
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")// Mekanism: Generators
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")// Mekanism: Tools
+
     // Apply Mixin AP
     //annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

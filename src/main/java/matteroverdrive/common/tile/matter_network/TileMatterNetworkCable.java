@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.network.NetworkMatter;
+import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.network.utils.IMatterNetworkMember;
+import matteroverdrive.core.property.Property;
+import matteroverdrive.core.property.PropertyTypes;
 import matteroverdrive.core.tile.types.cable.AbstractCableTile;
 import matteroverdrive.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,9 +19,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
+	private static final int ENERGY_STORAGE = 64000;
+
+	public final Property<CompoundTag> capEnergyStorageProp;
 
 	public TileMatterNetworkCable(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_MATTER_NETWORK_CABLE.get(), pos, state);
+
+		capEnergyStorageProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
+			.create(() -> getEnergyStorageCap().serializeNBT(), tag -> getEnergyStorageCap().deserializeNBT(tag)));
+
+		addEnergyStorageCap(new CapabilityEnergyStorage(ENERGY_STORAGE, true, true).setOwner(this)
+			.setPropertyManager(capEnergyStorageProp));
 	}
 
 	@Override
@@ -61,5 +73,4 @@ public class TileMatterNetworkCable extends AbstractCableTile<NetworkMatter> {
 		}
 		return network;
 	}
-
 }

@@ -10,6 +10,7 @@ import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.event.ServerEventHandler;
 import matteroverdrive.core.network.AbstractCableNetwork;
 import matteroverdrive.core.tile.GenericTile;
+import matteroverdrive.core.tile.types.GenericMachineTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> extends GenericTile {
+public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> extends GenericMachineTile {
 
 	protected boolean[] connections = new boolean[6];
 	protected BlockEntity[] tileConnections = new BlockEntity[6];
