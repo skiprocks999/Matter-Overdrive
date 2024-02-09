@@ -25,7 +25,7 @@ public class BlockMatterConduit extends AbstractCableBlock {
 
 	@Override
 	protected void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory, HashSet<Direction> cable,
-			HashSet<Direction> energy, LevelAccessor world, BlockPos pos) {
+			LevelAccessor world, BlockPos pos) {
 		BlockEntity entity;
 		for (Direction dir : Direction.values()) {
 			entity = world.getBlockEntity(pos.relative(dir));

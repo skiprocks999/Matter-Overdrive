@@ -188,13 +188,12 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 		HashSet<Direction> dirsUsed = new HashSet<>();
 		HashSet<Direction> inventory = new HashSet<>();
 		HashSet<Direction> cable = new HashSet<>();
-		HashSet<Direction> energy = new HashSet<>();
 
 		for (EnumProperty<CableConnectionType> checkState : OverdriveBlockStates.CABLE_DIRECTIONS) {
 			startingState = startingState.setValue(checkState, CableConnectionType.IGNORED);
 		}
 
-		sortDirections(dirsUsed, inventory, cable, energy, world, pos);
+		sortDirections(dirsUsed, inventory, cable, world, pos);
 
 		boolean shouldntSkip = true;
 
@@ -255,6 +254,6 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 	}
 
 	protected abstract void sortDirections(HashSet<Direction> usedDirs, HashSet<Direction> inventory,
-			HashSet<Direction> cable, HashSet<Direction> energy, LevelAccessor world, BlockPos pos);
+			HashSet<Direction> cable, LevelAccessor world, BlockPos pos);
 
 }
