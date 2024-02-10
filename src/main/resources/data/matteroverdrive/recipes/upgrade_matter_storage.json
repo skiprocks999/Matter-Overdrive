@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_matter_storage"
+  },
+  "pattern": [
+    " R ",
+    "MUM",
+    " R "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    },
+    "M": {
+      "item": "matteroverdrive:s_magnet"
+    }
+  }
+}

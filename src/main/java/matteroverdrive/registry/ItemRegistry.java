@@ -38,7 +38,35 @@ public class ItemRegistry {
 
 	public static final RegistryObject<Item> ITEM_RAW_MATTER_DUST = ITEMS.register("raw_matter_dust",
 			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_EARL_GRAY_TEA = ITEMS.register("earl_gray_tea",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_ROMULAN_ALE = ITEMS.register("romulan_ale",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_EMERGENCY_RATION = ITEMS.register("emergency_ration",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_TRITANIUM_INGOT = ITEMS.register("tritanium_ingot",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_TRITANIUM_NUGGET = ITEMS.register("tritanium_nugget",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_TRITANIUM_DUST = ITEMS.register("tritanium_dust",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_DILITHIUM_CRYSTAL = ITEMS.register("dilithium_crystal",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
 	public static final RegistryObject<Item> ITEM_MATTER_DUST = ITEMS.register("matter_dust",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_ME_CONVERSION_MATRIX = ITEMS.register("me_conversion_matrix",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_H_COMPENSATOR = ITEMS.register("h_compensator",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_INTEGRATION_MATRIX = ITEMS.register("integration_matrix",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_MACHINE_CASING = ITEMS.register("machine_casing",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_SUPERCONDUCTOR_MAGNET = ITEMS.register("s_magnet",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_FORCEFIELD_EMITTER = ITEMS.register("forcefield_emitter",
+			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
+	public static final RegistryObject<Item> ITEM_TRITANIUM_WRENCH = ITEMS.register("tritanium_wrench",
 			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN), true));
 	public static final RegistryObject<Item> ITEM_BASE_UPGRADE = ITEMS.register("upgrade_base",
 			() -> new OverdriveItem(new Item.Properties().tab(References.MAIN).stacksTo(16), false));
@@ -96,6 +124,9 @@ public class ItemRegistry {
 
 	public static final RegistryObject<Item> ITEM_COMMUNICATOR = ITEMS.register("communicator",
 			() -> new ItemCommunicator(new Item.Properties().tab(References.MAIN).stacksTo(1)));
+
+	public static final RegistryObject<Item> ITEM_DATAPAD = ITEMS.register("data_pad",
+			() -> new Item(new Item.Properties().tab(References.MAIN).stacksTo(1)));
 
 	private static BulkRegister<Item> bulkItem(Function<IBulkRegistryObject, RegistryObject<Item>> factory,
 			IBulkRegistryObject[] bulkValues) {

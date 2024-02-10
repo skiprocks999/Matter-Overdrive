@@ -5,9 +5,9 @@ import matteroverdrive.core.packet.type.clientbound.android.PacketAndroidEnergyS
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,7 @@ public class AndroidEnergy implements IEnergyStorage, ICapabilityProvider {
   }
 
   public static void syncEnergy(ServerPlayer entity) {
-    entity.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyStorage -> {
+    entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
       NetworkHandler.sendToClientPlayer(entity, new PacketAndroidEnergySync(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored()));
     });
   }
@@ -96,6 +96,6 @@ public class AndroidEnergy implements IEnergyStorage, ICapabilityProvider {
 
   @Override
   public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-    return CapabilityEnergy.ENERGY.orEmpty(cap, holder);
+    return ForgeCapabilities.ENERGY.orEmpty(cap, holder);
   }
 }

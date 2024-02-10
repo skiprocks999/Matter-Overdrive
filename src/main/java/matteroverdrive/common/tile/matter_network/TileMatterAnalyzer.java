@@ -124,7 +124,7 @@ public class TileMatterAnalyzer extends GenericMachineTile implements IMatterNet
 			return;
 		}
 		if (!UtilsItem.compareItems(scannedItemProp.get().getItem(), scanned.getItem())) {
-			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(scanned), updateTickable(false));
+			setShouldSaveData(setRunning(false), setProgress(0), setScannedItem(scanned));
 			int[] stored = network.getHighestStorageLocationForItem(scannedItemProp.get().getItem(), true);
 			double val = MatterRegister.INSTANCE.getServerMatterValue(scanned);
 			if (val <= 0.0 || stored[0] > -1 && stored[3] >= 100) {

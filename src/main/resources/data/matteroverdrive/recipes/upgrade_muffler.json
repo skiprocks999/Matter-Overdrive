@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_muffler"
+  },
+  "pattern": [
+    " R ",
+    "WUW",
+    " R "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  }
+}

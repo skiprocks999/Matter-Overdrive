@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "matteroverdrive:floor_tile_lime_green",
+    "count": 32
+  },
+  "pattern": [
+    "#P#",
+    "#D#",
+    "#P#"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "matteroverdrive:tritanium_plating"
+    },
+	"#": {
+      "item": "minecraft:clay"
+    },
+    "P": {
+      "tag": "forge:dyes/lime"
+    }
+  }
+}

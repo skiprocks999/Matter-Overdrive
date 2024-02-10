@@ -121,6 +121,13 @@ public class TileMatterReplicator extends GenericMachineTile implements IMatterN
 
 	}
 
+	// Not sure if I like this, but I have no idea how to get orders from each replicator to get a true
+	// total count of all the orders.
+
+	public ReplicatorOrderManager getOrderManager() {
+		return orderManager;
+	}
+
 	@Override
 	public void tickServer() {
 		UtilsTile.drainElectricSlot(this);

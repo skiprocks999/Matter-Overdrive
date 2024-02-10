@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "matteroverdrive:matter_conduit_regular",
+    "count": 8
+  },
+  "pattern": [
+    " G ",
+    "IMI",
+    " G "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "M": {
+      "item": "matteroverdrive:s_magnet"
+    }
+  }
+}

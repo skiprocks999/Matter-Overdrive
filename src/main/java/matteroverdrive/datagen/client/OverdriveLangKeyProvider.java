@@ -7,8 +7,8 @@ import matteroverdrive.common.block.type.TypeMatterConduit;
 import matteroverdrive.common.block.type.TypeMatterNetworkCable;
 import matteroverdrive.common.item.ItemUpgrade.UpgradeType;
 import matteroverdrive.common.item.tools.ItemMatterContainer.ContainerType;
-import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.tools.electric.ItemBattery.BatteryType;
+import matteroverdrive.common.item.tools.electric.ItemCommunicator;
 import matteroverdrive.common.item.type.TypeIsolinearCircuit;
 import matteroverdrive.common.recipe.item2item.specific_machines.InscriberRecipe;
 import matteroverdrive.common.tile.TileTritaniumCrate;
@@ -35,8 +35,143 @@ public class OverdriveLangKeyProvider extends LanguageProvider {
 	protected void addTranslations() {
 
 		switch (locale) {
-		case "en_us":
-		default:
+		case "ru_ru":
+			add("itemGroup.itemgroup" + References.ID + "main", "Энергетическая ячейка");
+
+			addItem(ItemRegistry.ITEM_MATTER_SCANNER, "Сканер материи");
+			addItem(ItemRegistry.ITEM_EMERGENCY_RATION, "Аварийный паёк");
+			addItem(ItemRegistry.ITEM_PHASER, "Фазер");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.REGULAR), "Батарейка");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.CREATIVE), "Творческая батарейка");
+			addItem(ItemRegistry.ITEM_ME_CONVERSION_MATRIX, "Материально-энергетическая конвертирующая матрица");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER1), "Изолинейная схема MK1");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER2), "Изолинейная схема MK2");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER3), "Изолинейная схема MK3");
+			addItem(ItemRegistry.ITEM_ISOLINEAR_CIRCUITS.get(TypeIsolinearCircuit.TIER4), "Изолинейная схема MK4");
+			addItem(ItemRegistry.ITEM_BASE_UPGRADE, "Оболочка улучшений");
+			addItem(ItemRegistry.ITEM_H_COMPENSATOR, "Гейзенберговский компенсатор");
+			addItem(ItemRegistry.ITEM_INTEGRATION_MATRIX, "Матрица интеграции");
+			addItem(ItemRegistry.ITEM_SUPERCONDUCTOR_MAGNET, "Сверхпроводящий магнит");
+//			item.matteroverdrive.matter_dust_refined.name=Очишенная материальная пыль
+			addItem(ItemRegistry.ITEM_MATTER_DUST, "Материальная пыль");
+
+			addItemDescTooltip(ItemRegistry.ITEM_MATTER_DUST, "Положить в утилизатор, чтобы очистить");
+			addItem(ItemRegistry.ITEM_MACHINE_CASING, "Машинный корпус");
+			addItem(ItemRegistry.ITEM_DILITHIUM_CRYSTAL, "Дилитиевый кристалл");
+			addItem(ItemRegistry.ITEM_TRITANIUM_INGOT, "Тритановый слиток");
+			addItem(ItemRegistry.ITEM_TRITANIUM_PLATE, "Тритановая пластина");
+			addItem(ItemRegistry.ITEM_TRITANIUM_DUST, "Тритановая пыль");
+			addItem(ItemRegistry.ITEM_PATTERN_DRIVE, "Шаблон привода");
+			addItemDescTooltip(ItemRegistry.ITEM_PATTERN_DRIVE, "Хранит 2 шаблона предмета");
+			addItem(ItemRegistry.ITEM_EARL_GRAY_TEA, "Чай. Эрл Грей. Горячий.");
+			addItem(ItemRegistry.ITEM_ROMULAN_ALE, "Ромуланский эль");
+			addItemDescTooltip(ItemRegistry.ITEM_ROMULAN_ALE, "Высоко опьяняющий алкогольный напиток ромуланского происхождения");
+
+			// Not implemented yet.
+
+//			item.matteroverdrive.security_protocol.empty.name=Протокол безопасности
+//			item.matteroverdrive.security_protocol.claim.name=Протокол безопасности [Запрос]
+//			item.matteroverdrive.security_protocol.claim.details=Защищает машины
+//			item.matteroverdrive.security_protocol.access.name=Протокол безопасности [Доступ]
+//			item.matteroverdrive.security_protocol.access.details=Позволяет получить доступ к защищенным машинам
+//			item.matteroverdrive.security_protocol.remove.name=Протокол безопасности [Удаление]
+//			item.matteroverdrive.security_protocol.remove.details=Убирает защиту у машин
+//			item.matteroverdrive.security_protocol.invalid=Неверный протокол безопасности
+
+
+			addItem(ItemRegistry.ITEM_TRITANIUM_WRENCH, "Тритановый ключ");
+			addItemDescTooltip(ItemRegistry.ITEM_TRITANIUM_WRENCH, "Безопасно демонтирует и вращает машины");
+
+			// Not implemented yet.
+//			item.matteroverdrive.spacetime_equalizer.name=Пространственно-временной эквалайзер
+
+//			item.matteroverdrive.spacetime_equalizer.details=Может быть одет в слот нагрудника, чтобы предотвратить влияние гравитационных сил
+//			item.matteroverdrive.rogue_android_part.head.name=Андроид-голова
+//			item.matteroverdrive.rogue_android_part.arms.name=Андроид-рука
+//			item.matteroverdrive.rogue_android_part.legs.name=Андроид-нога
+//			item.matteroverdrive.rogue_android_part.chest.name=Андроид-торс
+//			item.matteroverdrive.rogue_android_part.melee=Рукопашный Андроид
+//			item.matteroverdrive.rogue_android_part.range=Дальнобойный Андроид
+
+			addItem(ItemRegistry.ITEM_FORCEFIELD_EMITTER, "Излучатель силового поля");
+			addItem(ItemRegistry.ITEM_BATTERIES.get(BatteryType.HIGHCAPACITY), "Высокоёмкостная батарейка");
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_RED, "Красная пилюля");
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Синяя пилюля");
+
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_RED, "Примите красную пилюлю /n и забудьте о том, что вас сдерживает");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_BLUE, "Примите синюю пилюлю /n и вы проснетесь в постели более мудрым");
+
+			// Not implemented yet.
+//			item.matteroverdrive.creative_pattern_drive.name=Творческий шаблон привода
+//			item.matteroverdrive.creative_pattern_drive.details=Содержит наиболее воспроизводимые элементы /n ПКМ во время приседа, чтобы перезагрузить
+//			item.matteroverdrive.network_flash_drive.name=Сетевой флэш-накопитель
+//			item.matteroverdrive.network_flash_drive.details=Используется в качестве фильтра в устройствах материальной сети
+
+//			item.matteroverdrive.name=Энергетическая ячейка
+
+			// Not implemented.
+//			item.matteroverdrive.energy_pack.details=Используется для быстрой подзарядки./nДля "подзарядки" энергетических оружий
+
+			addItem(ItemRegistry.ITEM_PHASER_RIFLE, "Фазерная винтовка");
+			addItem(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Транспортный флэш-накопитель");
+			addItemDescTooltip(ItemRegistry.ITEM_TRANSPORTER_FLASHDRIVE, "Используется для обозначения места для быстрого использования Транспортера");
+
+			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Контейнер материи (Пустой)");
+
+			// Not implemented. I don't know why this is even a thing as a separate item.
+//			item.matteroverdrive.matter_container_full.name=Контейнер материи (Полный)
+			addItem(ItemRegistry.ITEM_MATTER_CONTAINERS.get(ContainerType.REGULAR), "Контейнер материи");
+
+			addItem(ItemRegistry.ITEM_TRITANIUM_NUGGET, "Тритановый самородок");
+
+			// Not implemented.
+//			item.matteroverdrive.tritanium_spine.name=Тритановый позвоночник
+
+			addItem(ItemRegistry.ITEM_DATAPAD, "Датапад");
+			addItemDescTooltip(ItemRegistry.ITEM_DATAPAD, "Содержит информацию о всём в Matter Overdrive");
+
+			addItem(ItemRegistry.ITEM_OMNI_TOOL, "Омнитул");
+
+			addItem(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Жёлтая пилюля");
+			addItemDescTooltip(ItemRegistry.ITEM_ANDROID_PILL_YELLOW, "Используется для сброса всех разблокированных способностей Андроида");
+
+			// Not Implemented
+//			item.matteroverdrive.tritanium_helmet.name=Тритановый шлем
+//			item.matteroverdrive.tritanium_chestplate.name=Тритановый нагрудник
+//			item.matteroverdrive.tritanium_leggings.name=Тритановые поножи
+//			item.matteroverdrive.tritanium_boots.name=Тритановые ботинки
+//			item.matteroverdrive.tritanium_hoe.name=Тритановая мотыга
+//			item.matteroverdrive.tritanium_sword.name=Тритановый меч
+//			item.matteroverdrive.tritanium_pickaxe.name=Тритановая кирка
+//			item.matteroverdrive.tritanium_axe.name=Тритановый топор
+//			item.matteroverdrive.tritanium_shovel.name=Тритановая лопата
+
+			// Not implemented.
+//			item.matteroverdrive.contract.name=Контракт
+
+			addItem(ItemRegistry.ITEM_ION_SNIPER, "Ионная винтовка");
+			addItem(ItemRegistry.ITEM_PLASMA_SHOTGUN, "Плазменный дробовик");
+
+			// Not implemented.
+//			item.matteroverdrive.plasma_shotgun.name=Плазменный дробовик
+//			item.matteroverdrive.weapon_receiver.name=Оружейный приёмник
+//			item.matteroverdrive.weapon_handle.name=Оружейная рукоять
+
+			// Not implemented.
+//			item.matteroverdrive.plasma_core.name=Плазменное ядро
+//			item.matteroverdrive.portable_decomposer.name=Портативный разлагатель
+//			item.matteroverdrive.portable_decomposer.details=Разлагает подобранные предметы в плазменную материю
+//			item.record.matteroverdrive.transformation.desc=BoxCat Games - Trace Route
+
+			// Not implemented.
+//			item.matteroverdrive.trilithium_crystal.name=Чистый Трилитиевый кристалл
+//			item.matteroverdrive.artifact.name=Неизвестный артефакт
+//			item.matteroverdrive.quantum_fold_manipulator.name=Квантовый складной манипулятор
+
+//			item.matteroverdrive.matter.name=Материя
+
+			case "en_us":
+			default:
 
 			add("itemGroup.itemgroup" + References.ID + "main", "Matter Overdrive");
 

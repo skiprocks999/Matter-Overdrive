@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:me_conversion_matrix"
+  },
+  "pattern": [
+    "EIE",
+    "CGC",
+    "EIE"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier2"
+    },
+    "G": {
+      "item": "matteroverdrive:dilithium_crystal"
+    }
+  }
+}

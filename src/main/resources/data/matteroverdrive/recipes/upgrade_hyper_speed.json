@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_hyper_speed"
+  },
+  "ingredients": [
+    {
+      "item": "matteroverdrive:dilithium_crystal"
+    },
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "matteroverdrive:upgrade_speed"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

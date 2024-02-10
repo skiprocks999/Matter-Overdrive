@@ -1,7 +1,5 @@
 package matteroverdrive.core.utils;
 
-import javax.annotation.Nullable;
-
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item_pattern.CapabilityItemPatternStorage;
@@ -10,9 +8,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+
+import javax.annotation.Nullable;
 
 public class UtilsItem {
 
@@ -22,7 +22,7 @@ public class UtilsItem {
 
 	@Nullable
 	public static IEnergyStorage getEnergyCap(ItemStack stack) {
-		LazyOptional<IEnergyStorage> lazy = stack.getCapability(CapabilityEnergy.ENERGY);
+		LazyOptional<IEnergyStorage> lazy = stack.getCapability(ForgeCapabilities.ENERGY);
 		if (lazy.isPresent()) {
 			return lazy.resolve().get();
 		}

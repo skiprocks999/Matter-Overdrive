@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "matteroverdrive:matter_analyzer"
+  },
+  "pattern": [
+    " C ",
+    "PMF",
+    "ONO"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "matteroverdrive:pattern_drive"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier3"
+    },
+    "F": {
+      "item": "matteroverdrive:transporter_flashdrive"
+    },
+    "M": {
+      "item": "matteroverdrive:me_conversion_matrix"
+    },
+    "N": {
+      "item": "matteroverdrive:integration_matrix"
+    },
+    "O": {
+      "tag": "forge:storage_blocks/iron"
+    }
+  }
+}

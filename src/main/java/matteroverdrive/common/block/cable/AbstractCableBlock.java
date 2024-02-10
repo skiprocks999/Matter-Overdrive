@@ -56,7 +56,7 @@ public abstract class AbstractCableBlock extends GenericEntityBlock {
 				map.put(OverdriveBlockStates.CABLE_DOWN, Direction.DOWN);
 			});
 
-	public static final Properties DEFUALT_CABLE_PROPERTIES = Properties.of(Material.METAL).sound(SoundType.METAL)
+	public static final Properties DEFAULT_CABLE_PROPERTIES = Properties.of(Material.METAL).sound(SoundType.METAL)
 			.strength(0.15f).dynamicShape();
 
 	protected final VoxelShape center;

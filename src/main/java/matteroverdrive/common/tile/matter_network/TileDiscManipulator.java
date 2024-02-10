@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.TriPredicate;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -28,11 +29,11 @@ public class TileDiscManipulator extends GenericTile {
 		capInventoryProp = this.getPropertyManager().addTrackedProperty(PropertyTypes.NBT
 				.create(() -> getInventoryCap().serializeNBT(), tag -> getInventoryCap().deserializeNBT(tag)));
 
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new CapabilityInventory(SIZE, false, false)
+		addCapability(ForgeCapabilities.ITEM_HANDLER, new CapabilityInventory(SIZE, false, false)
 				.setOwner(this).setInputs(1).setValidator((getValidator())).setPropertyManager(capInventoryProp));
 		setMenuProvider(new SimpleMenuProvider(
 				(id, inv, play) -> new InventoryDiscManipulator(id, play.getInventory(),
-						exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), getCoordsData()),
+						exposeCapability(ForgeCapabilities.ITEM_HANDLER), getCoordsData()),
 				getContainerName(TypeMachine.DISC_MANIPULATOR.id())));
 
 	}
@@ -43,7 +44,7 @@ public class TileDiscManipulator extends GenericTile {
 	}
 
 	public CapabilityInventory getInventoryCap() {
-		return exposeCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		return exposeCapability(ForgeCapabilities.ITEM_HANDLER);
 	}
 
 	private static TriPredicate<Integer, ItemStack, CapabilityInventory> getValidator() {

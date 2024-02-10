@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:matter_scanner"
+  },
+  "pattern": [
+    "III",
+    "GCG",
+    "IRI"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier3"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    }
+  }
+}

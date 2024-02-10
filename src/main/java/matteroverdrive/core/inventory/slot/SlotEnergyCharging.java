@@ -4,7 +4,7 @@ import matteroverdrive.core.capability.types.item.CapabilityInventory;
 import matteroverdrive.core.screen.component.ScreenComponentIcon.IconType;
 import matteroverdrive.core.screen.component.ScreenComponentSlot.SlotType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class SlotEnergyCharging extends SlotGeneric {
 
@@ -15,7 +15,7 @@ public class SlotEnergyCharging extends SlotGeneric {
 
 	@Override
 	public boolean mayPlace(ItemStack stack) {
-		if (stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+		if (stack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
 			return super.mayPlace(stack);
 		}
 		return false;

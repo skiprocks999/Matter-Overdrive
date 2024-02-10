@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "matteroverdrive:floor_tiles_light_blue",
+    "count": 16
+  },
+  "pattern": [
+    "# #",
+    "#D#",
+    "# #"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "matteroverdrive:floor_tile_light_blue"
+    },
+	"#": {
+      "item": "minecraft:clay"
+    }
+  }
+}

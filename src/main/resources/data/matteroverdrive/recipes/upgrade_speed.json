@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_speed"
+  },
+  "pattern": [
+    " R ",
+    "GUG",
+    " E "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    },
+    "E": {
+      "tag": "forge:gems/emerald"
+    },
+    "G": {
+      "tag": "forge:dusts/glowstone"
+    }
+  }
+}

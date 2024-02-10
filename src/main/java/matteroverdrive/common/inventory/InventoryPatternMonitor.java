@@ -23,7 +23,7 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 	public InventoryPatternMonitor(int id, Inventory playerinv) {
 		this(id, playerinv, new CapabilityInventory(0, false, false), new SimpleContainerData(3));
 	}
-	
+
 	@Override
 	public void init() {
 		hasHotbarSlots = false;
@@ -35,12 +35,12 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 	public void addInvSlots(CapabilityInventory invcap, Inventory playerinv) {
 		// unused
 	}
-	
+
 	@Override
 	public PlayerSlotDataWrapper getDataWrapper(Player player) {
 		return null;
 	}
-	
+
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
@@ -48,9 +48,9 @@ public class InventoryPatternMonitor extends GenericInventoryTile<TilePatternMon
 		if (player instanceof ServerPlayer server && tile != null) {
 			NetworkMatter network = tile.getConnectedNetwork();
 			if (network != null && tile.getTicks() % 2 == 0) {
-				NetworkHandler.sendToClientPlayer(server, new PacketClientMNData(network.serializeNetworkNbt(), tile.getBlockPos()));
+				NetworkHandler.sendToClientPlayer(server, new PacketClientMNData(network.serializeNetworkNbt(),
+					tile.getBlockPos()));
 			}
 		}
 	}
-
 }

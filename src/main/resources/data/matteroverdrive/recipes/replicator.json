@@ -1,0 +1,37 @@
+{
+  "result": {
+    "item": "matteroverdrive:matter_replicator"
+  },
+  "pattern": [
+    "PCF",
+    "IHI",
+    "NTM"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "matteroverdrive:pattern_drive"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier3"
+    },
+    "T": {
+      "item": "matteroverdrive:tritanium_plate"
+    },
+    "F": {
+      "item": "matteroverdrive:transporter_flashdrive"
+    },
+    "H": {
+      "item": "matteroverdrive:h_compensator"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "M": {
+      "item": "matteroverdrive:me_conversion_matrix"
+    },
+    "N": {
+      "item": "matteroverdrive:integration_matrix"
+    }
+  }
+}

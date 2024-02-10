@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_range"
+  },
+  "pattern": [
+    " E ",
+    "RUR",
+    " G "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  }
+}

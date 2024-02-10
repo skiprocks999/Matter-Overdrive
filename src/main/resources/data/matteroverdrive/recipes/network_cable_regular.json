@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "matteroverdrive:network_cable_regular",
+    "count": 16
+  },
+  "pattern": [
+    "IGI",
+    "BCB",
+    "IGI"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "tag": "forge:ingots/gold"
+    },
+    "C": {
+      "item": "matteroverdrive:isolinear_circuit_tier1"
+    },
+    "G": {
+      "tag": "forge:glass"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  }
+}

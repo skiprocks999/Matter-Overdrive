@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "matteroverdrive:tritanium_plating",
+    "count": 12
+  },
+  "pattern": [
+    "II ",
+    "II ",
+    "   "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "matteroverdrive:tritanium_plate"
+    }
+  }
+}

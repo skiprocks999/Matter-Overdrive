@@ -1,10 +1,5 @@
 package matteroverdrive.core.tile.types.cable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import javax.annotation.Nullable;
-
 import matteroverdrive.common.block.cable.AbstractCableBlock;
 import matteroverdrive.common.block.cable.ICableType;
 import matteroverdrive.common.event.ServerEventHandler;
@@ -16,6 +11,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class AbstractCableTile<NETWORK extends AbstractCableNetwork> extends GenericTile {
 

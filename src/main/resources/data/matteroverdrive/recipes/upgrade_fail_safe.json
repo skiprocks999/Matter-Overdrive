@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "matteroverdrive:upgrade_fail_safe"
+  },
+  "pattern": [
+    " D ",
+    "RUR",
+    " G "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "D": {
+      "tag": "forge:gems/diamond"
+    },
+    "U": {
+      "item": "matteroverdrive:upgrade_base"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  }
+}

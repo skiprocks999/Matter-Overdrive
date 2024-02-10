@@ -1,11 +1,5 @@
 package matteroverdrive.core.packet.type.serverbound.misc;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
 import matteroverdrive.core.capability.MatterOverdriveCapabilities;
 import matteroverdrive.core.capability.types.energy.CapabilityEnergyStorage;
 import matteroverdrive.core.capability.types.item.CapabilityInventory;
@@ -19,9 +13,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class PacketUpdateCapabilitySides extends AbstractOverdrivePacket<PacketUpdateCapabilitySides> {
 
@@ -141,8 +139,8 @@ public class PacketUpdateCapabilitySides extends AbstractOverdrivePacket<PacketU
 	}
 
 	public static enum CapabilityType {
-		ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), MATTER(MatterOverdriveCapabilities.MATTER_STORAGE),
-		ENERGY(CapabilityEnergy.ENERGY);
+		ITEM(ForgeCapabilities.ITEM_HANDLER), MATTER(MatterOverdriveCapabilities.MATTER_STORAGE),
+		ENERGY(ForgeCapabilities.ENERGY);
 
 		public final Capability<?> capability;
 

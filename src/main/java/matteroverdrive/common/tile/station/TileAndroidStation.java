@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class TileAndroidStation extends BaseStationTile {
 
@@ -23,13 +23,13 @@ public class TileAndroidStation extends BaseStationTile {
 	
 	public TileAndroidStation(BlockPos pos, BlockState state) {
 		super(TileRegistry.TILE_ANDROID_STATION.get(), pos, state);
-		addCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, CapabilityInventory.EMPTY);
+		addCapability(ForgeCapabilities.ITEM_HANDLER, CapabilityInventory.EMPTY);
 		setMenuProvider(new SimpleMenuProvider((id, inv, play) -> new InventoryAndroidStation(id, play.getInventory(),
 				getInventoryCap(), getCoordsData()), getContainerName(TypeMachine.ANDROID_STATION.id())));
 	}
 
 	@Override
-	public boolean isUsableByPlayer(LocalPlayer player) {
+	public boolean isUsableByPlayer(Player player) {
 		return player.getCapability(MatterOverdriveCapabilities.ANDROID_DATA).map(ICapabilityAndroid::isAndroid)
 				.orElse(false);
 	}

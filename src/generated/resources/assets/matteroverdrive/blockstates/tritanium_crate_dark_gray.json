@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "matteroverdrive:block/tritanium_crate_dark_gray",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "matteroverdrive:block/tritanium_crate_dark_gray"
+    },
+    "facing=south": {
+      "model": "matteroverdrive:block/tritanium_crate_dark_gray",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "matteroverdrive:block/tritanium_crate_dark_gray",
+      "y": 270
+    }
+  }
+}

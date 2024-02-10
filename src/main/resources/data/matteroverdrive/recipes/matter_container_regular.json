@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "   ",
+        "ISI",
+        " I "
+    ],
+    "key": {
+        "I": {
+            "item": "matteroverdrive:tritanium_ingot"
+        },
+        "S": {
+            "item": "matteroverdrive:s_magnet"
+        }
+    },
+    "result": {
+        "item": "matteroverdrive:matter_container_regular",
+        "count": 1
+    }
+}
