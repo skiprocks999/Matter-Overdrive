@@ -19,7 +19,7 @@ public class BlockMatterConduit extends AbstractCableBlock {
 	public static final HashSet<Block> PIPESET = new HashSet<>();
 
 	public BlockMatterConduit(TypeMatterConduit type) {
-		super(OverdriveBlockProperties.from(DEFUALT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
+		super(OverdriveBlockProperties.from(DEFAULT_CABLE_PROPERTIES).setCanBeWaterlogged(), type);
 		PIPESET.add(this);
 	}
 
